@@ -58,7 +58,7 @@ export const otherRouter = {
     children: [
         { path: 'home', title: {i18n: 'home'}, name: 'home_index', component: () => import('@/views/home/home.vue') },
         { path: 'ownspace', title: '个人中心', name: 'ownspace_index', component: () => import('@/views/own-space/own-space.vue') },
-        { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/advanced-router/component/order-info.vue') }, // 用于展示动态路由
+        { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/production-manage/component/order-info.vue') }, // 用于展示动态路由
         { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
         { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') }
     ]
@@ -217,6 +217,17 @@ export const appRouter = [
         children: [
             { path: 'mutative-router', title: '动态路由', name: 'mutative-router', icon: 'link', component: () => import('@/views/advanced-router/mutative-router.vue') },
             { path: 'argument-page', title: '带参页面', name: 'argument-page', icon: 'android-send', component: () => import('@/views/advanced-router/argument-page.vue') }
+        ]
+    },
+    {
+        path: '/production-manage',
+        icon: 'ios-infinite',
+        name: 'production-manage',
+        title: '生产管理',
+        component: Main,
+        children: [
+            { path: 'order-manage', title: '订单', name: 'order-manage', icon: 'link', component: () => import('@/views/production-manage/order-manage.vue') },
+            // { path: 'argument-page', title: '带参页面', name: 'argument-page', icon: 'android-send', component: () => import('@/views/production-manage/argument-page.vue') }
         ]
     },
     {
