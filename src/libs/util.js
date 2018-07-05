@@ -7,7 +7,7 @@ let util = {
 
 };
 util.title = function (title) {
-    title = title || 'iView admin';
+    title = title || '智慧秘书-瑞鸿';
     window.document.title = title;
 };
 
