@@ -74,7 +74,17 @@ export default {
                 }
             });
         }
-    }
+    },
+     created(){
+            this.$axios.get("/user/navlist")
+                .then(res =>{
+                    console.log(res);
+                })
+                .catch( error => {
+                    console.log(error);
+                })
+            
+        }
 };
 </script>
 
