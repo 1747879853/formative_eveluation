@@ -5,8 +5,13 @@
 
 <template>
     <div>
-        <Modal width="700" v-model="dispatchWorkOrder" title="订单信息">
-               分派 
+        <Modal width="700" v-model="dispatchWorkOrder" title="分派工单">
+           
+            <Select v-model="model1" placeholder="车间主任" style="width:200px">
+                <Option v-for="item in workshop_directors" :value="item.id" :key="item.id">{{ item.name }}</Option>
+            </Select>
+
+
         </Modal>
         <div v-for="work_order_data in work_order_data_arr">
             <Row>
@@ -69,6 +74,7 @@ export default {
     },
     data () {
         return {
+            model1: '',
             work_order_col: [
                 {
                     title: '工单号',
@@ -266,7 +272,8 @@ export default {
                     movie: '倩女幽魂',
                     music: '演员'
                 }
-            ]
+            ],
+            workshop_directors:[]
         };
     },
     methods: {
@@ -289,74 +296,27 @@ export default {
                 time: time,
                 state: state
             };
-            this.order_data = [order];
-
-            this.work_order_data_arr = [
-                [{
-                    work_order_id: 'work_order_record_id1',
-                    name: '中铁19局京雄铁路',
-                    user: '王新',
-                    type: '实体墩(9*3.6m-7.2*3m)墩身平板 模板焊接单（50:1）',
-                    number: 1,
-                    children: [
-                        [{
-                            graph_no: '图号DS-936-01,图号DS-936-02,图号DS-936-03,图号DS-936-05',
-                            name: '4.2m*2m平板',
-                            number: 8,
-                            comment: '边框孔冲Φ22*30孔',
-                            children: [
-                                    [{name: '面板',spec: '6mm钢板',length: 1900,width: 2000,number: 2,total: 16,comment: ''},{name: '流水槽面板4',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},{name: '流水槽面板3',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},
-                                    {name: '面板',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},{name: '流水槽面板1',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},{name: '流水槽面板2',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'}],
-                            ]
-                        }], 
-                        [{
-                            graph_no: '图号DS-936-01,图号DS-936-02,图号DS-936-03,图号DS-936-05',
-                            name: '4.2m*2m平板',
-                            number: 8,
-                            comment: '边框孔冲Φ22*30孔',
-                            children: [
-                                        [{name: '面板',spec: '6mm钢板',length: 1900,width: 2000,number: 2,total: 16,comment: ''},{name: '流水槽面板4',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},{name: '流水槽面板3',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'}],
-                                        [{name: '面板',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},{name: '流水槽面板1',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},{name: '流水槽面板2',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'}]
-                            ]
-                        }]
-                    ]
-                }],
-                [{
-                    work_order_id: 'work_order_record_id2',
-                    name: '中铁19局京雄铁路11',
-                    user: '王新11',
-                    type: '实体墩(9*3.6m-7.2*3m)墩身平板 模板焊接单（50:1）',
-                    number: 2,
-                    children: [
-                        [{
-                            graph_no: '图号DS-936-01,图号DS-936-02,图号DS-936-03,图号DS-936-05',
-                            name: '4.2m*2m平板',
-                            number: 8,
-                            comment: '边框孔冲Φ22*30孔',
-                            children: [
-                                    [{name: '面板',spec: '6mm钢板',length: 1900,width: 2000,number: 2,total: 16,comment: ''},{name: '流水槽面板4',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},{name: '流水槽面板3',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},
-                                    {name: '面板',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},{name: '流水槽面板1',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},{name: '流水槽面板2',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'}],
-                            ]
-                        }], 
-                        [{
-                            graph_no: '图号DS-936-01,图号DS-936-02,图号DS-936-03,图号DS-936-05',
-                            name: '4.2m*2m平板',
-                            number: 8,
-                            comment: '边框孔冲Φ22*30孔',
-                            children: [
-                                        [{name: '面板',spec: '6mm钢板',length: 1900,width: 2000,number: 2,total: 16,comment: ''},{name: '流水槽面板4',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},{name: '流水槽面板3',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},
-                                        {name: '面板',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},{name: '流水槽面板1',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'},{name: '流水槽面板2',spec: '7mm钢板',length: 555,width: 333,number: 2,total: 11,comment: 'aaaaa'}]
-                            ]
-                        }]
-
-                    ]
-                }]
-            ];
-            
+            this.order_data = [order];         
         }
     },
     mounted () {
         this.init();
+        this.$axios.get("/workshop_directors")
+        .then(res =>{
+            console.log(res);
+            this.workshop_directors = res.data.data;
+        })
+        .catch( error => {
+            console.log(error);
+        });
+        this.$axios.get("/work_order_data")
+        .then(res =>{
+            // console.log(res);
+            this.work_order_data_arr = res.data;
+        })
+        .catch( error => {
+            console.log(error);
+        })
     },
     activated () {
         this.init();
