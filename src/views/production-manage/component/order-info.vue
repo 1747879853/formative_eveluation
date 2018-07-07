@@ -13,26 +13,50 @@
 
 
         </Modal>
-        <div v-for="work_order_data in work_order_data_arr">
+          <!-- <Button @click="dispatchWorkOrder = true" type="primary">分派工单</Button> -->
+        <div >
             <Row>
                 <Card>
                     <p slot="title">
                         <Icon type="compose"></Icon>
-                        工单详情
+                        订单-工单
                     </p>
-                    <p>
+                    <!-- <p>
                         <Button @click="dispatchWorkOrder = true" type="primary">分派工单</Button>
-                    </p>
+                    </p> -->
 
-                    <Table :columns="work_order_col" :data="work_order_data"></Table>
-                    <div v-for="mat_data in work_order_data[0].children">
+                    <Table highlight-row ref="currentRowTable" @on-current-change="row_select" :columns="work_order_col" :data="work_order_data_arr"></Table>
+                    <br/>
+                    
+                   <div v-if="work_order_detail[0]">
+                    <div  v-for="(mat_data,index) in work_order_detail[0].children">
+                        <card>
+                    <p >
+                        <Icon type="compose"></Icon>
+                        模板-{{index+1}}#
+                    </p>
+                   
+                    <Table :columns="materials_col" v-if="mat_data" :data="mat_data"></Table>
+                    <!-- {{mat_data}} -->
+                     <p >
+                        <Icon type="compose"></Icon>
+                        模板-{{index+1}}# 物料清单
+                    </p>
+                    <Table :columns="boms_col" :data="mat_data[0].children"></Table>
+                    
+                        </card>
+                  
+                   </div>
+                    </div>
+                   
+                    <!-- <div v-for="mat_data in work_order_data.children">
                         <Table :columns="materials_col" :data="mat_data"></Table>
                         
-                        <div v-for="bom_data in mat_data[0].children">
+                        <div v-for="bom_data in mat_data.children">
                             <Table :columns="boms_col" :data="bom_data"></Table>
                         </div>
 
-                    </div>
+                    </div> -->
                 </Card>
             </Row>
         </div>
@@ -76,6 +100,11 @@ export default {
         return {
             model1: '',
             work_order_col: [
+                 {
+                    type: 'index',
+                    title: '序号',
+                    width: 30
+                },
                 {
                     title: '工单号',
                     key: 'work_order_id',
@@ -100,7 +129,32 @@ export default {
                     title: '数量',
                     key: 'number',
                     align: 'center'
-                }
+                },
+                  {
+                        title: '分派工单',
+                        key: 'action',
+                        width: 150,
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.dispatchWorkOrder=true;
+                                        }
+                                    }
+                                }, '分派工单'),
+                             
+                            ]);
+                        }
+                    }
             ],
             work_order_data_arr: [],
             materials_col: [
@@ -202,6 +256,7 @@ export default {
                 }
             ],
             order_data: [],
+            work_order_detail: [],
             columns10: [
                 {
                     type: 'expand',
@@ -297,14 +352,26 @@ export default {
                 state: state
             };
             this.order_data = [order];         
+        },
+        row_select(currentRow){
+        //    console.log(currentRow);
+           this.$axios.get("/work_order_detail")
+           .then(res => {
+               this.work_order_detail = res.data;
+               console.log(this.work_order_data_arr);
+           }).catch(error =>{
+                console.log(error);
+           })
         }
+       
     },
     mounted () {
         this.init();
         this.$axios.get("/workshop_directors")
         .then(res =>{
-            console.log(res);
+            
             this.workshop_directors = res.data.data;
+           
         })
         .catch( error => {
             console.log(error);
@@ -313,6 +380,9 @@ export default {
         .then(res =>{
             // console.log(res);
             this.work_order_data_arr = res.data;
+            //  console.log('22222222222222222');
+            // console.log(this.work_order_data_arr);
+            // console.log('1111111111111111111');
         })
         .catch( error => {
             console.log(error);

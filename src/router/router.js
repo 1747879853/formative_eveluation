@@ -227,6 +227,8 @@ export const appRouter = [
         component: Main,
         children: [
             { path: 'order-manage', title: '订单', name: 'order-manage', icon: 'link', component: () => import('@/views/production-manage/order-manage.vue') },
+            { path: 'order-workshop', title: '车间主任', name: 'order-workshop', icon: 'link', component: () => import('@/views/production-manage/order-workshop.vue') },           
+            { path: 'order-team', title: '班组', name: 'order-team', icon: 'link', component: () => import('@/views/production-manage/order-team.vue') },
             // { path: 'argument-page', title: '带参页面', name: 'argument-page', icon: 'android-send', component: () => import('@/views/production-manage/argument-page.vue') }
         ]
     },
