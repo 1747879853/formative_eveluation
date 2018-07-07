@@ -37,7 +37,7 @@ export default {
                     align: 'center'
                 },
                 {
-                    title: '用户',
+                    title: '客户',
                     key: 'user_name'
                 },
                 {
