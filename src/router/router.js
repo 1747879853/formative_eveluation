@@ -241,12 +241,17 @@ export const appRouter = [
             { path: 'index', title: '审批管理', name: 'approval_index', component: () => import('@/views/approval/approval.vue') }
         ]
     },    
-    {
-        path: '/error-page',
-        icon: 'android-sad',
-        title: '错误页面',
-        name: 'errorpage',
-    },
+    
+    // {
+    //     path: '/error-page',
+    //     icon: 'android-sad',
+    //     title: '错误页面',
+    //     name: 'errorpage',
+    //     component: Main,
+    //     children: [
+    //         { path: 'index', title: '错误页面', name: 'errorpage_index', component: () => import('@/views/error-page/error-page.vue') }
+    //     ]
+    // },
     {
         path: '/admin',
         icon: 'settings',
