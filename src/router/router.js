@@ -60,7 +60,8 @@ export const otherRouter = {
         { path: 'ownspace', title: '个人中心', name: 'ownspace_index', component: () => import('@/views/own-space/own-space.vue') },
         { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/production-manage/component/order-info.vue') }, // 用于展示动态路由
         { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
-        { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') }
+        { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') },
+        { path: 'new-approval', title: '创建新审批', name: 'new-approval', component: () => import('@/views/approval/new-approval.vue') }
     ]
 };
 
@@ -227,9 +228,32 @@ export const appRouter = [
         component: Main,
         children: [
             { path: 'order-manage', title: '订单', name: 'order-manage', icon: 'link', component: () => import('@/views/production-manage/order-manage.vue') },
+            { path: 'order-workshop', title: '车间主任', name: 'order-workshop', icon: 'link', component: () => import('@/views/production-manage/order-workshop.vue') },           
+            { path: 'order-team', title: '班组', name: 'order-team', icon: 'link', component: () => import('@/views/production-manage/order-team.vue') },
             // { path: 'argument-page', title: '带参页面', name: 'argument-page', icon: 'android-send', component: () => import('@/views/production-manage/argument-page.vue') }
         ]
     },
+    {
+        path: '/approval',
+        icon: 'key',
+        name: 'approval',
+        title: '审批管理',
+        component: Main,
+        children: [
+            { path: 'index', title: '审批管理', name: 'approval_index', component: () => import('@/views/approval/approval.vue') }
+        ]
+    },    
+    
+    // {
+    //     path: '/error-page',
+    //     icon: 'android-sad',
+    //     title: '错误页面',
+    //     name: 'errorpage',
+    //     component: Main,
+    //     children: [
+    //         { path: 'index', title: '错误页面', name: 'errorpage_index', component: () => import('@/views/error-page/error-page.vue') }
+    //     ]
+    // },
     {
         path: '/admin',
         icon: 'settings',
