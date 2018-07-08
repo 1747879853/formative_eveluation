@@ -47,23 +47,29 @@
                         ></infor-card>
                     </Col>
                 </Row>
-                <Row>
-                    <Card :padding="0">
-                        <p slot="title" class="card-title">
-                            <Icon type="map"></Icon>
-                            今日服务调用地理分布
-                        </p>
-                        <div class="map-con">
-                            <Col span="10">
-                                <map-data-table :cityData="cityData" height="281" :style-obj="{margin: '12px 0 0 11px'}"></map-data-table>
-                            </Col>
-                            <Col span="14" class="map-incon">
-                                <Row type="flex" justify="center" align="middle">
-                                    <home-map :city-data="cityData"></home-map>
-                                </Row>
-                            </Col>
-                        </div>
-                    </Card>
+                <Row :gutter="5">
+                    <Col :md="24" :lg="12" :style="{marginBottom: '10px'}">
+                        <Card>
+                            <p slot="title" class="card-title">
+                                <Icon type="android-map"></Icon>
+                                工单生产进度
+                            </p>
+                            <div class="data-source-row">
+                                <visite-volume></visite-volume>
+                            </div>
+                        </Card>
+                    </Col>
+                    <Col :md="24" :lg="12" :style="{marginBottom: '10px'}">
+                        <Card>
+                            <p slot="title" class="card-title">
+                                <Icon type="ios-pulse-strong"></Icon>
+                                部门出勤情况
+                            </p>
+                            <div class="data-source-row">
+                                <data-source-pie></data-source-pie>
+                            </div>
+                        </Card>
+                    </Col>
                 </Row>
             </Col>
             <Col :md="24" :lg="8">
@@ -129,29 +135,23 @@
             </Col>
         </Row>
         <Row :gutter="10" class="margin-top-10">
-            <Col :md="24" :lg="8" :style="{marginBottom: '10px'}">
-                <Card>
-                    <p slot="title" class="card-title">
-                        <Icon type="android-map"></Icon>
-                        上周每日来访量统计
-                    </p>
-                    <div class="data-source-row">
-                        <visite-volume></visite-volume>
-                    </div>
-                </Card>
-            </Col>
-            <Col :md="24" :lg="8" :style="{marginBottom: '10px'}">
-                <Card>
-                    <p slot="title" class="card-title">
-                        <Icon type="ios-pulse-strong"></Icon>
-                        数据来源统计
-                    </p>
-                    <div class="data-source-row">
-                        <data-source-pie></data-source-pie>
-                    </div>
-                </Card>
-            </Col>
-            <Col :md="24" :lg="8">
+            <Card :padding="0">
+                <p slot="title" class="card-title">
+                    <Icon type="map"></Icon>
+                    工地情况
+                </p>
+                <div class="map-con">
+                    <Col span="10">
+                        <map-data-table :cityData="cityData" height="281" :style-obj="{margin: '12px 0 0 11px'}"></map-data-table>
+                    </Col>
+                    <Col span="14" class="map-incon">
+                        <Row type="flex" justify="center" align="middle">
+                            <home-map :city-data="cityData"></home-map>
+                        </Row>
+                    </Col>
+                </div>
+            </Card>
+            <!-- <Col :md="24" :lg="8">
                 <Card>
                     <p slot="title" class="card-title">
                         <Icon type="android-wifi"></Icon>
@@ -161,9 +161,9 @@
                         <user-flow></user-flow>
                     </div>
                 </Card>
-            </Col>
+            </Col> -->
         </Row>
-        <Row class="margin-top-10">
+        <!-- <Row class="margin-top-10">
             <Card>
                 <p slot="title" class="card-title">
                     <Icon type="ios-shuffle-strong"></Icon>
@@ -173,7 +173,7 @@
                     <service-requests></service-requests>
                 </div>
             </Card>
-        </Row>
+        </Row> -->
     </div>
 </template>
 
@@ -206,10 +206,10 @@ export default {
         return {
             toDoList: [
                 {
-                    title: '去iView官网学习完整的iView组件'
+                    title: '完成工单一的设计'
                 },
                 {
-                    title: '去iView官网学习完整的iView组件'
+                    title: '出差了解工地情况'
                 }
             ],
             count: {

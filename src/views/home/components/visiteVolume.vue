@@ -24,43 +24,76 @@ export default {
             }
 
             const option = {
-                tooltip: {
+                tooltip : {
                     trigger: 'axis',
-                    axisPointer: {
-                        type: 'shadow'
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                     }
                 },
+                legend: {
+                    data: ['未完工', '待质检', '质检未通过', '质检通过']
+                },
                 grid: {
-                    top: 0,
-                    left: '2%',
+                    left: '3%',
                     right: '4%',
                     bottom: '3%',
                     containLabel: true
                 },
-                xAxis: {
-                    type: 'value',
-                    boundaryGap: [0, 0.01]
+                xAxis:  {
+                    type: 'value'
                 },
                 yAxis: {
                     type: 'category',
-                    data: ['Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'],
-                    nameTextStyle: {
-                        color: '#c3c3c3'
-                    }
+                    data: ['工单一','工单二','工单三','工单四']
                 },
                 series: [
                     {
-                        name: '访问量',
+                        name: '未完工',
                         type: 'bar',
-                        data: [
-                            {value: 453682, name: 'Mon', itemStyle: {normal: {color: '#2d8cf0'}}},
-                            {value: 879545, name: 'Tues', itemStyle: {normal: {color: '#2d8cf0'}}},
-                            {value: 2354678, name: 'Wed', itemStyle: {normal: {color: '#2d8cf0'}}},
-                            {value: 1598403, name: 'Thur', itemStyle: {normal: {color: '#2d8cf0'}}},
-                            {value: 543250, name: 'Fri', itemStyle: {normal: {color: '#2d8cf0'}}},
-                            {value: 1305923, name: 'Sat', itemStyle: {normal: {color: '#2d8cf0'}}},
-                            {value: 1103456, name: 'Sun', itemStyle: {normal: {color: '#2d8cf0'}}}
-                        ]
+                        stack: '总量',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'insideRight'
+                            }
+                        },
+                        data: [320, 302, 301, 334]
+                    },
+                    {
+                        name: '待质检',
+                        type: 'bar',
+                        stack: '总量',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'insideRight'
+                            }
+                        },
+                        data: [120, 132, 101, 134]
+                    },
+                    {
+                        name: '质检未通过',
+                        type: 'bar',
+                        stack: '总量',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'insideRight'
+                            }
+                        },
+                        data: [220, 182, 191, 234]
+                    },
+                    {
+                        name: '质检通过',
+                        type: 'bar',
+                        stack: '总量',
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'insideRight'
+                            }
+                        },
+                        data: [150, 212, 201, 154]
                     }
                 ]
             };

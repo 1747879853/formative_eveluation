@@ -23,7 +23,7 @@ export default {
                 legend: {
                     orient: 'vertical',
                     left: 'right',
-                    data: ['ios', 'android', 'pc', 'web', 'others']
+                    data: ['正常', '迟到', '早退', '请假', '旷工']
                 },
                 series: [
                     {
@@ -32,11 +32,11 @@ export default {
                         radius: '66%',
                         center: ['50%', '60%'],
                         data: [
-                            {value: 2103456, name: 'ios', itemStyle: {normal: {color: '#9bd598'}}},
-                            {value: 1305923, name: 'android', itemStyle: {normal: {color: '#ffd58f'}}},
-                            {value: 543250, name: 'pc', itemStyle: {normal: {color: '#abd5f2'}}},
-                            {value: 798403, name: 'web', itemStyle: {normal: {color: '#ab8df2'}}},
-                            {value: 302340, name: 'others', itemStyle: {normal: {color: '#e14f60'}}}
+                            {value: 210, name: '正常', itemStyle: {normal: {color: '#9bd598'}}},
+                            {value: 13, name: '迟到', itemStyle: {normal: {color: '#ffd58f'}}},
+                            {value: 5, name: '早退', itemStyle: {normal: {color: '#abd5f2'}}},
+                            {value: 7, name: '请假', itemStyle: {normal: {color: '#ab8df2'}}},
+                            {value: 3, name: '旷工', itemStyle: {normal: {color: '#e14f60'}}}
                         ],
                         itemStyle: {
                             emphasis: {
