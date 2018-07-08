@@ -3,15 +3,32 @@
 </style>
 
 <template>
-    
+    <Card>
+    <div>
+    <Button @click="modal2=true" class="ivu-btn ivu-btn-primary ivu-btn-small">添加权限</Button>
+    <Modal
+        v-model="modal2"
+        title="添加权限"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <table>
+        <tr><td>权限名</td><td>
+        <Input v-model="value1" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr>
+        <tr><td>权限</td><td>
+        <Input v-model="value2" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
+        <tr><td>是否激活</td><td>
+        <Input v-model="value3" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
+        <tr><td>条件</td><td>
+        <Input v-model="value4" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
+        </table>
+    </Modal>
+    </div>
         <tree-grid 
         :items='data' 
         :columns='columns'
-        @on-row-click='rowClick'
-        @on-selection-change='selectionClick'
-        @on-sort-change='sortClick'
-      ></tree-grid>
-    
+        @on-delete-click='deleteClick'
+      ></tree-grid>          
+    </Card>   
 </template>
 
 <script>
@@ -20,6 +37,7 @@ export default {
     name: 'text-editor',
      data() {
             return {
+                modal2:false,
                 columns: [{
                     title: '权限名',
                     key: 'name',
@@ -41,7 +59,8 @@ export default {
                     type: 'action',
                     actions: [{
                         type: 'primary',
-                        text: '添加子权限'
+                        text: '添加子权限',
+
                     }, {
                         type: 'success',
                         text: '修改'
@@ -51,7 +70,8 @@ export default {
                     }],
                     width: '150',
                 }],
-                data: [{
+                data: [
+                /*{
                     id: '1',
                     name: '后台首页',
                     authority: 'Admin/Index/index',
@@ -102,27 +122,44 @@ export default {
                     authority: 'Admin/Role/grroup',
                     status: '激活',
                     condition: ''
-                }]
-                }]
+                }]}*/
+                ],
+                
             }
         },
          components: {
             TreeGrid
         },
     methods: {
-            rowClick(data, index, event) {
-                console.log('当前行数据:' + data)
-                console.log('点击行号:' + index)
-                console.log('点击事件:' + event)
+            ok () {
+                this.$Message.info('Clicked ok');
             },
-            selectionClick(arr) {
-                console.log('选中数据id数组:' + arr)
+            cancel () {
+                this.$Message.info('Clicked cancel');
             },
-            sortClick(key, type) {
-                console.log('排序字段:' + key)
-                console.log('排序规则:' + type)
+            editClick() {
+                alert('1  被点击了');
+            },
+            deleteClick() {
+                this.$Modal.confirm({
+                    title: '删除权限',
+                    content: '<p>确定要删除此权限吗？</p>',
+                    onOk: () => {
+                        this.$Message.info('Clicked ok');
+                    },
+                    onCancel: () => {
+                        this.$Message.info('Clicked cancel');
+                    }
+                });
             }
-        }
+        },
+    mounted(){
+        this.$axios.get("/authRuleList").then( res =>{
+            this.data = res.data.body;
+        }).catch(error =>{
+            console.log(error);
+        })
+    }
 };
 </script>
 

@@ -24,7 +24,41 @@
                             <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item,$event,index)">
                         </label>
                         <div v-if="column.type === 'action'">
-                            <i-button :type="action.type" size="small" @click="RowClick(item,$event,index,action.text)" v-for='action in (column.actions)' :key="action.text">{{action.text}}</i-button>
+                            <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="modal1=true">添加子权限</button>
+                            <Modal
+                                v-model="modal1"
+                                title="添加子权限"
+                                @on-ok="ok1"
+                                @on-cancel="cancel1">
+                                <table>
+                                <tr><td>权限名</td><td>
+                                <Input v-model="value1" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr>
+                                <tr><td>权限</td><td>
+                                <Input v-model="value2" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
+                                <tr><td>是否激活</td><td>
+                                <Input v-model="value3" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
+                                <tr><td>条件</td><td>
+                                <Input v-model="value4" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
+                                </table>
+                            </Modal>
+                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true">修改</button>
+                            <Modal
+                                v-model="modal3"
+                                title="修改子权限"
+                                @on-ok="ok2"
+                                @on-cancel="cancel2">
+                                <table>
+                                <tr><td>权限名</td><td>
+                                <Input v-model="value5" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr>
+                                <tr><td>权限</td><td>
+                                <Input v-model="value6" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
+                                <tr><td>是否激活</td><td>
+                                <Input v-model="value7" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
+                                <tr><td>条件</td><td>
+                                <Input v-model="value8" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
+                                </table>
+                            </Modal>
+                            <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="deleteClick()">删除</button>
                         </div>
                         <label @click="toggle(index,item)" v-if="!column.type">
                             <span v-if='snum==iconRow()'>
@@ -61,6 +95,16 @@ export default {
             tdsWidth: 0, //td总宽
             timer: false, //控制监听时长
             dataLength: 0, //树形数据长度
+            modal1: false,
+            modal3:false,
+            value1:"",
+            value2:"",
+            value3:"",
+            value4:"",
+            value5:"",
+            value6:"",
+            value7:"",
+            value8:"",
         }
     },
     computed: {
@@ -124,6 +168,18 @@ export default {
         }
     },
     methods: {
+            ok1 () {
+                this.$Message.info('Clicked ok');
+            },
+            cancel1 () {
+                this.$Message.info('Clicked cancel');
+            },
+            ok2 () {
+                this.$Message.info('Clicked ok');
+            },
+            cancel2 () {
+                this.$Message.info('Clicked cancel');
+            },
       // 有无多选框折叠位置优化
       iconRow() {
         for (var i = 0, len = this.columns.length; i < len; i++) {
@@ -159,6 +215,10 @@ export default {
         RowClick(data, event, index, text) {
             let result = this.makeData(data)
             this.$emit('on-row-click', result, event, index, text)
+        },
+        deleteClick() {
+            
+            this.$emit('on-delete-click')
         },
         // 点击事件 返回数据处理
         makeData(data) {
