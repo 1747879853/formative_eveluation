@@ -88,6 +88,47 @@ var data2 =[
         ]
     }]
 ]
+
+var data3=[
+        {
+            'id': 1,
+            'name' : '生产经理'
+        },
+        {
+            'id': 2,
+            'name' : '财务'
+        },
+        {
+            'id': 3,
+            'name' : '出纳'
+        },
+        {
+            'id': 4,
+            'name' : '销售'
+        },
+]
+var data4=[
+        {
+            'id': '@id',
+            'name' : '@cname'
+        },
+        {
+            'id': '@id',
+            'name' : '@cname'
+        },
+        {
+            'id': '@id',
+            'name' : '@cname'
+        },
+        {
+            'id': '@id',
+            'name' : '@cname'
+        }
+        ]
+
+
+
+
 export default [
 {
     path: '/login',
@@ -101,7 +142,20 @@ export default [
 	path: '/work_order_data',
 	data: data2
 
+},
+{
+    path: '/user_group_list',
+    data: data3
+
+},
+{
+    
+    path: '/user_list',
+    data: data4
+
+
 }
+
 
 
 

@@ -1,9 +1,9 @@
 <style lang="less">
-    @import '../../styles/common.less';
-    @import 'draggable-list.less';
+   
 </style>
+
 <template>
-    <div class="access">
+    <div>
         <Row>
             表单设置<br>
             审批名称最多50字
@@ -11,189 +11,127 @@
 
             审批说明最多100字
             <Input v-model="approvalComment" placeholder="Enter something..." style="width: 300px"></Input>
+
+            <br>
+            <UserGroup cardtitle="授权分组" v-on:update-selected="getSelectedGroupIds"></UserGroup>
+            
+            <AllUsers  cardtitle="授权用户" v-on:update-selected="getSelectedUserIds"></AllUsers>
+                        
         </Row>
         <Row>
-            表单设计<br>
+            <Modal width="700" v-model="add_new_field" title="添加字段">
+                <ApprovalFieldsForm v-on:form-data-hash="getFieldData"></ApprovalFieldsForm>
+                <div slot="footer"></div>
+            </Modal>
             <Card>
-                <Row>
-                    <Col span="12">
-                        <Card dis-hover>
-                            <p slot="title">
-                                <Icon type="ios-list"></Icon>
-                               控件库(拖拽到右侧添加)
-                            </p>
-                            <div style="height: 720px;">
-                                <ul id="todoList" class="iview-admin-draggable-list">
-                                    <li v-for="(item, index) in todoArray" :key="index" class="notwrap todolist-item" :data-index="index">
-                                        {{ item.content }}
-                                        <Button type="primary" shape="circle" size="small" icon="close" class="btn-not-seen" @click="del_this_li"></Button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </Card>                        
-                    </Col>
-                    <Col span="12" class="padding-left-10">
-                        <Row>
-                        <Card dis-hover>
-                            <p slot="title">
-                                <Icon type="ios-list-outline"></Icon>
-                                申请表单清单
-                            </p>
-                            <div style="height: 360px;">
-                                <ul id="doList" class="btn-seen iview-admin-draggable-list"></ul>
-                            </div>
-                        </Card>
-                        </Row>
-                        <Row>
-                            <Card dis-hover>
-                            <p slot="title">
-                                <Icon type="ios-list-outline"></Icon>
-                                明细清单
-                            </p>
-                            <div style="height: 360px;">
-                                <ul id="detailList" class="btn-seen iview-admin-draggable-list"></ul>
-                            </div>
-                        </Card>
+                <div slot="title">
+                    <Icon type="compose"></Icon>
+                    字段列表
+                    <Button @click="add_new_field = true" type="primary">添加字段</Button>
+                </div>               
 
-                        </Row>
-                    </Col>
-                </Row>
+                <Table :columns="approval_field_col" :data="approval_field_data"></Table>
+            
             </Card>
-        </Row>  
+        </Row>
+
+
+        <Row><button @click="show_data"></button></Row>
     </div>
 </template>
 
 <script>
-import Sortable from 'sortablejs';
+import UserGroup from "../my-components/user-and-group/user-group.vue"
+import AllUsers from "../my-components/user-and-group/all-users.vue"
+import ApprovalFieldsForm from "./approval-fields-form.vue"
 export default {
     name: 'new-approval-tmpl',
     data () {
         return {
-            approvalName: '',
-            approvalComment: '',
-            todoArray: [
-                {
-                    content: '完成iview-admin基本开发'
-                },
-                {
-                    content: '对iview-admin进行性能优化'
-                },
-                {
-                    content: '对iview-admin的细节进行优化'
-                },
-                {
-                    content: '完成iview-admin开发'
-                },
-                {
-                    content: '解决发现的bug'
-                },
-                {
-                    content: '添加更多组件'
-                },
-                {
-                    content: '封装更多图表'
-                },
-                {
-                    content: '增加更多人性化功能'
-                }
-            ],
-            doArray: [],
-        };
-    },
-    mounted() {
-        document.body.ondrop = function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        };
-        let vm = this;
-        let todoList = document.getElementById('todoList');
-        Sortable.create(todoList, {
-            group: {
-                name: 'list',
-                pull: 'clone',
-                put: false
-
-            },
-
-            sort: false,
-            animation: 120,
-            ghostClass: 'placeholder-style',
-            fallbackClass: 'iview-admin-cloned-item',
-            onRemove (event) {
-                vm.doArray.splice(event.newIndex, 0, vm.todoArray[event.item.getAttribute('data-index')]);
-            },
-            // onClone: function (/**Event*/evt) {
-            //     var origEl = evt.item;
-            //     var cloneEl = evt.clone;
-            //     cloneEl.innerHTML = cloneEl.innerHTML + "<button v-on:click='testbtn'>Add 1</button>"
-            // },
-            // onAdd: function (/**Event*/evt) {
-            //     var itemEl = evt.item;  // dragged HTMLElement
-            //     evt.from;  // previous list
-            //     // + indexes from onEnd
-            //     debugger
-            //     itemEl.innerHTML = itemEl.innerHTML + "<button v-on:click='testbtn'>Add 1</button>"
-            // },
-            // setData: function (/** DataTransfer */dataTransfer, /** HTMLElement*/dragEl) {
-            //     dataTransfer.setData('Text', dragEl.textContent+"<button v-on:click='testbtn'>Add 1</button>"); // `dataTransfer` object of HTML5 DragEvent
-            //     // debugger
-            // }
-        });
-        let doList = document.getElementById('doList');
-        Sortable.create(doList, {
-            group: {
-                name: 'list',
-                pull: false,
-                put: true
-            },
             
-            // onAdd: function (/**Event*/evt) {
-            //     var itemEl = evt.item;  // dragged HTMLElement
-            //     evt.from;  // previous list
-            //     // + indexes from onEnd
-            //     // debugger
-            //     // itemEl.innerHTML = itemEl.innerHTML + "<button v-on:click='testbtn'>Add 1</button>"
-            // },
-            scroll: true,
-            sort: true,
-            filter: '.iview-admin-draggable-delete',
-            animation: 120,
-            fallbackClass: 'iview-admin-cloned-item',
-            onRemove (event) {
-                vm.doArray.splice(event.oldIndex, 1);
-            },
-            onChoose: function (/**Event*/evt) {
-                // alert(evt.oldIndex);  // element index within parent
-            }
-        });
-        let detailList = document.getElementById('detailList');
-        Sortable.create(detailList, {
-            group: {
-                name: 'list',
-                pull: false,
-                put: true
-            },
-            scroll: true,
-            sort: true,
-            filter: '.iview-admin-draggable-delete',
-            animation: 120,
-            fallbackClass: 'iview-admin-cloned-item',
-            onRemove (event) {
-                vm.doArray.splice(event.oldIndex, 1);
-            }
-        });
+            add_new_field: false,
+            approval_field_col: [
+                // {
+                //     title: '编号',
+                //     key: 'id',
+                //     align: 'center'
+                // },
+                {
+                    title: '名称',
+                    key: 'name',
+                    align: 'center'
+                },
+                {
+                    title: '字段',
+                    key: 'en_name',
+                    align: 'center'
+                },
+                {
+                    title: '控件',
+                    key: 'control',
+                    align: 'center'
+                },
+                                {
+                    title: '默认值',
+                    key: 'default_value',
+                    align: 'center'
+                },
+                {
+                    title: '操作',
+                    key: 'operation',
+                    align: 'center'
+                },
+            ],
+            approval_field_data: [
+                {    
+                    // 'id': 3,
+                    'name': '字段1' ,
+                    'en_name': 'field_one',
+                    'control': '选择框',
+                    'default_value': '',
+                    'operation': 'edit,delete'    
+                },
+                {    
+                    // 'id': 3,
+                    'name': '字段2' ,
+                    'en_name': 'field_two',
+                    'control': '单行输入框',
+                    'default_value': '111',
+                    'operation': 'edit,delete'    
+                } 
+            ],
+
+            approvalName:'',
+            approvalComment: '',
+            
+            selected_user_group_ids: [],            
+            selected_user_ids: [],
+            
+        };
     },
-    methods: {
-        del_this_li(){
-            // this.parent
-            alert(111);
+    components:{
+        UserGroup,AllUsers,ApprovalFieldsForm
+    },
+    mounted () {
+
+    },
+    methods:{        
+        getSelectedGroupIds(msg){
+            this.selected_user_group_ids = msg;
+        },
+        getSelectedUserIds(msg){
+            this.selected_user_ids = msg;
+        },
+        show_data(){
+            alert(this.selected_user_ids)
+        },
+        getFieldData(msg){
+            this.approval_field_data.push(msg);
         }
-        
+        // add_new_field(){
+
+        // },
         
     }
 };
 </script>
-
-<style>
-
-</style>

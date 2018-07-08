@@ -1,6 +1,9 @@
 .iview-admin-draggable-list{
     height: 100%;
 }
+.btn-not-seen{
+    display: none;
+}
 .iview-admin-draggable-list li{
     padding: 9px;
     border: 1px solid #e7ebee;
@@ -25,6 +28,11 @@
 .iview-admin-draggable-list li:hover .iview-admin-draggable-delete{
     display: block;
 }
+// let the delete button show when li:hover.the first line not work
+//.btn-seen li:hover .child, .btn-seen.hover .child { display: block; }
+.btn-seen li:hover .btn-not-seen { display: inline-block;}
+
+
 
 .placeholder-style{
     display: block !important;
