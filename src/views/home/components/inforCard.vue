@@ -16,6 +16,7 @@
                         class="infor-card-count user-created-count" 
                         :id-name="idName" 
                         :end-val="endVal" 
+                        :decimals="decimals"
                         :color="color"
                         :countSize="countSize"
                         :countWeight="countWeight"
@@ -39,6 +40,7 @@ export default {
     props: {
         idName: String,
         endVal: Number,
+        decimals: Number,
         color: String,
         iconType: String,
         introText: String,

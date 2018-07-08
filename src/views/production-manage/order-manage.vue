@@ -9,9 +9,9 @@
                 <Card>
                     <p slot="title">
                         <Icon type="ios-list"></Icon>
-                        订单详情(动态路由)
+                        订单列表
                     </p>
-                    <Row type="flex" justify="center" align="middle" class="advanced-router">
+                    <Row type="flex" justify="center" align="top" class="advanced-router">
                         <Table :columns="orderColumns" :data="orderData" style="width: 100%;"></Table>
                     </Row>
                 </Card>
@@ -36,9 +36,14 @@ export default {
                     key: 'order_id',
                     align: 'center'
                 },
-                {
+                 {
                     title: '客户',
-                    key: 'user_name'
+                    key: 'customer',
+                    align: 'center'
+                },
+                {
+                    title: '时间',
+                    key: 'create_time'
                 },
                 {
                     title: '详情',
@@ -47,7 +52,7 @@ export default {
                     render: (h, params) => {
                         return h('Button', {
                             props: {
-                                type: 'text',
+                                type: 'primary',
                                 size: 'small'
                             },
                             on: {
@@ -59,27 +64,27 @@ export default {
                                     });
                                 }
                             }
-                        }, '了解详情');
+                        }, '查看详情');
                     }
                 }
             ],
             orderData: [
-                {
-                    order_id: '1000001',
-                    user_name: 'Aresn'
-                },
-                {
-                    order_id: '1000002',
-                    user_name: 'Lison'
-                },
-                {
-                    order_id: '1000003',
-                    user_name: 'lili'
-                },
-                {
-                    order_id: '1000004',
-                    user_name: 'lala'
-                }
+                // {
+                //     order_id: '1000001',
+                //     user_name: 'Aresn'
+                // },
+                // {
+                //     order_id: '1000002',
+                //     user_name: 'Lison'
+                // },
+                // {
+                //     order_id: '1000003',
+                //     user_name: 'lili'
+                // },
+                // {
+                //     order_id: '1000004',
+                //     user_name: 'lala'
+                // }
             ]
         };
     },
@@ -87,6 +92,13 @@ export default {
         avatorImage () {
             return localStorage.avatorImgPath;
         }
+    },
+    mounted(){
+        this.$axios.get("/orderListData").then( res =>{
+            this.orderData = res.data.body;
+        }).catch(error =>{
+            console.log(error);
+        })
     }
 };
 </script>
