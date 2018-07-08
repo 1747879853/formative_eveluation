@@ -5,6 +5,73 @@
 <template>
     <div class="home-main">
         <Row :gutter="10">
+            <Col :md="24" :lg="16">
+                <Row :gutter="5">
+                    <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
+                        <infor-card
+                            id-name="user_created_count"
+                            :end-val="count.newOrders"
+                            iconType="android-person-add"
+                            color="#2d8cf0"
+                            intro-text="当月新增订单"
+                        ></infor-card>
+                    </Col>
+                    <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
+                        <infor-card
+                            id-name="visit_count"
+                            :end-val="count.finishedWorkOrders"
+                            iconType="ios-eye"
+                            color="#64d572"
+                            :iconSize="50"
+                            intro-text="当月生产交付工单"
+                        ></infor-card>
+                    </Col>
+                    <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
+                        <infor-card
+                            id-name="collection_count"
+                            :end-val="count.qsPassRate"
+                            :decimals="1"
+                            iconType="upload"
+                            color="#ffd572"
+                            intro-text="当月质检合格率"
+                        ></infor-card>
+                    </Col>
+                    <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
+                        <infor-card
+                            id-name="transfer_count"
+                            :end-val="count.failureRate"
+                            :decimals="2"
+                            iconType="shuffle"
+                            color="#f25e43"
+                            intro-text="当月设备故障率"
+                        ></infor-card>
+                    </Col>
+                </Row>
+                <Row :gutter="5">
+                    <Col :md="24" :lg="12" :style="{marginBottom: '10px'}">
+                        <Card>
+                            <p slot="title" class="card-title">
+                                <Icon type="android-map"></Icon>
+                                工单生产进度
+                            </p>
+                            <div class="data-source-row">
+                                <visite-volume></visite-volume>
+                            </div>
+                        </Card>
+                    </Col>
+                    <Col :md="24" :lg="12" :style="{marginBottom: '10px'}">
+                        <Card>
+                            <p slot="title" class="card-title">
+                                <Icon type="ios-pulse-strong"></Icon>
+                                部门出勤情况
+                            </p>
+                            <div class="data-source-row">
+                                <data-source-pie></data-source-pie>
+                            </div>
+                        </Card>
+                    </Col>
+                </Row>
+            </Col>
             <Col :md="24" :lg="8">
                 <Row class-name="home-page-row1" :gutter="10">
                     <Col :md="12" :lg="24" :style="{marginBottom: '10px'}">
@@ -66,90 +133,25 @@
                     </Col>
                 </Row>
             </Col>
-            <Col :md="24" :lg="16">
-                <Row :gutter="5">
-                    <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
-                        <infor-card
-                            id-name="user_created_count"
-                            :end-val="count.createUser"
-                            iconType="android-person-add"
-                            color="#2d8cf0"
-                            intro-text="今日新增用户"
-                        ></infor-card>
-                    </Col>
-                    <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
-                        <infor-card
-                            id-name="visit_count"
-                            :end-val="count.visit"
-                            iconType="ios-eye"
-                            color="#64d572"
-                            :iconSize="50"
-                            intro-text="今日浏览量"
-                        ></infor-card>
-                    </Col>
-                    <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
-                        <infor-card
-                            id-name="collection_count"
-                            :end-val="count.collection"
-                            iconType="upload"
-                            color="#ffd572"
-                            intro-text="今日数据采集量"
-                        ></infor-card>
-                    </Col>
-                    <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}">
-                        <infor-card
-                            id-name="transfer_count"
-                            :end-val="count.transfer"
-                            iconType="shuffle"
-                            color="#f25e43"
-                            intro-text="今日服务调用量"
-                        ></infor-card>
-                    </Col>
-                </Row>
-                <Row>
-                    <Card :padding="0">
-                        <p slot="title" class="card-title">
-                            <Icon type="map"></Icon>
-                            今日服务调用地理分布
-                        </p>
-                        <div class="map-con">
-                            <Col span="10">
-                                <map-data-table :cityData="cityData" height="281" :style-obj="{margin: '12px 0 0 11px'}"></map-data-table>
-                            </Col>
-                            <Col span="14" class="map-incon">
-                                <Row type="flex" justify="center" align="middle">
-                                    <home-map :city-data="cityData"></home-map>
-                                </Row>
-                            </Col>
-                        </div>
-                    </Card>
-                </Row>
-            </Col>
         </Row>
         <Row :gutter="10" class="margin-top-10">
-            <Col :md="24" :lg="8" :style="{marginBottom: '10px'}">
-                <Card>
-                    <p slot="title" class="card-title">
-                        <Icon type="android-map"></Icon>
-                        上周每日来访量统计
-                    </p>
-                    <div class="data-source-row">
-                        <visite-volume></visite-volume>
-                    </div>
-                </Card>
-            </Col>
-            <Col :md="24" :lg="8" :style="{marginBottom: '10px'}">
-                <Card>
-                    <p slot="title" class="card-title">
-                        <Icon type="ios-pulse-strong"></Icon>
-                        数据来源统计
-                    </p>
-                    <div class="data-source-row">
-                        <data-source-pie></data-source-pie>
-                    </div>
-                </Card>
-            </Col>
-            <Col :md="24" :lg="8">
+            <Card :padding="0">
+                <p slot="title" class="card-title">
+                    <Icon type="map"></Icon>
+                    工地情况
+                </p>
+                <div class="map-con">
+                    <Col span="10">
+                        <map-data-table :cityData="cityData" height="281" :style-obj="{margin: '12px 0 0 11px'}"></map-data-table>
+                    </Col>
+                    <Col span="14" class="map-incon">
+                        <Row type="flex" justify="center" align="middle">
+                            <home-map :city-data="cityData"></home-map>
+                        </Row>
+                    </Col>
+                </div>
+            </Card>
+            <!-- <Col :md="24" :lg="8">
                 <Card>
                     <p slot="title" class="card-title">
                         <Icon type="android-wifi"></Icon>
@@ -159,9 +161,9 @@
                         <user-flow></user-flow>
                     </div>
                 </Card>
-            </Col>
+            </Col> -->
         </Row>
-        <Row class="margin-top-10">
+        <!-- <Row class="margin-top-10">
             <Card>
                 <p slot="title" class="card-title">
                     <Icon type="ios-shuffle-strong"></Icon>
@@ -171,7 +173,7 @@
                     <service-requests></service-requests>
                 </div>
             </Card>
-        </Row>
+        </Row> -->
     </div>
 </template>
 
@@ -204,26 +206,17 @@ export default {
         return {
             toDoList: [
                 {
-                    title: '去iView官网学习完整的iView组件'
+                    title: '完成工单一的设计'
                 },
                 {
-                    title: '去iView官网学习完整的iView组件'
-                },
-                {
-                    title: '去iView官网学习完整的iView组件'
-                },
-                {
-                    title: '去iView官网学习完整的iView组件'
-                },
-                {
-                    title: '去iView官网学习完整的iView组件'
+                    title: '出差了解工地情况'
                 }
             ],
             count: {
-                createUser: 496,
-                visit: 3264,
-                collection: 24389305,
-                transfer: 39503498
+                newOrders: 4,
+                finishedWorkOrders: 23,
+                qsPassRate: 98.3,
+                failureRate: 0.345
             },
             cityData: cityData,
             showAddNewTodo: false,

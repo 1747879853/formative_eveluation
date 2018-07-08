@@ -8,9 +8,11 @@
 <script>
 import CountUp from 'countup';
 
-function transformValue (val) {
+function transformValue (val, decimals) {
     let endVal = 0;
     let unit = '';
+    if (decimals > 0)
+        unit = '%';
     if (val < 1000) {
         endVal = val;
     } else if (val >= 1000 && val < 1000000) {
@@ -85,7 +87,7 @@ export default {
     mounted () {
         this.$nextTick(() => {
             setTimeout(() => {
-                let res = transformValue(this.endVal);
+                let res = transformValue(this.endVal, this.decimals);
                 let endVal = res.val;
                 this.unit = res.unit;
                 let demo = {};
@@ -98,7 +100,7 @@ export default {
     },
     watch: {
         endVal (val) {
-            let res = transformValue(val);
+            let res = transformValue(val, this.decimals);
             let endVal = res.val;
             this.unit = res.unit;
             this.demo.update(endVal);
