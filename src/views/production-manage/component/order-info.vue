@@ -33,7 +33,7 @@
                         <card>
                     <p >
                         <Icon type="compose"></Icon>
-                        模板-{{index+1}}#
+                        模板-{{index+1}}#；工单号：{{work_order_id}}
                     </p>
                    
                     <Table :columns="materials_col" v-if="mat_data" :data="mat_data"></Table>
@@ -328,7 +328,8 @@ export default {
                     music: '演员'
                 }
             ],
-            workshop_directors:[]
+            workshop_directors:[],
+            work_order_id :''
         };
     },
     methods: {
@@ -358,7 +359,8 @@ export default {
            this.$axios.get("/work_order_detail")
            .then(res => {
                this.work_order_detail = res.data;
-               console.log(this.work_order_data_arr);
+               this.work_order_id = currentRow.work_order_id;
+            //    console.log(this.work_order_data_arr);
            }).catch(error =>{
                 console.log(error);
            })

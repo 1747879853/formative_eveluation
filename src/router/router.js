@@ -255,30 +255,30 @@ export const appRouter = [
     //     ]
     // },
     {
-        path: '/admin',
+        path: '/system-manage',
         icon: 'settings',
-        name: 'admin',
+        name: 'system-manage',
         title: '系统管理',
         component: Main,
         children: [
             {
-                path: 'privileges',
+                path: 'authority',
                 icon: 'compose',
-                name: 'privileges',
+                name: 'authority',
                 title: '权限管理',
-                component: () => import('@/views/my-components/text-editor/text-editor.vue')
+                component: () => import('@/views/system-manage/authority-manage.vue')
             },
             {
-                path: 'privilege-groups',
+                path: 'authority-groups',
                 icon: 'pound',
-                name: 'privilege-groups',
+                name: 'authority-groups',
                 title: '权限组管理',
                 component: () => import('@/views/my-components/markdown-editor/markdown-editor.vue')
             },
             {
-                path: 'user-privilege-groups',
+                path: 'user-authority-groups',
                 icon: 'pound',
-                name: 'user-privilege-groups',
+                name: 'user-authority-groups',
                 title: '用户权限分配',
                 component: () => import('@/views/my-components/markdown-editor/markdown-editor.vue')
             },
