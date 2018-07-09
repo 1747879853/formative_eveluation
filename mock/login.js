@@ -12,7 +12,6 @@ var chejian = {
 
 
 
-
 // var workshop_workorder_detail = {
 //     id: 1,
 //     name: '1#chejian',
@@ -79,6 +78,7 @@ var chejian = {
 
 //    }
 
+
 var data3=[
         {
             'id': 1,
@@ -114,7 +114,7 @@ var data4=[
             'id': '@id',
             'name' : '@cname'
         }
-        ]
+    ]
 
 
 
