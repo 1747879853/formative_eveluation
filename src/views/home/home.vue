@@ -135,33 +135,46 @@
             </Col>
         </Row>
         <Row :gutter="10" class="margin-top-10">
-            <Card :padding="0">
-                <p slot="title" class="card-title">
-                    <Icon type="map"></Icon>
-                    工地情况
-                </p>
-                <div class="map-con">
-                    <Col span="10">
-                        <map-data-table :cityData="cityData" height="281" :style-obj="{margin: '12px 0 0 11px'}"></map-data-table>
-                    </Col>
-                    <Col span="14" class="map-incon">
-                        <Row type="flex" justify="center" align="middle">
-                            <home-map :city-data="cityData"></home-map>
-                        </Row>
-                    </Col>
-                </div>
-            </Card>
-            <!-- <Col :md="24" :lg="8">
+            <Col :md="24" :lg="8">
                 <Card>
                     <p slot="title" class="card-title">
                         <Icon type="android-wifi"></Icon>
-                        各类用户服务调用变化统计
+                        车间生产情况
                     </p>
                     <div class="data-source-row">
-                        <user-flow></user-flow>
+                        <img src="../../images/chejian.jpg" />
+                        <!-- <video src="" /> -->
+                        <!-- <user-flow></user-flow> -->
                     </div>
                 </Card>
-            </Col> -->
+            </Col>
+            <Col :md="24" :lg="8">
+                <Card>
+                    <p slot="title" class="card-title">
+                        <Icon type="ios-shuffle-strong"></Icon>
+                        车辆出入统计
+                    </p>
+                    <div class="line-chart-con">
+                        <service-requests></service-requests>
+                    </div>
+                </Card>
+            </Col>
+            <Col :md="24" :lg="8">
+                <Card>
+                    <p slot="title" class="card-title">
+                        <Icon type="map"></Icon>
+                        工地情况
+                    </p>
+                    <div class="map-con">
+                        <map-data-table :cityData="cityData" height="201" :style-obj="{margin: '12px 0 0 11px'}"></map-data-table>
+                        <!-- <Col span="14" class="map-incon">
+                            <Row type="flex" justify="center" align="middle">
+                                <home-map :city-data="cityData"></home-map>
+                            </Row>
+                        </Col> -->
+                    </div>
+                </Card>
+            </Col>
         </Row>
         <!-- <Row class="margin-top-10">
             <Card>
