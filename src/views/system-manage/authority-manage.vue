@@ -1,4 +1,3 @@
-
 <template>
     <Card>
     <div>
@@ -31,7 +30,7 @@
 <script>
 import TreeGrid from './treeGrid'
 export default {
-    name: 'text-editor',
+    name: 'authority-manage',
      data() {
             return {
                 modal2:false,
@@ -129,13 +128,24 @@ export default {
         },
     methods: {
             ok () {
-                this.$Message.info('Clicked ok');
+                this.$axios.post('/authRuleList', {
+                            data: {
+                                params: {
+                                    id: 5,
+                                }
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            this.data = res.data;
+                            alert('添加成功');
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        this.$Message.info('Clicked ok');
             },
             cancel () {
                 this.$Message.info('Clicked cancel');
-            },
-            editClick() {
-                alert('1  被点击了');
             },
             deleteClick() {
                 this.$Modal.confirm({
