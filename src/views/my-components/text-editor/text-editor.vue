@@ -145,6 +145,20 @@ export default {
                     title: '删除权限',
                     content: '<p>确定要删除此权限吗？</p>',
                     onOk: () => {
+                        this.$axios.delete('/authRuleList', {
+                            data: {
+                                params: {
+                                    id: 1
+                                }
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            this.data = res.data;
+                            alert('删除成功');
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
                         this.$Message.info('Clicked ok');
                     },
                     onCancel: () => {
@@ -155,7 +169,7 @@ export default {
         },
     mounted(){
         this.$axios.get("/authRuleList").then( res =>{
-            this.data = res.data.body;
+            this.data = res.data;
         }).catch(error =>{
             console.log(error);
         })
