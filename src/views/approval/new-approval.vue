@@ -35,7 +35,7 @@
         </Row>
 
         <Row>
-            <Col span="8" class="padding-left-10">
+            <Col span="8">
                 <Card>
                     <p slot="title" style="height: 33px;">
                         <Icon type="android-funnel"></Icon>
@@ -54,7 +54,7 @@
                     </div>
                 </Card>
             </Col>
-            <Col span="10" class="padding-left-10">
+            <Col span="10">
                 <Card>
                     <p slot="title" style="height: 33px;">
                         <Icon type="android-funnel"></Icon>
@@ -62,15 +62,15 @@
                     </p>
                     <div style="height: 394px;">
                         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                            <FormItem label="Name" prop="name">
+                            <FormItem label="名称" prop="name">
                                 
                                 <Input v-model="formValidate.name" placeholder="Enter your name"></Input>
                                     
                             </FormItem>
-                            <FormItem label="En_name" prop="en_name">
+                            <FormItem label="英文名称" prop="en_name">
                                 <Input v-model="formValidate.en_name" placeholder="Enter your en_name"></Input>
                             </FormItem>
-                            <FormItem label="Control" prop="control">
+                            <FormItem label="控件" prop="control">
                                 <Select v-model="formValidate.control" placeholder="Select your control">
                                     <Option value="单行输入框">单行输入框</Option>
                                     <Option value="多行输入框">多行输入框</Option>
