@@ -1,7 +1,6 @@
-<style lang="less">
-   
+<style lang="less">    
+    @import 'draggable-list.less';
 </style>
-
 <template>
     <div>
         <Row>
@@ -20,7 +19,7 @@
         </Row>
         <Row>
             <Modal width="700" v-model="add_new_field" title="添加字段">
-                <ApprovalFieldsForm v-on:form-data-hash="getFieldData"></ApprovalFieldsForm>
+                <ApprovalFieldsForm v-bind:initIndex="choosedDataIndex" v-bind:initData="choosedData" v-on:form-data-hash="getFieldData"></ApprovalFieldsForm>
                 <div slot="footer"></div>
             </Modal>
             <Card>
@@ -35,18 +34,28 @@
             </Card>
         </Row>
         <Row>
+            <Col span="8" class="padding-left-10">
+                <Card>
+                    <p slot="title">
+                        <Icon type="android-funnel"></Icon>
+                        字段列表预览
+                    </p>
+                    <div style="height: 394px;">
             
-            <ul id="editable">
-                    <li>Оля<i class="js-remove">✖</i></li>
-                    <li>Владимир<i class="js-remove">✖</i></li>
-                    <li>Алина<i class="js-remove">✖</i></li>
-            </ul>
+                        <ul id="editable" class="iview-admin-draggable-list">
+                                
+                            <li v-for="(item, index) in approval_field_data" :key="index" class="notwrap todolist-item" :data-index="index">
+                            {{ item.name }}<Icon type="close" class="js-remove"/><Icon type="edit" class="js-edit" /></li>
+                        </ul>
 
-            <button id="addUser">Add</button>
+                        <!-- <button id="addUser">Add</button> -->
+                        <Button @click="add_new_field = true" type="primary">添加字段</Button>
+                    </div>
+                </Card>
+            </Col>
         </Row>
 
 
-        <Row><button @click="show_data"></button></Row>
     </div>
 </template>
 
@@ -59,8 +68,9 @@ export default {
     name: 'new-approval-tmpl',
     data () {
         return {
-            
             add_new_field: false,
+            choosedDataIndex: '',
+            choosedData: '',
             approval_field_col: [
                 // {
                 //     title: '编号',
@@ -98,7 +108,7 @@ export default {
                     // 'id': 3,
                     'name': '字段1' ,
                     'en_name': 'field_one',
-                    'control': '选择框',
+                    'control': '多选框',
                     'default_value': '',
                     'operation': 'edit,delete'    
                 },
@@ -124,12 +134,61 @@ export default {
         UserGroup,AllUsers,ApprovalFieldsForm
     },
     mounted () {
+        let editable = document.getElementById('editable');
+        let vm = this;
         var editableList = Sortable.create(editable, {
-          filter: '.js-remove',
-          onFilter: function (evt) {
-            var el = editableList.closest(evt.item); // get dragged item
-            el && el.parentNode.removeChild(el);
-          }
+            filter: '.js-remove, .js-edit',
+            onFilter: function (evt) {
+                
+                if(evt.target.attributes.class.textContent.indexOf('js-remove')>=0){
+                    var el = editableList.closest(evt.item); // get dragged item
+                    // el && el.parentNode.removeChild(el);  //delete the <li>...</li>
+                    // debugger
+                    vm.approval_field_data.splice(parseInt(el.attributes["data-index"]),1)
+                }
+                if(evt.target.attributes.class.textContent.indexOf('js-edit')>=0){
+                    var el = editableList.closest(evt.item);
+                    vm.choosedDataIndex = el.attributes["data-index"].value;
+                    // debugger
+                    vm.choosedData = JSON.stringify(vm.approval_field_data[parseInt(el.attributes["data-index"].value)]);
+                    vm.add_new_field = true; //open the modal dialog
+                }
+
+            },
+            onChoose: function (/**Event*/evt) {
+                // el and evt.item is equal
+                // 用官方的chosenClas这个属性设置样式后，鼠标点击后样式会一闪而过
+                //所以用下面的代码自己设置鼠标点击后的样式
+
+                var el = editableList.closest(evt.item);               
+
+                let list= document.getElementById("editable").getElementsByTagName("li");
+                for (let i = 0; i < list.length; i++) {
+                    if(list[i] == el){
+                        evt.item.setAttribute("style","border-color: #87b4ee;")
+                    }else{
+                        list[i].removeAttribute("style")
+                    }                    
+                }
+                
+            },
+            // Changed sorting within list
+            // onUpdate: function (/**Event*/evt) {
+            //     // same properties as onEnd
+            //     var el = editableList.closest(evt.item);
+            //     console.log(el)
+            //     // console.log(JSON.stringify(vm.approval_field_data[0]));
+            //     // console.log(JSON.stringify(vm.approval_field_data[1]));
+            //     var t;
+            //     t = vm.approval_field_data[evt.oldIndex];
+            //     vm.approval_field_data[evt.oldIndex] = vm.approval_field_data[evt.newIndex];
+            //     vm.approval_field_data[evt.newIndex] = t;
+            //     // console.log(JSON.stringify(vm.approval_field_data[0]));
+            //     // console.log(JSON.stringify(vm.approval_field_data[1]));
+            //     // evt.oldIndex;  // element's old index within old parent
+            //     // evt.newIndex;  // element's new index within new parent
+
+            // },
         });
 
     },
@@ -140,11 +199,13 @@ export default {
         getSelectedUserIds(msg){
             this.selected_user_ids = msg;
         },
-        show_data(){
-            alert(this.selected_user_ids)
-        },
         getFieldData(msg){
-            this.approval_field_data.push(msg);
+            if(this.choosedDataIndex){
+                this.approval_field_data[parseInt(this.choosedDataIndex)] =msg;
+            }else{
+                this.approval_field_data.push(msg);
+            }
+            
         }
         // add_new_field(){
 
