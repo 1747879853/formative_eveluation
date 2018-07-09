@@ -105,8 +105,8 @@ var workshop_workorder_detail = {
                 ]
             }
         ]
-    }],
-    [{
+    },
+    {
         work_order_id: 'work_order_record_id2',
         name: '中铁19局京雄铁路11',
         user: '王新11',
@@ -174,7 +174,7 @@ var data4=[
             'id': '@id',
             'name' : '@cname'
         }
-        ]
+        
 ]
 
 

@@ -34,6 +34,16 @@
             
             </Card>
         </Row>
+        <Row>
+            
+            <ul id="editable">
+                    <li>Оля<i class="js-remove">✖</i></li>
+                    <li>Владимир<i class="js-remove">✖</i></li>
+                    <li>Алина<i class="js-remove">✖</i></li>
+            </ul>
+
+            <button id="addUser">Add</button>
+        </Row>
 
 
         <Row><button @click="show_data"></button></Row>
@@ -44,6 +54,7 @@
 import UserGroup from "../my-components/user-and-group/user-group.vue"
 import AllUsers from "../my-components/user-and-group/all-users.vue"
 import ApprovalFieldsForm from "./approval-fields-form.vue"
+import Sortable from 'sortablejs';
 export default {
     name: 'new-approval-tmpl',
     data () {
@@ -113,6 +124,13 @@ export default {
         UserGroup,AllUsers,ApprovalFieldsForm
     },
     mounted () {
+        var editableList = Sortable.create(editable, {
+          filter: '.js-remove',
+          onFilter: function (evt) {
+            var el = editableList.closest(evt.item); // get dragged item
+            el && el.parentNode.removeChild(el);
+          }
+        });
 
     },
     methods:{        
