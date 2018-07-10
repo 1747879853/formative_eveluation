@@ -20,11 +20,8 @@
             <tbody>
                 <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
                     <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
-                        <label v-if="column.type === 'selection'">
-                            <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item,$event,index)">
-                        </label>
                         <div v-if="column.type === 'action'">
-                            <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="modal1=true">添加子权限</button>
+                            <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="modal1=true; id1=renderId(item);">添加子权限</button>
                             <Modal
                                 v-model="modal1"
                                 title="添加子权限"
@@ -41,7 +38,7 @@
                                 <Input v-model="value4" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
                                 </table>
                             </Modal>
-                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true">修改</button>
+                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);">修改</button>
                             <Modal
                                 v-model="modal3"
                                 title="修改子权限"
@@ -58,7 +55,7 @@
                                 <Input v-model="value8" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
                                 </table>
                             </Modal>
-                            <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="deleteClick()">删除</button>
+                            <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="id1=renderId(item); deleteClick();">删除</button>
                         </div>
                         <label @click="toggle(index,item)" v-if="!column.type">
                             <span v-if='snum==iconRow()'>
@@ -97,6 +94,7 @@ export default {
             dataLength: 0, //树形数据长度
             modal1: false,
             modal3:false,
+            id1:"",
             value1:"",
             value2:"",
             value3:"",
@@ -169,16 +167,46 @@ export default {
     },
     methods: {
             ok1 () {
-                this.$Message.info('Clicked ok');
+                this.$axios.post('/authRuleList', {
+                            params: {
+                                id:this.id1,
+                                v1:this.value1,
+                                v2:this.value2,
+                                v3:this.value3,
+                                v4:this.value4,
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            this.items = res.data;
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        this.$Message.info('添加成功');
             },
             cancel1 () {
-                this.$Message.info('Clicked cancel');
+                this.$Message.info('取消');
             },
             ok2 () {
-                this.$Message.info('Clicked ok');
+                this.$axios.patch('/authRuleList', {
+                            params: {
+                                id:this.id1,
+                                v1:this.value5,
+                                v2:this.value6,
+                                v3:this.value7,
+                                v4:this.value8,
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            this.items = res.data;
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        this.$Message.info('修改成功');
             },
             cancel2 () {
-                this.$Message.info('Clicked cancel');
+                this.$Message.info('取消');
             },
       // 有无多选框折叠位置优化
       iconRow() {
@@ -218,7 +246,30 @@ export default {
         },
         deleteClick() {
             
-            this.$emit('on-delete-click')
+            this.$Modal.confirm({
+                    title: '删除权限',
+                    content: '<p>确定要删除此权限吗？</p>',
+                    onOk: () => {
+                        this.$axios.delete('/authRuleList', {
+                            data: {
+                                params: {
+
+                                    id: this.id1,
+                                }
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            this.items = res.data;
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        this.$Message.info('删除成功');
+                    },
+                    onCancel: () => {
+                        this.$Message.info('取消');
+                    }
+                });
         },
         // 点击事件 返回数据处理
         makeData(data) {
@@ -436,6 +487,9 @@ export default {
         // 返回内容
         renderBody(row, column, index) {
             return row[column.key]
+        },
+        renderId(row, index) {
+            return row["id"]
         },
         // 默认选中
         renderCheck(data) {

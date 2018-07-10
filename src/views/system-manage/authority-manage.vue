@@ -22,7 +22,6 @@
         <tree-grid 
         :items='data' 
         :columns='columns'
-        @on-delete-click='deleteClick'
       ></tree-grid>          
     </Card>   
 </template>
@@ -129,50 +128,25 @@ export default {
     methods: {
             ok () {
                 this.$axios.post('/authRuleList', {
-                            data: {
-                                params: {
-                                    id: 5,
-                                }
+                            params: {
+                                id: 0,
+                                v1:this.value1,
+                                v2:this.value2,
+                                v3:this.value3,
+                                v4:this.value4,
                             }
                         }).then(function(res) {
                             console.log(res);
                             this.data = res.data;
-                            alert('添加成功');
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
                         });
-                        this.$Message.info('Clicked ok');
+                        this.$Message.info('添加成功');
             },
             cancel () {
-                this.$Message.info('Clicked cancel');
+                this.$Message.info('取消');
             },
-            deleteClick() {
-                this.$Modal.confirm({
-                    title: '删除权限',
-                    content: '<p>确定要删除此权限吗？</p>',
-                    onOk: () => {
-                        this.$axios.delete('/authRuleList', {
-                            data: {
-                                params: {
-                                    id: 1
-                                }
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            this.data = res.data;
-                            alert('删除成功');
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
-                        this.$Message.info('Clicked ok');
-                    },
-                    onCancel: () => {
-                        this.$Message.info('Clicked cancel');
-                    }
-                });
-            }
         },
     mounted(){
         this.$axios.get("/authRuleList").then( res =>{

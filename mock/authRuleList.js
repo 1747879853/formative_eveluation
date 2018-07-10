@@ -35,7 +35,8 @@ let arr = [
                       name: '欢迎页面',
                       condition: '222',
                       status: '激活',
-                      leaf: 1
+                      leaf: 1,
+                      children: []
                   }
               ]
           },
@@ -53,7 +54,8 @@ let arr = [
                       name: '物料清单',
                       condition: '444',
                       status: '激活',
-                      leaf: 1
+                      leaf: 3,
+                      children: []
                   }
               ]
           }
@@ -66,21 +68,78 @@ let arr = [
      case 'get':
        break;
      case 'post':
-       let newarr = {
-            id : '5',
-            authority : '5',
-            name : '5',
-            condition: '5',
-            status : '5',
+     if(parseInt(JSON.parse(options.body).params.id)==0){
+        let newarr = {
+            id : parseInt(arr[arr.length-1].id)+1,
+            authority : JSON.parse(options.body).params.v2,
+            name : JSON.parse(options.body).params.v1,
+            condition: JSON.parse(options.body).params.v3,
+            status : JSON.parse(options.body).params.v4,
             leaf : 0 ,
             children: [
             ]
        };
        arr.push(newarr);
+     }
+     else if(parseInt(JSON.parse(options.body).params.id)!=0){
+        let newarr = {
+            id : 10,
+            authority : JSON.parse(options.body).params.v2,
+            name : JSON.parse(options.body).params.v1,
+            condition: JSON.parse(options.body).params.v3,
+            status : JSON.parse(options.body).params.v4,
+            leaf : 0 ,
+            children: [
+            ]
+       };
+       for(let i = 0,k = 0; i < arr.length; i++){
+            if(arr[i].children!=null){
+                for(let j = 0; j < arr[i].children.length; j++){
+                    if(arr[i].children[j].id==parseInt(JSON.parse(options.body).params.id)){
+                        k=arr[i].children[j].id;
+                        arr[i].children[j].children.push(newarr);
+                        break;
+                    }
+                }
+                if(k!=0){
+                    break;
+                }
+            } 
+                if(arr[i].id==parseInt(JSON.parse(options.body).params.id)){
+                    arr[i].children.push(newarr);
+                    break;
+                }
+                     
+       }
+     }
+       
        break;
-     case 'son-insert':
-       break;
-     case 'edit':
+     case 'patch':
+        for(let i = 0,k = 0; i < arr.length; i++){
+            if(arr[i].children!=null){
+                for(let j = 0; j < arr[i].children.length; j++){
+                    if(arr[i].children[j].id==parseInt(JSON.parse(options.body).params.id)){
+                        k=arr[i].children[j].id;
+                        arr[i].children[j].name=JSON.parse(options.body).params.v1;
+                        arr[i].children[j].authority=JSON.parse(options.body).params.v2;
+                        arr[i].children[j].condition=JSON.parse(options.body).params.v3;
+                        arr[i].children[j].status=JSON.parse(options.body).params.v4;
+                        break;
+                    }
+                }
+                if(k!=0){
+                    break;
+                }
+            } 
+                if(arr[i].id==parseInt(JSON.parse(options.body).params.id)){
+                    arr[i].name=JSON.parse(options.body).params.v1;
+                    arr[i].authority=JSON.parse(options.body).params.v2;
+                    arr[i].condition=JSON.parse(options.body).params.v3;
+                    arr[i].status=JSON.parse(options.body).params.v4;
+                    break;
+                }
+                    
+       }
        break;
      case 'delete':
         let id = parseInt(JSON.parse(options.body).params.id); //获取删除的id

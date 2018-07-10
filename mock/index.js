@@ -12,7 +12,7 @@ import approval from './approval'
 let data = [].concat(authRuleList, navlist, login, echarts, table, groupList, getToken,order,approval)
 
 data.forEach(function(res){
-    Mock.mock(res.path, /get|post|delete/i, res.data)
+    Mock.mock(res.path, /get|post|delete|patch/i, res.data)
 })
 
 export default Mock
