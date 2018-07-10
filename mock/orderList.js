@@ -99,7 +99,7 @@ var work_order_detail = [
                 ]
             }], 
             [{
-                graph_no: ['图号DS-936-07','图号DS-936-09','图号DS-936-07','图号DS-936-04'],
+                graph_no: ['图号DS-936-07','图号DS-936-09','图号DS-936-07'],
                 name: '7.2m*8m平板',
                 number: 8,
                 comment: '边框孔冲Φ22*90孔',
@@ -165,6 +165,7 @@ var workteam_materials = {
             name: '4.2m*8m平板',
             number: 4,
             number_finished: 2,
+            quality_qty:1,
             comment: '边框孔冲Φ22*30孔',
             
         }, 
@@ -173,10 +174,11 @@ var workteam_materials = {
             name: '4.2m*2m',
             number: 6,
             number_finished: 5,
+            quality_qty:3,
             comment: '边框Φ22*90孔',
            
         }
-    ],
+    ]
 }
 
 var team_boms = 
@@ -211,6 +213,29 @@ var workshop_directors = {
 
 	]
 }
+
+var  workshop_packaging= {
+	"data":[
+		{
+			'id': '@id',
+			'name' : '@cname'
+		},
+		{
+			'id': '@id',
+			'name' : '@cname'
+		},
+		{
+			'id': '@id',
+			'name' : '@cname'
+		},
+		{
+			'id': '@id',
+			'name' : '@cname'
+		},
+
+	]
+}
+
 var workteams = {
 	"data":[
 		{
@@ -336,6 +361,10 @@ export default[
 { 
 	path: '/workshop_directors',
 	data: workshop_directors
+},
+{ 
+	path: '/workshop_packaging',
+	data: workshop_packaging
 },
 { 
 	path: '/workteams',

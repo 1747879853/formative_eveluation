@@ -1,5 +1,6 @@
 <style lang="less">
-    @import './advanced-router.less';
+@import "../../styles/common.less";
+@import "../tables/components/table.less";
 </style>
 
 <template>
@@ -8,20 +9,46 @@
            
             <img width="100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531138272810&di=fb25ebec179ae86ec8df80f3fb7aba90&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F12%2F81%2F58PIC5R58PICsqy_1024.jpg"></img>
         </Modal>
-        <Row>
-            
-                <Card>
+        
+        <Row class="margin-top-10">
+            <Col span="24">
+                <Card> 
                     <p slot="title">
-                        <Icon type="ios-list"></Icon>
-                        {{workteam_materials.name}}
+                        <Icon type="ios-keypad"></Icon>
+                       {{title}}
                     </p>
-                    
-                        <Table  highlight-row ref="currentRowTable" @on-current-change="row_select" :columns="orderColumns" :data="workteam_materials.materials" style="width: 100%;"></Table>
-                        <br>
-                        <div v-if="team_boms.length!=0">
-                        <Icon type="compose"></Icon>模板：{{bom_name}}
+                                <can-edit-table 
+                                    refs="table4" 
+                                   
+                                    v-model="workteam_materials" 
+                                    @on-cell-change="handleCellChange"
+                                 
+                                    @on-change="handleChange"  
+                                    :editIncell="true" 
+                                    :columns-list="teamOrderColumns"
+                                ></can-edit-table>
+
+                                 <br/>
+                                     <div v-if="team_boms.length!=0">
+                        <Icon type="compose"></Icon>模板：{{bom_name}};
+                        <Button type="primary" @click="getCurrentData">生产领料</Button>
+                         <Row :gutter="10">
+                         <Col span="24">
+                       
                         <Table :columns="boms_col" :data="team_boms"></Table>
+                        
+                        </Col>
+                        <!-- <Col span="2">
+                            <Row type="flex" justify="center" align="top" class="edittable-table-get-currentdata-con">
+                                <Button type="primary" @click="getCurrentData">生产领料</Button>
+                            </Row>
+                        </Col> -->
+                        </Row>
                         </div>
+                      
+                         
+                      
+                   
                 </Card>
             </Col>
         </Row>
@@ -29,181 +56,226 @@
 </template>
 
 <script>
+import canEditTable from "../tables/components/canEditTable.vue";
+// import tableData from '../tables/components/table_data.js';
 export default {
-    name: 'mutative-router',
-    data () {
-        return {
-            orderColumns: [
-                {
-                    type: 'index',
-                    title: '序号',
-                    width: 60
-                },
-                // {
-                //     title: '图号',
-                //     key: 'graph_no',
-                //     align: 'center'
-                // },
-                {
-                       title: '图号',
-                        key: 'action',
-                        width: 150,
-                        align: 'center',
-                        render: (h, params) => {
-
-                          return  h('div', {
-                                    slot: 'content'
-                                }, [
-                                    h('ul',  this.workteam_materials.materials[params.index].graph_no.map(item =>{
-                                        return h('li', {
-                                            style: {
-                                                textAlign: 'center',
-                                                padding: '4px',
-                                                color:'blue'
-                                            },
-                                        on: {
-                                        click: () => {
-                                            this.pic_show(item)
-                                        }
-                                    }
-                                        }, item)
-                                    }))
-                                ])
-                           
-                                
+  name: "editable-table",
+  components: {
+    canEditTable
+  },
+  data() {
+    return {
+      teamOrderColumns: [
+        {
+          title: "序号",
+          type: "index",
+          width: 80,
+          align: "center"
+        },
+        {
+          title: "图号",
+          key: "action",
+          width: 150,
+          align: "center",
+          render: (h, params) => {
+            return h(
+              "div",
+              {
+                slot: "content"
+              },
+              [
+                h(
+                  "ul",
+                  this.workteam_materials[params.index].graph_no.map(item => {
+                    return h(
+                      "li",
+                      {
+                        style: {
+                          textAlign: "center",
+                          padding: "4px",
+                          color: "blue"
+                        },
+                        on: {
+                          click: () => {
+                            this.pic_show(item);
+                          }
                         }
-                },
-               
+                      },
+                      item
+                    );
+                  })
+                )
+              ]
+            );
+          }
+        },
+        {
+          title: "模板",
+          align: "center",
+          key: "name"
+        },
+        {
+          title: "数量",
+          align: "center",
+          key: "number"
+        },
+        {
+          title: "完成数量",
+          align: "center",
+          width: 120,
+          key: "number_finished",
+          editable: true
+        },
+        {
+          title: "质检数量",
+          align: "center",
+          width: 120,
+          key: "quality_qty",
+          editable: true
+        },
+        {
+          title: "备注",
+          key: "comment"
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 150,
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Button",
                 {
-                    title: '模板',
-                    key: 'name'
-                },
-                
-              
-                {   
-                    title: '数量',
-                    key: 'number'
-
-                },
-                 {   
-                    title: '完成数量',
-                    key: 'number_finished'
-
-                },
-                  {   
-                    title: '备注',
-                    key: 'comment'
-
-                },
-               
-            ],
-            orderData: [
-                {
-                    order_id: '1000001',
-                    user_name: 'Aresn'
-                },
-                {
-                    order_id: '1000002',
-                    user_name: 'Lison'
-                },
-                {
-                    order_id: '1000003',
-                    user_name: 'lili'
-                },
-                {
-                    order_id: '1000004',
-                    user_name: 'lala'
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                       let argu = { work_shop_team_order_id: params.row.name };
+                      this.$router.push({
+                      name: "material-requisition",
+                      params: argu
+                    });
+                  }
                 }
-            ],
-            workteam_materials: [],
-            workteams: [],
-            dispatchWorkOrder:false,
-            model1: '',
-            team_qty: 1,
-            team_boms: [],
-            bom_name:'',
-            graph_no: '',
-            showPic:false,
-            boms_col: [
-                {
-                    type: 'index',
-                    title: '序号',
-                    width: 30
-                },
-                {
-                    title: '名称',
-                    key: 'name',
-                    align: 'center'
-                },
-                {
-                    title: '材料规格',
-                    key: 'spec',
-                    align: 'center'
-                },
-                {
-                    title: '长度(mm)',
-                    key: 'length',
-                    align: 'center'
-                },
-                {
-                    title: '宽度(mm)',
-                    key: 'width',
-                    align: 'center'
-                },
-                {
-                    title: '数量(件)',
-                    key: 'number',
-                    align: 'center'
-                },
-                {
-                    title: '总数量/套',
-                    key: 'total',
-                    align: 'center'
-                },
-                {
-                    title: '备注',
-                    key: 'comment',
-                    align: 'center'
-                },
-            ],
-           
-
-        };
-    },
-    computed: {
-        avatorImage () {
-            return localStorage.avatorImgPath;
+              },
+              "物料清单"
+            )
+            ]);
+          }
         }
+      ],
+      boms_col: [
+        {
+          type: "index",
+          title: "序号",
+          width: 30
+        },
+        {
+          title: "名称",
+          key: "name",
+          align: "center"
+        },
+        {
+          title: "材料规格",
+          key: "spec",
+          align: "center"
+        },
+        {
+          title: "长度(mm)",
+          key: "length",
+          align: "center"
+        },
+        {
+          title: "宽度(mm)",
+          key: "width",
+          align: "center"
+        },
+        {
+          title: "数量(件)",
+          key: "number",
+          align: "center"
+        },
+        {
+          title: "总数量/套",
+          key: "total",
+          align: "center"
+        },
+        {
+          title: "备注",
+          key: "comment",
+          align: "center"
+        }
+      ],
+      workteam_materials: [],
+      workteams: [],
+      team_boms: [],
+      showPic: false,
+      graph_no: "",
+      title: "",
+      bom_name: ""
+    };
+  },
+  methods: {
+    handleNetConnect(state) {
+      this.breakConnect = state;
     },
-    mounted(){
-        this.$axios.get("/workteam_materials").then(res => {
-                this.workteam_materials = res.data;
-                
-        }).catch(error => {
-            console.log(error);
-        });
-        this.$axios.get("/workteams").then(res => {
-            this.workteams = res.data.data;
-           
-            console.log(this.workteams);
-        }).catch( error =>{
-             console.log(error);
-        })
+    handleLowSpeed(state) {
+      this.lowNetSpeed = state;
     },
-    methods:{
-        row_select(currentRow){
-            this.$axios.get("/team_boms").then(res =>{
-               
-                this.team_boms =  res.data;
-                this.bom_name =currentRow.name;
-            }).catch(err =>{
-                console.log(err);
-            })
-       },
-       pic_show(picno){
-           this.graph_no= picno;
-           this.showPic=true;
-       }
+    getCurrentData() {
+      this.showCurrentTableData = true;
+    },
+    handleDel(val, index) {
+      this.$Message.success("删除了第" + (index + 1) + "行数据");
+    },
+    handleCellChange(val, index, key) {
+      this.$Message.success(
+        "修改了第 " + (index + 1) + " 行列名为 " + key + " 的数据"
+      );
+    },
+    handleChange(val, index) {
+      this.$Message.success("修改了第" + (index + 1) + "行数据");
+    },
+    pic_show(picno) {
+      this.graph_no = picno;
+      this.showPic = true;
     }
+    //      row_select(currentRow){
+    //          console.log(currentRow);
+    //         this.$axios.get("/team_boms").then(res =>{
+
+    //             this.team_boms =  res.data;
+    //             this.bom_name =currentRow.name;
+    //         }).catch(err =>{
+    //             console.log(err);
+    //         })
+    //    },
+  },
+  created() {},
+  mounted() {
+    this.$axios
+      .get("/workteam_materials")
+      .then(res => {
+        this.workteam_materials = res.data.materials;
+        this.title = res.data.name;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    this.$axios
+      .get("/workteams")
+      .then(res => {
+        this.workteams = res.data.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 };
 </script>

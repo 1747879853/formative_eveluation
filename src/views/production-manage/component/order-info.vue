@@ -7,11 +7,22 @@
     <div>
         <Modal width="700" v-model="dispatchWorkOrder" title="分派工单">
            
-            <Select v-model="model1" placeholder="车间主任" style="width:200px">
+            分派到下料车间:
+            <Select v-model="model1" placeholder="车间主任" style="width:200px" clearable>
                 <Option v-for="item in workshop_directors" :value="item.id" :key="item.id">{{ item.name }}</Option>
+            </Select>
+          
+            分派到组拼车间:
+            <Select v-model="model2" placeholder="车间主任" style="width:200px" clearable >
+                <Option v-for="item in workshop_packaging" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
 
 
+        </Modal>
+
+        <Modal width="60%" v-model="showPic" :title="graph_no">
+           
+            <img width="100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531138272810&di=fb25ebec179ae86ec8df80f3fb7aba90&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F12%2F81%2F58PIC5R58PICsqy_1024.jpg"></img>
         </Modal>
           <!-- <Button @click="dispatchWorkOrder = true" type="primary">分派工单</Button> -->
         <div >
@@ -36,7 +47,7 @@
                         模板-{{index+1}}#；工单号：{{work_order_id}}
                     </p>
                    
-                    <Table :columns="materials_col" v-if="mat_data" :data="mat_data"></Table>
+                    <Table :columns="materials_col" v-if="mat_data" :data="mat_data" :mat_data="mat_data" ></Table>
                     <!-- {{mat_data}} -->
                      <p >
                         <Icon type="compose"></Icon>
@@ -99,6 +110,7 @@ export default {
     data () {
         return {
             model1: '',
+            model2: '',
             work_order_col: [
                  {
                     type: 'index',
@@ -158,16 +170,48 @@ export default {
             ],
             work_order_data_arr: [],
             materials_col: [
-                {
-                    title: '图号',
-                    key: 'graph_no',
-                    align: 'center'
+                // {
+                //     title: '图号',
+                //     key: 'graph_no',
+                //     align: 'center'
+                // },
+                 {
+                       title: '图号',
+                        key: 'action',
+                        width: 150,
+                        align: 'center',
+                        render: (h, params) => {
+                            console.log(params);
+                          return  h('div', {
+                                    slot: 'content'
+                                }, [
+                                    h('ul', params.row.graph_no.map(item =>{
+                                        return h('li', {
+                                            style: {
+                                                textAlign: 'center',
+                                                padding: '4px',
+                                                color:'blue'
+                                            },
+                                        on: {
+                                        click: () => {
+                                            this.pic_show(item)
+                                        }
+                                    }
+                                        }, item)
+                                    }))
+                                ])
+                           
+                                
+                        }
                 },
+
+
                 {
                     title: '模板名称',
                     key: 'name',
                     align: 'center'
                 },
+                
                 {
                     title: '数量',
                     key: 'number',
@@ -329,7 +373,10 @@ export default {
                 }
             ],
             workshop_directors:[],
-            work_order_id :''
+            workshop_packaging:[],
+            work_order_id :'',
+            graph_no: '',
+            showPic: false
         };
     },
     methods: {
@@ -364,7 +411,11 @@ export default {
            }).catch(error =>{
                 console.log(error);
            })
-        }
+        },
+         pic_show(picno){
+           this.graph_no= picno;
+           this.showPic=true;
+       }
        
     },
     mounted () {
@@ -373,6 +424,15 @@ export default {
         .then(res =>{
             
             this.workshop_directors = res.data.data;
+           
+        })
+        .catch( error => {
+            console.log(error);
+        });
+        this.$axios.get("/workshop_packaging")
+        .then(res =>{
+            
+            this.workshop_packaging = res.data.data;
            
         })
         .catch( error => {

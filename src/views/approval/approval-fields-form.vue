@@ -42,6 +42,7 @@
 <script>
 export default {
     name: 'approval-fields-form',
+    props: ['initIndex','initData'],
     data () {
         return {
             formValidate: {
@@ -65,12 +66,20 @@ export default {
                     { required: true, message: 'Please select', trigger: 'change' }
                 ],
                
-            },
+            },        
+
         };
     },
-    mounted () {
-                
+    watch:{
+        initData(curVal,oldVal){
+            this.formValidate=JSON.parse(curVal)
+　　　　　　　　}
     },
+    
+    mounted () {
+               
+    },
+    
     methods:{
         handleSubmit (name) {
             this.$refs[name].validate((valid) => {
@@ -79,20 +88,16 @@ export default {
                     this.$emit('form-data-hash',tt)
                     // debugger
 
-                    // this.$Message.success('Success!');
+                    this.$Message.success('保存成功！');
                 } else {
-                    // this.$Message.error('Fail!');
-                    alert("please input the right data");
-                    return
+                    this.$Message.error('数据格式不正确！');
+                   
                 }
             })
         },
         handleReset (name) {
             this.$refs[name].resetFields();
         },
-    	// handle_change(data){//data is an arr
-    	// 	this.$emit('update-selected',this.user_ids)
-    	// }
     }
 
 };

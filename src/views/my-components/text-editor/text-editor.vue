@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import TreeGrid from './treeGrid'
+// import TreeGrid from './treeGrid'
 export default {
     name: 'text-editor',
      data() {
@@ -125,7 +125,7 @@ export default {
             }
         },
          components: {
-            TreeGrid
+            // TreeGrid
         },
     methods: {
             ok () {

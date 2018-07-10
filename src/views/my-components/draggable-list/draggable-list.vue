@@ -99,6 +99,20 @@
                 </Card>
             </Col>
         </Row>
+        <Row>
+
+
+
+        <ul id="editable" class="iview-admin-draggable-list">
+                    <li class="notwrap todolist-item">Оля<i class="js-remove">✖</i></li>
+                    <li class="notwrap todolist-item">Владимир<i class="js-remove">✖</i></li>
+                    <li class="notwrap todolist-item">Алина<i class="js-remove">✖</i></li>
+            </ul>
+
+            <button id="addUser">Add</button>
+
+
+        </Row>
     </div>
 </template>
 
@@ -162,6 +176,15 @@ export default {
             event.preventDefault();
             event.stopPropagation();
         };
+        let editable = document.getElementById('editable');
+        var editableList = Sortable.create(editable, {
+          filter: '.js-remove',
+          onFilter: function (evt) {
+            var el = editableList.closest(evt.item); // get dragged item
+            el && el.parentNode.removeChild(el);
+          }
+        });
+        
         let vm = this;
         let todoList = document.getElementById('todoList');
         Sortable.create(todoList, {
