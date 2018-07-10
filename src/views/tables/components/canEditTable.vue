@@ -4,11 +4,12 @@
 
 <template>
     <div>
-        <Table :ref="refs" :columns="columnsList" :data="thisTableData" border disabled-hover></Table>
+        <Table :ref="refs"  highlight-row  		:columns="columnsList"  :data="thisTableData" border disabled-hover></Table>
     </div>
 </template>
 
 <script>
+
 const editButton = (vm, h, currentRow, index) => {
     return h('Button', {
         props: {
@@ -272,6 +273,7 @@ export default {
             return clonedData;
         }
     },
+   
     watch: {
         value (data) {
             this.init();

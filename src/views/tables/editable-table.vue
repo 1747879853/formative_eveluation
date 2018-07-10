@@ -88,7 +88,7 @@
 import canEditTable from './components/canEditTable.vue';
 import tableData from './components/table_data.js';
 export default {
-    name: 'editable-table',
+    name: 'can-edit-table',
     components: {
         canEditTable
     },
