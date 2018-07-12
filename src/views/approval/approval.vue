@@ -1,22 +1,107 @@
 
-<template>
-    <div class="access">
-        <Row>
-            <Button type="primary" icon="plus-round" @click="goto_new_approval">创建新审批</Button>
-           
-        </Row>
-    </div>
+<template>           
+    <Row>
+        <Card>            
+            <div style="text-align:center;font-size:24px;color: #2db7f5;">
+                <Icon type="ios-list"></Icon>
+                审批列表
+                <span style="float:right;margin-right:100px;"> <Button type="primary" icon="plus-round" @click="goto_design_approval">创建新审批</Button></span>
+            </div>
+            <div>
+                <Table :columns="approvalColumns" :data="approvalData" style="width: 100%;"></Table>
+            </div>
+        </Card>
+    </Row>
+      
 </template>
 
 <script>
 import Cookies from 'js-cookie';
 export default {
-    name: 'access_index',
+    name: 'approval-index',
     data () {
         return {
-            accessCode: parseInt(Cookies.get('access')),
-            switchValue: parseInt(Cookies.get('access')) === 1
+            approvalColumns: [
+                {
+                  type: "index",
+                  title: "序号",
+                  width: 60
+                },
+                {
+                  title: "审批名称",
+                  key: "name",
+                  align: "center"
+                },
+                {
+                  title: "审批说明",
+                  key: "comment",
+                  align: "center"
+                },
+                {
+                  title: "创建时间",
+                  key: "created_time"
+                },
+                {
+                  title: "详情",
+                  key: "action",
+                  align: "center",
+                  render: (h, params) => {
+                        return h('div', [
+                            h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.edit(params.row)
+                                    }
+                                }
+                            }, '编辑表单'),  
+                            h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.procedure(params.row.id)
+                                    }
+                                }
+                            }, '审批流程'),
+                            h('Button', {
+                                props: {
+                                    type: 'error',
+                                    size: 'small'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.stopUse(params.row.id)
+                                    }
+                                }
+                            }, '停用')
+                        ]);
+                    }
+                }
+            ],
+            approvalData: []
         };
+    },
+    mounted() {
+        this.$axios
+        .get("/approval_list")
+        .then(res => {
+            this.approvalData = res.data;
+        })
+        .catch(error => {
+            console.log(error);
+        });
     },
     computed: {
         avatorPath () {
@@ -24,19 +109,30 @@ export default {
         }
     },
     methods: {
-        changeAccess (res) {
-            if (res) {
-                this.accessCode = 1;
-                Cookies.set('access', 1);
-            } else {
-                this.accessCode = 0;
-                Cookies.set('access', 0);
-            }
-            this.$store.commit('updateMenulist');
-        },
-        goto_new_approval(){
+        edit (row) {
+            let argu = { approval_id: row.id,approval_name: row.name,approval_comment: row.comment };
             this.$router.push({
-                name: 'new-approval',
+                name: 'design-approval',
+                params: argu
+            });
+            
+        },
+        procedure (app_id) {
+            let argu = { approval_id: app_id };
+            this.$router.push({
+                name: 'procedure-approval',
+                params: argu
+            });
+            
+        },
+        stopUse(app_id){
+
+        },
+        goto_design_approval(){
+            let argu = { approval_id: '-1' };
+            this.$router.push({
+                name: 'design-approval',
+                params: argu
             });
         }
     }
