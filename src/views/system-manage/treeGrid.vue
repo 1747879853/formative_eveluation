@@ -21,7 +21,8 @@
                 <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
                     <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
                         <div v-if="column.type === 'action'">
-                            <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="modal1=true; id1=renderId(item);">添加子权限</button>
+                            <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal1();
+                            id1=renderId(item);">添加子权限</button>
                             <Modal
                                 v-model="modal1"
                                 title="添加子权限"
@@ -38,7 +39,7 @@
                                 <Input v-model="value4" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
                                 </table>
                             </Modal>
-                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);">修改</button>
+                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);value5=renderName(item);value6=renderAuthority(item);value7=renderCondition(item);value8=renderStatus(item);">修改</button>
                             <Modal
                                 v-model="modal3"
                                 title="修改子权限"
@@ -95,14 +96,6 @@ export default {
             modal1: false,
             modal3:false,
             id1:"",
-            value1:"",
-            value2:"",
-            value3:"",
-            value4:"",
-            value5:"",
-            value6:"",
-            value7:"",
-            value8:"",
         }
     },
     computed: {
@@ -207,6 +200,13 @@ export default {
             },
             cancel2 () {
                 this.$Message.info('取消');
+            },
+            show_modal1(){
+                this.modal1=true; 
+                this.value1="";
+                this.value2="";
+                this.value3="";
+                this.value4="";
             },
       // 有无多选框折叠位置优化
       iconRow() {
@@ -490,6 +490,18 @@ export default {
         },
         renderId(row, index) {
             return row["id"]
+        },
+        renderName(row, index) {
+            return row["name"]
+        },
+        renderAuthority(row, index) {
+            return row["authority"]
+        },
+        renderCondition(row, index) {
+            return row["condition"]
+        },
+        renderStatus(row, index) {
+            return row["status"]
         },
         // 默认选中
         renderCheck(data) {
