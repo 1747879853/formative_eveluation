@@ -1,7 +1,7 @@
 <template>
     <Card>
     <div>
-    <Button @click="modal2=true" class="ivu-btn ivu-btn-primary ivu-btn-small">添加权限</Button>
+    <Button @click="show_modal()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加权限</Button>
     <Modal
         v-model="modal2"
         title="添加权限"
@@ -146,6 +146,13 @@ export default {
             },
             cancel () {
                 this.$Message.info('取消');
+            },
+            show_modal(){
+                this.modal2=true;
+                this.value1="";
+                this.value2="";
+                this.value3="";
+                this.value4="";
             },
         },
     mounted(){

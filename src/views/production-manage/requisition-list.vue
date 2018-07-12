@@ -22,7 +22,7 @@
                                    
                                     v-model="requisition_list" 
                                     @on-cell-change="handleCellChange"
-                                 
+                                    
                                     @on-change="handleChange"  
                                     :editIncell="true" 
                                     :columns-list="teamOrderColumns"
@@ -93,6 +93,20 @@ export default {
           align: "center",
          
         },
+        {
+          title: "模板",
+          key: "type",
+         
+          align: "center",
+         
+        },
+         {
+          title: "数量",
+          key: "number",
+         
+          align: "center",
+         
+        },
 
           {
           title: "审批状态",
@@ -126,15 +140,15 @@ export default {
                   },
                   on: {
                     click: () => {
-                      //  let argu = { work_shop_team_order_id: params.row.name };
-                      // this.$router.push({
-                      // name: "material-requisition",
-                      // params: argu
-                    // });
+                       let argu = { material_requisition_id: params.row.id };
+                      this.$router.push({
+                      name: "material-requisition-detail",
+                      params: argu
+                    });
                   }
                 }
               },
-              ""
+              "请领详情"
             )
             ]);
           }
@@ -189,7 +203,8 @@ export default {
       graph_no: "",
       title: "",
       bom_name: "",
-      requisition_list:[]
+      requisition_list:[],
+      props: ['data']
     };
   },
   methods: {
@@ -213,6 +228,7 @@ export default {
     handleChange(val, index) {
       this.$Message.success("修改了第" + (index + 1) + "行数据");
     },
+  
     pic_show(picno) {
       this.graph_no = picno;
       this.showPic = true;

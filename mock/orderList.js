@@ -289,6 +289,8 @@ var requisition_list =[
         user_name: 'Jack',
         apply_date: '2018-07-11 11:25',
         approval_status: '通过',
+        type: "4.2m*8m平板",
+        number:5,
         send_status:"已发料"
     },
     {
@@ -296,10 +298,25 @@ var requisition_list =[
         user_name: 'Lucy',
         apply_date: '2018-07-11 10:25',
         approval_status: '通过',
+        type: "8m*10.5m平板",
+        number:6,
         send_status:"未发料"
     },
 ]
+var apply_materials =
+{
+    name: '4.2m*8m平板',
+    number: 2,
+    boms: [
+        { name: '面板', spec: '6mm钢板', length: 1900, width: 2000, total: 16, get_qty: 9, apply_qty: 1, comment: '' },
+        { name: '流水槽面板4', spec: '7mm钢板', length: 555, width: 333,  total: 11, get_qty: 9, apply_qty: 7, comment: 'aaaaa' },
+        { name: '流水槽面板3', spec: '7mm钢板', length: 555, width: 333,  total: 11, get_qty: 9, apply_qty: 6, comment: 'aaaaa' },
+        { name: '面板2', spec: '7mm钢板', length: 555, width: 333, total: 11, get_qty: 9, apply_qty: 5, comment: 'aaaaa' },
+        { name: '流水槽面板1', spec: '7mm钢板', length: 555, width: 333,  total: 11, get_qty: 7, apply_qty: 3, comment: 'aaaaa' },
+        { name: '流水槽面板2', spec: '7mm钢板', length: 555, width: 333, total: 11, get_qty: 8, apply_qty: 4, comment: 'aaaaa' },
 
+    ]
+}
 
 
 export default [
@@ -414,5 +431,9 @@ export default [
     {
         path:'/requisition_list',
         data:requisition_list
+    },
+    {
+        path:'/apply_materials',
+        data:apply_materials
     }
 ]
