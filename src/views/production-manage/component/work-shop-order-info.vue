@@ -1,6 +1,6 @@
 <style lang="less">
-    @import '../../../styles/common.less';
-    @import '../advanced-router.less';
+@import "../../../styles/common.less";
+@import "../advanced-router.less";
 </style>
 
 <template>
@@ -68,212 +68,218 @@
 </template>
 
 <script>
-import expandRow from './expandRow.vue';
+import expandRow from "./expandRow.vue";
 export default {
-    name: 'work-shop-order-info',
-    components: {
-        expandRow
-    },
-    data () {
-        return {
-            model1: '',
-            model2: '',
-            work_order_col: [
-                 {
-                    type: 'index',
-                    title: '序号',
-                    width: 30
-                },
+  name: "work-shop-order-info",
+  components: {
+    expandRow
+  },
+  data() {
+    return {
+      model1: "",
+      model2: "",
+      work_order_col: [
+        {
+          type: "index",
+          title: "序号",
+          width: 30
+        },
+        {
+          title: "工单号",
+          key: "work_order_id",
+          align: "center"
+        },
+        {
+          title: "名称",
+          key: "name",
+          align: "center"
+        },
+        {
+          title: "设计",
+          key: "user",
+          align: "center"
+        },
+        {
+          title: "模版名称",
+          key: "type",
+          align: "center"
+        },
+        {
+          title: "数量",
+          key: "number",
+          align: "center"
+        },
+        {
+          title: "分派工单",
+          key: "action",
+          width: 150,
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Button",
                 {
-                    title: '工单号',
-                    key: 'work_order_id',
-                    align: 'center'
-                },
-                {
-                    title: '名称',
-                    key: 'name',
-                    align: 'center'
-                },
-                {
-                    title: '设计',
-                    key: 'user',
-                    align: 'center'
-                },
-                {
-                    title: '模版名称',
-                    key: 'type',
-                    align: 'center'
-                },
-                {
-                    title: '数量',
-                    key: 'number',
-                    align: 'center'
-                },
-                  {
-                        title: '分派工单',
-                        key: 'action',
-                        width: 150,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.dispatchWorkOrder=true;
-                                        }
-                                    }
-                                }, '分派工单'),
-                             
-                            ]);
-                        }
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      this.dispatchWorkOrder = true;
                     }
-            ],
-            work_order_data_arr: [],
-            workshop_order_detail :[],
-            materials_col: [
-                // {
-                //     title: '图号',
-                //     key: 'graph_no',
-                //     align: 'center'
-                // },
-                 {
-                       title: '图号',
-                        key: 'action',
-                        width: 150,
-                        align: 'center',
-                        render: (h, params) => {
-                            console.log(params);
-                          return  h('div', {
-                                    slot: 'content'
-                                }, [
-                                    h('ul', params.row.graph_no.map(item =>{
-                                        return h('li', {
-                                            style: {
-                                                textAlign: 'center',
-                                                padding: '4px',
-                                                color:'blue'
-                                            },
-                                        on: {
-                                        click: () => {
-                                            this.pic_show(item)
-                                        }
-                                    }
-                                        }, item)
-                                    }))
-                                ])
-                           
-                                
+                  }
+                },
+                "分派工单"
+              )
+            ]);
+          }
+        }
+      ],
+      work_order_data_arr: [],
+      workshop_order_detail: [],
+      materials_col: [
+        // {
+        //     title: '图号',
+        //     key: 'graph_no',
+        //     align: 'center'
+        // },
+        {
+          title: "图号",
+          key: "action",
+          width: 150,
+          align: "center",
+          render: (h, params) => {
+            console.log(params);
+            return h(
+              "div",
+              {
+                slot: "content"
+              },
+              [
+                h(
+                  "ul",
+                  params.row.graph_no.map(item => {
+                    return h(
+                      "li",
+                      {
+                        style: {
+                          textAlign: "center",
+                          padding: "4px",
+                          color: "blue"
+                        },
+                        on: {
+                          click: () => {
+                            this.pic_show(item);
+                          }
                         }
-                },
+                      },
+                      item
+                    );
+                  })
+                )
+              ]
+            );
+          }
+        },
 
+        {
+          title: "模板名称",
+          key: "name",
+          align: "center"
+        },
 
-                {
-                    title: '模板名称',
-                    key: 'name',
-                    align: 'center'
-                },
-                
-                {
-                    title: '数量',
-                    key: 'number',
-                    align: 'center'
-                },
-                {
-                    title: '备注',
-                    key: 'comment',
-                    align: 'center'
-                },              
-            ],
-            materials_data: [],
-            materials_data_hash: {},
-            boms_col: [
-                {
-                    type: 'index',
-                    title: '序号',
-                    width: 30
-                },
-                {
-                    title: '名称',
-                    key: 'name',
-                    align: 'center'
-                },
-                {
-                    title: '材料规格',
-                    key: 'spec',
-                    align: 'center'
-                },
-                {
-                    title: '长度(mm)',
-                    key: 'length',
-                    align: 'center'
-                },
-                {
-                    title: '宽度(mm)',
-                    key: 'width',
-                    align: 'center'
-                },
-                {
-                    title: '数量(件)',
-                    key: 'number',
-                    align: 'center'
-                },
-                {
-                    title: '总数量/套',
-                    key: 'total',
-                    align: 'center'
-                },
-                {
-                    title: '备注',
-                    key: 'comment',
-                    align: 'center'
-                },
-            ],
-            boms_data_hash: {},
+        {
+          title: "数量",
+          key: "number",
+          align: "center"
+        },
+        {
+          title: "备注",
+          key: "comment",
+          align: "center"
+        }
+      ],
+      materials_data: [],
+      materials_data_hash: {},
+      boms_col: [
+        {
+          type: "index",
+          title: "序号",
+          width: 30
+        },
+        {
+          title: "名称",
+          key: "name",
+          align: "center"
+        },
+        {
+          title: "材料规格",
+          key: "spec",
+          align: "center"
+        },
+        {
+          title: "长度(mm)",
+          key: "length",
+          align: "center"
+        },
+        {
+          title: "宽度(mm)",
+          key: "width",
+          align: "center"
+        },
+        {
+          title: "数量(件)",
+          key: "number",
+          align: "center"
+        },
+        {
+          title: "总数量/套",
+          key: "total",
+          align: "center"
+        },
+        {
+          title: "备注",
+          key: "comment",
+          align: "center"
+        }
+      ],
+      boms_data_hash: {},
 
+      showInfo: false,
+      dispatchWorkOrder: false,
 
-            showInfo: false,
-            dispatchWorkOrder: false,
-            
-            work_order_detail: [],
-           
-           
-            workshop_directors:[],
-            workshop_packaging:[],
-            work_order_id :'',
-            graph_no: '',
-            showPic: false
-        };
-    },
-    methods: {
-  
-       
-         pic_show(picno){
-           this.graph_no= picno;
-           this.showPic=true;
-       }
-       
-    },
-    mounted () {
-         this.$axios.get('/workshop_order_detail').then(res => {
-                this.workshop_order_detail = res.data;
-                this.show_work_shop_detail = true;
-            }).catch(error =>{
-                console.log(error);
-            });
+      work_order_detail: [],
 
-           
-            this.work_order_id = this.$route.params.work_shop_order_id;
-        
-    },
-    activated () {
-        this.work_order_id = this.$route.params.work_shop_order_id; 
+      workshop_directors: [],
+      workshop_packaging: [],
+      work_order_id: "",
+      graph_no: "",
+      showPic: false
+    };
+  },
+  methods: {
+    pic_show(picno) {
+      this.graph_no = picno;
+      this.showPic = true;
     }
+  },
+  mounted() {
+    this.$axios
+      .get("/workshop_order_detail")
+      .then(res => {
+        this.workshop_order_detail = res.data;
+        this.show_work_shop_detail = true;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    this.work_order_id = this.$route.params.work_shop_order_id;
+  },
+  activated() {
+    this.work_order_id = this.$route.params.work_shop_order_id;
+  }
 };
 </script>
