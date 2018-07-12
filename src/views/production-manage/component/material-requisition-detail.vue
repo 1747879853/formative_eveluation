@@ -25,8 +25,8 @@
                     
                      <p >
                         <Icon type="compose"></Icon>
-                        模板名称:{{name}}  *  {{number}}件;
-                        <Button type="primary"  @click="apply_material">申请领料</Button>
+                        {{title1}};
+                        <Button type="primary"  @click="apply_material">发放物料</Button>
                     </p>
                     <Table :columns="boms_col" :data="team_boms"></Table>
                   </Card>
@@ -42,7 +42,7 @@
 import expandRow from "./expandRow.vue";
 import canEditTable from "../../tables/components/canEditTable.vue";
 export default {
-  name: "material-requisition",
+  name: "material-requisition-detail",
   components: {
     expandRow,
     canEditTable
@@ -77,20 +77,11 @@ export default {
         },
 
         {
-          title: "所需数量/套",
-          key: "total",
-          align: "center"
-        },
-        {
-          title: "已领用数量",
-          key: "get_qty",
-          align: "center"
-        },
-        {
-          title: "申请中数量",
+          title: "请领数量/套",
           key: "apply_qty",
           align: "center"
         },
+        
         {
           title: "备注",
           key: "comment",
@@ -125,14 +116,16 @@ export default {
           align: "center"
         },
 
-        {
-          title: "所需数量/套",
-          key: "total",
-          align: "center"
-        },
+
         {
           title: "请领数量",
-          key: "request_qty",
+          key: "apply_qty",
+          align: "center",
+         
+        },
+          {
+          title: "实发数量",
+          key: "give_qty",
           align: "center",
           editable: true
         },
@@ -149,24 +142,29 @@ export default {
       name: "",
       number: 0,
       show_apply: false,
-      title: "物料申请单"
+      title: "物料申请单",
+      request_id:"",
+      title1:''
     };
   },
   methods: {},
   mounted() {
     this.$axios
-      .get("/team_boms")
+      .get("/apply_materials")
       .then(res => {
         this.team_boms = res.data.boms;
-        this.name = this.$route.params.work_shop_team_order_id;
+        this.request_id = this.$route.params.material_requisition_id;
+        this.name = res.data.name;
         this.number = res.data.number;
+        this.title1 = "生产领料单:" + this.request_id +";"+this.name+ " * " + this.number + "件";
       })
       .catch(err => {
         console.log(err);
       });
   },
   activated() {
-    this.name = this.$route.params.work_shop_team_order_id;
+    this.request_id = this.$route.params.material_requisition_id;
+     this.title1 = "生产领料单:" + this.request_id +";"+this.name+ " * " + this.number + "件";
   },
   methods: {
     apply_material() {
@@ -174,7 +172,8 @@ export default {
       if (this.edit_apply_data.length == 0) {
         this.edit_apply_data = this.team_boms;
       }
-      this.title = "物料申请单:" + this.name + " * " + this.number + "件";
+      this.title = "生产出库单:" + this.request_id +";"+this.name+ " * " + this.number + "件";
+     
     },
     handleDel(val, index) {
       this.$Message.success("删除了第" + (index + 1) + "行数据");
