@@ -61,7 +61,9 @@ export const otherRouter = {
         { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/production-manage/component/order-info.vue') }, // 用于展示动态路由
         { path: 'work-shop-order-info/:work_shop_order_id', title: '工单详情', name: 'work-shop-order-info', component: () => import('@/views/production-manage/component/work-shop-order-info.vue') }, // 用于展示动态路由
         { path: 'material-requisition/:work_shop_team_order_id', title: '物料清单', name: 'material-requisition', component: () => import('@/views/production-manage/component/material-requisition.vue') }, // 用于展示动态路由
-        
+      
+        { path: 'material-requisition-detail/:material_requisition_id', title: '生产领料单', name: 'material-requisition-detail', component: () => import('@/views/production-manage/component/material-requisition-detail.vue') }, // 用于展示动态路由
+
         { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
         { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') },
         { path: 'new-approval', title: '创建新审批', name: 'new-approval', component: () => import('@/views/approval/new-approval.vue') }
