@@ -280,7 +280,7 @@ export const appRouter = [
                 icon: 'pound',
                 name: 'authority-groups',
                 title: '权限组管理',
-                component: () => import('@/views/my-components/markdown-editor/markdown-editor.vue')
+                component: () => import('@/views/system-manage/authority-groups-manage.vue')
             },
             {
                 path: 'user-authority-groups',
