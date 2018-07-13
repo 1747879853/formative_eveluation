@@ -291,6 +291,30 @@ export const appRouter = [
             },
         ]
     },
+    {
+        path: '/users-manage',
+        icon: 'settings',
+        name: 'users-name',
+        title: '用户管理',
+        component: Main,
+        children: [
+            {
+                path: 'organization',
+                icon: 'compose',
+                name: 'organization',
+                title: '组织管理',
+                component: () => import('@/views/users-manage/organization.vue')
+            },
+            {
+                path: 'placeholder',
+                icon: 'compose',
+                name: 'placeholder',
+                title: '占位符',
+                component: () => import('@/views/users-manage/placeholder.vue')
+            },
+
+        ]
+    },
     // {
     //     path: '/error-page',
     //     icon: 'android-sad',
