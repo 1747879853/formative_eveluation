@@ -66,7 +66,7 @@ export const otherRouter = {
 
         { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
         { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') },
-        { path: 'new-approval', title: '创建新审批', name: 'new-approval', component: () => import('@/views/approval/new-approval.vue') }
+        { path: 'design-approval/:approval_id', title: '审批表单设计', name: 'design-approval', component: () => import('@/views/approval/design-approval.vue') }
     ]
 };
 

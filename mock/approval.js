@@ -75,91 +75,190 @@ selectoptions:   string,  eg：'选项1,选项2,选项3', 如果前面类型是�
 dateformat:  string,  '年-月-日 时:分  或  年-月-日' ,如果前面类型是日期时，否则为空
 */
 //data1中一个{}代表approval_fields表中的一条记录，代表代表approvals表中'approval_id': 1的这个申请的一个字段，整个data1代表approvals表中'approval_id': 1的这个申请的所有字段集合。
-var data1 = [
-	{    
-	    'id': 1,
-	    'approval_id': 1,
-	    'name': '申请事由',
-	    'en_name': 'reason',
-	    'control': '单行输入框',
-	    'info': '输入申请事由',
-	    'sequence': 1,    //
-	    
-	    'selectoptions': '',  //设计时添加的选择项，将来自动生成form时也要使用
-	    
 
-	    //'dateoptions': '年-月-日 时:分,年-月-日',  //本来想和选择项一样，后来由于时间格式就2种，所以不用了
-	    'dateformat':'年-月-日 时:分'  //管理员设计时，如果control为日期时，选择的日期的格式。否则为空。
-	},
-	{    
-	    'id': 2,
-	    'approval_id': 1,
-	    'name': '期望交付日期',
-	    'en_name': 'expire',
-	    'control': '日期',
-	    'info': '输入期望交付日期',
-	    'sequence': 2,
+/*
+create table approval_detail_fields
+belong_to : approvals
+申请表详单表的字段，该表字段和approval_fields表一样，这里用2个表分别表示主表和详表的字段只是为了好辨别（当然用一个表也可以）
+*/
 
-	    'selectoptions': '',
+var data1 = {
+	'approval_field_data':
+		[
+		{    
+		    'id': 1,
+		    'approval_id': 1,
+		    'name': '申请事由',
+		    'en_name': 'reason',
+		    'control': '单行输入框',
+		    'info': '输入申请事由',
+		    'sequence': 1,    //
+		    
+		    'selectoptions': '',  //设计时添加的选择项，将来自动生成form时也要使用
+		    
 
-	    //'dateoptions': '年-月-日 时:分,年-月-日',
-	    'dateformat':'年-月-日'
-	         
-	},
-	{    
-	    'id': 3,
-	    'approval_id': 1,
-	    'name': '字段3',
-	    'en_name': 'fieldthree',
-	    'control': '单选框',
-	    'info': 'please select...',
-	    'sequence': 3,
+		    //'dateoptions': '年-月-日 时:分,年-月-日',  //本来想和选择项一样，后来由于时间格式就2种，所以不用了
+		    'dateformat':'年-月-日 时:分'  //管理员设计时，如果control为日期时，选择的日期的格式。否则为空。
+		},
+		{    
+		    'id': 2,
+		    'approval_id': 1,
+		    'name': '期望交付日期',
+		    'en_name': 'expire',
+		    'control': '日期',
+		    'info': '输入期望交付日期',
+		    'sequence': 2,
 
-	    'selectoptions': '选项11,选项22,选项33,选项44',
+		    'selectoptions': '',
 
-	    //'dateoptions': '年-月-日 时:分,年-月-日',
-	    'dateformat':''
-	         
-	},
-	{    
-	    'id': 4,
-	    'approval_id': 1,
-	    'name': '字段4',
-	    'en_name': 'fieldfour',
-	    'control': '多选框',
-	    'info': 'this is a multi selction',
-	    'sequence': 4,
+		    //'dateoptions': '年-月-日 时:分,年-月-日',
+		    'dateformat':'年-月-日'
+		         
+		},
+		{    
+		    'id': 3,
+		    'approval_id': 1,
+		    'name': '字段3',
+		    'en_name': 'fieldthree',
+		    'control': '单选框',
+		    'info': 'please select...',
+		    'sequence': 3,
 
-	    'selectoptions': 'multi1,multi2,multi3,multi4',
+		    'selectoptions': '选项11,选项22,选项33,选项44',
 
-	    //'dateoptions': '年-月-日 时:分,年-月-日',
-	    'dateformat':''
-	         
-	},
-	{    
-	    'id': 5,
-	    'approval_id': 1,
-	    'name': '字段5',
-	    'en_name': 'fieldfive',
-	    'control': '多行输入框',
-	    'info': 'multi line input',
-	    'sequence': 5,
+		    //'dateoptions': '年-月-日 时:分,年-月-日',
+		    'dateformat':''
+		         
+		},
+		{    
+		    'id': 4,
+		    'approval_id': 1,
+		    'name': '字段4',
+		    'en_name': 'fieldfour',
+		    'control': '多选框',
+		    'info': 'this is a multi selction',
+		    'sequence': 4,
 
-	    'selectoptions': '',
+		    'selectoptions': 'multi1,multi2,multi3,multi4',
 
-	    //'dateoptions': '年-月-日 时:分,年-月-日',
-	    'dateformat':''
-	         
-	}	
-]
+		    //'dateoptions': '年-月-日 时:分,年-月-日',
+		    'dateformat':''
+		         
+		},
+		{    
+		    'id': 5,
+		    'approval_id': 1,
+		    'name': '字段5',
+		    'en_name': 'fieldfive',
+		    'control': '多行输入框',
+		    'info': 'multi line input',
+		    'sequence': 5,
 
+		    'selectoptions': '',
+
+		    //'dateoptions': '年-月-日 时:分,年-月-日',
+		    'dateformat':''
+		         
+		}	
+		],
+	'approval_detail_field_data':
+		[
+		{    
+		    'id': 1,
+		    'approval_id': 1,
+		    'name': '申请事由',
+		    'en_name': 'reason',
+		    'control': '单行输入框',
+		    'info': '输入申请事由',
+		    'sequence': 1,    //
+		    
+		    'selectoptions': '',  //设计时添加的选择项，将来自动生成form时也要使用
+		    
+
+		    //'dateoptions': '年-月-日 时:分,年-月-日',  //本来想和选择项一样，后来由于时间格式就2种，所以不用了
+		    'dateformat':'年-月-日 时:分'  //管理员设计时，如果control为日期时，选择的日期的格式。否则为空。
+		},
+		{    
+		    'id': 2,
+		    'approval_id': 1,
+		    'name': '期望交付日期',
+		    'en_name': 'expire',
+		    'control': '日期',
+		    'info': '输入期望交付日期',
+		    'sequence': 2,
+
+		    'selectoptions': '',
+
+		    //'dateoptions': '年-月-日 时:分,年-月-日',
+		    'dateformat':'年-月-日'
+		         
+		},
+		{    
+		    'id': 3,
+		    'approval_id': 1,
+		    'name': '字段3',
+		    'en_name': 'fieldthree',
+		    'control': '单选框',
+		    'info': 'please select...',
+		    'sequence': 3,
+
+		    'selectoptions': '选项11,选项22,选项33,选项44',
+
+		    //'dateoptions': '年-月-日 时:分,年-月-日',
+		    'dateformat':''
+		         
+		},
+		{    
+		    'id': 4,
+		    'approval_id': 1,
+		    'name': '字段4',
+		    'en_name': 'fieldfour',
+		    'control': '多选框',
+		    'info': 'this is a multi selction',
+		    'sequence': 4,
+
+		    'selectoptions': 'multi1,multi2,multi3,multi4',
+
+		    //'dateoptions': '年-月-日 时:分,年-月-日',
+		    'dateformat':''
+		         
+		},
+		{    
+		    'id': 5,
+		    'approval_id': 1,
+		    'name': '字段5',
+		    'en_name': 'fieldfive',
+		    'control': '多行输入框',
+		    'info': 'multi line input',
+		    'sequence': 5,
+
+		    'selectoptions': '',
+
+		    //'dateoptions': '年-月-日 时:分,年-月-日',
+		    'dateformat':''
+		         
+		}	
+		]
+},
+
+data2={
+	'msg': '保存成功！'
+}
 export default [
 	{
-	    path: '/approval_field_list?approval_id=1',
+		//返回某个审批项目的主表字段信息和详表字段信息（如果有详表的话，没有为空）
+	    path: '/approval_field_list?approval_id=1',  //这里只模拟了id是1的情况，其他的情况没有模拟，所以当id不是1的时候客户端会出现404错误。
 	    data: data1
 	},
 	{
-	    path: '/approval_list',
+	    path: '/approval_list',  //返回公司所有的审批项目
 	    data: data
+	},
+	{
+		//接收三个参数 approval_id: 如果是新建表单则为空''，否则是修改的审批的id
+                //approval_field_data:主表表单字段信息
+                //approval_detail_field_data: 详表字段信息，如果没有则为[]
+		path: '/approval_field_save',
+		data: data2
 	}
 ]

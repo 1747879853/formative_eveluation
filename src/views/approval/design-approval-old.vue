@@ -66,7 +66,7 @@
 <script>
 import Sortable from 'sortablejs';
 export default {
-    name: 'new-approval-tmpl',
+    name: 'design-approval-tmpl',
     data () {
         return {
             approvalName: '',
