@@ -22,7 +22,7 @@
                                    
                                     v-model="requisition_list" 
                                     @on-cell-change="handleCellChange"
-                                    
+                                    @on-row-clic="get_row"
                                     @on-change="handleChange"  
                                     :editIncell="true" 
                                     :columns-list="teamOrderColumns"
@@ -227,6 +227,9 @@ export default {
     },
     handleChange(val, index) {
       this.$Message.success("修改了第" + (index + 1) + "行数据");
+    },
+    get_row(row){
+      console.log(row);
     },
   
     pic_show(picno) {

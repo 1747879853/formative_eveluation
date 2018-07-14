@@ -4,7 +4,7 @@
 
 <template>
     <div>
-        <Table :ref="refs"  highlight-row  		:columns="columnsList"  :data="thisTableData" border disabled-hover></Table>
+        <Table :ref="refs"  highlight-row  @on-row-click="onRowClick" 		:columns="columnsList"  :data="thisTableData" border disabled-hover></Table>
     </div>
 </template>
 
@@ -271,7 +271,10 @@ export default {
                 delete item.saving;
             });
             return clonedData;
-        }
+        },
+        onRowClick (row, index) {
+      this.$emit('on-row-clic', row, index)
+    }
     },
    
     watch: {
