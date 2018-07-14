@@ -44,7 +44,7 @@
                     <Button type="primary" @click="save()">保存</Button>
                 </p>
                 <div style="overflow-y:auto;height:500px;">
-                <Tree ref="tree" :data="data1" show-checkbox multiple></Tree>
+                <Tree ref="tree" :data="data1" show-checkbox @on-select-change="check111"></Tree>
                 </div>
             </Card>
         </Col>
@@ -63,6 +63,7 @@ import Sortable from 'sortablejs';
                 value1:"",
                 modal:false,
                 select:null,
+                ele:null,
             }
         },
         mounted () { 
@@ -172,6 +173,14 @@ import Sortable from 'sortablejs';
                             });
                             this.$Message.info('保存成功');  
             } 
+        },
+        check111(selectedList){
+            if(selectedList[selectedList.length-1].checked==true){
+                selectedList[selectedList.length-1].checked=false;
+            }
+            else{
+                selectedList[selectedList.length-1].checked=true;
+            }            
         }
     }
 }
