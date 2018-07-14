@@ -111,8 +111,8 @@ let arr = [
             id : maxid+1,
             authority : JSON.parse(options.body).params.v2,
             name : JSON.parse(options.body).params.v1,
-            condition: JSON.parse(options.body).params.v3,
-            status : JSON.parse(options.body).params.v4,
+            condition: JSON.parse(options.body).params.v4,
+            status : JSON.parse(options.body).params.v3,
             leaf : 0 ,
             children: [
             ]
@@ -124,8 +124,8 @@ let arr = [
             id : maxid+1,
             authority : JSON.parse(options.body).params.v2,
             name : JSON.parse(options.body).params.v1,
-            condition: JSON.parse(options.body).params.v3,
-            status : JSON.parse(options.body).params.v4,
+            condition: JSON.parse(options.body).params.v4,
+            status : JSON.parse(options.body).params.v3,
             leaf : newleaf ,
             children: [
             ]

@@ -1,14 +1,17 @@
 import Mock from 'mockjs'
 /*
+数组data1与数据库table中的内容映射如下：
+表名:authGroupList_data1
+序号id对应数据库中字段id,类型为int,从1开始,主键,且是表authRuleList中字段id的外键;
+权限名title对应数据库中字段name,类型为varchar,字符集应可识别中文汉字,长度不固定,且是表authRuleList中字段name的外键;
+双亲结点leaf对应数据库字段parent_id,类型为int,且是表authRuleList中字段leaf的外键;
+是否展开expand,是否勾选checked,孩子children,不在数据库中体现;
+
 数组arr与数据库table中的内容映射如下：
-表名:authGroupList
-序号id对应数据库中字段id,类型为int,从1开始,主键,且是表authGroupList中字段id的外键;
-权限authority对应数据库中字段authority,类型为varchar,长度不固定;
-权限名name对应数据库中字段name,类型为varchar,字符集应可识别中文汉字,长度不固定;
-条件condition对应数据库字段condition,类型为varchar;
-是否激活status对应数据库字段status,类型为varchar,也可以是枚举;
-双亲结点leaf对应数据库字段parent_id,类型为int;
-孩子children不在数据库中体现;
+表名:authGroupList_arr
+序号id对应数据库中字段id,类型为int,从1开始,主键;
+权限组名name对应数据库中字段name,类型为varchar,字符集应可识别中文汉字,长度不固定;
+勾选项checked_id对应数据库字段checked_id,保存为整形数组;
 */
 let data1 = [
                     {
@@ -100,12 +103,12 @@ let arr = [
                {    
                     id: 1,
                     name:'权限组1',
-                    checked_id:[2,4,6,8]
+                    checked_id:[4,7,8]
                 },
                 {    
                     id: 2,
                     name: '权限组2',
-                    checked_id:[1,3,5,7]
+                    checked_id:[3,5,7]
                 }
                 ]
 
@@ -116,33 +119,69 @@ let list = function (options) {
      case 'get':    
        break;
      case 'patch':   
-     debugger
-        let ch_id = arr[parseInt(JSON.parse(options.body).params.num)].checked_id;
-        function edit(arr,h){  
-          depthTraversal1(arr,h);  
-        }
-        function depthTraversal1(arr,h){  
+        var ch_id = arr[parseInt(JSON.parse(options.body).params.num)].checked_id;
+        function edit(arr){  
+          depthTraversal1(arr); 
+          return arr; 
+        }   
+        function depthTraversal1(arr){  
             if (arr!=null){  
                 for(let i=0;i<arr.length;i++){
-                  if(arr[i].id==h){
-                      arr[i].checked=true;
-                  }
-                  depthTraversal1(arr[i].children,h);
+                    if(ch_id.length!=0){
+                    for(let j=0;j<ch_id.length;j++){
+                        if(arr[i].id==ch_id[j]){
+                            arr[i].checked=true;
+                            break;
+                        }
+                        else{arr[i].checked=false;}
+                    }
+                    }else{
+                        arr[i].checked=false;
+                    }
+                  depthTraversal1(arr[i].children);
                 }
             }         
         }
-        for(let j=0;j<ch_id.length;j++){
-            edit(data1,ch_id[j]);
-        }       
+        data1=edit(data1);    
        break;
-     case 'post'://添加新权限
+     case 'post'://添加新权限组
+     var newid;
+     if(arr.length==0){
+        newid=1;
+     }else{
+        var max=0;
+        for(let i=0;i<arr.length;i++)
+        {
+            if(arr[i].id>max){
+                max=arr[i].id;
+            }
+        }
+        newid=max+1;
+     }
        let newarr = 
         {
-            id:arr[arr.lenth-1].id+1,
-            name: JSON.parse(options.body).params.v1,              
+            id : newid,
+            name : JSON.parse(options.body).params.v1, 
+            checked_id : []             
         };
-     arr.push(newarr);
+        arr.push(newarr);
        break;
+     case 'delete':
+        for(let i=0;i<arr.length;i++)
+        {
+            if(arr[i].id=parseInt(JSON.parse(options.body).params.id)+1){
+                arr.splice(parseInt(JSON.parse(options.body).params.id),1);
+            }
+        }
+        break;
+     case 'put': //修改data1中的checked_id
+        let checked_tree = JSON.parse(options.body).params.id;
+        let tree_id = [];
+        for(let i=0;i<checked_tree.length;i++){
+            tree_id[i]=checked_tree[i].id;
+        }
+        arr[parseInt(JSON.parse(options.body).params.group_id)].checked_id=tree_id;
+        break;
      default:
    }
 

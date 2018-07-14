@@ -15,7 +15,7 @@
             <Card>
                 <p slot="title" style="font-size:20px;height: 33px;">
                     <Icon type="android-funnel"></Icon>
-                    权限组
+                    权限组&nbsp;&nbsp;&nbsp;
                     <Button type="primary" @click="showmodal()">添加</Button>
                     <Modal
                         v-model="modal"
@@ -40,10 +40,11 @@
             <Card >
                 <p slot="title" style="font-size:20px;height: 33px;">
                     <Icon type="android-funnel"></Icon>
-                    可分配权限
+                    可分配权限&nbsp;&nbsp;&nbsp;
+                    <Button type="primary" @click="save()">保存</Button>
                 </p>
                 <div style="overflow-y:auto;height:500px;">
-                <Tree :data="data1" show-checkbox multiple></Tree>
+                <Tree ref="tree" :data="data1" show-checkbox multiple></Tree>
                 </div>
             </Card>
         </Col>
@@ -61,6 +62,7 @@ import Sortable from 'sortablejs';
                 ],
                 value1:"",
                 modal:false,
+                select:null,
             }
         },
         mounted () { 
@@ -76,23 +78,46 @@ import Sortable from 'sortablejs';
             filter: '.js-remove',
             onFilter: function (evt) {
                 var el = editableList.closest(evt.item); 
-                vm.groups_data.splice(parseInt(el.getAttribute('data-index')),1);
+                vm.$Modal.confirm({
+                    title: '删除权限组',
+                    content: '<p>确定要删除此权限组吗？</p>',
+                    onOk: () => {
+                        vm.$axios.delete('/authGroupList', {
+                            data: {
+                                params: {
+                                    id: parseInt(el.getAttribute('data-index')),
+                                }
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            vm.groups_data = res.data[1];
+                        }.bind(vm))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        vm.$Message.info('删除成功');
+                        vm.select=null;
+                    },
+                    onCancel: () => {
+                        vm.$Message.info('取消');
+                    }
+                });
             },
             onChoose: function (evt) {
-                var el = editableList.closest(evt.item);               
+                var el = editableList.closest(evt.item);   
+                vm.select=parseInt(el.getAttribute('data-index'));            
                 //为选中的条目添加样式
                 let list= document.getElementById("editable-new").getElementsByTagName("li");
                 for (let i = 0; i < list.length; i++) {
                     if(list[i] == el){
-                        evt.item.setAttribute("style","border-color: #87b4ee;");
-                        // vm.data1=vm.groups_data[].id;
-                        vm.$axios.patch('/authGroupList', {
+                        evt.item.setAttribute("style","border-color: #87b4ee;");                        vm.$axios.patch('/authGroupList', {
                             params: {
                                 num:parseInt(el.getAttribute('data-index')),
                             }
                         }).then(function(res) {
                             console.log(res);
                             vm.groups_data = res.data[1];
+                            vm.data1 = res.data[0];
                         }.bind(vm))
                         .catch(function(error) {
                             console.log(error)
@@ -119,7 +144,7 @@ import Sortable from 'sortablejs';
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.groups_data = res.data;
+                            this.groups_data = res.data[1];
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -129,7 +154,25 @@ import Sortable from 'sortablejs';
         cancel () {
             this.$Message.info('取消');
         },
-           
+        save (){
+            if(this.select==null){
+                this.$Message.info('请选中一个权限组');
+            }else{
+                this.$axios.put('/authGroupList', {
+                                params: {
+                                    group_id:this.select,
+                                    id:this.$refs.tree.getCheckedNodes(),
+                                }
+                            }).then(function(res) {
+                                console.log(res);
+                                this.groups_data = res.data[1];
+                            }.bind(this))
+                            .catch(function(error) {
+                                console.log(error)
+                            });
+                            this.$Message.info('保存成功');  
+            } 
+        }
     }
 }
 </script>

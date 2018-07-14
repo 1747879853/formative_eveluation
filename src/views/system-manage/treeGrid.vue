@@ -30,13 +30,13 @@
                                 @on-cancel="cancel1">
                                 <table>
                                 <tr><td>权限名</td><td>
-                                <Input v-model="value1" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr>
+                                <Input v-model="value1" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 <tr><td>权限</td><td>
-                                <Input v-model="value2" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
+                                <Input v-model="value2" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 <tr><td>是否激活</td><td>
-                                <Input v-model="value3" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
+                                <Input v-model="value3" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 <tr><td>条件</td><td>
-                                <Input v-model="value4" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
+                                <Input v-model="value4" placeholder="条件" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 </table>
                             </Modal>
                             <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);value5=renderName(item);value6=renderAuthority(item);value7=renderCondition(item);value8=renderStatus(item);">修改</button>
@@ -47,13 +47,13 @@
                                 @on-cancel="cancel2">
                                 <table>
                                 <tr><td>权限名</td><td>
-                                <Input v-model="value5" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr>
+                                <Input v-model="value5" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 <tr><td>权限</td><td>
-                                <Input v-model="value6" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
+                                <Input v-model="value6" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 <tr><td>是否激活</td><td>
-                                <Input v-model="value7" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
+                                <Input v-model="value8" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 <tr><td>条件</td><td>
-                                <Input v-model="value8" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
+                                <Input v-model="value7" placeholder="条件" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 </table>
                             </Modal>
                             <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="id1=renderId(item); deleteClick();">删除</button>
