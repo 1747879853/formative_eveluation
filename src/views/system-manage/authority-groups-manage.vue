@@ -30,7 +30,7 @@
                 </p>
                 <div style="overflow-y:auto;height:500px;">
                     <ul id="editable-new" class="iview-admin-draggable-list">                            
-                        <li v-for="(item, index) in approval_field_data" :key="index" class="notwrap todolist-item" :data-index="index">
+                        <li v-for="(item, index) in groups_data" :key="index" class="notwrap todolist-item" :data-index="index">
                         {{ item.name }}<Icon type="close" class="js-remove"/></li>
                     </ul>
                 </div>
@@ -57,7 +57,7 @@ import Sortable from 'sortablejs';
             return {
                 data1: [
                 ],
-                approval_field_data: [
+                groups_data: [
                {    
                     'id': 1,
                     'name':'权限组1',
@@ -231,7 +231,7 @@ import Sortable from 'sortablejs';
             filter: '.js-remove',
             onFilter: function (evt) {
                 var el = editableList.closest(evt.item); 
-                vm.approval_field_data.splice(parseInt(el.getAttribute('data-index')),1);
+                vm.groups_data.splice(parseInt(el.getAttribute('data-index')),1);
             },
             onChoose: function (evt) {
                 var el = editableList.closest(evt.item);               
@@ -240,7 +240,7 @@ import Sortable from 'sortablejs';
                 for (let i = 0; i < list.length; i++) {
                     if(list[i] == el){
                         evt.item.setAttribute("style","border-color: #87b4ee;");
-                        vm.data1=vm.approval_field_data[parseInt(el.getAttribute('data-index'))].data;
+                        vm.data1=vm.groups_data[parseInt(el.getAttribute('data-index'))].data;
                     }else{
                         list[i].removeAttribute("style");
                     }                    
@@ -258,7 +258,7 @@ import Sortable from 'sortablejs';
         },
         ok () {
             this.newFromValidate.name=this.value1;
-            this.approval_field_data.push(JSON.parse(JSON.stringify(this.newFromValidate)));
+            this.groups_data.push(JSON.parse(JSON.stringify(this.newFromValidate)));
             this.$Message.info('添加成功');
         },
         cancel () {

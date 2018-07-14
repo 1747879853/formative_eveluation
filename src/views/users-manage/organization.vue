@@ -6,7 +6,7 @@
         v-if="isLoadingTree"
         :data="setTree"
         node-key="id"
-        highlight-current
+         highlight-current
         :props="defaultProps"
         :expand-on-click-node="false"
         :render-content="renderContent"
@@ -18,7 +18,7 @@
 <!-- VUE饿了么树形控件添加增删改功能按钮 -->
 <script>
 import TreeRender from './tree_render'
-import api from '../../../mock/api'
+import api from '../../../mock/organization'
   export default{
     name: 'tree',
     data(){

@@ -54,9 +54,10 @@
 	}
 	.tree-expand .tree-label.tree-new{
 		font-weight:600;
+		font-size:15px;
 	}
 	.tree-expand .tree-label{
-		font-size:0.9em;
+		font-size:1.1em;
 	}
 	.tree-expand .tree-label .edit{
 		width:80%;

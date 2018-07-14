@@ -287,10 +287,11 @@ export const appRouter = [
                 icon: 'pound',
                 name: 'user-authority-groups',
                 title: '用户权限分配',
-                component: () => import('@/views/my-components/markdown-editor/markdown-editor.vue')
+                component: () => import('@/views/system-manage/user-authority-allocation.vue')
             },
         ]
     },
+<<<<<<< HEAD
     {
         path: '/users-manage',
         icon: 'settings',
@@ -315,6 +316,9 @@ export const appRouter = [
 
         ]
     },
+=======
+
+>>>>>>> ed8b6bddae1e17d627ee575839843ad82d44b13f
     // {
     //     path: '/error-page',
     //     icon: 'android-sad',
