@@ -317,7 +317,89 @@ var apply_materials =
 
     ]
 }
+// var processData1 ={
+//     order_id:"XS20180714001",
+//     type:'高铁',
+//     number: 2,
+//     children:[
+//         {
+//             work_order_id: 'work_order_record_id1',
+//             name: '中铁19局京雄铁路',
+//             user: '王新',
+//             type: '实体墩(9*3.6m-7.2*3m)墩身平板 模板焊接单（50:1）',
+//             number: 5,
+//             children:[
+//                 {
+//                     workshop_id: "下料",
+//                     number: 5,
+//                     children:[
+//                         {
+//                             name:'4.2m*8m平板',
+//                             number:5,
+//                             finish_number:3
+//                         },
+//                         {
+//                             name:'4m*9m平板',
+//                             number:6,
+//                             finish_number:4
+//                         },
 
+//                     ]
+//                 },
+//                 {
+//                     workshop_id: "组拼",
+//                     number: 5,
+//                     children:[
+//                         {
+//                             name:'4.2m*8m平板',
+//                             number:5,
+//                             finish_number:7
+//                         },
+//                         {
+//                             name:'4m*9m平板',
+//                             number:8,
+//                             finish_number:2
+//                         },
+
+//                     ]
+
+//                 }
+//             ]
+//         }
+       
+
+//     ]
+// }
+
+
+
+
+
+var progressData ={
+    order_id:"XS20180714001",
+    type:'高铁',
+    number: 2,
+    children:[
+        {
+            work_order_id: 'work_order_record_id1',
+            name: '中铁19局京雄铁路',
+            user: '王新',
+            type: '实体墩(9*3.6m-7.2*3m)墩身平板 模板焊接单（50:1）',
+            number: 6,
+            xialiao: "4.2m*8m平板:3/5;4m*9m平板:2/8",
+            zupin:  "5.2m*8m平板:3/6,4m*9m平板:5/7",
+        },
+        {
+            work_order_id: 'work_order_record_id2',
+            name: '中铁18局京雄铁路',
+            user: '王新',
+            type: '实体墩(9*3.6m-7.2*3m)墩身平板 模板焊接单（100:1）',
+            number: 7,
+            xialiao: "4.2m*8m平板:3/7,4m*9m平板:2/7",
+            zupin:  "4.2m*8m平板:3/7,4m*9m平板:5/7",
+        },
+    ]
+}
 
 export default [
     {
@@ -435,5 +517,9 @@ export default [
     {
         path:'/apply_materials',
         data:apply_materials
+    },
+    {
+        path:'/progressData',
+        data:progressData
     }
 ]
