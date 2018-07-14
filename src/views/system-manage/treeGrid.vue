@@ -95,6 +95,14 @@ export default {
             dataLength: 0, //树形数据长度
             modal1: false,
             modal3:false,
+            value1:"",
+            value2:"",
+            value3:"",
+            value4:"",
+            value5:"",
+            value6:"",
+            value7:"",
+            value8:"",
             id1:"",
         }
     },
@@ -340,6 +348,7 @@ export default {
                 item = Object.assign({}, item, {
                     "load": (item.expanded ? true : false)
                 });
+                //debugger
                 this.initItems.push(item);
                 if (item.children && item.expanded) {
                     this.initData(item.children, level + 1, item);
