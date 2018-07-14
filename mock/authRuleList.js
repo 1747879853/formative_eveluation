@@ -1,5 +1,15 @@
 import Mock from 'mockjs'
-
+/*
+数组arr与数据库table中的内容映射如下：
+表名:authRuleList
+序号id对应数据库中字段id,类型为int,从1开始;
+权限authority对应数据库中字段authority,类型为varchar,长度不固定;
+权限名name对应数据库中字段name,类型为varchar,字符集应可识别中文汉字,长度不固定;
+条件condition对应数据库字段condition,类型为varchar;
+是否激活status对应数据库字段status,类型为varchar,也可以是枚举;
+双亲结点leaf对应数据库字段parent_id,类型为int;
+孩子children不在数据库中体现;
+*/
 
 let arr = [
           {
@@ -138,7 +148,7 @@ let arr = [
        
        break;
      case 'patch'://修改权限
-       function edit(arr){  
+        function edit(arr){  
           depthTraversal1(arr);  
         }
         function depthTraversal1(arr){  

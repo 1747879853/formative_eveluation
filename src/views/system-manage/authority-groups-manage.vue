@@ -57,174 +57,19 @@ import Sortable from 'sortablejs';
             return {
                 data1: [
                 ],
-                groups_data: [
-               {    
-                    'id': 1,
-                    'name':'权限组1',
-                    data:[
-                        {
-                            title: '权限控制',
-                            expand: true,
-                            children: [
-                                {
-                                    title: '权限管理',
-                                    expand: true,
-                                    children: [
-                                        {
-                                            title: '添加权限',
-                                        },
-                                        {
-                                            title: '修改权限',
-                                        },
-                                        {
-                                            title: '删除权限',
-                                        }
-                                    ]
-                                },
-                                {
-                                    title: '用户组管理',
-                                    expand: true,
-                                    children: [
-                                    {
-                                        title: '添加用户组',
-                                    },
-                                    {
-                                        title: '修改用户组',
-                                    },
-                                    {
-                                        title: '删除用户组',
-                                    }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            title: '后台首页',
-                            expand: true,
-                            children: [
-                                {
-                                    title: '欢迎页面',
-                                    expand: true,
-                                    children: [
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {    
-                    'id': 2,
-                    'name': '权限组2',
-                    data:[
-                        {
-                            title: '权限控制',
-                            expand: true,
-                            children: [
-                                {
-                                    title: '权限管理',
-                                    expand: true,
-                                    children: [
-                                        {
-                                            title: '添加权限',
-                                        },
-                                        {
-                                            title: '修改权限',
-                                        },
-                                        {
-                                            title: '删除权限',
-                                        }
-                                    ]
-                                },
-                                {
-                                    title: '用户组管理',
-                                    expand: true,
-                                    children: [
-                                    {
-                                        title: '添加用户组',
-                                    },
-                                    {
-                                        title: '修改用户组',
-                                    },
-                                    {
-                                        title: '删除用户组',
-                                    }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            title: '后台首页',
-                            expand: true,
-                            children: [
-                                {
-                                    title: '欢迎页面',
-                                    expand: true,
-                                    children: [
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
+                groups_data: [              
                 ],
                 value1:"",
-                newFromValidate: {
-                name: "",  
-                data:[
-                        {
-                            title: '权限控制',
-                            expand: true,
-                            children: [
-                                {
-                                    title: '权限管理',
-                                    expand: true,
-                                    children: [
-                                        {
-                                            title: '添加权限',
-                                        },
-                                        {
-                                            title: '修改权限',
-                                        },
-                                        {
-                                            title: '删除权限',
-                                        }
-                                    ]
-                                },
-                                {
-                                    title: '用户组管理',
-                                    expand: true,
-                                    children: [
-                                    {
-                                        title: '添加用户组',
-                                    },
-                                    {
-                                        title: '修改用户组',
-                                    },
-                                    {
-                                        title: '删除用户组',
-                                    }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            title: '后台首页',
-                            expand: true,
-                            children: [
-                                {
-                                    title: '欢迎页面',
-                                    expand: true,
-                                    children: [
-                                    ]
-                                }
-                            ]
-                        }
-                    ]            
-                },
                 modal:false,
             }
         },
         mounted () { 
+        this.$axios.get("/authGroupList").then( res =>{
+            this.groups_data = res.data[1];
+            this.data1 = res.data[0];
+        }).catch(error =>{
+            console.log(error);
+        });
         let editable = document.getElementById('editable-new');
         let vm = this;
         var editableList = Sortable.create(editable, {
@@ -240,7 +85,18 @@ import Sortable from 'sortablejs';
                 for (let i = 0; i < list.length; i++) {
                     if(list[i] == el){
                         evt.item.setAttribute("style","border-color: #87b4ee;");
-                        vm.data1=vm.groups_data[parseInt(el.getAttribute('data-index'))].data;
+                        // vm.data1=vm.groups_data[].id;
+                        vm.$axios.patch('/authGroupList', {
+                            params: {
+                                num:parseInt(el.getAttribute('data-index')),
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            vm.groups_data = res.data[1];
+                        }.bind(vm))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
                     }else{
                         list[i].removeAttribute("style");
                     }                    
@@ -257,9 +113,18 @@ import Sortable from 'sortablejs';
             this.value1="";
         },
         ok () {
-            this.newFromValidate.name=this.value1;
-            this.groups_data.push(JSON.parse(JSON.stringify(this.newFromValidate)));
-            this.$Message.info('添加成功');
+            this.$axios.post('/authGroupList', {
+                            params: {
+                                v1:this.value1,
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            this.groups_data = res.data;
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        this.$Message.info('添加成功');
         },
         cancel () {
             this.$Message.info('取消');

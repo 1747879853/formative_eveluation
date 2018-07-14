@@ -1,4 +1,5 @@
 import authRuleList from './authRuleList'
+import authGroupList from './authGroupList'
 import Mock from 'mockjs'
 import navlist from './navlist'
 import login from './login'
@@ -9,7 +10,7 @@ import getToken from './getToken'
 import order from './orderList'
 import approval from './approval'
 
-let data = [].concat(authRuleList, navlist, login, echarts, table, groupList, getToken,order,approval)
+let data = [].concat(authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval)
 
 data.forEach(function(res){
     Mock.mock(res.path, /get|post|delete|patch/i, res.data)

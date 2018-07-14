@@ -291,7 +291,6 @@ export const appRouter = [
             },
         ]
     },
-<<<<<<< HEAD
     {
         path: '/users-manage',
         icon: 'settings',
@@ -316,9 +315,6 @@ export const appRouter = [
 
         ]
     },
-=======
-
->>>>>>> ed8b6bddae1e17d627ee575839843ad82d44b13f
     // {
     //     path: '/error-page',
     //     icon: 'android-sad',
