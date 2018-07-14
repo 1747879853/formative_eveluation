@@ -59,59 +59,12 @@
 import ApprovalCreateForm from "./approval-create-form.vue"
 import ApprovalCreateFormNew from "./approval-create-form-new.vue"
 export default {
-    name: 'new-approval-tmpl',
+    name: 'design-approval-tmpl',
     data () {
         return {
-            approval_field_data: [
-               {    
-                    'id': 1,
-                    'approval_id': 1,
-                    'name': '申请事由',
-                    'en_name': 'reason',
-                    'control': '单行输入框',
-                    'info': '输入申请事由',
-                    'sequence': 1,        
-                    'selectoptions': '',
-                    'dateformat':''
-                },
-                {    
-                    'id': 2,
-                    'approval_id': 1,
-                    'name': '期望交付日期',
-                    'en_name': 'expire',
-                    'control': '日期',
-                    'info': '输入期望交付日期',
-                    'sequence': 2,
-                    'selectoptions': '',
-                    'dateformat':''
-                         
-                }
-            ],
-            approval_detail_field_data: [
-               {    
-                    'id': 1,
-                    'approval_id': 1,
-                    'name': '申请事由',
-                    'en_name': 'reason',
-                    'control': '单行输入框',
-                    'info': '输入申请事由',
-                    'sequence': 1,        
-                    'selectoptions': '',
-                    'dateformat':''
-                },
-                {    
-                    'id': 2,
-                    'approval_id': 1,
-                    'name': '期望交付日期',
-                    'en_name': 'expire',
-                    'control': '日期',
-                    'info': '输入期望交付日期',
-                    'sequence': 2,
-                    'selectoptions': '',
-                    'dateformat':''
-                         
-                }
-            ],
+            approval_id_s: '',
+            approval_field_data: [],
+            approval_detail_field_data: [],
 
             approvalName:'',
             approvalComment: '',
@@ -170,10 +123,36 @@ export default {
         ApprovalCreateForm,ApprovalCreateFormNew
     },
     mounted () {
-              
-
+        this.init();
     },
-    methods:{        
+    activated () {
+        this.init();
+    },
+    
+    methods:{  
+        init (){
+            this.approval_id_s = this.$route.params.approval_id.toString();
+            this.approvalName = this.$route.params.approval_name;
+            this.approvalComment = this.$route.params.approval_comment;
+
+            if(this.approval_id_s=='-1'){
+                return;
+            }
+            else{
+                this.$axios
+                .get("/approval_field_list?approval_id=" + this.approval_id_s)
+                .then(res => {
+                    this.approval_field_data = res.data.approval_field_data;
+                    this.approval_detail_field_data = res.data.approval_detail_field_data;
+                })
+                .catch(error => {
+                    console.log(error);
+                    this.$Message.error("没有该审批的表单数据！")
+                });
+            }
+
+
+        },      
 
         handleReset (name) {
             this.$refs[name].resetFields();
@@ -204,10 +183,24 @@ export default {
                 let se = parseInt(list[i].getAttribute("data-index"));
                 this.approval_detail_field_data[i].sequence = se;                                  
             }
-            this.$Message.success("保存成功！");
-            console.log(this.approval_field_data)
-            console.log(this.approval_detail_field_data)
-            //下一步发送数据到服务器，然后建表并保存。
+
+            //发送数据到服务器，然后建表并保存。
+            this.$axios.post('/approval_field_save', {
+                approval_id: this.approval_id_s,
+                approval_field_data: this.approval_field_data,
+                approval_detail_field_data: this.approval_detail_field_data
+            })
+            .then(res => {
+                // console.log(response);
+                // console.log(res);
+                this.$Message.success(res.data.msg);
+                // this.$Message.success("xxxx")              
+            })
+            .catch(error => {
+                console.log(error);
+            });
+           
+             
         }               
     }
 };

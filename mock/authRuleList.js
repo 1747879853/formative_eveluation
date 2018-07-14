@@ -1,24 +1,5 @@
 import Mock from 'mockjs'
 
-// let arr = []
-
-//  for (let i = 0; i < 4; i++) {
-//    let newArticleObject = {
-//         id: (i*2)+1,
-//         name: '后台首页',
-//         authority: 'Admin/Index/index',
-//         status: '激活',
-//         condition: '',
-//         children:[{
-//                         id: (i*2)+2,
-//                         name: '欢迎界面',
-//                         authority: 'Admin/Index/welcome',
-//                         status: '激活',
-//                         condition: ''
-//                     }]
-//    }
-//    arr.push(newArticleObject);
-//  }
 
 let arr = [
           {
@@ -31,6 +12,23 @@ let arr = [
               children: [
                   {
                       id: '2',
+                      authority: 'Admin/Index/welcome',
+                      name: '欢迎页面',
+                      condition: '222',
+                      status: '激活',
+                      leaf: 1,
+                      children: [{
+                      id: '5',
+                      authority: 'Admin/Index/welcome',
+                      name: '欢迎页面',
+                      condition: '222',
+                      status: '激活',
+                      leaf: 2,
+                      children: []
+                  }]
+                  },
+                  {
+                      id: '6',
                       authority: 'Admin/Index/welcome',
                       name: '欢迎页面',
                       condition: '222',
@@ -67,10 +65,40 @@ let arr = [
    switch (rtype) {
      case 'get':
        break;
-     case 'post':
+     case 'post'://添加新权限
+      var maxid=0;
+      var newleaf=0;
+      function findId(arr){  
+          max_id(arr);  
+      }
+      function max_id(arr){  
+          if (arr!=null){  
+              for(let i=0;i<arr.length;i++){
+                if(arr[i].id>maxid){
+                    maxid=arr[i].id;
+                }
+                max_id(arr[i].children);
+              }
+          }         
+      }
+      function findLeaf(arr){  
+          new_leaf(arr);  
+      }
+      function new_leaf(arr){  
+          if (arr!=null){  
+              for(let i=0;i<arr.length;i++){
+                if(arr[i].id==parseInt(JSON.parse(options.body).params.id)){
+                    newleaf=arr[i].id;
+                }
+                new_leaf(arr[i].children);
+              }
+          }         
+      }
+      findId(arr);
+      findLeaf(arr);
      if(parseInt(JSON.parse(options.body).params.id)==0){
         let newarr = {
-            id : parseInt(arr[arr.length-1].id)+1,
+            id : maxid+1,
             authority : JSON.parse(options.body).params.v2,
             name : JSON.parse(options.body).params.v1,
             condition: JSON.parse(options.body).params.v3,
@@ -83,69 +111,68 @@ let arr = [
      }
      else if(parseInt(JSON.parse(options.body).params.id)!=0){
         let newarr = {
-            id : 10,
+            id : maxid+1,
             authority : JSON.parse(options.body).params.v2,
             name : JSON.parse(options.body).params.v1,
             condition: JSON.parse(options.body).params.v3,
             status : JSON.parse(options.body).params.v4,
-            leaf : 0 ,
+            leaf : newleaf ,
             children: [
             ]
        };
-       for(let i = 0,k = 0; i < arr.length; i++){
-            if(arr[i].children!=null){
-                for(let j = 0; j < arr[i].children.length; j++){
-                    if(arr[i].children[j].id==parseInt(JSON.parse(options.body).params.id)){
-                        k=arr[i].children[j].id;
-                        arr[i].children[j].children.push(newarr);
-                        break;
-                    }
+        function add(arr,newarr){  
+          depthTraversal(arr,newarr);  
+        }
+        function depthTraversal(arr,newarr){  
+            if (arr!=null){  
+                for(let i=0;i<arr.length;i++){
+                  if(arr[i].id==parseInt(JSON.parse(options.body).params.id)){
+                      arr[i].children.push(newarr);
+                  }
+                  depthTraversal(arr[i].children,newarr);
                 }
-                if(k!=0){
-                    break;
-                }
-            } 
-                if(arr[i].id==parseInt(JSON.parse(options.body).params.id)){
-                    arr[i].children.push(newarr);
-                    break;
-                }
-                     
-       }
+            }         
+        }
+        add(arr,newarr); 
      }
        
        break;
-     case 'patch':
-        for(let i = 0,k = 0; i < arr.length; i++){
-            if(arr[i].children!=null){
-                for(let j = 0; j < arr[i].children.length; j++){
-                    if(arr[i].children[j].id==parseInt(JSON.parse(options.body).params.id)){
-                        k=arr[i].children[j].id;
-                        arr[i].children[j].name=JSON.parse(options.body).params.v1;
-                        arr[i].children[j].authority=JSON.parse(options.body).params.v2;
-                        arr[i].children[j].condition=JSON.parse(options.body).params.v3;
-                        arr[i].children[j].status=JSON.parse(options.body).params.v4;
-                        break;
-                    }
+     case 'patch'://修改权限
+       function edit(arr){  
+          depthTraversal1(arr);  
+        }
+        function depthTraversal1(arr){  
+            if (arr!=null){  
+                for(let i=0;i<arr.length;i++){
+                  if(arr[i].id==parseInt(JSON.parse(options.body).params.id)){
+                      arr[i].name=JSON.parse(options.body).params.v1;
+                      arr[i].authority=JSON.parse(options.body).params.v2;
+                      arr[i].condition=JSON.parse(options.body).params.v3;
+                      arr[i].status=JSON.parse(options.body).params.v4;
+                  }
+                  depthTraversal1(arr[i].children);
                 }
-                if(k!=0){
-                    break;
-                }
-            } 
-                if(arr[i].id==parseInt(JSON.parse(options.body).params.id)){
-                    arr[i].name=JSON.parse(options.body).params.v1;
-                    arr[i].authority=JSON.parse(options.body).params.v2;
-                    arr[i].condition=JSON.parse(options.body).params.v3;
-                    arr[i].status=JSON.parse(options.body).params.v4;
-                    break;
-                }
-                    
-       }
+            }         
+        }
+        edit(arr);
        break;
-     case 'delete':
-        let id = parseInt(JSON.parse(options.body).params.id); //获取删除的id
-        arr = arr.filter(function(val){
-          return val.id!=id;
-        });
+     case 'delete'://删除权限
+        function del(arr){  
+          depthTraversal2(arr);  
+        }
+        function depthTraversal2(arr){  
+            if (arr!=null){  
+                for(let i=0;i<arr.length;i++){
+                  if(arr[i].id==parseInt(JSON.parse(options.body).params.id)){
+                      arr.splice(i,1);
+                  }
+                  if(arr[i]!=null){
+                    depthTraversal2(arr[i].children);
+                  }                  
+                }
+            }         
+        }
+        del(arr);
         break; 
      default:
    }

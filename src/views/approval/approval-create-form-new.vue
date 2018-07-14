@@ -1,6 +1,6 @@
 <style lang="less">
     @import 'draggable-list.less';
-</style>
+</style> 
 <template>
   
     <Row type="flex" justify="center" class="code-row-bg">
