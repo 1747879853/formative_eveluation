@@ -53,11 +53,8 @@ export default {
                 }, {
                     title: '操作',
                     type: 'action',
-                    actions: [{
-                        type: 'primary',
-                        text: '添加子权限',
-
-                    }, {
+                    actions: [
+                    {
                         type: 'success',
                         text: '修改'
                     },{
