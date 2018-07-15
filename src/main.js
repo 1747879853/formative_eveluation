@@ -9,8 +9,6 @@ import 'iview/dist/styles/iview.css';
 import VueI18n from 'vue-i18n';
 import util from './libs/util';
 import axios from './libs/ajax';
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
 
 
 //// 生产环境中注释掉以下语句
@@ -18,7 +16,6 @@ import '../mock/index.js';
 
 Vue.use(VueI18n);
 Vue.use(iView);
-Vue.use(ElementUI);
 
 // 注册组件到Vue
 Vue.prototype.$axios = axios;
@@ -53,3 +50,4 @@ new Vue({
         this.$store.commit('setTagsList', tagsList);
     }
 });
+
