@@ -168,22 +168,7 @@ export default {
     },
     methods: {
             ok1 () {
-                this.$axios.post('/authRuleList', {
-                            params: {
-                                id:this.id1,
-                                v1:this.value1,
-                                v2:this.value2,
-                                v3:this.value3,
-                                v4:this.value4,
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            this.items = res.data;
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
-                        this.$Message.info('添加成功');
+                this.$emit('on-add-child', this.id1);
             },
             cancel1 () {
                 this.$Message.info('取消');
