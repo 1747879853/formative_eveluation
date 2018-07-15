@@ -107,7 +107,7 @@ export default {
                           return i;
                       }
                       let ret = this.depthTraversal(arr[i].children,id,newarr);
-                      if (ret>0) {
+                      if (ret>=0) {
                           return i;
                       }
                     }
