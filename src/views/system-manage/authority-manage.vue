@@ -10,13 +10,14 @@
         <table>
         <tr><td>权限名</td><td>
         <Input v-model="value1" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr>
+        <tr>&nbsp;</tr>
         <tr><td>权限</td><td>
         <Input v-model="value2" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
-        <tr><td>是否激活</td><td>
+        <tr>&nbsp;</tr><tr><td>是否激活</td><td>
         <Input v-model="value3" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
-        <tr><td>条件</td><td>
+        <tr>&nbsp;</tr><tr><td>条件</td><td>
         <Input v-model="value4" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
-        </table>
+        <tr>&nbsp;</tr></table>
     </Modal>
     </div>
         <tree-grid 
@@ -116,7 +117,10 @@ export default {
                     condition: ''
                 }]}*/
                 ],
-                
+                value1:"",
+                value2:"",
+                value3:"",
+                value4:"",
             }
         },
          components: {
