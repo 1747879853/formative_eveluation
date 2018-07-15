@@ -120,7 +120,7 @@ export default {
         procedure (app_id) {
             let argu = { approval_id: app_id };
             this.$router.push({
-                name: 'procedure-approval',
+                name: 'approval-procedure',
                 params: argu
             });
             
