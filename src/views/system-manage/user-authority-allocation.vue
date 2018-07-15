@@ -15,7 +15,7 @@
             <Card>
                 <p slot="title" style="font-size:20px;height: 33px;">
                     <Icon type="android-funnel"></Icon>
-                    用户
+                    用户&nbsp;&nbsp;&nbsp;
                     <Button type="primary" @click="showmodal()">添加</Button>
                     <Modal
                         v-model="modal"
@@ -40,10 +40,11 @@
             <Card >
                 <p slot="title" style="font-size:20px;height: 33px;">
                     <Icon type="android-funnel"></Icon>
-                    可分配权限组
+                    可分配权限组&nbsp;&nbsp;&nbsp;
+                    <Button type="primary" @click="save()">保存</Button>
                 </p>
                 <div style="overflow-y:auto;height:500px;">
-                <Tree :data="data1" show-checkbox multiple ></Tree>
+                <Tree ref="tree" :data="data1" show-checkbox @on-select-change="check111"></Tree>
                 </div>
             </Card>
         </Col>
@@ -58,81 +59,70 @@ import Sortable from 'sortablejs';
                 data1: [
                 ],
                 users_data: [
-               {    
-                    'id': 1,
-                    'name':'用户1',
-                    data:[
-                        {
-                            title: '权限组1',
-                        },
-                        {
-                            title: '权限组2',
-                        },
-                        {
-                            title: '权限组3',
-                        },
-                        {
-                            title: '权限组4',
-                        }
-                    ]
-                },
-                {    
-                    'id': 2,
-                    'name': '用户2',
-                    data:[
-                        {
-                            title: '权限组1',
-                        },
-                        {
-                            title: '权限组2',
-                        },
-                        {
-                            title: '权限组3',
-                        },
-                        {
-                            title: '权限组4',
-                        }
-                    ]
-                }
                 ],
                 value1:"",
-                newFromValidate: {
-                name: "",  
-                data:[
-                        {
-                            title: '权限组1',
-                        },
-                        {
-                            title: '权限组2',
-                        },
-                        {
-                            title: '权限组3',
-                        },
-                        {
-                            title: '权限组4',
-                        }
-                    ]            
-                },
                 modal:false,
+                select:null,
             }
         },
         mounted () { 
+        this.$axios.get("/authUserList").then( res =>{
+        this.users_data = res.data[1];
+        this.data1 = res.data[0];
+        }).catch(error =>{
+            console.log(error);
+        });
         let editable = document.getElementById('editable-new');
         let vm = this;
         var editableList = Sortable.create(editable, {
             filter: '.js-remove',
             onFilter: function (evt) {
                 var el = editableList.closest(evt.item); 
-                vm.users_data.splice(parseInt(el.getAttribute('data-index')),1);
+                vm.$Modal.confirm({
+                    title: '删除用户',
+                    content: '<p>确定要删除此用户吗？</p>',
+                    onOk: () => {
+                        vm.$axios.delete('/authUserList', {
+                            data: {
+                                params: {
+                                    id: parseInt(el.getAttribute('data-index')),
+                                }
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            vm.users_data = res.data[1];
+                        }.bind(vm))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        vm.$Message.info('删除成功');
+                        vm.select=null;
+                    },
+                    onCancel: () => {
+                        vm.$Message.info('取消');
+                    }
+                });
             },
             onChoose: function (evt) {
-                var el = editableList.closest(evt.item);               
+                var el = editableList.closest(evt.item); 
+                vm.select=parseInt(el.getAttribute('data-index'));              
                 //为选中的条目添加样式
                 let list= document.getElementById("editable-new").getElementsByTagName("li");
                 for (let i = 0; i < list.length; i++) {
                     if(list[i] == el){
                         evt.item.setAttribute("style","border-color: #87b4ee;");
-                        vm.data1=vm.users_data[parseInt(el.getAttribute('data-index'))].data;
+                        vm.$axios.patch('/authUserList', {
+                            params: {
+                                num:parseInt(el.getAttribute('data-index')),
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            vm.users_data = res.data[1];
+                            vm.data1 = res.data[0];
+                        }.bind(vm))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
                     }else{
                         list[i].removeAttribute("style");
                     }                    
@@ -149,14 +139,49 @@ import Sortable from 'sortablejs';
             this.value1="";
         },
         ok () {
-            this.newFromValidate.name=this.value1;
-            this.users_data.push(JSON.parse(JSON.stringify(this.newFromValidate)));
-            this.$Message.info('添加成功');
+            this.$axios.post('/authUserList', {
+                            params: {
+                                v1:this.value1,
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            this.users_data = res.data[1];
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        this.$Message.info('添加成功');
         },
         cancel () {
             this.$Message.info('取消');
         },
-           
+        save (){
+            if(this.select==null){
+                this.$Message.info('请选中一个用户');
+            }else{
+                this.$axios.put('/authUserList', {
+                            params: {
+                                user_id:this.select,
+                                id:this.$refs.tree.getCheckedNodes(),
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            this.groups_data = res.data[1];
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        this.$Message.info('保存成功');
+            }   
+        },
+        check111(selectedList){
+            if(selectedList[selectedList.length-1].checked==true){
+                selectedList[selectedList.length-1].checked=false;
+            }
+            else{
+                selectedList[selectedList.length-1].checked=true;
+            }            
+        }   
     }
 }
 </script>
