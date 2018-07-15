@@ -306,12 +306,12 @@ export const appRouter = [
                 component: () => import('@/views/users-manage/organization.vue')
             },
             {
-                path: 'placeholder',
+                path: 'user',
                 icon: 'compose',
-                name: 'placeholder',
-                title: '占位符',
-                component: () => import('@/views/users-manage/placeholder.vue')
-            },
+                name: 'user',
+                title: '用户',
+                component: () => import('@/views/users-manage/user.vue')
+            }
 
         ]
     },
