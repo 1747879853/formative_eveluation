@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 import TreeGrid from './treeGrid'
 export default {
     name: 'authority-manage',
@@ -90,7 +92,6 @@ export default {
                             }
                         }).then(function(res) {
                             console.log(res);
-                            debugger
                             this.data.push(res.data);
                         }.bind(this))
                         .catch(function(error) {
@@ -98,16 +99,19 @@ export default {
                         });
                         this.$Message.info('添加成功');
             },
-            depthTraversal:function(arr,id,newarr){  
+            depthTraversal:function(arr,id,newarr){
                 if (arr!=null){  
                     for(let i=0;i<arr.length;i++){
                       if(arr[i].id==id){
                           arr[i].children.push(newarr);
-                          //arr[i].children.splice(arr[i].children.length-1,1,newarr);
+                          return i;
                       }
-                      this.depthTraversal(arr[i].children,id,newarr);
+                      let ret = this.depthTraversal(arr[i].children,id,newarr);
+                      if (ret>0) {
+                          return i;
+                      }
                     }
-                }         
+                }
             },
             addChild ( id ) {
                 this.$axios.post('/authRuleList', {
@@ -120,11 +124,9 @@ export default {
                             }
                         }).then(function(res) {
                             console.log(res);
-                            let data2 = this.data;
-                            this.data = [];
-                            this.depthTraversal(data2, id, res.data);
-                            console.log(data2[1].children);
-                            this.data = data2;
+                            let ret = this.depthTraversal(this.data, id, res.data);
+                            alert(ret);
+                            Vue.set(this.data, ret, this.data[ret]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
