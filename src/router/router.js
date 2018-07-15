@@ -298,6 +298,13 @@ export const appRouter = [
         title: '用户管理',
         component: Main,
         children: [
+              {
+                path: 'user',
+                icon: 'compose',
+                name: 'user',
+                title: '用户',
+                component: () => import('@/views/users-manage/user.vue')
+            },
             {
                 path: 'organization',
                 icon: 'compose',
@@ -305,13 +312,7 @@ export const appRouter = [
                 title: '组织管理',
                 component: () => import('@/views/users-manage/organization.vue')
             },
-            {
-                path: 'placeholder',
-                icon: 'compose',
-                name: 'placeholder',
-                title: '占位符',
-                component: () => import('@/views/users-manage/placeholder.vue')
-            },
+          
 
         ]
     },

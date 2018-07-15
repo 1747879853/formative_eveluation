@@ -8,8 +8,9 @@ import groupList from './groupList'
 import getToken from './getToken'
 import order from './orderList'
 import approval from './approval'
+import userList from './userList'
 
-let data = [].concat(authRuleList, navlist, login, echarts, table, groupList, getToken,order,approval)
+let data = [].concat(authRuleList, navlist, login, echarts, table, groupList, getToken,order,approval,userList)
 
 data.forEach(function(res){
     Mock.mock(res.path, /get|post|delete|patch/i, res.data)
