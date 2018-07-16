@@ -22,24 +22,25 @@
         <Input v-model="value4" placeholder="请输入状态" clearable style="width: 300px"></Input></td></tr>
         </table>
         </Modal>
-         <Modal
-                                v-model="modal2"
-                                title="修改用户信息"
-                                @on-ok="ok2"
-                                @on-cancel="cancel2">
-                                <table>
-                                <tr><td>用户名</td><td>
-                                <Input v-model="value5" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
-                                <tr><td>姓名</td><td>
-                                <Input v-model="val电话ue6" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
-                                <tr><td>电话</td><td>
-                                <Input v-model="value7" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
-                                <tr><td>状态</td><td>
-                                <Input v-model="value8" placeholder="请输入状态" clearable style="width: 300px"></Input></td></tr>
-                                </table>
-                            </Modal>
+        <Modal
+       v-model="modal2"
+       title="修改用户信息"
+       @on-ok="ok2"
+       @on-cancel="cancel2">
+       <table>
+       <tr><td>用户名</td><td>
+       <Input v-model="value5" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+       <tr><td>姓名</td><td>
+       <Input v-model="val电话ue6" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
+       <tr><td>电话</td><td>
+       <Input v-model="value7" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
+       <tr><td>状态</td><td>
+       <Input v-model="value8" placeholder="请输入状态" clearable style="width: 300px"></Input></td></tr>
+       </table>
+       </Modal>
     </div>
-        <Row>
+        <Row :items='data' 
+        :columns='columns'>
             <Col span="24">
                 <Card>
                     <p slot="title">
@@ -103,7 +104,13 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.show_moda2()
+                                        this.show_modal2();
+                                        modal2=true;
+                                        id1=userId(item);
+                                        value5=userName(item);
+                                        value6=user_Name(item);
+                                        value7=userTel(item);
+                                        value8=userStatus(item);
                                     }
                                 }
                             }, '编辑用户'),  
@@ -142,14 +149,16 @@ export default {
       });
   },
   methods:{
-    show_modal1(){
+    show_modal1()
+    {
                 this.modal1=true;
                 this.value1="";
                 this.value2="";
                 this.value3="";
                 this.value4="";
-            },
-            ok () {
+    },
+    ok () 
+    {
                 this.$axios.post('/userList', {
                             params: {
                                 id: 0,
@@ -166,15 +175,17 @@ export default {
                             console.log(error)
                         });
                         this.$Message.info('添加成功');
-            },
-            show_moda2(){
+          },
+    show_modal2()
+    {
                 this.modal2=true;
                 this.value1="";
                 this.value2="";
                 this.value3="";
                 this.value4="";
-            },
-            ok2 () {
+    },
+    ok2 () 
+    {
                 this.$axios.patch('/userList', {
                             params: {
                                 id:this.id1,
@@ -191,11 +202,11 @@ export default {
                             console.log(error)
                         });
                         this.$Message.info('修改成功');
-            },
-            cancel2 () {
-                this.$Message.info('取消');
-            },
-             deleteClick() {
+    },
+    cancel2 () 
+    {this.$Message.info('取消');},
+    deleteClick() 
+    {
             
             this.$Modal.confirm({
                     title: '删除用户',
@@ -216,11 +227,27 @@ export default {
                             console.log(error)
                         });
                         this.$Message.info('删除成功');
-                    },
-                    onCancel: () => {
-                        this.$Message.info('取消');
-                    }
-                });
+                       },
+           onCancel: () => { this.$Message.info('取消'); }});
+    },
+  
+    userBody(row, column, index) {
+            return row[column.key]
+        },
+      userId(row, index) {
+            return row["id"]
+        },
+        userName(row, index) {
+            return row["name"]
+        },
+        user_Name(row, index) {
+            return row["user_name"]
+        },
+        userTel(row, index) {
+            return row["user_tel"]
+        },
+        userStatus(row, index) {
+            return row["status"]
         },
            
   }
