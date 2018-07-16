@@ -6,8 +6,8 @@
         <Row>            
             <Card>
                 <p style="text-align:center;font-size:24px;color: #2db7f5;">
-                    {{}}流程设置
-                    <span style="float:right;margin-right:100px;"> <Button type="primary" @click="save_and_use">保存并启用</Button></span>
+                    {{approval_name}}流程设置
+                    <span style="float:right;margin-right:100px;"> <Button type="primary" @click="save_proc_nodes">保存</Button></span>
                 </p>                    
             </Card>                      
         </Row>
@@ -39,15 +39,15 @@
                         结点设置
                     </p>
                     <div style="height: 100px;">
-                        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">                            
-                            <FormItem label="角色" prop="role">
-                                <Select v-model="formValidate.role_id" placeholder="请选择角色">
-                                    <Option v-for="(item,index) in user_groups" :key="item.id" value="item.id">{{item.name}}</Option>                              
-                                    
-                                </Select>
-                            </FormItem>                   
-                          
-                        </Form>
+                        
+                        <Input v-model="proc_name" placeholder="请输入结点名称" clearable ></Input>
+
+
+                        <Select v-model="role_id" placeholder="请选择角色" style="margin-top:10px;">
+                            <Option v-for="(item,index) in user_groups" :key="item.id" :value="item.id">{{item.name}}</Option>                              
+                            
+                        </Select>
+                            
                     </div>
                 </Card>
             </Col>
@@ -63,56 +63,33 @@ export default {
     name: 'approval-procedure',
     data () {
         return {
+            approval_id: 0,
+            approval_name: '',
             user_groups: [],
-            proc_nodes:[{    
-                'id': 1,        
-                'name': '审核1',
-                'owner_type': 'Role',
-                'owner_id': '22',
-                'sequence': 0,
-                'procedure_id': 11
-            },
-            {    
-                'id': 2,        
-                'name': '审核2',
-                'owner_type': 'Role',
-                'owner_id': '33',
-                'sequence': 1,
-                'procedure_id': 11
-            },
-            {    
-                'id': 3,        
-                'name': '审核3',
-                'owner_type': 'Role',
-                'owner_id': '44',
-                'sequence': 2,
-                'procedure_id': 11
-            }],
-            cur_node:{
+            proc_nodes:[],
+            new_proc_node: {
                 'id': 0,        
-                'name': '',
-                'owner_type': '',
-                'owner_id': '',
+                'name': '审批结点',
+                'owner_type': 'Role',
+                'owner_id': 0,
                 'sequence': 0,
                 'procedure_id': 0
             },
-            formValidate: {
-                role_id: 0 
-            },
-            ruleValidate: {
-                role_id: [
-                    { required: true, message: '角色不能为空', trigger: 'blur' }
-                ]
-               
-            },
-
-                       
+            role_id: 0 ,
+            proc_name: "审批结点",
+            proc_node_selected: -1, 
         }; //return
     },
     computed: {
         
     },
     watch:{
+        role_id(curVal,oldVal){
+            this.proc_nodes[this.proc_node_selected].owner_id = curVal;
+        },
+        proc_name(curVal,oldVal){
+            this.proc_nodes[this.proc_node_selected].name = curVal;
+        }
         
     },
     components:{
@@ -120,6 +97,7 @@ export default {
     },
     mounted () {
         this.init();
+
         this.$axios.get("/user_group_list")
         .then(res =>{
             // console.log(res.data);
@@ -129,103 +107,87 @@ export default {
             console.log(error);
         });
           
-    },
+    },    
     activated () {
         this.init();
     },
-    
-    methods:{  
+    // 组件内导航钩子，处理未保存退出的情况
+    // beforeRouteLeave: function(to, from , next){
+    //       next(false)
+    //       this.$confirm('您还未保存简介，确定需要提出吗?', '提示', {
+    //         confirmButtonText: '确定',
+    //         cancelButtonText: '取消',
+    //         type: 'warning'
+    //       }).then(() => {
+    //         // 选择确定
+    //         next()
+    //       })
+    // },   
+    methods:{
         init (){
-            // this.approval_id_s = this.$route.params.approval_id.toString();
-            // this.approvalName = this.$route.params.approval_name;
-            // this.approvalComment = this.$route.params.approval_comment;
+            this.approval_id = this.$route.params.approval_id;
+            this.approval_name = this.$route.params.approval_name;
 
-            // if(this.approval_id_s=='-1'){
-            //     return;
-            // }
-            // else{
-            //     this.$axios
-            //     .get("/procedure_used?approval_id=" + this.approval_id_s)
-            //     .then(res => {
-            //         // this.approval_field_data = res.data.approval_field_data;
-            //         // this.approval_detail_field_data = res.data.approval_detail_field_data;
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //         this.$Message.error("没有该审批的表单数据！")
-            //     });
-            // }
+            this.$axios
+            .get("/procedure_nodes?approval_id=" + this.approval_id)
+            .then(res => {
+                this.proc_nodes = res.data
+            })
+            .catch(error => {
+                this.proc_nodes = [];
+                console.log(error);
+                // this.$Message.error("该审批的结点数据获取失败！")
+            });
+           
 
 
-        },  
+        },
+         
         show_node_info(evt){
             //add style for clicked item
             var el = evt.target.parentElement  
             var cusid_ele = document.getElementsByClassName('out-span');
             for (var i = 0; i < cusid_ele.length; ++i) {
                 if( el == cusid_ele[i]){
-                    cusid_ele[i].setAttribute("style","border-color: #87b4ee;color: #87b4ee;")
+                    cusid_ele[i].setAttribute("style","border-color: #87b4ee;color: #87b4ee;");
+                    this.role_id = this.proc_nodes[parseInt(el.getAttribute("data-index"))].owner_id;
+                    this.proc_name = this.proc_nodes[parseInt(el.getAttribute("data-index"))].name,
+                    this.proc_node_selected = i;
+                    // debugger
+                    // alert(this.formValidate.role_id);
                 }else{
                     cusid_ele[i].removeAttribute("style")
                 }  
-            }
-           
+            }           
         },  
-        del_node(){
-            alert(22);
+        del_node(evt){
+            // alert(22);
+            var el = evt.target.parentElement
+            this.proc_nodes.splice(parseInt(el.getAttribute('data-index')),1)
 
         },
         add_new_item(){
+            this.proc_nodes.push(JSON.parse(JSON.stringify(this.new_proc_node)));
+        },        
+        save_proc_nodes(){
 
-        },
-
-        handleReset (name) {
-            this.$refs[name].resetFields();
-        },
-        addNewField(){
-            this.approval_field_data.push(JSON.parse(JSON.stringify(this.newFromValidate)));
-        },
-
-        addSel(index) {
-            this.sel_arr.splice(index+1, 0, "新选项"); 
-        },
-        removeSel(index) {
-            if(this.sel_arr.length > 1){
-                this.sel_arr.splice(index , 1);
-            }else{
-                this.$Message.error('至少一个选项！');
+            //根据数组proc_nodes中结点顺序重新设置sequence字段的值
+            for (let i = 0; i < this.proc_nodes.length; i++) {                
+                this.proc_nodes[i].sequence = i;                                  
             }
-        },
-        save_and_use(){
-            let list= document.getElementById("editable").getElementsByTagName("li");
-            for (let i = 0; i < list.length; i++) {                
-                let se = parseInt(list[i].getAttribute("data-index"));
-                this.approval_field_data[i].sequence = se;                                  
-            }
-
-            list= document.getElementById("editable-new").getElementsByTagName("li");
-            for (let i = 0; i < list.length; i++) {                
-                let se = parseInt(list[i].getAttribute("data-index"));
-                this.approval_detail_field_data[i].sequence = se;                                  
-            }
-
-            //发送数据到服务器，然后建表并保存。
+            //发送数据到服务器保存。
             this.$axios.post('/approval_field_save', {
-                approval_id: this.approval_id_s,
-                approval_field_data: this.approval_field_data,
-                approval_detail_field_data: this.approval_detail_field_data
+                approval_id: this.approval_id,
+                proc_nodes: this.proc_nodes,
             })
             .then(res => {
                 // console.log(response);
                 // console.log(res);
                 this.$Message.success(res.data.msg);
-                // this.$Message.success("xxxx")              
             })
             .catch(error => {
                 console.log(error);
             });
-           
-             
         }               
     }
 };

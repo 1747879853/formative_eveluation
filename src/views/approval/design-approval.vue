@@ -146,6 +146,8 @@ export default {
                     this.approval_detail_field_data = res.data.approval_detail_field_data;
                 })
                 .catch(error => {
+                    this.approval_field_data = [];
+                    this.approval_detail_field_data = [];
                     console.log(error);
                     this.$Message.error("没有该审批的表单数据！")
                 });
