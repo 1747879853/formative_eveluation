@@ -100,10 +100,10 @@ export default {
             },
             show_modal(){
                 this.modal2=true;
-                this.value1="";
-                this.value2="";
-                this.value3="";
-                this.value4="";
+                this.f_name="";
+                this.f_authority="";
+                this.f_status="";
+                this.f_condition="";
             },
         },
     mounted(){

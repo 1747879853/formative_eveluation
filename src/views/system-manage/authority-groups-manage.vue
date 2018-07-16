@@ -24,7 +24,7 @@
                         @on-cancel="cancel">
                         <table>
                         <tr><td>权限组名</td><td>
-                        <Input v-model="value1" placeholder="请输入权限组名" clearable style="width: 300px"></Input></td></tr>
+                        <Input v-model="name" placeholder="请输入权限组名" clearable style="width: 300px"></Input></td></tr>
                         </table>
                     </Modal>
                 </p>
@@ -60,7 +60,7 @@ import Sortable from 'sortablejs';
                 ],
                 groups_data: [              
                 ],
-                value1:"",
+                name:"",
                 modal:false,
                 select:null,
                 ele:null,
@@ -151,12 +151,12 @@ import Sortable from 'sortablejs';
     methods:{        
         showmodal(){
             this.modal=true;
-            this.value1="";
+            this.name="";
         },
         ok () {
             this.$axios.post('/authGroupList', {
                             params: {
-                                v1:this.value1,
+                                name:this.name,
                             }
                         }).then(function(res) {
                             console.log(res);

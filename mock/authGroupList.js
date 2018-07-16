@@ -101,11 +101,11 @@ let list = function (options) {
         newarr=arr[i];     
        break;
      case 'post'://添加新权限组
-     var newid=5;     
+       var newid=5;     
        var newarr = 
         {
             id : newid,
-            name : JSON.parse(options.body).params.v1, 
+            name : JSON.parse(options.body).params.name, 
             checked_id : []             
         };
         arr.push(newarr);
