@@ -86,12 +86,14 @@ import Sortable from 'sortablejs';
                         vm.$axios.delete('/authGroupList', {
                             data: {
                                 params: {
+                                    //实际应该传对应的id
+                                    //vm.groups_data[parseInt(el.getAttribute('data-index'))].id
                                     id: parseInt(el.getAttribute('data-index')),
                                 }
                             }
                         }).then(function(res) {
                             console.log(res);
-                            vm.groups_data = res.data[1];
+                            vm.groups_data.splice(parseInt(el.getAttribute('data-index')),1);
                         }.bind(vm))
                         .catch(function(error) {
                             console.log(error)
@@ -111,18 +113,31 @@ import Sortable from 'sortablejs';
                 let list= document.getElementById("editable-new").getElementsByTagName("li");
                 for (let i = 0; i < list.length; i++) {
                     if(list[i] == el){
-                        evt.item.setAttribute("style","border-color: #87b4ee;");                        vm.$axios.patch('/authGroupList', {
-                            params: {
-                                num:parseInt(el.getAttribute('data-index')),
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            vm.groups_data = res.data[1];
-                            vm.data1 = res.data[0];
-                        }.bind(vm))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
+                        evt.item.setAttribute("style","border-color: #87b4ee;"); 
+                        let ch_id = vm.groups_data[parseInt(el.getAttribute('data-index'))].checked_id;
+                        function edit(arr){  
+                          depthTraversal1(arr); 
+                          return arr; 
+                        }   
+                        function depthTraversal1(arr){  
+                            if (arr!=null){  
+                                for(let i=0;i<arr.length;i++){
+                                    if(ch_id.length!=0){
+                                    for(let j=0;j<ch_id.length;j++){
+                                        if(arr[i].id==ch_id[j]){
+                                            arr[i].checked=true;
+                                            break;
+                                        }
+                                        else{arr[i].checked=false;}
+                                    }
+                                    }else{
+                                        arr[i].checked=false;
+                                    }
+                                  depthTraversal1(arr[i].children);
+                                }
+                            }         
+                        }
+                        vm.data1=edit(vm.data1);
                     }else{
                         list[i].removeAttribute("style");
                     }                    
@@ -145,7 +160,7 @@ import Sortable from 'sortablejs';
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.groups_data = res.data[1];
+                            this.groups_data.push(res.data[2]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -159,14 +174,19 @@ import Sortable from 'sortablejs';
             if(this.select==null){
                 this.$Message.info('请选中一个权限组');
             }else{
-                this.$axios.put('/authGroupList', {
+                let checked_tree = this.$refs.tree.getCheckedNodes();
+                let tree_id = [];
+                for(let i=0;i<checked_tree.length;i++){
+                    tree_id[i]=checked_tree[i].id;
+                }
+                this.$axios.patch('/authGroupList', {
                                 params: {
                                     group_id:this.select,
-                                    id:this.$refs.tree.getCheckedNodes(),
+                                    id:tree_id,
                                 }
                             }).then(function(res) {
                                 console.log(res);
-                                this.groups_data = res.data[1];
+                                this.groups_data[this.select].checked_id = res.data[2].checked_id;
                             }.bind(this))
                             .catch(function(error) {
                                 console.log(error)
