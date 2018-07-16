@@ -298,7 +298,7 @@ var procedure_nodes = [
 	    'id': 1,	    
 	    'name': '审核1',
 	    'owner_type': 'Role',
-	    'owner_id': '22',
+	    'owner_id': 22,
 	    'sequence': 0,
 	    'procedure_id': 11
 	},
@@ -306,7 +306,7 @@ var procedure_nodes = [
 	    'id': 2,	    
 	    'name': '审核2',
 	    'owner_type': 'Role',
-	    'owner_id': '33',
+	    'owner_id': 33,
 	    'sequence': 1,
 	    'procedure_id': 11
 	},
@@ -314,7 +314,7 @@ var procedure_nodes = [
 	    'id': 3,	    
 	    'name': '审核3',
 	    'owner_type': 'Role',
-	    'owner_id': '44',
+	    'owner_id': 44,
 	    'sequence': 2,
 	    'procedure_id': 11
 	},
