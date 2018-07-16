@@ -1,13 +1,13 @@
 /*
 create table approvals
 has_many: approval_fields
-申请表的字段
+审批表的字段
 id 
 name:       string, 名称
-en_name:    string, 对ruby来说就是model名称,该名称由服务器端在保存客户端提交的申请时填入
+en_name:    string, 对ruby来说就是model名称,该名称由服务器端在保存客户端提交的审批时填入
 /////not used:  group_ids:  string, 授权的用户组的id，以逗号分隔的字符串
 /////not used:   user_ids:  string, 授权的用户的id，以逗号分隔的字符串
-comment:    string, 该申请的简介说明
+comment:    string, 该审批的简介说明
 created_time: timestamp, 创建时间，也即启用时间
 stoped_time:  timestamp, 停用时间，如正在使用则为空
 status: integer，1 正在使用， 0 停用
@@ -15,44 +15,44 @@ status: integer，1 正在使用， 0 停用
 var approval_list = [
 	{    
 	    'id': 1,
-	    'name': '采购申请',
+	    'name': '采购',
 	    'en_name': 'PurchaseApproval', 
 	    // 'group_ids': '1,4,6',
 	    // 'user_ids': '3,5,7,8',
-	    'comment': '这是一个采购申请',
+	    'comment': '这是一个采购审批',
 	    'created_time': '2017-01-01 08:01:01',
 	    'stoped_time': null,
 	    'status': 1
 	},
 	{    
 	    'id': 2,
-	    'name': '请假申请',
+	    'name': '请假',
 	    'en_name': 'LeaveApproval',
 	    'group_ids': '11,8,6',
 	    'user_ids': '13,50,71,18',
-	    'comment': '这是一个请假申请',
+	    'comment': '这是一个请假审批',
 	    'created_time': '2017-05-01 08:10:10',
 	    'stoped_time': null,
 	    'status': 1     
 	},
 	{    
 	    'id': 3,
-	    'name': '付款申请' ,
+	    'name': '付款' ,
 	    'en_name': 'PaymentApproval',
 	    // 'group_ids': '5,9,10',
 	    // 'user_ids': '22,15,16,21',
-	    'comment': '这是一个付款申请',
+	    'comment': '这是一个付款审批',
 	    'created_time': '2017-06-01 08:20:20',
 	    'stoped_time': null,
 	    'status': 1    
 	},
 	{    
 	    'id': 4,
-	    'name': 'xx申请' ,
+	    'name': 'xx审批' ,
 	    'en_name': 'XxYyZz',
 	    // 'group_ids': '5,9,10',
 	    // 'user_ids': '22,15,16,21',
-	    'comment': '这是一个xx申请',
+	    'comment': '这是一个xx审批',
 	    'created_time': '2017-06-01 08:08:08',
 	    'stoped_time': '2017-10-01 08:08:08',
 	    'status': 0   
@@ -298,7 +298,7 @@ var procedure_nodes = [
 	    'id': 1,	    
 	    'name': '审核1',
 	    'owner_type': 'Role',
-	    'owner_id': '22',
+	    'owner_id': 22,
 	    'sequence': 0,
 	    'procedure_id': 11
 	},
@@ -306,7 +306,7 @@ var procedure_nodes = [
 	    'id': 2,	    
 	    'name': '审核2',
 	    'owner_type': 'Role',
-	    'owner_id': '33',
+	    'owner_id': 33,
 	    'sequence': 1,
 	    'procedure_id': 11
 	},
@@ -314,7 +314,7 @@ var procedure_nodes = [
 	    'id': 3,	    
 	    'name': '审核3',
 	    'owner_type': 'Role',
-	    'owner_id': '44',
+	    'owner_id': 44,
 	    'sequence': 2,
 	    'procedure_id': 11
 	},
@@ -350,4 +350,11 @@ export default [
 	    path: '/procedure_nodes?approval_id=1',  //返回正在使用的该审批的流程节点
 	    data: procedure_nodes
 	},
+	{
+		/*接收2个参数 approval_id: 审批表approvals的id，proc_nodes: 结点数据(数据格式见本文件var procedure_nodes)，该结点数据中owner_type默认是"Role",其他只有owner_id,name,sequence这3个数据需要保存，其他数据忽略。
+		保存时过程：依据approval_id查流程表procedures，如果没有记录，则新创建记录。如果有记录，则将原记录的status设置为0，表示停用，然后再新创建记录。然后将procedure_nodes数据写入procedure_nodes表。
+		*/
+		path: '/procedure_node_save',
+		data: save_success
+	}
 ]
