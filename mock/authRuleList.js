@@ -1,6 +1,7 @@
 let arr;
 var id = 0;
 var maxid = 10;
+let params;
 let list = function (options) {
     /* 模拟删除数据的方式 */
     let rtype = options.type.toLowerCase(); // 获取请求类型
@@ -61,52 +62,31 @@ let list = function (options) {
         case 'post':// 添加新权限
             id = maxid;
             maxid = maxid + 1;
-            let params = JSON.parse(options.body).params;
+            params = JSON.parse(options.body).params;
             arr = {
                 id: id,
-                authority: params.v2,
-                name: params.v1,
-                condition: params.v4,
-                status: params.v3,
+                authority: params.authority,
+                name: params.name,
+                condition: params.condition,
+                status: params.status,
                 children: []
             };
             break;
         case 'patch':// 修改权限
-            function edit (arr) {
-                depthTraversal1(arr);
-            }
-            function depthTraversal1 (arr) {
-                if (arr != null) {
-                    for (let i = 0; i < arr.length; i++) {
-                        if (arr[i].id == parseInt(JSON.parse(options.body).params.id)) {
-                            arr[i].name = JSON.parse(options.body).params.v1;
-                            arr[i].authority = JSON.parse(options.body).params.v2;
-                            arr[i].condition = JSON.parse(options.body).params.v3;
-                            arr[i].status = JSON.parse(options.body).params.v4;
-                        }
-                        depthTraversal1(arr[i].children);
-                    }
-                }
-            }
-            edit(arr);
+            params = JSON.parse(options.body).params;
+            arr = {
+                id: params.id,
+                authority: params.v2,
+                name: params.v1,
+                condition: params.v3,
+                status: params.v4
+            };
             break;
         case 'delete':// 删除权限
-            function del (arr) {
-                depthTraversal2(arr);
-            }
-            function depthTraversal2 (arr) {
-                if (arr != null) {
-                    for (let i = 0; i < arr.length; i++) {
-                        if (arr[i].id == parseInt(JSON.parse(options.body).params.id)) {
-                            arr.splice(i, 1);
-                        }
-                        if (arr[i] != null) {
-                            depthTraversal2(arr[i].children);
-                        }
-                    }
-                }
-            }
-            del(arr);
+            params = JSON.parse(options.body).params;
+            arr = {
+                id: params.id
+            };
             break;
         default:
     }

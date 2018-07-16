@@ -72,6 +72,8 @@
     </div>
 </template>
 <script>
+import Vue from 'vue';
+
 export default {
     name: 'treeGrid',
     props: {
@@ -167,8 +169,92 @@ export default {
         }
     },
     methods: {
+            depthTraversal:function(arr,id,newarr){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr[i].children.push(newarr);
+                          return i;
+                      }
+                      let ret = this.depthTraversal(arr[i].children,id,newarr);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal2:function(arr,id,newarr){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr[i].authority = newarr.authority;
+                          arr[i].name = newarr.name;
+                          arr[i].condition = newarr.condition;
+                          arr[i].status = newarr.status;
+                          return i;
+                      }
+                      let ret = this.depthTraversal2(arr[i].children,id,newarr);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal4:function(arr,id,newarr){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr.splice(i, 1);
+                          return i;
+                      }
+                      let ret = this.depthTraversal4(arr[i].children,id,newarr);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal3:function(arr,id,newarr){
+                let found = false;
+                let i;
+                if (arr!=null){  
+                    for(i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr.splice(i, 1);
+                        return -1;
+                      }
+                        else{
+                            let ret = this.depthTraversal4(arr[i].children,id,newarr);
+                            if(ret>=0)
+                                return ret;
+                        }
+                    
+                    }    
+                    //   let ret = this.depthTraversal2(arr[i].children,id,newarr);
+                    //   if (ret>=0) {
+                    //       return i;
+                    //   }
+                }
+            },
             ok1 () {
-                this.$emit('on-add-child', this.id1);
+                // this.$emit('on-add-child', this.id1);
+                this.$axios.post('/authRuleList', {
+                            params: {
+                                id: this.id1,
+                                v1: this.value1,
+                                v2: this.value2,
+                                v3: this.value3,
+                                v4: this.value4,
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            let ret = this.depthTraversal(this.items, this.id1, res.data);
+                            Vue.set(this.items, ret, this.items[ret]);
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        this.$Message.info('添加成功');
             },
             cancel1 () {
                 this.$Message.info('取消');
@@ -184,7 +270,8 @@ export default {
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.items = res.data;
+                            let ret = this.depthTraversal2(this.items, this.id1, res.data);
+                            Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -246,13 +333,14 @@ export default {
                         this.$axios.delete('/authRuleList', {
                             data: {
                                 params: {
-
                                     id: this.id1,
                                 }
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.items = res.data;
+                            let ret=this.depthTraversal3(this.items, this.id1, res.data);
+                            if(ret>=0)
+                                Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
