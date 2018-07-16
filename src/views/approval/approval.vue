@@ -71,7 +71,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.procedure(params.row.id)
+                                        this.procedure(params.row)
                                     }
                                 }
                             }, '审批流程'),
@@ -82,7 +82,7 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.stopUse(params.row.id)
+                                        this.stopUse(params.row)
                                     }
                                 }
                             }, '停用')
@@ -117,10 +117,10 @@ export default {
             });
             
         },
-        procedure (app_id) {
-            let argu = { approval_id: app_id };
+        procedure (row) {
+            let argu = { approval_id: row.id,approval_name: row.name };
             this.$router.push({
-                name: 'procedure-approval',
+                name: 'approval-procedure',
                 params: argu
             });
             
