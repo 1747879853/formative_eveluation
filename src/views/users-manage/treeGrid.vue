@@ -2,7 +2,7 @@
     <div :style="{width:tableWidth}" class='autoTbale'>
         <table class="table table-bordered" id='hl-tree-table'>
             <tbody>
-                <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
+                <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{color:isChecked== index}" @click="changeColor(index)">
                     <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
                         <div v-if="column.type === 'action'">
                             <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal1();
@@ -68,6 +68,7 @@ export default {
             modal1: false,
             modal3:false,
             id1:"",
+            isChecked:-1,//是否与表格的行的下标一致
         }
     },
     computed: {
@@ -131,6 +132,9 @@ export default {
         }
     },
     methods: {
+            changeColor(index){
+                this.isChecked=index;
+            },
             ok1 () {
                 this.$axios.post('/organization', {
                             params: {
@@ -527,6 +531,10 @@ export default {
                 '[object Object]': 'object'
             };
             return map[toString.call(obj)];
+        },
+        isChoose(){
+            isChecked=true;
+            return isChecked;
         }
     },
     beforeDestroy() {
@@ -559,6 +567,10 @@ table {
     vertical-align: middle;
 }
 
+.table>tbody>tr>.changeColor {
+    background-color: #42b983;
+}
+
 .table-bordered>tbody>tr>td,
 .table-bordered>tbody>tr>th,
 .table-bordered>tfoot>tr>td,
@@ -578,13 +590,18 @@ table {
 }
 
 #hl-tree-table>tbody>tr {
-    background-color: #fbfbfb;
+    background-color: #fff;
+    cursor: pointer;
 }
 
 #hl-tree-table>tbody>.child-tr {
     background-color: #fff;
+    cursor: pointer;
 }
 
+#hl-tree-table>tbody>.color{
+    background-color: #bbbec4;
+}
 label {
     margin: 0 8px;
 }

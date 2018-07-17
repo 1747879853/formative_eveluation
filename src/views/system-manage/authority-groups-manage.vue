@@ -29,7 +29,7 @@
                     </Modal>
                 </p>
                 <div style="overflow-y:auto;height:500px;">
-                    <ul id="editable-new" class="iview-admin-draggable-list">                            
+                    <ul  id="editable-new"  class="iview-admin-draggable-list">                            
                         <li v-for="(item, index) in groups_data" :key="index" class="notwrap todolist-item" :data-index="index">
                         {{ item.name }}<Icon type="close" class="js-remove"/></li>
                     </ul>
