@@ -24,7 +24,7 @@
                         @on-cancel="cancel">
                         <table>
                         <tr><td>用户名</td><td>
-                        <Input v-model="value1" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+                        <Input v-model="u_name" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
                         </table>
                     </Modal>
                 </p>
@@ -60,7 +60,7 @@ import Sortable from 'sortablejs';
                 ],
                 users_data: [
                 ],
-                value1:"",
+                u_name:"",
                 modal:false,
                 select:null,
             }
@@ -90,7 +90,7 @@ import Sortable from 'sortablejs';
                             }
                         }).then(function(res) {
                             console.log(res);
-                            vm.users_data = res.data[1];
+                            vm.users_data.splice(parseInt(el.getAttribute('data-index')),1);
                         }.bind(vm))
                         .catch(function(error) {
                             console.log(error)
@@ -111,18 +111,21 @@ import Sortable from 'sortablejs';
                 for (let i = 0; i < list.length; i++) {
                     if(list[i] == el){
                         evt.item.setAttribute("style","border-color: #87b4ee;");
-                        vm.$axios.patch('/authUserList', {
-                            params: {
-                                num:parseInt(el.getAttribute('data-index')),
+                        var ch_id = vm.users_data[parseInt(el.getAttribute('data-index'))].checked_id;
+                        for(let i=0;i<vm.data1.length;i++){
+                            if(ch_id.length!=0){
+                                for(let j=0;j<ch_id.length;j++){
+                                    if(vm.data1[i].id==ch_id[j]){
+                                        vm.data1[i].checked=true;
+                                        break;
+                                    }
+                                    else{vm.data1[i].checked=false;
+                                    }
+                                }
+                            }else{
+                                vm.data1[i].checked=false;
                             }
-                        }).then(function(res) {
-                            console.log(res);
-                            vm.users_data = res.data[1];
-                            vm.data1 = res.data[0];
-                        }.bind(vm))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
+                        } 
                     }else{
                         list[i].removeAttribute("style");
                     }                    
@@ -136,16 +139,16 @@ import Sortable from 'sortablejs';
     methods:{        
         showmodal(){
             this.modal=true;
-            this.value1="";
+            this.u_name="";
         },
         ok () {
             this.$axios.post('/authUserList', {
                             params: {
-                                v1:this.value1,
+                                name:this.u_name,
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.users_data = res.data[1];
+                            this.users_data.push(res.data[2]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -159,14 +162,19 @@ import Sortable from 'sortablejs';
             if(this.select==null){
                 this.$Message.info('请选中一个用户');
             }else{
-                this.$axios.put('/authUserList', {
+                let checked_tree = this.$refs.tree.getCheckedNodes();
+                let tree_id = [];
+                for(let i=0;i<checked_tree.length;i++){
+                    tree_id[i]=checked_tree[i].id;
+                }
+                this.$axios.patch('/authUserList', {
                             params: {
                                 user_id:this.select,
-                                id:this.$refs.tree.getCheckedNodes(),
+                                id:tree_id,
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.groups_data = res.data[1];
+                            this.users_data[this.select].checked_id = res.data[2].checked_id;
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)

@@ -1,31 +1,59 @@
 <template>
     <div :style="{width:tableWidth}" class='autoTbale'>
         <table class="table table-bordered" id='hl-tree-table'>
+            <thead>
+                <tr>
+                    <th v-for="(column,index) in cloneColumns">
+                        <label v-if="column.type === 'selection'">
+                            <input type="checkbox" v-model="checks" @click="handleCheckAll">
+                        </label>
+                        <label v-else>
+                            {{ renderHeader(column, index) }}
+                            <span class="ivu-table-sort" v-if="column.sortable">
+                                <Icon type="arrow-up-b" :class="{on: column._sortType === 'asc'}" @click.native="handleSort(index, 'asc')" />
+                                <Icon type="arrow-down-b" :class="{on: column._sortType === 'desc'}" @click.native="handleSort(index, 'desc')" />
+                            </span>
+                        </label>
+                    </th>
+                </tr>
+            </thead>
             <tbody>
                 <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{color:isChecked== index}" @click="changeColor(index)">
                     <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
                         <div v-if="column.type === 'action'">
                             <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal1();
-                            id1=renderId(item);">添加</button>
+                            id1=renderId(item);">添加子权限</button>
                             <Modal
                                 v-model="modal1"
-                                title="添加组织机构"
+                                title="添加子权限"
                                 @on-ok="ok1"
                                 @on-cancel="cancel1">
                                 <table>
-                                <tr><td>组织名</td><td>
-                                <Input v-model="value1" placeholder="请输入组织名" clearable style="width: 300px"></Input></td></tr>
+                                <tr><td>权限名</td><td>
+                                <Input v-model="value1" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <tr><td>权限</td><td>
+                                <Input v-model="value2" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <tr><td>是否激活</td><td>
+                                <Input v-model="value3" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <tr><td>条件</td><td>
+                                <Input v-model="value4" placeholder="条件" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 </table>
                             </Modal>
                             <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);value5=renderName(item);value6=renderAuthority(item);value7=renderCondition(item);value8=renderStatus(item);">修改</button>
                             <Modal
                                 v-model="modal3"
-                                title="修改组织名"
+                                title="修改子权限"
                                 @on-ok="ok2"
                                 @on-cancel="cancel2">
                                 <table>
                                 <tr><td>权限名</td><td>
-                                <Input v-model="value5" placeholder="请输入组织名" clearable style="width: 300px"></Input></td></tr>
+                                <Input v-model="value5" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <tr><td>权限</td><td>
+                                <Input v-model="value6" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <tr><td>是否激活</td><td>
+                                <Input v-model="value8" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <tr><td>条件</td><td>
+                                <Input v-model="value7" placeholder="条件" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 </table>
                             </Modal>
                             <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="id1=renderId(item); deleteClick();">删除</button>
@@ -67,6 +95,14 @@ export default {
             dataLength: 0, //树形数据长度
             modal1: false,
             modal3:false,
+            value1:"",
+            value2:"",
+            value3:"",
+            value4:"",
+            value5:"",
+            value6:"",
+            value7:"",
+            value8:"",
             id1:"",
             isChecked:-1,//是否与表格的行的下标一致
         }
@@ -136,7 +172,7 @@ export default {
                 this.isChecked=index;
             },
             ok1 () {
-                this.$axios.post('/organization', {
+                this.$axios.post('/authRuleList', {
                             params: {
                                 id:this.id1,
                                 v1:this.value1,
@@ -157,7 +193,7 @@ export default {
                 this.$Message.info('取消');
             },
             ok2 () {
-                this.$axios.patch('/organization', {
+                this.$axios.patch('/authRuleList', {
                             params: {
                                 id:this.id1,
                                 v1:this.value5,
@@ -224,9 +260,9 @@ export default {
             
             this.$Modal.confirm({
                     title: '删除权限',
-                    content: '<p>确定要删除此组织机构吗？</p>',
+                    content: '<p>确定要删除此权限吗？</p>',
                     onOk: () => {
-                        this.$axios.delete('/organization', {
+                        this.$axios.delete('/authRuleList', {
                             data: {
                                 params: {
 
@@ -316,6 +352,7 @@ export default {
                 item = Object.assign({}, item, {
                     "load": (item.expanded ? true : false)
                 });
+                //debugger
                 this.initItems.push(item);
                 if (item.children && item.expanded) {
                     this.initData(item.children, level + 1, item);

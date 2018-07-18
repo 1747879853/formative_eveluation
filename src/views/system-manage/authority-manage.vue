@@ -9,14 +9,14 @@
         @on-cancel="cancel">
         <table>
         <tr><td>权限名</td><td>
-        <Input v-model="value1" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr>
+        <Input v-model="f_name" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr>
         <tr>&nbsp;</tr>
         <tr><td>权限</td><td>
-        <Input v-model="value2" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
+        <Input v-model="f_authority" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
         <tr>&nbsp;</tr><tr><td>是否激活</td><td>
-        <Input v-model="value3" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
+        <Input v-model="f_status" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
         <tr>&nbsp;</tr><tr><td>条件</td><td>
-        <Input v-model="value4" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
+        <Input v-model="f_condition" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
         <tr>&nbsp;</tr></table>
     </Modal>
     </div>
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
 import TreeGrid from './treeGrid'
 export default {
     name: 'authority-manage',
@@ -53,11 +55,8 @@ export default {
                 }, {
                     title: '操作',
                     type: 'action',
-                    actions: [{
-                        type: 'primary',
-                        text: '添加子权限',
-
-                    }, {
+                    actions: [
+                    {
                         type: 'success',
                         text: '修改'
                     },{
@@ -67,63 +66,11 @@ export default {
                     width: '150',
                 }],
                 data: [
-                /*{
-                    id: '1',
-                    name: '后台首页',
-                    authority: 'Admin/Index/index',
-                    status: '激活',
-                    condition: '',
-                    children: [{
-                        id: '01',
-                        name: '欢迎界面',
-                        authority: 'Admin/Index/welcome',
-                        status: '激活',
-                        condition: ''
-                    }]
-                }, {
-                    id: '2',
-                    name: '系统设置',
-                    authority: 'Admin/ShowNav/config',
-                    status: '激活',
-                    condition: '',
-                    children: [{
-                        id: '01',
-                        name: '菜单管理',
-                        authority: 'Admin/ShowNav/nav',
-                        status: '激活',
-                        condition: '',
-                        children: [{
-                        id: '001',
-                        name: '菜单列表',
-                        authority: 'Admin/Nav/index',
-                        status: '激活',
-                        condition: ''
-                    }]
-                    }]
-                }, {
-                    id: '3',
-                    name: '权限控制',
-                    authority: 'Admin/ShowNav/role',
-                    status: '激活',
-                    condition: '',
-                    children: [{
-                        id: '01',
-                        name: '权限管理',
-                        authority: 'Admin/Role/index',
-                        status: '激活',
-                        condition: ''
-                    }, {
-                    id: '02',
-                    name: '用户组管理',
-                    authority: 'Admin/Role/grroup',
-                    status: '激活',
-                    condition: ''
-                }]}*/
                 ],
-                value1:"",
-                value2:"",
-                value3:"",
-                value4:"",
+                f_authority:"",
+                f_name:"",
+                f_condition:"",
+                f_status:"",
             }
         },
          components: {
@@ -134,14 +81,14 @@ export default {
                 this.$axios.post('/authRuleList', {
                             params: {
                                 id: 0,
-                                v1:this.value1,
-                                v2:this.value2,
-                                v3:this.value3,
-                                v4:this.value4,
+                                name: this.f_name,
+                                authority: this.f_authority,
+                                status: this.f_status,
+                                condition: this.f_condition,
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.data = res.data;
+                            this.data.push(res.data);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -153,10 +100,10 @@ export default {
             },
             show_modal(){
                 this.modal2=true;
-                this.value1="";
-                this.value2="";
-                this.value3="";
-                this.value4="";
+                this.f_name="";
+                this.f_authority="";
+                this.f_status="";
+                this.f_condition="";
             },
         },
     mounted(){

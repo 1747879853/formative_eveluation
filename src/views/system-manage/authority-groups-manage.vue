@@ -111,7 +111,8 @@ import Sortable from 'sortablejs';
                 let list= document.getElementById("editable-new").getElementsByTagName("li");
                 for (let i = 0; i < list.length; i++) {
                     if(list[i] == el){
-                        evt.item.setAttribute("style","border-color: #87b4ee;");                        vm.$axios.patch('/authGroupList', {
+                        evt.item.setAttribute("style","border-color: #87b4ee;");
+                        vm.$axios.patch('/authGroupList', {
                             params: {
                                 num:parseInt(el.getAttribute('data-index')),
                             }

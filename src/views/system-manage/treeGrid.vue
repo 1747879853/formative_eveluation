@@ -30,16 +30,16 @@
                                 @on-cancel="cancel1">
                                 <table>
                                 <tr><td>权限名</td><td>
-                                <Input v-model="value1" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <Input v-model="c_name" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 <tr><td>权限</td><td>
-                                <Input v-model="value2" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <Input v-model="c_authority" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 <tr><td>是否激活</td><td>
-                                <Input v-model="value3" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <Input v-model="c_status" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 <tr><td>条件</td><td>
-                                <Input v-model="value4" placeholder="条件" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <Input v-model="c_condition" placeholder="条件" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 </table>
                             </Modal>
-                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);value5=renderName(item);value6=renderAuthority(item);value7=renderCondition(item);value8=renderStatus(item);">修改</button>
+                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);e_name=renderName(item);e_authority=renderAuthority(item);e_condition=renderCondition(item);e_status=renderStatus(item);">修改</button>
                             <Modal
                                 v-model="modal3"
                                 title="修改子权限"
@@ -47,13 +47,13 @@
                                 @on-cancel="cancel2">
                                 <table>
                                 <tr><td>权限名</td><td>
-                                <Input v-model="value5" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <Input v-model="e_name" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 <tr><td>权限</td><td>
-                                <Input v-model="value6" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <Input v-model="e_authority" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 <tr><td>是否激活</td><td>
-                                <Input v-model="value8" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <Input v-model="e_status" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 <tr><td>条件</td><td>
-                                <Input v-model="value7" placeholder="条件" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+                                <Input v-model="e_condition" placeholder="条件" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 </table>
                             </Modal>
                             <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="id1=renderId(item); deleteClick();">删除</button>
@@ -72,6 +72,8 @@
     </div>
 </template>
 <script>
+import Vue from 'vue';
+
 export default {
     name: 'treeGrid',
     props: {
@@ -95,14 +97,14 @@ export default {
             dataLength: 0, //树形数据长度
             modal1: false,
             modal3:false,
-            value1:"",
-            value2:"",
-            value3:"",
-            value4:"",
-            value5:"",
-            value6:"",
-            value7:"",
-            value8:"",
+            c_name:"",
+            c_authority:"",
+            c_status:"",
+            c_condition:"",
+            e_name:"",
+            e_authority:"",
+            e_status:"",
+            e_condition:"",
             id1:"",
         }
     },
@@ -167,18 +169,83 @@ export default {
         }
     },
     methods: {
+            depthTraversal:function(arr,id,newarr){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr[i].children.push(newarr);
+                          return i;
+                      }
+                      let ret = this.depthTraversal(arr[i].children,id,newarr);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal2:function(arr,id,newarr){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr[i].authority = newarr.authority;
+                          arr[i].name = newarr.name;
+                          arr[i].condition = newarr.condition;
+                          arr[i].status = newarr.status;
+                          return i;
+                      }
+                      let ret = this.depthTraversal2(arr[i].children,id,newarr);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal4:function(arr,id,newarr){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr.splice(i, 1);
+                          return i;
+                      }
+                      let ret = this.depthTraversal4(arr[i].children,id,newarr);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal3:function(arr,id,newarr){
+                let found = false;
+                let i;
+                if (arr!=null){  
+                    for(i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr.splice(i, 1);
+                        return -1;
+                      }
+                        else{
+                            let ret = this.depthTraversal4(arr[i].children,id,newarr);
+                            if(ret>=0)
+                                return ret;
+                        }
+                    
+                    }    
+                }
+            },
             ok1 () {
+                // this.$emit('on-add-child', this.id1);
                 this.$axios.post('/authRuleList', {
                             params: {
-                                id:this.id1,
-                                v1:this.value1,
-                                v2:this.value2,
-                                v3:this.value3,
-                                v4:this.value4,
+                                id: this.id1,
+                                name: this.c_name,
+                                authority: this.c_authority,
+                                status: this.c_status,
+                                condition: this.c_condition,
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.items = res.data;
+                            let ret = this.depthTraversal(this.items, this.id1, res.data);
+                            Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -192,14 +259,15 @@ export default {
                 this.$axios.patch('/authRuleList', {
                             params: {
                                 id:this.id1,
-                                v1:this.value5,
-                                v2:this.value6,
-                                v3:this.value7,
-                                v4:this.value8,
+                                name: this.e_name,
+                                authority: this.e_authority,
+                                status: this.e_status,
+                                condition: this.e_condition,
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.items = res.data;
+                            let ret = this.depthTraversal2(this.items, this.id1, res.data);
+                            Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -211,10 +279,10 @@ export default {
             },
             show_modal1(){
                 this.modal1=true; 
-                this.value1="";
-                this.value2="";
-                this.value3="";
-                this.value4="";
+                this.c_name="";
+                this.c_authority="";
+                this.c_status="";
+                this.c_condition="";
             },
       // 有无多选框折叠位置优化
       iconRow() {
@@ -261,13 +329,14 @@ export default {
                         this.$axios.delete('/authRuleList', {
                             data: {
                                 params: {
-
                                     id: this.id1,
                                 }
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.items = res.data;
+                            let ret=this.depthTraversal3(this.items, this.id1, res.data);
+                            if(ret>=0)
+                                Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
