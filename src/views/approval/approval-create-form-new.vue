@@ -4,7 +4,7 @@
 <template>
   
     <Row type="flex" justify="center" class="code-row-bg">
-        <Col span="12">
+        <Col span="10">
             <Card>
                 <p slot="title" style="height: 33px;">
                     <Icon type="android-funnel"></Icon>
@@ -12,7 +12,7 @@
                     <Button type="primary" @click="addNewField">添加</Button>
 
                 </p>
-                <div style="height: 300px;">
+                <div style="height: 400px;">
         
                     <ul id="editable-new" class="iview-admin-draggable-list">
                             
@@ -23,13 +23,13 @@
                 </div>
             </Card>
         </Col>
-        <Col span="12">
+        <Col span="14">
             <Card>
                 <p slot="title" style="height: 33px;">
                     <Icon type="android-funnel"></Icon>
                     字段设置
                 </p>
-                <div style="height: 300px;">
+                <div style="height: 400px;">
                     <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
                         <FormItem label="名称" prop="name">
                             <Input v-model="formValidate.name" placeholder="请输入"></Input>

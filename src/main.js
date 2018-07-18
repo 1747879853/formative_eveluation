@@ -51,3 +51,21 @@ new Vue({
     }
 });
 
+// iView 相关的全局配置
+// message 配置
+iView.Message.config({
+  top: 50,
+  duration: 3
+})
+// notice 配置
+iView.Notice.config({
+  top: 50,
+  duration: 3
+})
+// LoadingBar 配置
+iView.LoadingBar.config({
+  // color: '#5cb85c',
+  // failedColor: '#f0ad4e',
+  height: 3
+})
+
