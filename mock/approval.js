@@ -67,7 +67,7 @@ id
 approval_id,  approvals表的id
 name:       string, 名称,eg：'申请事由'
 en_name:     string, eg： reason，该名称由服务器端在保存客户端提交的申请并创建申请表时填入
-type:       string, 类型, eg：单行输入框|多选框|单选框|日期等
+control:       string, 类型, eg：单行输入框|多选框|单选框|日期等
 info:       string,, 提示文字
 sequence:  integer, 显示顺序，从小到大，从上到下显示,设计完成后提交时写入服务器数据库
 selectoptions:   string,  eg：'选项1,选项2,选项3', 如果前面类型是多选框或单选框时，否则为空
@@ -248,7 +248,7 @@ belongs_to: approvals
 has_many: procedure_nodes
 流程表的字段
 id 
-comment:    string, 该申请的简介说明
+comment:    string, 该流程的简介说明
 created_time: timestamp, 创建时间，也即启用时间
 stoped_time:  timestamp, 停用时间，如正在使用则为空
 status: integer，1 正在使用， 0 停用
@@ -339,7 +339,7 @@ export default [
 		//接收三个参数 approval_id: 如果是新建表单则为空''，否则是修改的审批的id
                 //approval_field_data:主表表单字段信息
                 //approval_detail_field_data: 详表字段信息，如果没有则为[]
-		path: '/approval_field_save',
+		path: '/approval_create',
 		data: save_success
 	},
 	{
