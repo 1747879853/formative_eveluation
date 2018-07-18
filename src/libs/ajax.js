@@ -7,6 +7,12 @@ const ajaxUrl = env === 'development'
         ? ''
         : 'http://114.118.17.4:8080/api/v1';
 
+    //     const ajaxUrl = env === 'development'
+    // ? 'http://192.168.192.128/api/v1'
+    // : env === 'production'
+    //     ? ''
+    //     : 'http://192.168.192.128/api/v1';
+
 const service = axios.create({
     baseURL: ajaxUrl,
     withCredentials: true,
