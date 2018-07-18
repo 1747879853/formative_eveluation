@@ -153,7 +153,10 @@ export default {
                     this.approval_field_data = [];
                     this.approval_detail_field_data = [];
                     console.log(error);
-                    this.$Message.error("没有该审批的表单数据！")
+                    this.$Message.error("获取该审批的表单数据失败，请检查服务器！");
+                    // bug: here should close current tag,and go back ?????????
+                    // this.$router.go(-1);  //this can go back
+                    // this.$store.commit('closePage', this.$route.name);  //not work
                 });
             }
 

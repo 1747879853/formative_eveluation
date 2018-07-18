@@ -354,7 +354,7 @@ export default [
 		/*接收2个参数 approval_id: 审批表approvals的id，proc_nodes: 结点数据(数据格式见本文件var procedure_nodes)，该结点数据中owner_type默认是"Role",其他只有owner_id,name,sequence这3个数据需要保存，其他数据忽略。
 		保存时过程：依据approval_id查流程表procedures，如果没有记录，则新创建记录。如果有记录，则将原记录的status设置为0，表示停用，然后再新创建记录。然后将procedure_nodes数据写入procedure_nodes表。
 		*/
-		path: '/procedure_node_save',
+		path: '/procedure_create',
 		data: save_success
 	}
 ]
