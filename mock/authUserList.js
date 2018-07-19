@@ -25,12 +25,12 @@ let data1 = [
 let arr = [
                {    
                     id: 1,
-                    name:'用户1',
+                    username:'用户1',
                     checked_id:[1,3]
                 },
                 {    
                     id: 2,
-                    name: '用户2',
+                    username: '用户2',
                     checked_id:[2,4]
                 }
           ]
