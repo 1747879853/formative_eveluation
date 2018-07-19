@@ -4,9 +4,9 @@
 
 <template>
     <div>
-        <Modal width="700" v-model="dispatchWorkOrder" title="分派到班组">
+        <Modal width="700" v-model="dispatchWorkOrder" title="分派到班组" @on-ok="give_workteam">
            
-            <Select v-model="model1" placeholder="班组" style="width:200px">
+            <Select v-model="model1" placeholder="班组" style="width:200px" clearable>
                 <Option v-for="item in workteams" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
             数量：<InputNumber :max="max_qty" :min=1 v-model="team_qty"></InputNumber>
@@ -47,13 +47,13 @@
                 <Card>
                     <p slot="title">
                         <Icon type="ios-list"></Icon>
-                        {{workshop_workorders.name}}-工单
+                        {{workshop_name}}-工单
                     </p>
                   
-                        <Table highlight-row ref="currentRowTable" @on-current-change="row_select"  :columns="orderColumns" :data="workshop_workorder_workorders" style="width: 100%;"></Table>
+                        <Table highlight-row ref="currentRowTable" :columns="orderColumns" :data="workshop_workorder_workorders" style="width: 100%;"></Table>
                     <div style="margin: 10px;overflow: hidden">
                         <div style="float: right;">
-                    <Page :total="100" :current="1" @on-change="changePage"></Page>
+                    <!-- <Page :total="100" :current="1" @on-change="changePage"></Page> -->
                         </div>
                     </div>
                      
@@ -87,14 +87,10 @@ export default {
           key: "work_order_id",
           align: "center"
         },
-        {
-          title: "客户",
-          key: "name"
-        },
 
         {
           title: "模板",
-          key: "type"
+          key: "template_type"
         },
         {
           title: "数量",
@@ -122,7 +118,21 @@ export default {
                       // console.log(params.row);
                       this.team_qty = params.row.number;
                       this.max_qty = params.row.number;
+                      this.$axios
+                        .get("/teams", {
+                          params: {
+                            work_shop_id: this.work_shop_id
+                          }
+                        })
+                        .then(res => {
+                          this.workteams = res.data.teams;
+                          
+                        })
+                        .catch(error => {
+                          console.log(error);
+                        });
                       this.dispatchWorkOrder = true;
+                      this.work_order_id = params.row.work_order_id;
                     }
                   }
                 },
@@ -269,7 +279,10 @@ export default {
       work_order_id: "",
       graph_no: "",
       showPic: false,
-      workshop_workorder_workorders: []
+      workshop_workorder_workorders: [],
+      workshop_name: "",
+      work_shop_id: "",
+      user_id: ""
     };
   },
   computed: {
@@ -279,43 +292,51 @@ export default {
   },
   mounted() {
     this.$axios
-      .get("/workshop_workorders")
+      .get("/work_shop_order_list", { params: { user_id: 6 } })
       .then(res => {
-        this.workshop_workorders = res.data;
-        this.workshop_workorder_workorders = res.data.workorders;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    this.$axios
-      .get("/workteams")
-      .then(res => {
-        this.workteams = res.data.data;
+        this.workshop_name = res.data.data[0]["name"];
+        this.work_shop_id = res.data.data[0]["work_shop_id"];
+        this.user_id = res.data.data[0]["user_id"];
+
+        // console.log(this.work_shop_id);
+        this.workshop_workorder_workorders = res.data.data;
       })
       .catch(error => {
         console.log(error);
       });
   },
   methods: {
-    row_select(currentRow) {
-      this.$axios
-        .get("/workshop_order_detail")
-        .then(res => {
-          this.workshop_order_detail = res.data;
-          this.work_order_id = currentRow.work_order_id;
-          this.show_work_shop_detail = true;
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-    pic_show(picno) {
-      this.graph_no = picno;
-      this.showPic = true;
-    },
-    changePage() {
-      this.workshop_workorder_workorders = this.workshop_workorder_workorders;
+
+
+    give_workteam(){
+      this.$axios.post('/work_team_task',{
+        work_team_id: this.model1,
+        user_id: this.user_id,
+        number: this.team_qty,
+        work_order_id: this.work_order_id
+      }).then(res =>{
+        alert(res.data.msg);
+      })
     }
+    // row_select(currentRow) {
+    //   this.$axios
+    //     .get("/workshop_order_detail")
+    //     .then(res => {
+    //       this.workshop_order_detail = res.data;
+    //       this.work_order_id = currentRow.work_order_id;
+    //       this.show_work_shop_detail = true;
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // },
+    // pic_show(picno) {
+    //   this.graph_no = picno;
+    //   this.showPic = true;
+    // },
+    // changePage() {
+    //   this.workshop_workorder_workorders = this.workshop_workorder_workorders;
+    // }
   }
 };
 </script>
