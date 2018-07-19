@@ -68,8 +68,8 @@ import Sortable from 'sortablejs';
         },
         mounted () { 
         this.$axios.get("/authGroupList").then( res =>{
-            this.groups_data = res.data[1];
-            this.data1 = res.data[0];
+            this.groups_data = res.data.a;
+            this.data1 = res.data.b;
         }).catch(error =>{
             console.log(error);
         });

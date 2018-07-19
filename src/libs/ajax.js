@@ -28,7 +28,7 @@ const service = axios.create({
 service.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
 service.interceptors.request.use(function (config) {
     // Do something before request is sent
-    if (config.url.match(/\/authRuleList|users|approval_list|approval_field_list|approval_create|procedure_nodes|procedure_create/)) {
+    if (config.url.match(/\/authRuleList|authGroupList|users|approval_list|approval_field_list|approval_create|procedure_nodes|procedure_create/)) {
         config.baseURL = devUrl;
         // config.baseURL = '';
     }

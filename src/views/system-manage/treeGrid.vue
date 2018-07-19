@@ -10,8 +10,7 @@
                         <label v-else>
                             {{ renderHeader(column, index) }}
                             <span class="ivu-table-sort" v-if="column.sortable">
-                                <Icon type="arrow-up-b" :class="{on: column._sortType === 'asc'}" @click.native="handleSort(index, 'asc')" />
-                                <Icon type="arrow-down-b" :class="{on: column._sortType === 'desc'}" @click.native="handleSort(index, 'desc')" />
+                                
                             </span>
                         </label>
                     </th>
@@ -200,21 +199,21 @@ export default {
                     }
                 }
             },
-            depthTraversal4:function(arr,id,newarr){
+            depthTraversal4:function(arr,id){
                 if (arr!=null){  
                     for(let i=0;i<arr.length;i++){
                       if(arr[i].id==id){
                           arr.splice(i, 1);
                           return i;
                       }
-                      let ret = this.depthTraversal4(arr[i].children,id,newarr);
+                      let ret = this.depthTraversal4(arr[i].children,id);
                       if (ret>=0) {
                           return i;
                       }
                     }
                 }
             },
-            depthTraversal3:function(arr,id,newarr){
+            depthTraversal3:function(arr,id){
                 let found = false;
                 let i;
                 if (arr!=null){  
@@ -224,7 +223,7 @@ export default {
                         return -1;
                       }
                         else{
-                            let ret = this.depthTraversal4(arr[i].children,id,newarr);
+                            let ret = this.depthTraversal4(arr[i].children,id);
                             if(ret>=0)
                                 return ret;
                         }
@@ -233,14 +232,16 @@ export default {
                 }
             },
             ok1 () {
-                // this.$emit('on-add-child', this.id1);
+                if(this.c_status=='激活'){
+                    this.c_status=1;
+                }
                 this.$axios.post('/authRuleList', {
                             params: {
-                                id: this.id1,
-                                name: this.c_name,
-                                authority: this.c_authority,
+                                title: this.c_name,
+                                name: this.c_authority,
                                 status: this.c_status,
                                 condition: this.c_condition,
+                                parent_id: this.id1,
                             }
                         }).then(function(res) {
                             console.log(res);
@@ -256,11 +257,14 @@ export default {
                 this.$Message.info('取消');
             },
             ok2 () {
+                if(this.e_status=='激活'){
+                    this.e_status=1;
+                }
                 this.$axios.patch('/authRuleList', {
                             params: {
                                 id:this.id1,
-                                name: this.e_name,
-                                authority: this.e_authority,
+                                title: this.e_name,
+                                name: this.e_authority,
                                 status: this.e_status,
                                 condition: this.e_condition,
                             }
@@ -334,7 +338,7 @@ export default {
                             }
                         }).then(function(res) {
                             console.log(res);
-                            let ret=this.depthTraversal3(this.items, this.id1, res.data);
+                            let ret=this.depthTraversal3(this.items, this.id1);
                             if(ret>=0)
                                 Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
