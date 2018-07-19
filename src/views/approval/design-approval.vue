@@ -19,7 +19,7 @@
                 </p>
                 <div>
                     <span>审批名称（最多20字）
-                    <Input v-model="approvalName" placeholder="请输入..." style="width: 300px"></Input>
+                    <Input v-model="approvalName" placeholder="请输入..." required style="width: 300px"></Input>
                     </span>
                     <span style="margin-left:20px;">
                     审批说明（最多100字）
@@ -35,7 +35,7 @@
                         <Icon type="android-funnel"></Icon>
                         主表设计
                     </p>
-                    <div style="height: 394px;">
+                    <div style="height: 494px;">
                         <ApprovalCreateForm cardtitle="主表设计" v-bind:approval_field_data="approval_field_data"></ApprovalCreateForm>
                     </div>
                 </Card>
@@ -46,7 +46,7 @@
                         <Icon type="android-funnel"></Icon>
                         详表设计
                     </p>
-                    <div style="height: 394px;">
+                    <div style="height: 494px;">
                         <ApprovalCreateFormNew cardtitle="详表设计" v-bind:approval_field_data="approval_detail_field_data"></ApprovalCreateFormNew>
                     </div>
                 </Card>
@@ -58,11 +58,13 @@
 <script>
 import ApprovalCreateForm from "./approval-create-form.vue"
 import ApprovalCreateFormNew from "./approval-create-form-new.vue"
+import iView from 'iview';
 export default {
     name: 'design-approval-tmpl',
     data () {
         return {
             approval_id_s: '',
+            existed_app_arr: [],
             approval_field_data: [],
             approval_detail_field_data: [],
 
@@ -130,15 +132,17 @@ export default {
     },
     
     methods:{  
-        init (){
+        init (){            
             this.approval_id_s = this.$route.params.approval_id.toString();
-            this.approvalName = this.$route.params.approval_name;
-            this.approvalComment = this.$route.params.approval_comment;
-
+            this.existed_app_arr = this.$route.params.existed_app;
             if(this.approval_id_s=='-1'){
                 return;
             }
             else{
+                
+                this.approvalName = this.$route.params.approval_name;
+                this.approvalComment = this.$route.params.approval_comment;
+
                 this.$axios
                 .get("/approval_field_list?approval_id=" + this.approval_id_s)
                 .then(res => {
@@ -149,7 +153,10 @@ export default {
                     this.approval_field_data = [];
                     this.approval_detail_field_data = [];
                     console.log(error);
-                    this.$Message.error("没有该审批的表单数据！")
+                    this.$Message.error("获取该审批的表单数据失败，请检查服务器！");
+                    // bug: here should close current tag,and go back ?????????
+                    // this.$router.go(-1);  //this can go back
+                    // this.$store.commit('closePage', this.$route.name);  //not work
                 });
             }
 
@@ -174,6 +181,7 @@ export default {
             }
         },
         save_and_use(){
+            iView.LoadingBar.start();
             let list= document.getElementById("editable").getElementsByTagName("li");
             for (let i = 0; i < list.length; i++) {                
                 let se = parseInt(list[i].getAttribute("data-index"));
@@ -185,20 +193,37 @@ export default {
                 let se = parseInt(list[i].getAttribute("data-index"));
                 this.approval_detail_field_data[i].sequence = se;                                  
             }
+            for (let i = 0; i < this.existed_app_arr.length; i++) {
+                if(this.existed_app_arr[i].name == this.approvalName){
+                    iView.LoadingBar.finish();
+                    this.$Message.error("审批名称与已有审批重名!")
+                    return
+                }
+            }
+            
 
+            if(this.approvalName==""||this.approvalComment==""||this.approval_field_data.length<=0){
+                iView.LoadingBar.finish();
+                this.$Message.error("数据填写不完整!")
+                return
+            }
             //发送数据到服务器，然后建表并保存。
-            this.$axios.post('/approval_field_save', {
+            //here has a bug,always post to server an additional data approval => {}  ???????????
+            this.$axios.post('/approval_create', {
                 approval_id: this.approval_id_s,
+                approval_name: this.approvalName,
+                approval_comment: this.approvalComment,
                 approval_field_data: this.approval_field_data,
                 approval_detail_field_data: this.approval_detail_field_data
             })
             .then(res => {
-                // console.log(response);
+                iView.LoadingBar.finish();
                 // console.log(res);
                 this.$Message.success(res.data.msg);
-                // this.$Message.success("xxxx")              
             })
             .catch(error => {
+                iView.LoadingBar.finish();
+                this.$Message.error('保存失败，请检查服务器设置！');
                 console.log(error);
             });
            

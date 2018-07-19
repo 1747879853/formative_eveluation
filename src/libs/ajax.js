@@ -7,6 +7,17 @@ const ajaxUrl = env === 'development'
         ? ''
         : 'http://114.118.17.4:8080/api/v1';
 
+    //     const ajaxUrl = env === 'development'
+    // ? 'http://192.168.192.128/api/v1'
+    // : env === 'production'
+    //     ? ''
+    //     : 'http://192.168.192.128/api/v1';
+const devUrl = env === 'development'
+    ? 'http://127.0.0.1:3000/api/v1'
+    : env === 'production'
+        ? 'http://114.118.17.4:8080/api/v1'
+        : '';
+
 const service = axios.create({
     baseURL: ajaxUrl,
     withCredentials: true,
@@ -17,8 +28,13 @@ const service = axios.create({
 service.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
 service.interceptors.request.use(function (config) {
     // Do something before request is sent
+<<<<<<< HEAD
     if (config.url.match(/\/authRuleList|users|authGroupList/)) {
         config.baseURL = 'http://127.0.0.1:3000/api/v1';
+=======
+    if (config.url.match(/\/authRuleList|users|approval_list|approval_field_list|approval_create|procedure_nodes|procedure_create/)) {
+        config.baseURL = devUrl;
+>>>>>>> 786e29a4cd37ef463619ecc48262726ed26781c0
         // config.baseURL = '';
     }
     return config;
