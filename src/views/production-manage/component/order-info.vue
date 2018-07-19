@@ -443,11 +443,7 @@ export default {
             order_id:  this.$route.params.order_id
         }})
         .then(res =>{
-            // console.log(res);
             this.work_order_data_arr = res.data.work_orders;
-            //  console.log('22222222222222222');
-            // console.log(this.work_order_data_arr);
-            // console.log('1111111111111111111');
         })
         .catch( error => {
             console.log(error);
