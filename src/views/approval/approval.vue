@@ -129,7 +129,7 @@ export default {
 
         },
         goto_design_approval(){
-            let argu = { approval_id: '-1' };
+            let argu = { approval_id: '-1',existed_app: this.approvalData };
             this.$router.push({
                 name: 'design-approval',
                 params: argu

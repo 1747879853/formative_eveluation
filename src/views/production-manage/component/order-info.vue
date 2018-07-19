@@ -5,16 +5,16 @@
 
 <template>
     <div>
-        <Modal width="700" v-model="dispatchWorkOrder" title="分派工单">
+        <Modal width="700" v-model="dispatchWorkOrder" title="分派工单"  @on-ok="give_workshop" >
            
             分派到下料车间:
             <Select v-model="model1" placeholder="车间主任" style="width:200px" clearable>
-                <Option v-for="item in workshop_directors" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                <Option v-for="item in workshop_directors" :value="item.user_id" :key="item.id">{{ item.username }}</Option>
             </Select>
           
             分派到组拼车间:
             <Select v-model="model2" placeholder="车间主任" style="width:200px" clearable >
-                <Option v-for="item in workshop_packaging" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                <Option v-for="item in workshop_packaging" :value="item.user_id" :key="item.id">{{ item.username }}</Option>
             </Select>
 
 
@@ -40,7 +40,7 @@
                     <br/>
                     
                    <div v-if="work_order_detail[0]">
-                    <div  v-for="(mat_data,index) in work_order_detail[0].children">
+                    <div  v-for="(mat_data,index) in work_order_detail">
                         <card>
                     <p >
                         <Icon type="compose"></Icon>
@@ -119,22 +119,22 @@ export default {
                 },
                 {
                     title: '工单号',
-                    key: 'work_order_id',
+                    key: 'id',
                     align: 'center'
                 },
                 {
                     title: '名称',
-                    key: 'name',
+                    key: 'title',
                     align: 'center'
                 },
                 {
                     title: '设计',
-                    key: 'user',
+                    key: 'maker',
                     align: 'center'
                 },
                 {
                     title: '模版名称',
-                    key: 'type',
+                    key: 'template_type',
                     align: 'center'
                 },
                 {
@@ -380,33 +380,16 @@ export default {
         };
     },
     methods: {
-        init () {
-            let index = parseInt(this.$route.params.order_id.toString().substr(-1, 1));
-            let buyer = '';
-            let addr = '';
-            let time = '';
-            let state = '';
-            switch (index) {
-                case 1: buyer = 'Arasn'; addr = '北京市东直门外大街39号院2号楼航空服务大厦'; time = '2017年10月20日 13：33：24'; state = '已付款'; break;
-                case 2: buyer = 'Lison'; addr = '北京市东直门外大街39号院2号楼航空服务大厦'; time = '2017年10月21日 19：13：24'; state = '已付款'; break;
-                case 3: buyer = 'lili'; addr = 'TalkingData总部'; time = '2017年10月12日 10：39：24'; state = '待收货'; break;
-                case 4: buyer = 'lala'; addr = '国家统计局'; time = '2017年8月20日 11：45：24'; state = '已收货'; break;
-            }
-            let order = {
-                order_id: this.$route.params.order_id,
-                buyer: buyer,
-                addr: addr,
-                time: time,
-                state: state
-            };
-            this.order_data = [order];         
-        },
+             
+       
         row_select(currentRow){
         //    console.log(currentRow);
-           this.$axios.get("/work_order_detail")
+           this.$axios.get("/work_order_details",{params:{
+             work_order_id: currentRow.id
+           }})
            .then(res => {
-               this.work_order_detail = res.data;
-               this.work_order_id = currentRow.work_order_id;
+               this.work_order_detail = res.data.materials_boms;
+               this.work_order_id = currentRow.id;
             //    console.log(this.work_order_data_arr);
            }).catch(error =>{
                 console.log(error);
@@ -415,43 +398,59 @@ export default {
          pic_show(picno){
            this.graph_no= picno;
            this.showPic=true;
+       },
+       give_workshop(){
+           if(this.model1==""&&this.model2==""){
+              
+               alert("至少选择一个车间主任分配");
+               this.dispatchWorkOrder =true;
+
+           }else{
+               this.$axios.post('/work_shop_task',{
+                   xialiao: this.model1,
+                   zupin: this.model2,
+                   work_order_id: this.work_order_id
+               }).then(res =>{
+                   alert(res.data.msg);
+               })
+           }
+
+            
        }
        
     },
     mounted () {
-        this.init();
-        this.$axios.get("/workshop_directors")
+        
+        this.$axios.get("/xialiao")
         .then(res =>{
             
-            this.workshop_directors = res.data.data;
+            this.workshop_directors = res.data.manager;
            
         })
         .catch( error => {
             console.log(error);
         });
-        this.$axios.get("/workshop_packaging")
+        this.$axios.get("/zupin")
         .then(res =>{
             
-            this.workshop_packaging = res.data.data;
+            this.workshop_packaging = res.data.manager;
            
         })
         .catch( error => {
             console.log(error);
         });
-        this.$axios.get("/work_order_data")
+        this.$axios.get("/order_details",{params:{
+            order_id:  this.$route.params.order_id
+        }})
         .then(res =>{
-            // console.log(res);
-            this.work_order_data_arr = res.data;
-            //  console.log('22222222222222222');
-            // console.log(this.work_order_data_arr);
-            // console.log('1111111111111111111');
+            this.work_order_data_arr = res.data.work_orders;
         })
         .catch( error => {
             console.log(error);
         })
     },
     activated () {
-        this.init();
+        
     }
 };
 </script>

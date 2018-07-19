@@ -85,10 +85,14 @@ export default {
     },
     watch:{
         role_id(curVal,oldVal){
-            this.proc_nodes[this.proc_node_selected].owner_id = curVal;
+            if(this.proc_nodes[this.proc_node_selected]){
+                this.proc_nodes[this.proc_node_selected].owner_id = curVal;
+            }
         },
         proc_name(curVal,oldVal){
-            this.proc_nodes[this.proc_node_selected].name = curVal;
+            if(this.proc_nodes[this.proc_node_selected]){
+                this.proc_nodes[this.proc_node_selected].name = curVal;
+            }
         }
         
     },
@@ -96,21 +100,13 @@ export default {
         // ApprovalCreateForm,ApprovalCreateFormNew
     },
     mounted () {
-        this.init();
-
-        this.$axios.get("/user_group_list")
-        .then(res =>{
-            // console.log(res.data);
-            this.user_groups = res.data;
-        })
-        .catch( error => {
-            console.log(error);
-        });
+        this.init();        
           
     },    
     activated () {
         this.init();
     },
+    //bug:???????????????????????
     // 组件内导航钩子，处理未保存退出的情况
     // beforeRouteLeave: function(to, from , next){
     //       next(false)
@@ -125,6 +121,15 @@ export default {
     // },   
     methods:{
         init (){
+            this.$axios.get("/user_group_list")
+            .then(res =>{
+                // console.log(res.data);
+                this.user_groups = res.data;
+            })
+            .catch( error => {
+                console.log(error);
+            });
+
             this.approval_id = this.$route.params.approval_id;
             this.approval_name = this.$route.params.approval_name;
 
@@ -136,7 +141,8 @@ export default {
             .catch(error => {
                 this.proc_nodes = [];
                 console.log(error);
-                // this.$Message.error("该审批的结点数据获取失败！")
+                this.$Message.error("该审批的结点数据获取失败，请检查服务器！");
+                //bug: should close this tag????????
             });
            
 
@@ -176,7 +182,7 @@ export default {
                 this.proc_nodes[i].sequence = i;                                  
             }
             //发送数据到服务器保存。
-            this.$axios.post('/approval_field_save', {
+            this.$axios.post('/procedure_create', {
                 approval_id: this.approval_id,
                 proc_nodes: this.proc_nodes,
             })
