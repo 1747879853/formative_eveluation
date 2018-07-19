@@ -78,13 +78,16 @@ export default {
         },
     methods: {
             ok () {
+                if(this.f_status=='激活'){
+                    this.f_status=1;
+                }
                 this.$axios.post('/authRuleList', {
                             params: {
-                                id: 0,
-                                name: this.f_name,
-                                authority: this.f_authority,
+                                title: this.f_name,
+                                name: this.f_authority,
                                 status: this.f_status,
                                 condition: this.f_condition,
+                                parent_id: 0
                             }
                         }).then(function(res) {
                             console.log(res);

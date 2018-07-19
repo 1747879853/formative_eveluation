@@ -324,7 +324,6 @@ export const appRouter = [
                 name: 'organization',
                 title: '组织管理',
                 component: () => import('@/views/users-manage/organization.vue')
-
             },
         ]
     },

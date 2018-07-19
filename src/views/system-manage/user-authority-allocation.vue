@@ -31,7 +31,7 @@
                 <div style="overflow-y:auto;height:500px;">
                     <ul id="editable-new" class="iview-admin-draggable-list">                            
                         <li v-for="(item, index) in users_data" :key="index" class="notwrap todolist-item" :data-index="index">
-                        {{ item.name }}<Icon type="close" class="js-remove"/></li>
+                        {{ item.username }}<Icon type="close" class="js-remove"/></li>
                     </ul>
                 </div>
             </Card>
@@ -67,8 +67,8 @@ import Sortable from 'sortablejs';
         },
         mounted () { 
         this.$axios.get("/authUserList").then( res =>{
-        this.users_data = res.data[1];
-        this.data1 = res.data[0];
+        this.users_data = res.data.a;
+        this.data1 = res.data.b;
         }).catch(error =>{
             console.log(error);
         });
@@ -169,12 +169,12 @@ import Sortable from 'sortablejs';
                 }
                 this.$axios.patch('/authUserList', {
                             params: {
-                                user_id:this.select,
+                                user_id:this.users_data[this.select].id,
                                 id:tree_id,
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.users_data[this.select].checked_id = res.data[2].checked_id;
+                            this.users_data[this.select].checked_id = res.data.checked_id;
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)

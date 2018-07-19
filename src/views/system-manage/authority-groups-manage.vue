@@ -31,7 +31,7 @@
                 <div style="overflow-y:auto;height:500px;">
                     <ul id="editable-new" class="iview-admin-draggable-list">                            
                         <li v-for="(item, index) in groups_data" :key="index" class="notwrap todolist-item" :data-index="index">
-                        {{ item.name }}<Icon type="close" class="js-remove"/></li>
+                        {{ item.title }}<Icon type="close" class="js-remove"/></li>
                     </ul>
                 </div>
             </Card>
@@ -68,8 +68,8 @@ import Sortable from 'sortablejs';
         },
         mounted () { 
         this.$axios.get("/authGroupList").then( res =>{
-            this.groups_data = res.data[1];
-            this.data1 = res.data[0];
+            this.groups_data = res.data.a;
+            this.data1 = res.data.b;
         }).catch(error =>{
             console.log(error);
         });
@@ -86,9 +86,8 @@ import Sortable from 'sortablejs';
                         vm.$axios.delete('/authGroupList', {
                             data: {
                                 params: {
-                                    //实际应该传对应的id
-                                    //vm.groups_data[parseInt(el.getAttribute('data-index'))].id
-                                    id: parseInt(el.getAttribute('data-index')),
+                                    id: vm.groups_data[parseInt(el.getAttribute('data-index'))].id,
+                                    status:0
                                 }
                             }
                         }).then(function(res) {
@@ -156,11 +155,11 @@ import Sortable from 'sortablejs';
         ok () {
             this.$axios.post('/authGroupList', {
                             params: {
-                                name:this.name,
+                                title:this.name,
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.groups_data.push(res.data[2]);
+                            this.groups_data.push(res.data);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -181,12 +180,12 @@ import Sortable from 'sortablejs';
                 }
                 this.$axios.patch('/authGroupList', {
                                 params: {
-                                    group_id:this.select,
-                                    id:tree_id,
+                                    group_id:this.groups_data[this.select].id,
+                                    id:tree_id
                                 }
                             }).then(function(res) {
                                 console.log(res);
-                                this.groups_data[this.select].checked_id = res.data[2].checked_id;
+                                this.groups_data[this.select].checked_id = res.data.checked_id;
                             }.bind(this))
                             .catch(function(error) {
                                 console.log(error)
