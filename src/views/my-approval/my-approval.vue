@@ -18,7 +18,7 @@
                 <span v-if="hasMainTable">
 
                     <Select v-model="submit_user_id" placeholder="请选择审批人" style="margin-left:50px;width:200px;">
-                        <Option v-for="(item,index) in submit_users" :key="item.id" :value="item.id">{{item.name}}</Option>                            
+                        <Option v-for="(item,index) in submit_users" :key="item.id" :value="item.id">{{item.username}}</Option>                            
                         
                     </Select>
                     <Button type="primary" @click="submitAllForm">提交</Button>
