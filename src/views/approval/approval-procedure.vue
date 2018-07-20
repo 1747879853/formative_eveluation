@@ -44,7 +44,7 @@
 
 
                         <Select v-model="role_id" placeholder="请选择角色" style="margin-top:10px;">
-                            <Option v-for="(item,index) in user_groups" :key="item.id" :value="item.id">{{item.name}}</Option>                              
+                            <Option v-for="(item,index) in user_groups" :key="item.id" :value="item.id">{{item.title}}</Option>                              
                             
                         </Select>
                             
