@@ -70,7 +70,7 @@ export default {
             new_proc_node: {
                 'id': 0,        
                 'name': '审批结点',
-                'owner_type': 'Role',
+                'owner_type': 'AuthGroup',
                 'owner_id': 0,
                 'sequence': 0,
                 'procedure_id': 0
@@ -179,7 +179,11 @@ export default {
 
             //根据数组proc_nodes中结点顺序重新设置sequence字段的值
             for (let i = 0; i < this.proc_nodes.length; i++) {                
-                this.proc_nodes[i].sequence = i;                                  
+                this.proc_nodes[i].sequence = i; 
+                if(this.proc_nodes[i].owner_id == 0 ){
+                    this.$Message.error("结点对应角色设置不完整！");
+                    return
+                }                               
             }
             //发送数据到服务器保存。
             this.$axios.post('/procedure_create', {
