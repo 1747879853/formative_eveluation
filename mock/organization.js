@@ -147,7 +147,15 @@ var newid=5;
         }
         add(arr,newarr); 
      }
-       
+    
+      var newarr = 
+        {
+            id : newid,
+            name : JSON.parse(options.body).params.name, 
+            checked_id : []             
+        };
+        arr.push(newarr);
+        newid=newid+1;
        break;
      case 'patch'://修改权限
        function edit(arr){  
@@ -167,6 +175,11 @@ var newid=5;
             }         
         }
         edit(arr);
+
+        let i=parseInt(JSON.parse(options.body).params.user_id);
+        var newarr;
+        arr[i].checked_id=JSON.parse(options.body).params.id;
+        newarr=arr[i];
        break;
      case 'delete'://删除权限
         function del(arr){  
@@ -185,6 +198,7 @@ var newid=5;
             }         
         }
         del(arr);
+        arr.splice(parseInt(JSON.parse(options.body).params.id),1);
         break; 
      default:
    }
