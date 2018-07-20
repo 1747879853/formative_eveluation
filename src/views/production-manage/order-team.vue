@@ -9,6 +9,14 @@
            
             <img width="100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531138272810&di=fb25ebec179ae86ec8df80f3fb7aba90&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F12%2F81%2F58PIC5R58PICsqy_1024.jpg"></img>
         </Modal>
+         <Modal width="60%" v-model="show_finish" title="添加完成数量" @on-ok="material_finished">
+             添加完成数量：<InputNumber v-model="finish_qty"></InputNumber>
+          
+        </Modal>
+         <Modal width="60%" v-model="show_pass" title="添加合格数量" @on-ok="material_passed">
+             添加合格数量：<InputNumber v-model="pass_qty"></InputNumber>
+          
+        </Modal>
         
         <Row class="margin-top-10">
             <Col span="24">
@@ -21,10 +29,7 @@
                                     refs="table4" 
                                    
                                     v-model="workteam_materials" 
-                                    @on-cell-change="handleCellChange"
-                                 
-                                    @on-change="handleChange"  
-                                    :editIncell="true" 
+                                  
                                     :columns-list="teamOrderColumns"
                                 ></can-edit-table>
 
@@ -86,7 +91,7 @@ export default {
               [
                 h(
                   "ul",
-                  this.workteam_materials[params.index].graph_no.map(item => {
+                  params.row.graph_no.split(",").map(item => {
                     return h(
                       "li",
                       {
@@ -123,15 +128,13 @@ export default {
           title: "完成数量",
           align: "center",
           width: 120,
-          key: "number_finished",
-          editable: true
+          key: "finished_number"
         },
         {
           title: "质检数量",
           align: "center",
           width: 120,
-          key: "quality_qty",
-          editable: true
+          key: "passed_number"
         },
         {
           title: "备注",
@@ -140,7 +143,7 @@ export default {
         {
           title: "操作",
           key: "action",
-          width: 150,
+          width: 200,
           align: "center",
           render: (h, params) => {
             return h("div", [
@@ -156,20 +159,62 @@ export default {
                   },
                   on: {
                     click: () => {
-                       let argu = { work_shop_team_order_id: params.row.name };
+                      let argu = { mid: params.row.mid, name: params.row.name };
                       this.$router.push({
-                      name: "material-requisition",
-                      params: argu
-                    });
+                        name: "material-requisition",
+                        params: argu
+                      });
+                    }
                   }
-                }
-              },
-              "物料清单"
-            )
+                },
+                "物料"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                       this.finish_qty = 0;
+                      this.show_finish = true;
+                      this.team_task_id = params.row.id;
+                     
+                    }
+                  }
+                },
+                "完成"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      this.pass_qty =0;
+                      this.show_pass = true;
+                      this.team_task_id = params.row.id;
+                    }
+                  }
+                },
+                "质检"
+              )
             ]);
           }
         }
       ],
+
       boms_col: [
         {
           type: "index",
@@ -218,33 +263,88 @@ export default {
       showPic: false,
       graph_no: "",
       title: "",
-      bom_name: ""
+      bom_name: "",
+      show_finish: false,
+      show_pass: false,
+      team_task_id: "",
+      finish_qty: 0,
+      pass_qty: 0
     };
   },
   methods: {
-    handleNetConnect(state) {
-      this.breakConnect = state;
-    },
-    handleLowSpeed(state) {
-      this.lowNetSpeed = state;
-    },
-    getCurrentData() {
-      this.showCurrentTableData = true;
-    },
-    handleDel(val, index) {
-      this.$Message.success("删除了第" + (index + 1) + "行数据");
-    },
-    handleCellChange(val, index, key) {
-      this.$Message.success(
-        "修改了第 " + (index + 1) + " 行列名为 " + key + " 的数据"
-      );
-    },
-    handleChange(val, index) {
-      this.$Message.success("修改了第" + (index + 1) + "行数据");
+    // handleNetConnect(state) {
+    //   this.breakConnect = state;
+    // },
+    // handleLowSpeed(state) {
+    //   this.lowNetSpeed = state;
+    // },
+    // getCurrentData() {
+    //   this.showCurrentTableData = true;
+    // },
+    // handleDel(val, index) {
+    //   this.$Message.success("删除了第" + (index + 1) + "行数据");
+    // },
+    // handleCellChange(val, index, key) {
+    //   this.$Message.success(
+    //     "修改了第 " + (index + 1) + " 行列名为 " + key + " 的数据"
+    //   );
+    // },
+    // handleChange(val, index) {
+    //   this.$Message.success("修改了第" + (index + 1) + "行数据");
+    // },
+    init(){
+       this.$axios
+      .get("/work_team_task_list")
+      .then(res => {
+        this.workteam_materials = res.data.data;
+        this.title = res.data.data[0]["team_name"];
+      })
+      .catch(error => {
+        console.log(error);
+      });
     },
     pic_show(picno) {
       this.graph_no = picno;
       this.showPic = true;
+    },
+    material_finished() {
+      
+      if (this.finish_qty != 0) {
+        this.$axios
+          .post("/team_task_material_finished", {
+            finish_number: this.finish_qty,
+            team_task_id: this.team_task_id
+          })
+          .then(res => {
+            this.init();
+            alert(res.data.msg);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }else{
+        alert("完成数量不能为0");
+        return;
+      }
+    },
+    material_passed(){
+       if (this.pass_qty != 0) {
+        this.$axios
+          .post("/team_task_material_passed", {
+            pass_number: this.pass_qty,
+            team_task_id: this.team_task_id
+          })
+          .then(res => {
+            this.init();
+            alert(res.data.msg);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }else{
+        alert("合格数量不能为0");
+        return;
+      }
     }
     //      row_select(currentRow){
     //          console.log(currentRow);
@@ -259,23 +359,15 @@ export default {
   },
   created() {},
   mounted() {
-    this.$axios
-      .get("/workteam_materials")
-      .then(res => {
-        this.workteam_materials = res.data.materials;
-        this.title = res.data.name;
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    this.$axios
-      .get("/workteams")
-      .then(res => {
-        this.workteams = res.data.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    this.init();
+    // this.$axios
+    //   .get("/workteams")
+    //   .then(res => {
+    //     this.workteams = res.data.data;
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   }
 };
 </script>

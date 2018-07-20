@@ -78,19 +78,11 @@ export default {
 
         {
           title: "所需数量/套",
-          key: "total",
+          key: "qty",
           align: "center"
         },
-        {
-          title: "已领用数量",
-          key: "get_qty",
-          align: "center"
-        },
-        {
-          title: "申请中数量",
-          key: "apply_qty",
-          align: "center"
-        },
+       
+     
         {
           title: "备注",
           key: "comment",
@@ -127,12 +119,12 @@ export default {
 
         {
           title: "所需数量/套",
-          key: "total",
+          key: "qty",
           align: "center"
         },
         {
           title: "请领数量",
-          key: "request_qty",
+          key: "qty",
           align: "center",
           editable: true
         },
@@ -149,31 +141,50 @@ export default {
       name: "",
       number: 0,
       show_apply: false,
-      title: "物料申请单"
+      title: "物料申请单",
+      mid: ""
     };
   },
   methods: {},
   mounted() {
+    
+      
     this.$axios
-      .get("/team_boms")
+      .get("/team_task_boms",{params:{
+        material_id:this.$route.params.mid
+      }})
       .then(res => {
         this.team_boms = res.data.boms;
-        this.name = this.$route.params.work_shop_team_order_id;
-        this.number = res.data.number;
+        this.name = this.$route.params.name;
+        this.number = res.data.boms[0]["number"];
       })
       .catch(err => {
         console.log(err);
       });
   },
   activated() {
-    this.name = this.$route.params.work_shop_team_order_id;
+    this.name = this.$route.params.name;
+    this.mid = this.$route.params.mid;
+
+    this.$axios
+      .get("/team_task_boms",{params:{
+        material_id:this.$route.params.mid
+      }})
+      .then(res => {
+        this.team_boms = res.data.boms;
+        this.name = this.$route.params.name;
+        this.number = res.data.boms[0]["number"];
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
   methods: {
     apply_material() {
       this.show_apply = true;
-      if (this.edit_apply_data.length == 0) {
-        this.edit_apply_data = this.team_boms;
-      }
+   
+      this.edit_apply_data = this.team_boms;
+      
       this.title = "物料申请单:" + this.name + " * " + this.number + "件";
     },
     handleDel(val, index) {
