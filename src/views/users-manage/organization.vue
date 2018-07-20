@@ -16,7 +16,7 @@
         </table>
     </Modal>
     </div>
- <tree-grid 
+ <tree-grid id="hl-tree-table"
         :items='data' 
         :columns='columns'
       ></tree-grid>
@@ -30,17 +30,7 @@
                     <Button type="primary" @click="save()">保存</Button>
                 </p>
                 <div style="overflow-y:auto;height:500px;">
-                <RadioGroup v-model="vertical" vertical>
-                    <Radio label="leader1">
-                        <span>负责人1</span>
-                    </Radio>
-                    <Radio label="leader2">
-                        <span>负责人2</span>
-                    </Radio>
-                    <Radio label="leader3">
-                        <span>负责人3</span>
-                    </Radio>
-                </RadioGroup>
+                <Tree ref="tree" :data="data1" show-checkbox @on-select-change="check111"></Tree>
                 </div>
         </Card>
     </Col>
@@ -56,7 +46,6 @@ export default {
      data() {
             return {
                 modal2:false,
-                vertical:"leader1",
                 columns: [{
                     title: '组织名',
                     key: 'name',
@@ -79,23 +68,9 @@ export default {
                 }],
                 data: [
                 ],
-                 data1: [
-                 {
-                    title:'user1',
-                    expand:true
-                },
-                {
-                    title:'user2',
-                    expand:true
-                },
-                {
-                    title:'user3',
-                    expand:true
-                },{
-                    title:'user4',
-                    expand:true
-                },
-                 ]
+                data1: [
+                 ],
+                 select:null,
             }
         },
     components:{
@@ -112,10 +87,46 @@ export default {
     },
    mounted(){
         this.$axios.get("/organization").then( res =>{
-            this.data = res.data;
+            this.data = res.data[1];
+            this.data1  = res.data[0];
         }).catch(error =>{
             console.log(error);
         })
+        let editable = document.getElementById('hl-tree-table');
+        let vm = this;
+        var editableList = Sortable.create(editable, {            
+            onChoose: function (evt) {
+                var el = editableList.closest(evt.item); 
+                vm.select=parseInt(el.getAttribute('data-index'));              
+                //为选中的条目添加样式
+                let list= document.getElementById("hl-tree-table").getElementsByTagName("tr");
+                for (let i = 0; i < list.length; i++) {
+                    if(list[i] == el){
+                        evt.item.setAttribute("style","background: #87b4ee;");
+                        var ch_id = vm.users_data[parseInt(el.getAttribute('data-index'))].checked_id;
+                        for(let i=0;i<vm.data1.length;i++){
+                            if(ch_id.length!=0){
+                                for(let j=0;j<ch_id.length;j++){
+                                    if(vm.data1[i].id==ch_id[j]){
+                                        vm.data1[i].checked=true;
+                                        break;
+                                    }
+                                    else{vm.data1[i].checked=false;
+                                    }
+                                }
+                            }else{
+                                vm.data1[i].checked=false;
+                            }
+                        } 
+                    }else{
+                        list[i].removeAttribute("style");
+                    }                    
+                }
+                
+            },
+            
+        });        
+
     },
     methods: {
             ok () {
@@ -154,8 +165,8 @@ export default {
                 selectedList[selectedList.length-1].checked=true;
             }            
         }
-        },
-    }
+    },
+  }
 </script>
 
 <style>
