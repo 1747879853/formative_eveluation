@@ -16,22 +16,11 @@
                 <p slot="title" style="font-size:20px;height: 33px;">
                     <Icon type="android-funnel"></Icon>
                     用户&nbsp;&nbsp;&nbsp;
-                    <Button type="primary" @click="showmodal()">添加</Button>
-                    <Modal
-                        v-model="modal"
-                        title="添加新用户"
-                        @on-ok="ok"
-                        @on-cancel="cancel">
-                        <table>
-                        <tr><td>用户名</td><td>
-                        <Input v-model="u_name" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
-                        </table>
-                    </Modal>
                 </p>
                 <div style="overflow-y:auto;height:500px;">
                     <ul id="editable-new" class="iview-admin-draggable-list">                            
                         <li v-for="(item, index) in users_data" :key="index" class="notwrap todolist-item" :data-index="index">
-                        {{ item.username }}<Icon type="close" class="js-remove"/></li>
+                        {{ item.username }}</li>
                     </ul>
                 </div>
             </Card>
@@ -60,7 +49,6 @@ import Sortable from 'sortablejs';
                 ],
                 users_data: [
                 ],
-                u_name:"",
                 modal:false,
                 select:null,
             }
@@ -74,35 +62,7 @@ import Sortable from 'sortablejs';
         });
         let editable = document.getElementById('editable-new');
         let vm = this;
-        var editableList = Sortable.create(editable, {
-            filter: '.js-remove',
-            onFilter: function (evt) {
-                var el = editableList.closest(evt.item); 
-                vm.$Modal.confirm({
-                    title: '删除用户',
-                    content: '<p>确定要删除此用户吗？</p>',
-                    onOk: () => {
-                        vm.$axios.delete('/authUserList', {
-                            data: {
-                                params: {
-                                    id: parseInt(el.getAttribute('data-index')),
-                                }
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            vm.users_data.splice(parseInt(el.getAttribute('data-index')),1);
-                        }.bind(vm))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
-                        vm.$Message.info('删除成功');
-                        vm.select=null;
-                    },
-                    onCancel: () => {
-                        vm.$Message.info('取消');
-                    }
-                });
-            },
+        var editableList = Sortable.create(editable, {            
             onChoose: function (evt) {
                 var el = editableList.closest(evt.item); 
                 vm.select=parseInt(el.getAttribute('data-index'));              
@@ -140,23 +100,6 @@ import Sortable from 'sortablejs';
         showmodal(){
             this.modal=true;
             this.u_name="";
-        },
-        ok () {
-            this.$axios.post('/authUserList', {
-                            params: {
-                                name:this.u_name,
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            this.users_data.push(res.data[2]);
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
-                        this.$Message.info('添加成功');
-        },
-        cancel () {
-            this.$Message.info('取消');
         },
         save (){
             if(this.select==null){

@@ -14,37 +14,18 @@
 
             <Row v-if="showOrNot == false">
                 <Button type="primary" @click="returnBack" icon="ios-arrow-thin-left">返回</Button>
-                <Form ref="formDynamic" :model="formDynamic" :label-width="80" style="width: 300px" >
-      
-                    <FormItem  
-                        v-for="(item,index) in formDynamic.items"   
-                        :key="index"      
-                        :label="item.name"
-                        :prop="'items.' + index + '.en_name_value'"
-                        :rules="item.rule">
-                    <Row>
-                        <Input v-if="item.control == '单行输入框'" v-model="item.en_name_value" clearable :placeholder="item.info"></Input>
-                        <Input v-else-if="item.control == '多行输入框'" v-model="item.en_name_value" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :placeholder="item.info"></Input>
-
-                        <Select v-else-if="item.control == '多选框'" v-model="item.en_name_value" :placeholder="item.info">
-                            <Option v-for="(opt,index1) in item.selectoptions_arr" :key="index1" :value="opt">{{opt}}</Option>
-                        </Select>
-
-                        <Select v-else-if="item.control == '单选框'" v-model="item.en_name_value" :placeholder="item.info">
-                            <Option v-for="(opt,index2) in item.selectoptions_arr" :key="index2" :value="opt">{{opt}}</Option>
-                        </Select>
-
-                        <DatePicker v-else-if="item.control == '日期' && item.dateformat=='年-月-日'" type="date" :placeholder="item.info" v-model="item.en_name_value"></DatePicker>
-
-                        <DatePicker v-else-if="item.control == '日期' && item.dateformat=='年-月-日 时:分'" type="datetime" :placeholder="item.info" v-model="item.en_name_value"></DatePicker>
-
-                    </Row>
-                </FormItem>
-                    <FormItem>
-                        <Button type="primary" @click="handleSubmit('formDynamic')">Submit</Button>
-                        <Button type="ghost" @click="handleReset('formDynamic')" style="margin-left: 8px">Reset</Button>
-                    </FormItem>
-                </Form>
+                <Button type="primary" @click="submitAllForm">提交</Button>
+                <div style="border-bottom: 1px solid #ccc;margin-top:5px;"> </div>
+                
+                <AutoForm v-if="hasMainTable" v-bind:formDynamic="formDynamicMain" v-bind:arrIndex="-1" ></AutoForm>
+                
+                <div v-if="hasDetailTable">
+                    <AutoForm  v-for="(item,index) in formDynamicDetail_arr" :key="index" v-bind:formDynamic="item" v-bind:arrIndex="index" v-on:delitem="delDetailItem"></AutoForm>
+                    
+                    <p>如需采购多种产品，请点击“增加明细”</p>
+                    <Button type="primary" @click="addDetailData" icon="plus">增加明细</Button>
+                </div>
+                
             </Row>
         </TabPane>
         <TabPane label="待我审批的" name="name2">标签二的内容</TabPane>
@@ -56,19 +37,36 @@
 
 <script>
 import Vue from 'vue';
+import AutoForm from "./auto-form.vue"
 export default {
     name: 'my-approval',
     data () {
         return {
-            formDynamic: {
+            formDynamicMain: {
+                    flag: "main",
+                    title: "",
                     items: [
                         
                     ]
-                },
+            },
+            formDynamicDetail: {
+                    flag: "detail",
+                    title: "",
+                    items: [
+                        
+                    ]
+            },
+            formDynamicDetail_arr:[
+            ],
+            detail_arr_index: 0,
+            hasMainTable: false,
+            hasDetailTable: false,
             showOrNot: true,
             main_fields: [],
             detail_fields: [],
             approvalList: [],
+            approval_data: {},
+            approval_name: ''
             
         };
     },
@@ -84,38 +82,71 @@ export default {
         });
 
     },
+    components:{
+        AutoForm
+    },
     created(){
     },
     methods: {
         returnBack(){
             this.showOrNot = true
-            this.formDynamic.items = [];
+            this.formDynamicMain.items = [];
         },
      
         AppFormShow(item){
             this.$axios
             .get("/approval_field_list?approval_id=" + item.id)
             .then(res => {
-                this.main_fields = res.data.approval_field_data;
-                this.detail_fields = res.data.approval_detail_field_data;
+                this.approval_data = res.data.approval_data;
+                this.approval_name = this.approval_data.name;
+                if(res.data.approval_field_data.length > 0){
+                    this.hasMainTable = true;
+                    this.main_fields = res.data.approval_field_data;
 
-                for(let i=0;i<this.main_fields.length;i++){
-                    let cur = this.main_fields[i];
-                    this.main_fields[i]["selectoptions_arr"] = [];
-                    if(cur.control == "单选框" || cur.control == "多选框"){
-                        this.main_fields[i]["selectoptions_arr"] = cur.selectoptions.split(',')
-                        this.main_fields[i]["rule"] = { required: true, message: '请选择', trigger: 'change' }                        
-                    }else if(cur.control == "日期"  && cur.dateformat=='年-月-日'){
-                        this.main_fields[i]["rule"] = { required: true, type: 'date', message: '请选择日期', trigger: 'change' }
-                    }else if(cur.control == "日期"  && cur.dateformat=='年-月-日 时:分'){
-                        this.main_fields[i]["rule"] = { required: true, type: 'date', message: '请选择日期时间', trigger: 'change' }
-                    }else{
-                        this.main_fields[i]["rule"] = { required: true, message: '不能为空', trigger: 'blur' }
+                    for(let i=0;i<this.main_fields.length;i++){
+                        let cur = this.main_fields[i];
+                        this.main_fields[i]["selectoptions_arr"] = [];
+                        if(cur.control == "单选框" || cur.control == "多选框"){
+                            this.main_fields[i]["selectoptions_arr"] = cur.selectoptions.split(',')
+                            this.main_fields[i]["rule"] = { required: true, message: '请选择', trigger: 'change' }                        
+                        }else if(cur.control == "日期"  && cur.dateformat=='年-月-日'){
+                            this.main_fields[i]["rule"] = { required: true, type: 'date', message: '请选择日期', trigger: 'change' }
+                        }else if(cur.control == "日期"  && cur.dateformat=='年-月-日 时:分'){
+                            this.main_fields[i]["rule"] = { required: true, type: 'date', message: '请选择日期时间', trigger: 'change' }
+                        }else{
+                            this.main_fields[i]["rule"] = { required: true, message: '不能为空', trigger: 'blur' }
 
+                        }
+                        this.main_fields[i]["en_name_value"] = ''                    
                     }
-                    this.main_fields[i]["en_name_value"] = ''                    
+                    this.formDynamicMain.items = this.main_fields;
+                    this.formDynamicMain.title = this.approval_name+"主表";
                 }
-                this.formDynamic.items = this.main_fields;
+                if(res.data.approval_detail_field_data.length > 0){
+                    this.hasDetailTable = true;
+                    this.detail_fields = res.data.approval_detail_field_data;
+
+                    for(let i=0;i<this.detail_fields.length;i++){
+                        let cur = this.detail_fields[i];
+                        this.detail_fields[i]["selectoptions_arr"] = [];
+                        if(cur.control == "单选框" || cur.control == "多选框"){
+                            this.detail_fields[i]["selectoptions_arr"] = cur.selectoptions.split(',')
+                            this.detail_fields[i]["rule"] = { required: true, message: '请选择', trigger: 'change' }                        
+                        }else if(cur.control == "日期"  && cur.dateformat=='年-月-日'){
+                            this.detail_fields[i]["rule"] = { required: true, type: 'date', message: '请选择日期', trigger: 'change' }
+                        }else if(cur.control == "日期"  && cur.dateformat=='年-月-日 时:分'){
+                            this.detail_fields[i]["rule"] = { required: true, type: 'date', message: '请选择日期时间', trigger: 'change' }
+                        }else{
+                            this.detail_fields[i]["rule"] = { required: true, message: '不能为空', trigger: 'blur' }
+
+                        }
+                        this.detail_fields[i]["en_name_value"] = ''                    
+                    }
+                    this.formDynamicDetail.items = this.detail_fields;
+                    this.formDynamicDetail.title = this.approval_name + "明细";
+                    this.formDynamicDetail_arr.push(JSON.parse(JSON.stringify(this.formDynamicDetail)));
+                    this.formDynamicDetail.title = '';
+                }
             })
             .catch(error => {
                 this.main_fields =[];
@@ -124,22 +155,20 @@ export default {
             });
             this.showOrNot = false
         },
-        handleSubmit (name) {
-            this.$refs[name].validate((valid) => {
-                if (valid) {
-                    let rr = this.formDynamic.items
-                    // debugger
-                    this.$Message.success('Success!');
-                } else {
-                    this.$Message.error('Fail!');
-                }
-            })
+        addDetailData(){
+            this.formDynamicDetail.title = this.approval_name + "明细";
+            this.formDynamicDetail_arr.push(JSON.parse(JSON.stringify(this.formDynamicDetail)));
+            this.formDynamicDetail.title = '';
         },
-        handleReset (name) {
-            this.$refs[name].resetFields();            
-        }
-
-        
+        delDetailItem(param){
+            if(this.formDynamicDetail_arr.length>1){
+                this.formDynamicDetail_arr.splice(param.arrIndex,1)
+            }
+        },
+        submitAllForm(){
+            console.log(this.formDynamicMain);
+            console.log(this.formDynamicDetail_arr);
+        }        
     }
 };
 
