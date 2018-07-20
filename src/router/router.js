@@ -67,7 +67,8 @@ export const otherRouter = {
         { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
         { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') },
         { path: 'design-approval/:approval_id', title: '审批表单设计', name: 'design-approval', component: () => import('@/views/approval/design-approval.vue') },
-        { path: 'approval-procedure/:approval_id', title: '审批流程', name: 'approval-procedure', component: () => import('@/views/approval/approval-procedure.vue') }
+        { path: 'approval-procedure/:approval_id', title: '审批流程', name: 'approval-procedure', component: () => import('@/views/approval/approval-procedure.vue') },
+        { path: 'approval-new/:approval_id', title: '创建新审批', name: 'approval-new', component: () => import('@/views/my-approval/approval-new.vue') }
     ]
 };
 
@@ -250,7 +251,18 @@ export const appRouter = [
         children: [
             { path: 'index', title: '审批管理', name: 'approval_index', component: () => import('@/views/approval/approval.vue') }
         ]
-    },    
+    },  
+
+    {
+        path: '/my-approval',
+        icon: 'key',
+        name: 'myapproval',
+        title: '审批',
+        component: Main,
+        children: [
+            { path: 'index', title: '审批', name: 'my_approval', component: () => import('@/views/my-approval/my-approval.vue') }
+        ]
+    } , 
     
     // {
     //     path: '/error-page',
