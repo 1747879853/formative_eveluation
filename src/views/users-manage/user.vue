@@ -151,7 +151,6 @@ export default {
                                 username: this.user_name,
                                 tel: this.user_tel,
                                 status: 1,
-                                password_digest:123456
                             }
                         }).then(function(res) {
                             console.log(res);
