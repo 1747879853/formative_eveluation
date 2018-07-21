@@ -1,31 +1,46 @@
 <template>
     <div :style="{width:tableWidth}" class='autoTbale'>
         <table class="table table-bordered" id='hl-tree-table'>
+            <thead>
+                <tr>
+                    <th v-for="(column,index) in cloneColumns">
+                        <label v-if="column.type === 'selection'">
+                            <input type="checkbox" v-model="checks" @click="handleCheckAll">
+                        </label>
+                        <label v-else>
+                            {{ renderHeader(column, index) }}
+                            <span class="ivu-table-sort" v-if="column.sortable">
+                                
+                            </span>
+                        </label>
+                    </th>
+                </tr>
+            </thead>
             <tbody>
-                <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{color:isChecked== index}" @click="changeColor(index)" :data-index="index">
+                <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
                     <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
                         <div v-if="column.type === 'action'">
                             <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal1();
-                            id1=renderId(item);">添加</button>
+                            id1=renderId(item);">添加子科目</button>
                             <Modal
                                 v-model="modal1"
-                                title="添加组织机构"
+                                title="添加子花费科目"
                                 @on-ok="ok1"
                                 @on-cancel="cancel1">
                                 <table>
-                                <tr><td>组织名</td><td>
-                                <Input v-model="value1" placeholder="请输入组织名" clearable style="width: 300px"></Input></td></tr>
+                                <tr><td>花费科目名</td><td>
+                                <Input v-model="c_name" placeholder="请输入花费科目名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 </table>
                             </Modal>
-                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);value5=renderName(item);value6=renderAuthority(item);value7=renderCondition(item);value8=renderStatus(item);">修改</button>
+                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);e_name=renderName(item);">修改</button>
                             <Modal
                                 v-model="modal3"
-                                title="修改组织名"
+                                title="修改子花费科目"
                                 @on-ok="ok2"
                                 @on-cancel="cancel2">
                                 <table>
-                                <tr><td>权限名</td><td>
-                                <Input v-model="value5" placeholder="请输入组织名" clearable style="width: 300px"></Input></td></tr>
+                                <tr><td>花费科目名</td><td>
+                                <Input v-model="e_name" placeholder="请输入花费科目名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 </table>
                             </Modal>
                             <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="id1=renderId(item); deleteClick();">删除</button>
@@ -44,6 +59,8 @@
     </div>
 </template>
 <script>
+import Vue from 'vue';
+
 export default {
     name: 'treeGrid',
     props: {
@@ -53,7 +70,7 @@ export default {
             default: function() {
                 return [];
             }
-        },
+        }
     },
     data() {
         return {
@@ -67,8 +84,9 @@ export default {
             dataLength: 0, //树形数据长度
             modal1: false,
             modal3:false,
+            c_name:"",
+            e_name:"",
             id1:"",
-            isChecked:-1,//是否与表格的行的下标一致
         }
     },
     computed: {
@@ -132,24 +150,79 @@ export default {
         }
     },
     methods: {
-            changeColor(index){
-                this.isChecked=index;
-                // selectedindex =index;
-                this.$emit('selectedindex',index);
-
+            depthTraversal:function(arr,id,newarr){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr[i].children.push(newarr);
+                          return i;
+                      }
+                      let ret = this.depthTraversal(arr[i].children,id,newarr);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal2:function(arr,id,newarr){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr[i].authority = newarr.authority;
+                          arr[i].name = newarr.name;
+                          arr[i].condition = newarr.condition;
+                          arr[i].status = newarr.status;
+                          return i;
+                      }
+                      let ret = this.depthTraversal2(arr[i].children,id,newarr);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal4:function(arr,id){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr.splice(i, 1);
+                          return i;
+                      }
+                      let ret = this.depthTraversal4(arr[i].children,id);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal3:function(arr,id){
+                let found = false;
+                let i;
+                if (arr!=null){  
+                    for(i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr.splice(i, 1);
+                        return -1;
+                      }
+                        else{
+                            let ret = this.depthTraversal4(arr[i].children,id);
+                            if(ret>=0)
+                                return ret;
+                        }
+                    
+                    }    
+                }
             },
             ok1 () {
-                this.$axios.post('/organization', {
+                this.$axios.post('/costList', {
                             params: {
-                                id:this.id1,
-                                v1:this.value1,
-                                v2:this.value2,
-                                v3:this.value3,
-                                v4:this.value4,
+                                name: this.c_name,
+                                parent_id: this.id1,
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.items = res.data;
+                            let ret = this.depthTraversal(this.items, this.id1, res.data);
+                            Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -160,17 +233,15 @@ export default {
                 this.$Message.info('取消');
             },
             ok2 () {
-                this.$axios.patch('/organization', {
+                this.$axios.patch('/costList', {
                             params: {
                                 id:this.id1,
-                                v1:this.value5,
-                                v2:this.value6,
-                                v3:this.value7,
-                                v4:this.value8,
+                                name: this.e_name,
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.items = res.data;
+                            let ret = this.depthTraversal2(this.items, this.id1, res.data);
+                            Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -182,10 +253,7 @@ export default {
             },
             show_modal1(){
                 this.modal1=true; 
-                this.value1="";
-                this.value2="";
-                this.value3="";
-                this.value4="";
+                this.c_name="";
             },
       // 有无多选框折叠位置优化
       iconRow() {
@@ -226,19 +294,20 @@ export default {
         deleteClick() {
             
             this.$Modal.confirm({
-                    title: '删除权限',
-                    content: '<p>确定要删除此组织机构吗？</p>',
+                    title: '删除花费科目',
+                    content: '<p>确定要删除此花费科目吗？</p>',
                     onOk: () => {
-                        this.$axios.delete('/organization', {
+                        this.$axios.delete('/costList', {
                             data: {
                                 params: {
-
                                     id: this.id1,
                                 }
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.items = res.data;
+                            let ret=this.depthTraversal3(this.items, this.id1);
+                            if(ret>=0)
+                                Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -319,6 +388,7 @@ export default {
                 item = Object.assign({}, item, {
                     "load": (item.expanded ? true : false)
                 });
+                //debugger
                 this.initItems.push(item);
                 if (item.children && item.expanded) {
                     this.initData(item.children, level + 1, item);
@@ -473,15 +543,6 @@ export default {
         renderName(row, index) {
             return row["name"]
         },
-        renderAuthority(row, index) {
-            return row["authority"]
-        },
-        renderCondition(row, index) {
-            return row["condition"]
-        },
-        renderStatus(row, index) {
-            return row["status"]
-        },
         // 默认选中
         renderCheck(data) {
             let arr = []
@@ -534,10 +595,6 @@ export default {
                 '[object Object]': 'object'
             };
             return map[toString.call(obj)];
-        },
-        isChoose(){
-            isChecked=true;
-            return isChecked;
         }
     },
     beforeDestroy() {
@@ -570,10 +627,6 @@ table {
     vertical-align: middle;
 }
 
-.table>tbody>tr>.changeColor {
-    background-color: #42b983;
-}
-
 .table-bordered>tbody>tr>td,
 .table-bordered>tbody>tr>th,
 .table-bordered>tfoot>tr>td,
@@ -593,18 +646,13 @@ table {
 }
 
 #hl-tree-table>tbody>tr {
-    background-color: #fff;
-    cursor: pointer;
+    background-color: #fbfbfb;
 }
 
 #hl-tree-table>tbody>.child-tr {
     background-color: #fff;
-    cursor: pointer;
 }
 
-#hl-tree-table>tbody>.color{
-    background-color: #bbbec4;
-}
 label {
     margin: 0 8px;
 }
