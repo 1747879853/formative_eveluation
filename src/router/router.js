@@ -316,8 +316,31 @@ export const appRouter = [
             },
         ]
     },
+    {
+        path: '/employee-information',
+        icon: 'settings',
+        name: 'employee-name',
+        title: '员工信息',
+        component: Main,
+        children: [
+              {
+                path: 'attendance-record',
+                icon: 'compose',
+                name: 'attendance-record',
+                title: '考勤记录',
+                component: () => import('@/views/employee-information/attendance-record.vue')
+            },
+            {
+                path: 'placeorder-record',
+                icon: 'compose',
+                name: 'placeorder-record',
+                title: '占位符',
+                component: () => import('@/views/employee-information/placeorder-record.vue')
+            },
+        ]
+    },
     // {
-    //     path: '/error-page',
+    //     path: '/error-/page',
     //     icon: 'android-sad',
     //     title: '错误页面',
     //     name: 'errorpage',
