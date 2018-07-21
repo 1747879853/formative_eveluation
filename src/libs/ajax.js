@@ -1,3 +1,4 @@
+
 import env from '../../build/env';
 import axios from 'axios';
 
@@ -28,8 +29,8 @@ const service = axios.create({
 service.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
 service.interceptors.request.use(function (config) {
     // Do something before request is sent
-    if (config.url.match(/\/authRuleList|authUserList|authGroupList|users|approval_list|approval_field_list|approval_create|procedure_nodes|procedure_create|user_group_list/)) {
-        config.baseURL = '';
+    if (config.url.match(/\/authRuleList|authUserList|authGroupList|userList|users|approval_list|approval_field_list|approval_create|approval_save|procedure_nodes|procedure_create|user_group_list/)) {
+        config.baseURL = devUrl;
         // config.baseURL = '';
     }
     return config;
