@@ -193,11 +193,13 @@ export default {
                 let se = parseInt(list[i].getAttribute("data-index"));
                 this.approval_detail_field_data[i].sequence = se;                                  
             }
-            for (let i = 0; i < this.existed_app_arr.length; i++) {
-                if(this.existed_app_arr[i].name == this.approvalName){
-                    iView.LoadingBar.finish();
-                    this.$Message.error("审批名称与已有审批重名!")
-                    return
+            if(this.approval_id_s=='-1'){
+                for (let i = 0; i < this.existed_app_arr.length; i++) {
+                    if(this.existed_app_arr[i].name == this.approvalName){
+                        iView.LoadingBar.finish();
+                        this.$Message.error("审批名称与已有审批重名!")
+                        return
+                    }
                 }
             }
             

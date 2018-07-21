@@ -19,6 +19,7 @@
  <tree-grid 
         :items='data' 
         :columns='columns'
+        v-on:selectedindex="selected_index"
       ></tree-grid>
 </Card>
 </Col>
@@ -30,17 +31,7 @@
                     <Button type="primary" @click="save()">保存</Button>
                 </p>
                 <div style="overflow-y:auto;height:500px;">
-                <RadioGroup v-model="vertical" vertical>
-                    <Radio label="leader1">
-                        <span>负责人1</span>
-                    </Radio>
-                    <Radio label="leader2">
-                        <span>负责人2</span>
-                    </Radio>
-                    <Radio label="leader3">
-                        <span>负责人3</span>
-                    </Radio>
-                </RadioGroup>
+                <Tree ref="tree" :data="data1" show-checkbox @on-select-change="check111"></Tree>
                 </div>
         </Card>
     </Col>
@@ -56,7 +47,6 @@ export default {
      data() {
             return {
                 modal2:false,
-                vertical:"leader1",
                 columns: [{
                     title: '组织名',
                     key: 'name',
@@ -79,40 +69,21 @@ export default {
                 }],
                 data: [
                 ],
-                 data1: [
-                 {
-                    title:'user1',
-                    expand:true
-                },
-                {
-                    title:'user2',
-                    expand:true
-                },
-                {
-                    title:'user3',
-                    expand:true
-                },{
-                    title:'user4',
-                    expand:true
-                },
-                 ]
+                data1: [
+                 ],
+                select:null,
             }
         },
     components:{
     	TreeGrid
     },
     props:{
-        columns1: Array,
-        items1: {
-            type: Array,
-            default: function() {
-                return [];
-            }
-        }
     },
+    
    mounted(){
         this.$axios.get("/organization").then( res =>{
-            this.data = res.data;
+            this.data = res.data[1];
+            this.data1  = res.data[0];
         }).catch(error =>{
             console.log(error);
         })
@@ -139,6 +110,24 @@ export default {
             cancel () {
                 this.$Message.info('取消');
             },
+            selected_index(index){
+            let ch_id=this.data[index].checked_id;
+            for(let i=0;i<this.data1.length;i++){
+                if(ch_id.length!=0){
+                    for(let j=0;j<ch_id.length;j++){
+                        if(this.data1[i].id==ch_id[j]){
+                        this.data1[i].checked=true;
+                         break;
+                     }else{
+                        this.data1[i].checked=false;
+                     }
+                    }
+                }else{
+                this.data1[i].checked=false;    
+                }
+              }  
+            },
+
             show_modal(){
                 this.modal2=true;
                 this.value1="";
@@ -146,6 +135,30 @@ export default {
                 this.value3="";
                 this.value4="";
             },
+            save (){
+            // if(this.select==null){
+            //     this.$Message.info('请选中一个用户');
+            // }else{
+                let checked_tree = this.$refs.tree.getCheckedNodes();
+                let tree_id = [];
+                for(let i=0;i<checked_tree.length;i++){
+                    tree_id[i]=checked_tree[i].id;
+                }
+                this.$axios.patch('/organization', {
+                            params: {
+                                user_id:this.data[this.select].id,
+                                id:tree_id,
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            this.data[this.select].checked_id = res.data.checked_id;
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        this.$Message.info('保存成功');
+            // }   
+        },
             check111(selectedList){
             if(selectedList[selectedList.length-1].checked==true){
                 selectedList[selectedList.length-1].checked=false;
@@ -154,8 +167,8 @@ export default {
                 selectedList[selectedList.length-1].checked=true;
             }            
         }
-        },
-    }
+    },
+  }
 </script>
 
 <style>

@@ -12,8 +12,9 @@ import order from './orderList'
 import approval from './approval'
 import userList from './userList'
 import organization from './organization'
+import costList from './costList'
 
-let data = [].concat(authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,userList)
+let data = [].concat(authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,userList,costList)
 
 
 

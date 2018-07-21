@@ -304,6 +304,30 @@ export const appRouter = [
             },
         ]
     },
+    //我修改的地方
+    {
+        path: '/daily-summary',
+        icon: 'settings',
+        name: 'daily-summary',
+        title: '日清总结',
+        component: Main,
+        children: [
+            {
+                path: 'cost',
+                icon: 'compose',
+                name: 'cost',
+                title: '花费科目',
+                component: () => import('@/views/daily-summary/cost.vue')
+            },
+            // {
+            //     path: 'organization',
+            //     icon: 'compose',
+            //     name: 'organization',
+            //     title: '组织管理',
+            //     component: () => import('@/views/users-manage/organization.vue')
+            // },
+        ]
+    },
     {
         path: '/users-manage',
         icon: 'settings',
