@@ -38,19 +38,20 @@ export default {
           title: "序号",
           width: 60
         },
+        
         {
           title: "订单号",
-          key: "order_id",
+          key: "no",
           align: "center"
         },
         {
           title: "客户",
-          key: "customer",
+          key: "client_title",
           align: "center"
         },
         {
           title: "时间",
-          key: "create_time"
+          key: "record_time"
         },
         {
           title: "详情",
@@ -70,7 +71,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      let argu = { order_id: params.row.order_id };
+                      let argu = { order_id: params.row.id };
                       this.$router.push({
                         name: "order-info",
                         params: argu
@@ -147,9 +148,13 @@ export default {
   },
   mounted() {
     this.$axios
-      .get("/orderListData")
+      .get("/orders",{
+        headers: {
+          "Content-Type":'application/json'
+        }})
       .then(res => {
-        this.orderData = res.data.body;
+        this.orderData = res.data.orders;
+        console.log(res);
       })
       .catch(error => {
         console.log(error);

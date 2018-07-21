@@ -1,23 +1,17 @@
 <template>
     <Card>
     <div>
-    <Button @click="show_modal()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加权限</Button>
+    <Button @click="show_modal()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加花费科目</Button>
     <Modal
         v-model="modal2"
-        title="添加权限"
+        title="添加花费科目"
         @on-ok="ok"
         @on-cancel="cancel">
         <table>
-        <tr><td>权限名</td><td>
-        <Input v-model="f_name" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr>
+        <tr><td>花费科目名</td><td>
+        <Input v-model="f_name" placeholder="请输入花费科目名" clearable style="width: 300px"></Input></td></tr>
         <tr>&nbsp;</tr>
-        <tr><td>权限</td><td>
-        <Input v-model="f_authority" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
-        <tr>&nbsp;</tr><tr><td>是否激活</td><td>
-        <Input v-model="f_status" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
-        <tr>&nbsp;</tr><tr><td>条件</td><td>
-        <Input v-model="f_condition" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
-        <tr>&nbsp;</tr></table>
+        </table>
     </Modal>
     </div>
         <tree-grid 
@@ -37,20 +31,8 @@ export default {
             return {
                 modal2:false,
                 columns: [{
-                    title: '权限名',
+                    title: '花费科目名',
                     key: 'name',
-                    width: '150',
-                }, {
-                    title: '权限',
-                    key: 'authority',
-                    width: '150',
-                },  {
-                    title: '是否激活',
-                    key: 'status',
-                    width: '150',
-                },  {
-                    title: '条件',
-                    key: 'condition',
                     width: '150',
                 }, {
                     title: '操作',
@@ -67,10 +49,7 @@ export default {
                 }],
                 data: [
                 ],
-                f_authority:"",
                 f_name:"",
-                f_condition:"",
-                f_status:"",
             }
         },
          components: {
@@ -78,15 +57,9 @@ export default {
         },
     methods: {
             ok () {
-                if(this.f_status=='激活'){
-                    this.f_status=1;
-                }
-                this.$axios.post('/authRuleList', {
+                this.$axios.post('/costList', {
                             params: {
-                                title: this.f_name,
-                                name: this.f_authority,
-                                status: this.f_status,
-                                condition: this.f_condition,
+                                name: this.f_name,
                                 parent_id: 0
                             }
                         }).then(function(res) {
@@ -104,13 +77,10 @@ export default {
             show_modal(){
                 this.modal2=true;
                 this.f_name="";
-                this.f_authority="";
-                this.f_status="";
-                this.f_condition="";
             },
         },
     mounted(){
-        this.$axios.get("/authRuleList").then( res =>{
+        this.$axios.get("/costList").then( res =>{
             this.data = res.data;
         }).catch(error =>{
             console.log(error);

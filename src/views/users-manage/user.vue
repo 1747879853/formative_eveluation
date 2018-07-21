@@ -2,53 +2,45 @@
 @import "./advanced-router.less";
 </style>
 
-<template>
-    <div>
-      <div>
-       <Button @click="show_modal1()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加用户</Button>
-       <Modal
-        v-model="modal1"
-        title="添加用户"
-        @on-ok="ok"
-        @on-cancel="cancel">
-        <table>
-        <tr><td>用户名</td><td>
-        <Input v-model="name" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
-        <tr><td>姓名</td><td>
-        <Input v-model="user_name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
-        <tr><td>电话</td><td>
-        <Input v-model="user_tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
-        </table>
-        </Modal>
-        <Modal
-       v-model="modal2"
-       title="修改用户信息"
-       @on-ok="ok2"
-       @on-cancel="cancel2">
-       <table>
-       <tr><td>用户名</td><td>
-       <Input v-model="name" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
-       <tr><td>姓名</td><td>
-       <Input v-model="user_name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
-       <tr><td>电话</td><td>
-       <Input v-model="user_tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
-       </table>
-       </Modal>
-    </div>
-        <Row>
-            <Col span="24">
-                <Card>
-                    <p slot="title">
-                        <Icon type="ios-list"></Icon>
-                        用户列表
-                    </p>
-                    <Row type="flex" justify="center" align="top" class="advanced-router">
-                        <Table :columns="userColumns" :data="userData" style="width: 100%;"></Table>
-                    </Row>
-                </Card>
-            </Col>
-        </Row>
-    </div>
+<template>    
+<Card>
+    <p slot="title" style="height:25px">
+        <Icon type="ios-list"></Icon>
+        用户列表&nbsp;&nbsp;&nbsp;
+        <Button @click="show_modal1()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加用户</Button>
+        <div> 
+            <Modal
+            v-model="modal1"
+            title="添加用户"
+            @on-ok="ok"
+            @on-cancel="cancel">
+            <table>
+            <tr><td>用户名</td><td>
+            <Input v-model="name" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>姓名</td><td>
+            <Input v-model="user_name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>电话</td><td>
+            <Input v-model="user_tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
+            </table>
+            </Modal>
+            <Modal
+            v-model="modal2"
+            title="修改用户信息"
+            @on-ok="ok2"
+            @on-cancel="cancel2">
+            <table>
+            <tr><td>用户名</td><td>
+            <Input v-model="name" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>姓名</td><td>
+            <Input v-model="user_name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>电话</td><td>
+            <Input v-model="user_tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
+            </table>
+            </Modal>
+        </div>
+    </p>                    
+    <Table :columns="userColumns" :data="userData" style="width: 100%;"></Table>                    
+</Card>
 </template>
 
 <script>
@@ -155,9 +147,11 @@ export default {
     {
                 this.$axios.post('/userList', {
                             params: {
-                                name: this.name,
-                                user_name: this.user_name,
-                                user_tel: this.user_tel,
+                                email: this.name,
+                                username: this.user_name,
+                                tel: this.user_tel,
+                                status: 1,
+                                password_digest:123456
                             }
                         }).then(function(res) {
                             console.log(res);
@@ -181,9 +175,9 @@ export default {
                 this.$axios.patch('/userList', {
                             params: {
                                 id: this.id,
-                                name: this.name,
-                                user_name: this.user_name,
-                                user_tel: this.user_tel,
+                                email: this.name,
+                                username: this.user_name,
+                                tel: this.user_tel,
                             }
                         }).then(function(res) {
                             console.log(res);
@@ -215,18 +209,12 @@ export default {
                             data: {
                                 params: {
                                     id: this.id,
-                              
+                                    status: 0
                                 }
                             }
                         }).then(function(res) {
                             console.log(res);
-                            let id = res.data.id;
-                            for(let i = 0; i < this.userData.length; i++){
-                              if (this.userData[i].id == id){
-                                this.userData[i].status = res.data.status;
-                                break;
-                              }
-                            }
+                            this.userData.splice(index,1);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)

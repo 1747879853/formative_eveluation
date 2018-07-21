@@ -15,15 +15,15 @@
         <div >
             <Row>
                <Card>
-                    <div v-if="workshop_order_detail[0]" >
-                    <div  v-for="(mat_data,index) in workshop_order_detail[0].children">
-                   
+                    <div v-if="work_order_detail[0]">
+                    <div  v-for="(mat_data,index) in work_order_detail">
+                        <card>
                     <p >
                         <Icon type="compose"></Icon>
-                        模板-{{index+1}}#;工单号:{{work_order_id}}
+                        模板-{{index+1}}#；工单号：{{work_order_id}}
                     </p>
                    
-                    <Table :columns="materials_col" v-if="mat_data" :data="mat_data"></Table>
+                    <Table :columns="materials_col" v-if="mat_data" :data="mat_data" :mat_data="mat_data" ></Table>
                     <!-- {{mat_data}} -->
                      <p >
                         <Icon type="compose"></Icon>
@@ -31,7 +31,7 @@
                     </p>
                     <Table :columns="boms_col" :data="mat_data[0].children"></Table>
                     
-                        
+                        </card>
                   
                    </div>
                     </div>
@@ -267,15 +267,17 @@ export default {
     }
   },
   mounted() {
-    this.$axios
-      .get("/workshop_order_detail")
-      .then(res => {
-        this.workshop_order_detail = res.data;
-        this.show_work_shop_detail = true;
-      })
-      .catch(error => {
-        console.log(error);
-      });
+     this.$axios.get("/work_order_details",{params:{
+             work_order_id: this.$route.params.work_shop_order_id
+           }})
+           .then(res => {
+               this.work_order_detail = res.data.materials_boms;
+               this.work_order_id = currentRow.id;
+            //    console.log(this.work_order_data_arr);
+           }).catch(error =>{
+                console.log(error);
+           })
+        
     this.work_order_id = this.$route.params.work_shop_order_id;
   },
   activated() {

@@ -1,31 +1,46 @@
 <template>
     <div :style="{width:tableWidth}" class='autoTbale'>
         <table class="table table-bordered" id='hl-tree-table'>
+            <thead>
+                <tr>
+                    <th v-for="(column,index) in cloneColumns">
+                        <label v-if="column.type === 'selection'">
+                            <input type="checkbox" v-model="checks" @click="handleCheckAll">
+                        </label>
+                        <label v-else>
+                            {{ renderHeader(column, index) }}
+                            <span class="ivu-table-sort" v-if="column.sortable">
+                                
+                            </span>
+                        </label>
+                    </th>
+                </tr>
+            </thead>
             <tbody>
-                <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{color:isChecked== index}" @click="id1=renderId(item);changeColor(index)" :data-index="index">
+                <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
                     <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
                         <div v-if="column.type === 'action'">
                             <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal1();
-                            id1=renderId(item);">添加</button>
+                            id1=renderId(item);">添加子科目</button>
                             <Modal
                                 v-model="modal1"
-                                title="添加组织机构"
+                                title="添加子花费科目"
                                 @on-ok="ok1"
                                 @on-cancel="cancel1">
                                 <table>
-                                <tr><td>组织名</td><td>
-                                <Input v-model="f_name" placeholder="请输入组织名" clearable style="width: 300px"></Input></td></tr>
+                                <tr><td>花费科目名</td><td>
+                                <Input v-model="c_name" placeholder="请输入花费科目名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 </table>
                             </Modal>
-                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);f_name=renderName(item);">修改</button>
+                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);e_name=renderName(item);">修改</button>
                             <Modal
                                 v-model="modal3"
-                                title="修改组织名"
+                                title="修改子花费科目"
                                 @on-ok="ok2"
                                 @on-cancel="cancel2">
                                 <table>
-                                <tr><td>权限名</td><td>
-                                <Input v-model="f_name" placeholder="请输入组织名" clearable style="width: 300px"></Input></td></tr>
+                                <tr><td>花费科目名</td><td>
+                                <Input v-model="e_name" placeholder="请输入花费科目名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
                                 </table>
                             </Modal>
                             <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="id1=renderId(item); deleteClick();">删除</button>
@@ -55,7 +70,7 @@ export default {
             default: function() {
                 return [];
             }
-        },
+        }
     },
     data() {
         return {
@@ -69,9 +84,9 @@ export default {
             dataLength: 0, //树形数据长度
             modal1: false,
             modal3:false,
+            c_name:"",
+            e_name:"",
             id1:"",
-            isChecked:-1,//是否与表格的行的下标一致
-            f_name: ''
         }
     },
     computed: {
@@ -135,12 +150,6 @@ export default {
         }
     },
     methods: {
-            changeColor(index){
-                this.isChecked=index;
-                var id = this.id1;
-                this.$emit('selectedindex',id);
-
-            },
             depthTraversal:function(arr,id,newarr){
                 if (arr!=null){  
                     for(let i=0;i<arr.length;i++){
@@ -205,10 +214,10 @@ export default {
                 }
             },
             ok1 () {
-                this.$axios.post('/organization', {
+                this.$axios.post('/costList', {
                             params: {
+                                name: this.c_name,
                                 parent_id: this.id1,
-                                name: this.f_name
                             }
                         }).then(function(res) {
                             console.log(res);
@@ -224,10 +233,10 @@ export default {
                 this.$Message.info('取消');
             },
             ok2 () {
-                this.$axios.patch('/organization', {
+                this.$axios.patch('/costList', {
                             params: {
-                                id: this.id1,
-                                name:this.f_name,
+                                id:this.id1,
+                                name: this.e_name,
                             }
                         }).then(function(res) {
                             console.log(res);
@@ -244,7 +253,7 @@ export default {
             },
             show_modal1(){
                 this.modal1=true; 
-                this.f_name="";
+                this.c_name="";
             },
       // 有无多选框折叠位置优化
       iconRow() {
@@ -285,10 +294,10 @@ export default {
         deleteClick() {
             
             this.$Modal.confirm({
-                    title: '删除权限',
-                    content: '<p>确定要删除此组织机构吗？</p>',
+                    title: '删除花费科目',
+                    content: '<p>确定要删除此花费科目吗？</p>',
                     onOk: () => {
-                        this.$axios.delete('/organization', {
+                        this.$axios.delete('/costList', {
                             data: {
                                 params: {
                                     id: this.id1,
@@ -379,6 +388,7 @@ export default {
                 item = Object.assign({}, item, {
                     "load": (item.expanded ? true : false)
                 });
+                //debugger
                 this.initItems.push(item);
                 if (item.children && item.expanded) {
                     this.initData(item.children, level + 1, item);
@@ -585,10 +595,6 @@ export default {
                 '[object Object]': 'object'
             };
             return map[toString.call(obj)];
-        },
-        isChoose(){
-            isChecked=true;
-            return isChecked;
         }
     },
     beforeDestroy() {
@@ -621,10 +627,6 @@ table {
     vertical-align: middle;
 }
 
-.table>tbody>tr>.changeColor {
-    background-color: #42b983;
-}
-
 .table-bordered>tbody>tr>td,
 .table-bordered>tbody>tr>th,
 .table-bordered>tfoot>tr>td,
@@ -644,18 +646,13 @@ table {
 }
 
 #hl-tree-table>tbody>tr {
-    background-color: #fff;
-    cursor: pointer;
+    background-color: #fbfbfb;
 }
 
 #hl-tree-table>tbody>.child-tr {
     background-color: #fff;
-    cursor: pointer;
 }
 
-#hl-tree-table>tbody>.color{
-    background-color: #bbbec4;
-}
 label {
     margin: 0 8px;
 }

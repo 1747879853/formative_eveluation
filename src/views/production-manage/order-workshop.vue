@@ -3,75 +3,61 @@
 </style>
 
 <template>
-    <div>
-        <Modal width="700" v-model="dispatchWorkOrder" title="分派到班组">
+
+ <Tabs type="card">
+        <TabPane label="工单列表">
+
+         
+        <Modal width="700" v-model="dispatchWorkOrder" title="分派到班组" @on-ok="give_workteam">
            
-            <Select v-model="model1" placeholder="班组" style="width:200px">
+            <Select v-model="model1" placeholder="班组" style="width:200px" clearable>
                 <Option v-for="item in workteams" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
             数量：<InputNumber :max="max_qty" :min=1 v-model="team_qty"></InputNumber>
-
-        </Modal>
-  
-          <!-- <Modal  v-model="show_work_shop_detail"  width='80%'  height='70%'>
-                 <Card>
-                    <div v-if="workshop_order_detail[0]" >
-                    <div  v-for="(mat_data,index) in workshop_order_detail[0].children">
-                   
-                    <p >
-                        <Icon type="compose"></Icon>
-                        模板-{{index+1}}#;工单号:{{work_order_id}}
-                    </p>
-                   
-                    <Table :columns="materials_col" v-if="mat_data" :data="mat_data"></Table>
-                 
-                     <p >
-                        <Icon type="compose"></Icon>
-                        模板-{{index+1}}# 物料清单
-                    </p>
-                    <Table :columns="boms_col" :data="mat_data[0].children"></Table>
-                    
-                        
-                  
-                   </div>
-                    </div>
-                  </Card>
-                   </Modal>
-
-                          <Modal width="60%" v-model="showPic" :title="graph_no">
-           
-            <img width="100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531138272810&di=fb25ebec179ae86ec8df80f3fb7aba90&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F12%2F81%2F58PIC5R58PICsqy_1024.jpg"></img>
-        </Modal> -->
+        </Modal>    
         <Row>
-           
                 <Card>
                     <p slot="title">
                         <Icon type="ios-list"></Icon>
-                        {{workshop_workorders.name}}-工单
-                    </p>
-                  
-                        <Table highlight-row ref="currentRowTable" @on-current-change="row_select"  :columns="orderColumns" :data="workshop_workorder_workorders" style="width: 100%;"></Table>
+                        {{workshop_name}}-工单
+                    </p>          
+                        <Table highlight-row ref="currentRowTable" :columns="orderColumns" :data="workshop_workorder_workorders" style="width: 100%;"></Table>
                     <div style="margin: 10px;overflow: hidden">
                         <div style="float: right;">
-                    <Page :total="100" :current="1" @on-change="changePage"></Page>
+                    <!-- <Page :total="100" :current="1" @on-change="changePage"></Page> -->
                         </div>
-                    </div>
-                     
+                    </div>                   
                      <br/>
-                
-
-
-         
-                   </Card>
-
-                    
-                
+                   </Card>       
             </Col>
         </Row>
-    </div>
+        </TabPane>
+
+
+        <TabPane label="物料请领审批">
+            <Modal v-model="show_approval_detail" width="70%" title="领料明细">
+                  <Table :columns="approval_details_columns"   :data="approval_details"></Table>
+                  <br>
+            审核:<Select v-model="model1" style="width:200px" clearable>
+                <Option v-for="(item,index) in approval_arr" :value="index" :key="item">{{ item }}</Option>
+           </Select>             意见:<Input v-model="value" placeholder="审批意见..." style="width: 300px"></Input>
+           </Modal>
+
+           <Card>
+                    <p>
+                       <Icon type="ios-list"></Icon>   物料申请单   (点击记录查看详情)
+                    </p>
+                  <Table :columns="boms_approval_columns"  highlight-row @on-row-click="approval_select" :data="boms_approval_list"></Table>
+                  </Card>
+        </TabPane>
+        
+    </Tabs>
+  
+    
 </template>
 
 <script>
+import Cookies from "js-cookie";
 export default {
   name: "mutative-router",
   data() {
@@ -87,14 +73,10 @@ export default {
           key: "work_order_id",
           align: "center"
         },
-        {
-          title: "客户",
-          key: "name"
-        },
 
         {
           title: "模板",
-          key: "type"
+          key: "template_type"
         },
         {
           title: "数量",
@@ -122,7 +104,20 @@ export default {
                       // console.log(params.row);
                       this.team_qty = params.row.number;
                       this.max_qty = params.row.number;
+                      this.$axios
+                        .get("/teams", {
+                          params: {
+                            work_shop_id: this.work_shop_id
+                          }
+                        })
+                        .then(res => {
+                          this.workteams = res.data.teams;
+                        })
+                        .catch(error => {
+                          console.log(error);
+                        });
                       this.dispatchWorkOrder = true;
+                      this.work_order_id = params.row.work_order_id;
                     }
                   }
                 },
@@ -157,7 +152,47 @@ export default {
           }
         }
       ],
+      value:"",
 
+      boms_approval_columns: [
+        {
+          type: "index",
+          title: "序号",
+          width: 30
+        },
+        {
+          title: "单号",
+          key: "id",
+          align: "center"
+        },
+        {
+          title: "模板",
+          key: "apply_comment",
+          align: "center"
+        },
+        {
+          title: "申请日期",
+          key: "record_time",
+          align: "center"
+        },
+        {
+          title: "申请人",
+          key: "apply_name",
+          align: "center"
+        },
+        {
+          title: "审批人",
+          key: "approval_owner",
+          align: "center"
+        },
+        {
+          title: "状态",
+          key: "status",
+          align: "center"
+        }
+      ],
+      approval_arr: ["审核中", "同意", "否决"],
+      boms_approval_list: [],
       workshop_workorders: [],
       workteams: [],
       dispatchWorkOrder: false,
@@ -269,7 +304,45 @@ export default {
       work_order_id: "",
       graph_no: "",
       showPic: false,
-      workshop_workorder_workorders: []
+      workshop_workorder_workorders: [],
+      workshop_name: "",
+      work_shop_id: "",
+      user_id: "",
+      approval_details_columns: [
+        {
+          type: "index",
+          title: "序号",
+          width: 30
+        },
+        {
+          title: "名称",
+          key: "name",
+          align: "center"
+        },
+        {
+          title: "材料规格",
+          key: "spec",
+          align: "center"
+        },
+        {
+          title: "长度(mm)",
+          key: "length",
+          align: "center"
+        },
+        {
+          title: "宽度(mm)",
+          key: "width",
+          align: "center"
+        },
+
+        {
+          title: "请领数量",
+          key: "req_qty",
+          align: "center"
+        }
+      ],
+      approval_details: [],
+      show_approval_detail: false
     };
   },
   computed: {
@@ -279,43 +352,76 @@ export default {
   },
   mounted() {
     this.$axios
-      .get("/workshop_workorders")
+      .get("/work_shop_order_list", { params: { user_id: 6 } })
       .then(res => {
-        this.workshop_workorders = res.data;
-        this.workshop_workorder_workorders = res.data.workorders;
+        this.workshop_name = res.data.data[0]["name"];
+        this.work_shop_id = res.data.data[0]["work_shop_id"];
+        this.user_id = res.data.data[0]["user_id"];
+
+        // console.log(this.work_shop_id);
+        this.workshop_workorder_workorders = res.data.data;
       })
       .catch(error => {
         console.log(error);
       });
-    this.$axios
-      .get("/workteams")
-      .then(res => {
-        this.workteams = res.data.data;
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    this.boms_approval_list1();
   },
   methods: {
-    row_select(currentRow) {
+    give_workteam() {
       this.$axios
-        .get("/workshop_order_detail")
-        .then(res => {
-          this.workshop_order_detail = res.data;
-          this.work_order_id = currentRow.work_order_id;
-          this.show_work_shop_detail = true;
+        .post("/work_team_task", {
+          work_team_id: this.model1,
+          user_id: this.user_id,
+          number: this.team_qty,
+          work_order_id: this.work_order_id
         })
-        .catch(error => {
-          console.log(error);
+        .then(res => {
+          alert(res.data.msg);
         });
     },
-    pic_show(picno) {
-      this.graph_no = picno;
-      this.showPic = true;
+    boms_approval_list1() {
+      this.$axios
+        .get("/boms_approvals", {
+          params: {
+            user_id: Cookies.get("userid"),
+            approval: "1"
+          }
+        })
+        .then(res => {
+          this.boms_approval_list = res.data.boms_approval_list;
+        });
     },
-    changePage() {
-      this.workshop_workorder_workorders = this.workshop_workorder_workorders;
+    approval_select(currentRow) {
+      this.$axios
+        .get("/boms_approval_detail", {
+          params: {
+            approval_id: currentRow.id
+          }
+        })
+        .then(res => {
+          this.show_approval_detail = true;
+          this.approval_details = res.data.boms_approval_detail;
+        });
     }
+    // row_select(currentRow) {
+    //   this.$axios
+    //     .get("/workshop_order_detail")
+    //     .then(res => {
+    //       this.workshop_order_detail = res.data;
+    //       this.work_order_id = currentRow.work_order_id;
+    //       this.show_work_shop_detail = true;
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // },
+    // pic_show(picno) {
+    //   this.graph_no = picno;
+    //   this.showPic = true;
+    // },
+    // changePage() {
+    //   this.workshop_workorder_workorders = this.workshop_workorder_workorders;
+    // }
   }
 };
 </script>

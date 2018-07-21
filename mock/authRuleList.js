@@ -76,10 +76,10 @@ let list = function (options) {
             params = JSON.parse(options.body).params;
             arr = {
                 id: params.id,
-                authority: params.v2,
-                name: params.v1,
-                condition: params.v3,
-                status: params.v4
+                authority: params.authority,
+                name: params.name,
+                condition: params.condition,
+                status: params.status,
             };
             break;
         case 'delete':// 删除权限

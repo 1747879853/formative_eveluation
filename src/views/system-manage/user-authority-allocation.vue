@@ -16,22 +16,11 @@
                 <p slot="title" style="font-size:20px;height: 33px;">
                     <Icon type="android-funnel"></Icon>
                     用户&nbsp;&nbsp;&nbsp;
-                    <Button type="primary" @click="showmodal()">添加</Button>
-                    <Modal
-                        v-model="modal"
-                        title="添加新用户"
-                        @on-ok="ok"
-                        @on-cancel="cancel">
-                        <table>
-                        <tr><td>用户名</td><td>
-                        <Input v-model="value1" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
-                        </table>
-                    </Modal>
                 </p>
                 <div style="overflow-y:auto;height:500px;">
                     <ul id="editable-new" class="iview-admin-draggable-list">                            
                         <li v-for="(item, index) in users_data" :key="index" class="notwrap todolist-item" :data-index="index">
-                        {{ item.name }}<Icon type="close" class="js-remove"/></li>
+                        {{ item.username }}</li>
                     </ul>
                 </div>
             </Card>
@@ -60,49 +49,20 @@ import Sortable from 'sortablejs';
                 ],
                 users_data: [
                 ],
-                value1:"",
                 modal:false,
                 select:null,
             }
         },
         mounted () { 
         this.$axios.get("/authUserList").then( res =>{
-        this.users_data = res.data[1];
-        this.data1 = res.data[0];
+        this.users_data = res.data.a;
+        this.data1 = res.data.b;
         }).catch(error =>{
             console.log(error);
         });
         let editable = document.getElementById('editable-new');
         let vm = this;
-        var editableList = Sortable.create(editable, {
-            filter: '.js-remove',
-            onFilter: function (evt) {
-                var el = editableList.closest(evt.item); 
-                vm.$Modal.confirm({
-                    title: '删除用户',
-                    content: '<p>确定要删除此用户吗？</p>',
-                    onOk: () => {
-                        vm.$axios.delete('/authUserList', {
-                            data: {
-                                params: {
-                                    id: parseInt(el.getAttribute('data-index')),
-                                }
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            vm.users_data = res.data[1];
-                        }.bind(vm))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
-                        vm.$Message.info('删除成功');
-                        vm.select=null;
-                    },
-                    onCancel: () => {
-                        vm.$Message.info('取消');
-                    }
-                });
-            },
+        var editableList = Sortable.create(editable, {            
             onChoose: function (evt) {
                 var el = editableList.closest(evt.item); 
                 vm.select=parseInt(el.getAttribute('data-index'));              
@@ -111,18 +71,21 @@ import Sortable from 'sortablejs';
                 for (let i = 0; i < list.length; i++) {
                     if(list[i] == el){
                         evt.item.setAttribute("style","border-color: #87b4ee;");
-                        vm.$axios.patch('/authUserList', {
-                            params: {
-                                num:parseInt(el.getAttribute('data-index')),
+                        var ch_id = vm.users_data[parseInt(el.getAttribute('data-index'))].checked_id;
+                        for(let i=0;i<vm.data1.length;i++){
+                            if(ch_id.length!=0){
+                                for(let j=0;j<ch_id.length;j++){
+                                    if(vm.data1[i].id==ch_id[j]){
+                                        vm.data1[i].checked=true;
+                                        break;
+                                    }
+                                    else{vm.data1[i].checked=false;
+                                    }
+                                }
+                            }else{
+                                vm.data1[i].checked=false;
                             }
-                        }).then(function(res) {
-                            console.log(res);
-                            vm.users_data = res.data[1];
-                            vm.data1 = res.data[0];
-                        }.bind(vm))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
+                        } 
                     }else{
                         list[i].removeAttribute("style");
                     }                    
@@ -136,37 +99,25 @@ import Sortable from 'sortablejs';
     methods:{        
         showmodal(){
             this.modal=true;
-            this.value1="";
-        },
-        ok () {
-            this.$axios.post('/authUserList', {
-                            params: {
-                                v1:this.value1,
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            this.users_data = res.data[1];
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
-                        this.$Message.info('添加成功');
-        },
-        cancel () {
-            this.$Message.info('取消');
+            this.u_name="";
         },
         save (){
             if(this.select==null){
                 this.$Message.info('请选中一个用户');
             }else{
-                this.$axios.put('/authUserList', {
+                let checked_tree = this.$refs.tree.getCheckedNodes();
+                let tree_id = [];
+                for(let i=0;i<checked_tree.length;i++){
+                    tree_id[i]=checked_tree[i].id;
+                }
+                this.$axios.patch('/authUserList', {
                             params: {
-                                user_id:this.select,
-                                id:this.$refs.tree.getCheckedNodes(),
+                                user_id:this.users_data[this.select].id,
+                                id:tree_id,
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.groups_data = res.data[1];
+                            this.users_data[this.select].checked_id = res.data.checked_id;
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
