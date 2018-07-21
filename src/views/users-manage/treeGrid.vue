@@ -2,7 +2,7 @@
     <div :style="{width:tableWidth}" class='autoTbale'>
         <table class="table table-bordered" id='hl-tree-table'>
             <tbody>
-                <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{color:isChecked== index}" @click="changeColor(index)" :data-index="index">
+                <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{color:isChecked== index}" @click="id1=renderId(item);changeColor(index)" :data-index="index">
                     <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
                         <div v-if="column.type === 'action'">
                             <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal1();
@@ -14,10 +14,10 @@
                                 @on-cancel="cancel1">
                                 <table>
                                 <tr><td>组织名</td><td>
-                                <Input v-model="value1" placeholder="请输入组织名" clearable style="width: 300px"></Input></td></tr>
+                                <Input v-model="f_name" placeholder="请输入组织名" clearable style="width: 300px"></Input></td></tr>
                                 </table>
                             </Modal>
-                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);value5=renderName(item);value6=renderAuthority(item);value7=renderCondition(item);value8=renderStatus(item);">修改</button>
+                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);f_name=renderName(item);">修改</button>
                             <Modal
                                 v-model="modal3"
                                 title="修改组织名"
@@ -25,7 +25,7 @@
                                 @on-cancel="cancel2">
                                 <table>
                                 <tr><td>权限名</td><td>
-                                <Input v-model="value5" placeholder="请输入组织名" clearable style="width: 300px"></Input></td></tr>
+                                <Input v-model="f_name" placeholder="请输入组织名" clearable style="width: 300px"></Input></td></tr>
                                 </table>
                             </Modal>
                             <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="id1=renderId(item); deleteClick();">删除</button>
@@ -44,6 +44,8 @@
     </div>
 </template>
 <script>
+import Vue from 'vue';
+
 export default {
     name: 'treeGrid',
     props: {
@@ -69,6 +71,7 @@ export default {
             modal3:false,
             id1:"",
             isChecked:-1,//是否与表格的行的下标一致
+            f_name: ''
         }
     },
     computed: {
@@ -134,22 +137,83 @@ export default {
     methods: {
             changeColor(index){
                 this.isChecked=index;
-                // selectedindex =index;
-                this.$emit('selectedindex',index);
+                var id = this.id1;
+                this.$emit('selectedindex',id);
 
+            },
+            depthTraversal:function(arr,id,newarr){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr[i].children.push(newarr);
+                          return i;
+                      }
+                      let ret = this.depthTraversal(arr[i].children,id,newarr);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal2:function(arr,id,newarr){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr[i].authority = newarr.authority;
+                          arr[i].name = newarr.name;
+                          arr[i].condition = newarr.condition;
+                          arr[i].status = newarr.status;
+                          return i;
+                      }
+                      let ret = this.depthTraversal2(arr[i].children,id,newarr);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal4:function(arr,id){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr.splice(i, 1);
+                          return i;
+                      }
+                      let ret = this.depthTraversal4(arr[i].children,id);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal3:function(arr,id){
+                let found = false;
+                let i;
+                if (arr!=null){  
+                    for(i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                          arr.splice(i, 1);
+                        return -1;
+                      }
+                        else{
+                            let ret = this.depthTraversal4(arr[i].children,id);
+                            if(ret>=0)
+                                return ret;
+                        }
+                    
+                    }    
+                }
             },
             ok1 () {
                 this.$axios.post('/organization', {
                             params: {
-                                id:this.id1,
-                                v1:this.value1,
-                                v2:this.value2,
-                                v3:this.value3,
-                                v4:this.value4,
+                                parent_id: this.id1,
+                                name: this.f_name
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.items = res.data;
+                            let ret = this.depthTraversal(this.items, this.id1, res.data);
+                            Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -162,15 +226,13 @@ export default {
             ok2 () {
                 this.$axios.patch('/organization', {
                             params: {
-                                id:this.id1,
-                                v1:this.value5,
-                                v2:this.value6,
-                                v3:this.value7,
-                                v4:this.value8,
+                                id: this.id1,
+                                name:this.f_name,
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.items = res.data;
+                            let ret = this.depthTraversal2(this.items, this.id1, res.data);
+                            Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -182,10 +244,7 @@ export default {
             },
             show_modal1(){
                 this.modal1=true; 
-                this.value1="";
-                this.value2="";
-                this.value3="";
-                this.value4="";
+                this.f_name="";
             },
       // 有无多选框折叠位置优化
       iconRow() {
@@ -232,13 +291,14 @@ export default {
                         this.$axios.delete('/organization', {
                             data: {
                                 params: {
-
                                     id: this.id1,
                                 }
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.items = res.data;
+                            let ret=this.depthTraversal3(this.items, this.id1);
+                            if(ret>=0)
+                                Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -472,15 +532,6 @@ export default {
         },
         renderName(row, index) {
             return row["name"]
-        },
-        renderAuthority(row, index) {
-            return row["authority"]
-        },
-        renderCondition(row, index) {
-            return row["condition"]
-        },
-        renderStatus(row, index) {
-            return row["status"]
         },
         // 默认选中
         renderCheck(data) {

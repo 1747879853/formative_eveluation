@@ -29,7 +29,7 @@ service.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
 service.interceptors.request.use(function (config) {
     // Do something before request is sent
     if (config.url.match(/\/authRuleList|authUserList|authGroupList|users|approval_list|approval_field_list|approval_create|procedure_nodes|procedure_create|user_group_list/)) {
-        config.baseURL = devUrl;
+        config.baseURL = '';
         // config.baseURL = '';
     }
     return config;
