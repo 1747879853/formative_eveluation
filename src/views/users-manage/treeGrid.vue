@@ -2,7 +2,7 @@
     <div :style="{width:tableWidth}" class='autoTbale'>
         <table class="table table-bordered" id='hl-tree-table'>
             <tbody>
-                <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{color:isChecked== index}" @click="changeColor(index)">
+                <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{color:isChecked== index}" @click="changeColor(index)" :data-index="index">
                     <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
                         <div v-if="column.type === 'action'">
                             <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal1();
@@ -53,7 +53,7 @@ export default {
             default: function() {
                 return [];
             }
-        }
+        },
     },
     data() {
         return {
@@ -134,6 +134,9 @@ export default {
     methods: {
             changeColor(index){
                 this.isChecked=index;
+                // selectedindex =index;
+                this.$emit('selectedindex',index);
+
             },
             ok1 () {
                 this.$axios.post('/organization', {
