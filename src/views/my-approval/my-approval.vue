@@ -45,6 +45,7 @@
 <script>
 import Vue from 'vue';
 import AutoForm from "./auto-form.vue"
+import iView from 'iview';
 export default {
     name: 'my-approval',
     data () {
@@ -191,7 +192,8 @@ export default {
             //check if all data filled,then submit
             let allfilled =true;
             let m_hash = {};
-            let d_hash = {};
+            let d_hash_arr = [];
+            let t_hash ={};
             for(let i=0;i<this.formDynamicMain.items.length;i++){
                 let cur = this.formDynamicMain.items[i];
                 m_hash[cur.en_name] = cur.en_name_value;
@@ -200,35 +202,49 @@ export default {
                     break;
                 } 
             }
-            if(hasMainTable){
+            if(this.hasDetailTable){
                 for(let i=0;i<this.formDynamicDetail_arr.length && allfilled;i++){
                     let cur = this.formDynamicDetail_arr[i];
                     for(let j=0;j<cur.items.length;j++){
                         let curcur = cur.items[j];
-                        d_hash[curcur.en_name] = curcur.en_name_value;
+                        t_hash[curcur.en_name] = curcur.en_name_value;                        
                         if(curcur.en_name_value==undefined){
                             allfilled = false;
                             break;
                         } 
                     }
+                    d_hash_arr.push(JSON.parse(JSON.stringify(t_hash)));
+                    t_hash = {};
                 }
             }
+            /*post parameters like this:
+            {
+                "approvalid":10,
+                "mainhash":{"field0":"111","field1":"222","field2":"选项1","field3":"选项2","field4":"2018-07-20T16:00:00.000Z"},
+                "detailhasharr":[{"field0":"333","field1":"选项1"},{"field0":"444","field1":"选项2"}],
+                "submit_user_id":1
+            }
+            */
             if(allfilled){
                 this.$axios.post('/approval_save', {
                     approvalid: this.approval_id,
                     mainhash: m_hash,
-                    detailhash: d_hash,
+                    detailhasharr: d_hash_arr,
                     submit_user_id: this.submit_user_id,  //审批人
                 })
                 .then(res => {
                     iView.LoadingBar.finish();
                     // console.log(res);
-                    this.$Message.success(res.data.msg);
+                    if(res.data.code == 1){
+                        this.$Message.success(res.data.msg);
+                    }else{
+                        this.$Message.error('保存失败，服务器保存数据错误！');
+                    }
                     return;
                 })
                 .catch(error => {
                     iView.LoadingBar.finish();
-                    this.$Message.error('保存失败，请检查服务器设置！');
+                    this.$Message.error('保存失败，连接服务器超时！');
                     console.log(error);
                     return;
                 });

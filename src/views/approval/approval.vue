@@ -110,7 +110,7 @@ export default {
     },
     methods: {
         edit (row) {
-            let argu = { approval_id: row.id,approval_name: row.name,approval_comment: row.comment };
+            let argu = { approval_id: row.id,existed_app: this.approvalData, approval_name: row.name,approval_comment: row.comment };
             this.$router.push({
                 name: 'design-approval',
                 params: argu

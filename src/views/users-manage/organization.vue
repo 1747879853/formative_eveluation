@@ -16,9 +16,10 @@
         </table>
     </Modal>
     </div>
- <tree-grid id="hl-tree-table"
+ <tree-grid 
         :items='data' 
         :columns='columns'
+        v-on:selectedindex="selected_index"
       ></tree-grid>
 </Card>
 </Col>
@@ -70,21 +71,15 @@ export default {
                 ],
                 data1: [
                  ],
-                 select:null,
+                select:null,
             }
         },
     components:{
     	TreeGrid
     },
     props:{
-        columns1: Array,
-        items1: {
-            type: Array,
-            default: function() {
-                return [];
-            }
-        }
     },
+    
    mounted(){
         this.$axios.get("/organization").then( res =>{
             this.data = res.data[1];
@@ -92,41 +87,6 @@ export default {
         }).catch(error =>{
             console.log(error);
         })
-        let editable = document.getElementById('hl-tree-table');
-        let vm = this;
-        var editableList = Sortable.create(editable, {            
-            onChoose: function (evt) {
-                var el = editableList.closest(evt.item); 
-                vm.select=parseInt(el.getAttribute('data-index'));              
-                //为选中的条目添加样式
-                let list= document.getElementById("hl-tree-table").getElementsByTagName("tr");
-                for (let i = 0; i < list.length; i++) {
-                    if(list[i] == el){
-                        evt.item.setAttribute("style","background: #87b4ee;");
-                        var ch_id = vm.users_data[parseInt(el.getAttribute('data-index'))].checked_id;
-                        for(let i=0;i<vm.data1.length;i++){
-                            if(ch_id.length!=0){
-                                for(let j=0;j<ch_id.length;j++){
-                                    if(vm.data1[i].id==ch_id[j]){
-                                        vm.data1[i].checked=true;
-                                        break;
-                                    }
-                                    else{vm.data1[i].checked=false;
-                                    }
-                                }
-                            }else{
-                                vm.data1[i].checked=false;
-                            }
-                        } 
-                    }else{
-                        list[i].removeAttribute("style");
-                    }                    
-                }
-                
-            },
-            
-        });        
-
     },
     methods: {
             ok () {
@@ -150,6 +110,24 @@ export default {
             cancel () {
                 this.$Message.info('取消');
             },
+            selected_index(index){
+            let ch_id=this.data[index].checked_id;
+            for(let i=0;i<this.data1.length;i++){
+                if(ch_id.length!=0){
+                    for(let j=0;j<ch_id.length;j++){
+                        if(this.data1[i].id==ch_id[j]){
+                        this.data1[i].checked=true;
+                         break;
+                     }else{
+                        this.data1[i].checked=false;
+                     }
+                    }
+                }else{
+                this.data1[i].checked=false;    
+                }
+              }  
+            },
+
             show_modal(){
                 this.modal2=true;
                 this.value1="";
@@ -157,6 +135,30 @@ export default {
                 this.value3="";
                 this.value4="";
             },
+            save (){
+            // if(this.select==null){
+            //     this.$Message.info('请选中一个用户');
+            // }else{
+                let checked_tree = this.$refs.tree.getCheckedNodes();
+                let tree_id = [];
+                for(let i=0;i<checked_tree.length;i++){
+                    tree_id[i]=checked_tree[i].id;
+                }
+                this.$axios.patch('/organization', {
+                            params: {
+                                user_id:this.data[this.select].id,
+                                id:tree_id,
+                            }
+                        }).then(function(res) {
+                            console.log(res);
+                            this.data[this.select].checked_id = res.data.checked_id;
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        this.$Message.info('保存成功');
+            // }   
+        },
             check111(selectedList){
             if(selectedList[selectedList.length-1].checked==true){
                 selectedList[selectedList.length-1].checked=false;
