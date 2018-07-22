@@ -159,7 +159,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                      let argu = { mid: params.row.mid, name: params.row.name };
+                      let argu = { mid: params.row.mid, name: params.row.name, team_task_id: params.row.id };
                       this.$router.push({
                         name: "material-requisition",
                         params: argu
@@ -181,7 +181,7 @@ export default {
                   },
                   on: {
                     click: () => {
-                       this.finish_qty = 0;
+                      this.finish_qty = 0;
                       this.show_finish = true;
                       this.team_task_id = params.row.id;
                      
