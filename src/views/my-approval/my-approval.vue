@@ -145,12 +145,23 @@ export default {
         this.$axios
         .get("/approval_list")
         .then(res => {
-            this.approvalList = res.data;
+            this.approvalList = res.data || [];
         })
         .catch(error => {
             this.approvalList =[];
             console.log(error);
         });
+
+        this.$axios
+            .get("/approval_to_me")
+            .then(res => {
+                this.to_me_data = res.data.data || [];
+                this.to_me_num = res.data.rows || 0;
+            })
+            .catch(error => {
+                this.to_me_data =[];
+                console.log(error);
+            });
 
 
     },
@@ -328,8 +339,8 @@ export default {
                 this.$axios
                 .get("/approval_to_me")
                 .then(res => {
-                    this.to_me_data = res.data.data;
-                    this.to_me_num = res.data.rows;
+                    this.to_me_data = res.data.data || [];
+                    this.to_me_num = res.data.rows || 0;
                 })
                 .catch(error => {
                     this.to_me_data =[];
@@ -341,7 +352,7 @@ export default {
                 this.$axios
                 .get("/approval_to_me_done")
                 .then(res => {
-                    this.to_me_done_data = res.data.data;
+                    this.to_me_done_data = res.data.data || [];
                 })
                 .catch(error => {
                     this.to_me_done_data =[];
@@ -352,7 +363,7 @@ export default {
                 this.$axios
                 .get("/approval_from_me")
                 .then(res => {
-                    this.from_me_data = res.data.data;
+                    this.from_me_data = res.data.data || [];
                 })
                 .catch(error => {
                     this.from_me_data =[];

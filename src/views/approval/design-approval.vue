@@ -146,8 +146,8 @@ export default {
                 this.$axios
                 .get("/approval_field_list?approval_id=" + this.approval_id_s)
                 .then(res => {
-                    this.approval_field_data = res.data.approval_field_data;
-                    this.approval_detail_field_data = res.data.approval_detail_field_data;
+                    this.approval_field_data = res.data.approval_field_data || [];
+                    this.approval_detail_field_data = res.data.approval_detail_field_data || [];
                 })
                 .catch(error => {
                     this.approval_field_data = [];
