@@ -1,7 +1,7 @@
 
 <template>    
     
-    <Tabs value="name1">
+    <Tabs value="name1" @on-click="changeTab">
         <TabPane label="发起审批" name="name1">
             <Row id="approval-list" v-if="showOrNot">
                 <p>审批分组名称</p>
@@ -35,9 +35,22 @@
                 
             </Row>
         </TabPane>
-        <TabPane label="待我审批的" name="name2">标签二的内容</TabPane>
-        <TabPane label="我已审批的" name="name3">标签三的内容</TabPane>
-        <TabPane label="我发起的" name="name4">标签一的内容</TabPane>
+        <TabPane :label="label2" name="to_me_label">
+            <Row>
+                <Table :ref="refs"  highlight-row  @on-row-click="to_me_onRowClick"   :columns="to_me_columns"  :data="to_me_data" border></Table>
+            </Row>
+        </TabPane>
+
+        <TabPane label="我已审批的" name="to_me_done_label">
+            <Row>
+                <Table :ref="refs"  highlight-row  @on-row-click="to_me_onRowClick"   :columns="to_me_columns"  :data="to_me_done_data" border></Table>
+            </Row>
+        </TabPane>
+        <TabPane label="我发起的" name="from_me_label">
+            <Row>
+                <Table :ref="refs"  highlight-row  @on-row-click="to_me_onRowClick"   :columns="to_me_columns"  :data="from_me_data" border></Table>
+            </Row>
+        </TabPane>
     </Tabs>
       
 </template>
@@ -77,7 +90,54 @@ export default {
             approval_name: '',
             approval_id: 0,
             submit_users: [],
-            submit_user_id: 0
+            submit_user_id: 0,
+            to_me_num: 0,
+            label2: (h) => {
+                return h('div', [
+                    h('span', '待我审批的'),
+                    h('Badge', {
+                        props: {
+                            count: this.to_me_num
+                        }
+                    })
+                ])
+            },
+            to_me_data: [],
+            to_me_done_data: [],
+            from_me_data: [],
+            refs: String,
+            to_me_columns: [
+                {
+                  type: "index",
+                  title: "序号",
+                  width: 60
+                },
+                {
+                  title: "审批名称",
+                  key: "title",
+                  align: "center"
+                },
+                {
+                  title: "审批摘要",
+                  key: "digest",
+                  align: "center"
+                },
+                {
+                  title: "发起时间",
+                  key: "submit_time",
+                  align: "center"
+                },
+                {
+                  title: "完成时间",
+                  key: "finish_time",
+                  align: "center"
+                },
+                {
+                  title: "状态",
+                  key: "status",
+                  align: "center"
+                }
+            ],
             
         };
     },
@@ -91,6 +151,7 @@ export default {
             this.approvalList =[];
             console.log(error);
         });
+
 
     },
     components:{
@@ -256,7 +317,50 @@ export default {
             }
             console.log(this.formDynamicMain);
             console.log(this.formDynamicDetail_arr);
-        }        
+        },
+        to_me_onRowClick (row, index) {
+          // this.$emit('on-row-clic', row, index)
+          // debugger
+          // alert(row);
+        },
+        changeTab(name){
+            if(name=="to_me_label"){
+                this.$axios
+                .get("/approval_to_me")
+                .then(res => {
+                    this.to_me_data = res.data.data;
+                    this.to_me_num = res.data.rows;
+                })
+                .catch(error => {
+                    this.to_me_data =[];
+                    console.log(error);
+                });
+            }
+            else if(name=="to_me_done_label"){
+
+                this.$axios
+                .get("/approval_to_me_done")
+                .then(res => {
+                    this.to_me_done_data = res.data.data;
+                })
+                .catch(error => {
+                    this.to_me_done_data =[];
+                    console.log(error);
+                });
+            }else if(name=="from_me_label"){
+
+                this.$axios
+                .get("/approval_from_me")
+                .then(res => {
+                    this.from_me_data = res.data.data;
+                })
+                .catch(error => {
+                    this.from_me_data =[];
+                    console.log(error);
+                });
+            }
+
+        }    
     }
 };
 
