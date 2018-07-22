@@ -1,6 +1,7 @@
 
 import env from '../../build/env';
 import axios from 'axios';
+import store from '../store';
 
 const ajaxUrl = env === 'development'
     ? ''
@@ -28,6 +29,13 @@ const service = axios.create({
 // Alter defaults after instance has been created
 service.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
 service.interceptors.request.use(function (config) {
+    if(store.state.token){     
+        config.headers.common['Authentication-Token']=store.state.token
+    }
+    if (config.url.match(/\/user_token/)) {
+        config.baseURL = 'http://127.0.0.1:3000';
+        // config.baseURL = '';
+    }
     // Do something before request is sent
     if (config.url.match(/\/authRuleList|authUserList|authGroupList|userList|users|approval_list|approval_field_list|approval_create|approval_save|procedure_nodes|procedure_create|user_group_list/)) {
         config.baseURL = devUrl;
