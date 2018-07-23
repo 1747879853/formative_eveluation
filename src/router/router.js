@@ -68,7 +68,8 @@ export const otherRouter = {
         { path: 'message', title: '消息中心', name: 'message_index', component: () => import('@/views/message/message.vue') },
         { path: 'design-approval/:approval_id', title: '审批表单设计', name: 'design-approval', component: () => import('@/views/approval/design-approval.vue') },
         { path: 'approval-procedure/:approval_id', title: '审批流程', name: 'approval-procedure', component: () => import('@/views/approval/approval-procedure.vue') },
-        { path: 'approval-new/:approval_id', title: '创建新审批', name: 'approval-new', component: () => import('@/views/my-approval/approval-new.vue') }
+        { path: 'approval-new/:approval_id', title: '创建新审批', name: 'approval-new', component: () => import('@/views/my-approval/approval-new.vue') },
+        { path: 'add-dailySummary', title: '填写工作日报', name: 'add-dailySummary', component: () => import('@/views/daily-summary/add-summary.vue') },
     ]
 };
 
@@ -304,12 +305,11 @@ export const appRouter = [
             },
         ]
     },
-    //我修改的地方
     {
         path: '/daily-summary',
         icon: 'settings',
         name: 'daily-summary',
-        title: '日清总结',
+        title: '日清日结',
         component: Main,
         children: [
             {
@@ -319,13 +319,13 @@ export const appRouter = [
                 title: '花费科目',
                 component: () => import('@/views/daily-summary/cost.vue')
             },
-            // {
-            //     path: 'organization',
-            //     icon: 'compose',
-            //     name: 'organization',
-            //     title: '组织管理',
-            //     component: () => import('@/views/users-manage/organization.vue')
-            // },
+            {
+                path: 'daily-work',
+                icon: 'compose',
+                name: 'daily-work',
+                title: '工作日报',
+                component: () => import('@/views/daily-summary/daily-work.vue')
+            },
         ]
     },
     {

@@ -214,6 +214,8 @@ export default {
                 }
             },
             ok1 () {
+                // console.log(this.id1);
+                // this.id1 就是父类id
                 this.$axios.post('/costList', {
                             params: {
                                 name: this.c_name,

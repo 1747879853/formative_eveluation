@@ -19,7 +19,13 @@ let list = function (options) {
                         {
                             id: '5',
                             name: '加油费',
-                            children: []
+                            children: [
+                                {
+                                    id: '6',
+                                    name: '保险费',
+                                    children: [],
+                                }
+                            ]
                         }
                     ]
                 },
