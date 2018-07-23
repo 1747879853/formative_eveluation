@@ -146,8 +146,8 @@ export default {
                 this.$axios
                 .get("/approval_field_list?approval_id=" + this.approval_id_s)
                 .then(res => {
-                    this.approval_field_data = res.data.approval_field_data;
-                    this.approval_detail_field_data = res.data.approval_detail_field_data;
+                    this.approval_field_data = res.data.approval_field_data || [];
+                    this.approval_detail_field_data = res.data.approval_detail_field_data || [];
                 })
                 .catch(error => {
                     this.approval_field_data = [];
@@ -193,11 +193,13 @@ export default {
                 let se = parseInt(list[i].getAttribute("data-index"));
                 this.approval_detail_field_data[i].sequence = se;                                  
             }
-            for (let i = 0; i < this.existed_app_arr.length; i++) {
-                if(this.existed_app_arr[i].name == this.approvalName){
-                    iView.LoadingBar.finish();
-                    this.$Message.error("审批名称与已有审批重名!")
-                    return
+            if(this.approval_id_s=='-1'){
+                for (let i = 0; i < this.existed_app_arr.length; i++) {
+                    if(this.existed_app_arr[i].name == this.approvalName){
+                        iView.LoadingBar.finish();
+                        this.$Message.error("审批名称与已有审批重名!")
+                        return
+                    }
                 }
             }
             

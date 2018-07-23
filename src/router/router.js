@@ -238,7 +238,7 @@ export const appRouter = [
             { path: 'order-manage', title: '订单', name: 'order-manage', icon: 'link', component: () => import('@/views/production-manage/order-manage.vue') },
             { path: 'order-workshop', title: '车间', name: 'order-workshop', icon: 'link', component: () => import('@/views/production-manage/order-workshop.vue') },           
             { path: 'order-team', title: '班组', name: 'order-team', icon: 'link', component: () => import('@/views/production-manage/order-team.vue') },
-            { path: 'requisition-list', title: '领料单', name: 'requisition-list', icon: 'link', component: () => import('@/views/production-manage/requisition-list.vue') },
+            // { path: 'requisition-list', title: '领料单', name: 'requisition-list', icon: 'link', component: () => import('@/views/production-manage/requisition-list.vue') },
             
             // { path: 'argument-page', title: '带参页面', name: 'argument-page', icon: 'android-send', component: () => import('@/views/production-manage/argument-page.vue') }
         ]
@@ -351,8 +351,31 @@ export const appRouter = [
             },
         ]
     },
+    {
+        path: '/employee-information',
+        icon: 'settings',
+        name: 'employee-name',
+        title: '员工信息',
+        component: Main,
+        children: [
+              {
+                path: 'attendance-record',
+                icon: 'compose',
+                name: 'attendance-record',
+                title: '考勤记录',
+                component: () => import('@/views/employee-information/attendance-record.vue')
+            },
+            {
+                path: 'placeorder-record',
+                icon: 'compose',
+                name: 'placeorder-record',
+                title: '占位符',
+                component: () => import('@/views/employee-information/placeorder-record.vue')
+            },
+        ]
+    },
     // {
-    //     path: '/error-page',
+    //     path: '/error-/page',
     //     icon: 'android-sad',
     //     title: '错误页面',
     //     name: 'errorpage',

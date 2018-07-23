@@ -1,7 +1,7 @@
 
 <template>    
     
-    <Tabs value="name1">
+    <Tabs value="name1" @on-click="changeTab">
         <TabPane label="发起审批" name="name1">
             <Row id="approval-list" v-if="showOrNot">
                 <p>审批分组名称</p>
@@ -35,9 +35,22 @@
                 
             </Row>
         </TabPane>
-        <TabPane label="待我审批的" name="name2">标签二的内容</TabPane>
-        <TabPane label="我已审批的" name="name3">标签三的内容</TabPane>
-        <TabPane label="我发起的" name="name4">标签一的内容</TabPane>
+        <TabPane :label="label2" name="to_me_label">
+            <Row>
+                <Table :ref="refs"  highlight-row  @on-row-click="to_me_onRowClick"   :columns="to_me_columns"  :data="to_me_data" border></Table>
+            </Row>
+        </TabPane>
+
+        <TabPane label="我已审批的" name="to_me_done_label">
+            <Row>
+                <Table :ref="refs"  highlight-row  @on-row-click="to_me_onRowClick"   :columns="to_me_columns"  :data="to_me_done_data" border></Table>
+            </Row>
+        </TabPane>
+        <TabPane label="我发起的" name="from_me_label">
+            <Row>
+                <Table :ref="refs"  highlight-row  @on-row-click="to_me_onRowClick"   :columns="to_me_columns"  :data="from_me_data" border></Table>
+            </Row>
+        </TabPane>
     </Tabs>
       
 </template>
@@ -45,6 +58,7 @@
 <script>
 import Vue from 'vue';
 import AutoForm from "./auto-form.vue"
+import iView from 'iview';
 export default {
     name: 'my-approval',
     data () {
@@ -76,7 +90,54 @@ export default {
             approval_name: '',
             approval_id: 0,
             submit_users: [],
-            submit_user_id: 0
+            submit_user_id: 0,
+            to_me_num: 0,
+            label2: (h) => {
+                return h('div', [
+                    h('span', '待我审批的'),
+                    h('Badge', {
+                        props: {
+                            count: this.to_me_num
+                        }
+                    })
+                ])
+            },
+            to_me_data: [],
+            to_me_done_data: [],
+            from_me_data: [],
+            refs: String,
+            to_me_columns: [
+                {
+                  type: "index",
+                  title: "序号",
+                  width: 60
+                },
+                {
+                  title: "审批名称",
+                  key: "title",
+                  align: "center"
+                },
+                {
+                  title: "审批摘要",
+                  key: "digest",
+                  align: "center"
+                },
+                {
+                  title: "发起时间",
+                  key: "submit_time",
+                  align: "center"
+                },
+                {
+                  title: "完成时间",
+                  key: "finish_time",
+                  align: "center"
+                },
+                {
+                  title: "状态",
+                  key: "status",
+                  align: "center"
+                }
+            ],
             
         };
     },
@@ -84,12 +145,24 @@ export default {
         this.$axios
         .get("/approval_list")
         .then(res => {
-            this.approvalList = res.data;
+            this.approvalList = res.data || [];
         })
         .catch(error => {
             this.approvalList =[];
             console.log(error);
         });
+
+        this.$axios
+            .get("/approval_to_me")
+            .then(res => {
+                this.to_me_data = res.data.data || [];
+                this.to_me_num = res.data.rows || 0;
+            })
+            .catch(error => {
+                this.to_me_data =[];
+                console.log(error);
+            });
+
 
     },
     components:{
@@ -191,7 +264,8 @@ export default {
             //check if all data filled,then submit
             let allfilled =true;
             let m_hash = {};
-            let d_hash = {};
+            let d_hash_arr = [];
+            let t_hash ={};
             for(let i=0;i<this.formDynamicMain.items.length;i++){
                 let cur = this.formDynamicMain.items[i];
                 m_hash[cur.en_name] = cur.en_name_value;
@@ -200,35 +274,49 @@ export default {
                     break;
                 } 
             }
-            if(hasMainTable){
+            if(this.hasDetailTable){
                 for(let i=0;i<this.formDynamicDetail_arr.length && allfilled;i++){
                     let cur = this.formDynamicDetail_arr[i];
                     for(let j=0;j<cur.items.length;j++){
                         let curcur = cur.items[j];
-                        d_hash[curcur.en_name] = curcur.en_name_value;
+                        t_hash[curcur.en_name] = curcur.en_name_value;                        
                         if(curcur.en_name_value==undefined){
                             allfilled = false;
                             break;
                         } 
                     }
+                    d_hash_arr.push(JSON.parse(JSON.stringify(t_hash)));
+                    t_hash = {};
                 }
             }
+            /*post parameters like this:
+            {
+                "approvalid":10,
+                "mainhash":{"field0":"111","field1":"222","field2":"选项1","field3":"选项2","field4":"2018-07-20T16:00:00.000Z"},
+                "detailhasharr":[{"field0":"333","field1":"选项1"},{"field0":"444","field1":"选项2"}],
+                "submit_user_id":1
+            }
+            */
             if(allfilled){
                 this.$axios.post('/approval_save', {
                     approvalid: this.approval_id,
                     mainhash: m_hash,
-                    detailhash: d_hash,
+                    detailhasharr: d_hash_arr,
                     submit_user_id: this.submit_user_id,  //审批人
                 })
                 .then(res => {
                     iView.LoadingBar.finish();
                     // console.log(res);
-                    this.$Message.success(res.data.msg);
+                    if(res.data.code == 1){
+                        this.$Message.success(res.data.msg);
+                    }else{
+                        this.$Message.error('保存失败，服务器保存数据错误！');
+                    }
                     return;
                 })
                 .catch(error => {
                     iView.LoadingBar.finish();
-                    this.$Message.error('保存失败，请检查服务器设置！');
+                    this.$Message.error('保存失败，连接服务器超时！');
                     console.log(error);
                     return;
                 });
@@ -240,7 +328,50 @@ export default {
             }
             console.log(this.formDynamicMain);
             console.log(this.formDynamicDetail_arr);
-        }        
+        },
+        to_me_onRowClick (row, index) {
+          // this.$emit('on-row-clic', row, index)
+          // debugger
+          // alert(row);
+        },
+        changeTab(name){
+            if(name=="to_me_label"){
+                this.$axios
+                .get("/approval_to_me")
+                .then(res => {
+                    this.to_me_data = res.data.data || [];
+                    this.to_me_num = res.data.rows || 0;
+                })
+                .catch(error => {
+                    this.to_me_data =[];
+                    console.log(error);
+                });
+            }
+            else if(name=="to_me_done_label"){
+
+                this.$axios
+                .get("/approval_to_me_done")
+                .then(res => {
+                    this.to_me_done_data = res.data.data || [];
+                })
+                .catch(error => {
+                    this.to_me_done_data =[];
+                    console.log(error);
+                });
+            }else if(name=="from_me_label"){
+
+                this.$axios
+                .get("/approval_from_me")
+                .then(res => {
+                    this.from_me_data = res.data.data || [];
+                })
+                .catch(error => {
+                    this.from_me_data =[];
+                    console.log(error);
+                });
+            }
+
+        }    
     }
 };
 

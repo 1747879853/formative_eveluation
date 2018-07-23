@@ -94,7 +94,7 @@ export default {
                 info: '',
                 sequence: 0,                
                 selectoptions: '',
-                dateformat:'' 
+                dateformat:'年-月-日' 
             },
             newFromValidate: {
                 name: '名称',
@@ -103,7 +103,7 @@ export default {
                 info: '',
                 sequence: 0,
                 selectoptions: '',
-                dateformat:''               
+                dateformat:'年-月-日'               
             },
             ruleValidate: {
                 name: [

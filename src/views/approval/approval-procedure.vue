@@ -124,9 +124,10 @@ export default {
             this.$axios.get("/user_group_list")
             .then(res =>{
                 // console.log(res.data);
-                this.user_groups = res.data;
+                this.user_groups = res.data || [];
             })
             .catch( error => {
+                this.user_groups = [];
                 console.log(error);
             });
 
@@ -136,7 +137,7 @@ export default {
             this.$axios
             .get("/procedure_nodes?approval_id=" + this.approval_id)
             .then(res => {
-                this.proc_nodes = res.data
+                this.proc_nodes = res.data || [];
             })
             .catch(error => {
                 this.proc_nodes = [];

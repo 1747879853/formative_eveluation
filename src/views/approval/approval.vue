@@ -97,9 +97,10 @@ export default {
         this.$axios
         .get("/approval_list")
         .then(res => {
-            this.approvalData = res.data;
+            this.approvalData = res.data || [];
         })
         .catch(error => {
+            this.approvalData = [];
             console.log(error);
         });
     },
@@ -110,7 +111,7 @@ export default {
     },
     methods: {
         edit (row) {
-            let argu = { approval_id: row.id,approval_name: row.name,approval_comment: row.comment };
+            let argu = { approval_id: row.id,existed_app: this.approvalData, approval_name: row.name,approval_comment: row.comment };
             this.$router.push({
                 name: 'design-approval',
                 params: argu

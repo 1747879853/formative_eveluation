@@ -12,14 +12,14 @@
         @on-cancel="cancel">
         <table>
         <tr><td>组织机构名</td><td>
-        <Input v-model="value1" placeholder="请输入组织机构名" clearable style="width: 300px"></Input></td></tr>
+        <Input v-model="f_name" placeholder="请输入组织机构名" clearable style="width: 300px"></Input></td></tr>
         </table>
     </Modal>
     </div>
  <tree-grid 
         :items='data' 
         :columns='columns'
-        v-on:selectedindex="selected_index"
+        @selectedindex="selected_index"
       ></tree-grid>
 </Card>
 </Col>
@@ -31,7 +31,10 @@
                     <Button type="primary" @click="save()">保存</Button>
                 </p>
                 <div style="overflow-y:auto;height:500px;">
-                <Tree ref="tree" :data="data1" show-checkbox @on-select-change="check111"></Tree>
+                  <!--   <Tree ref="tree" :data="data1" show-checkbox @on-select-change="check111"></Tree> -->
+                  <div v-for="(item, index) in data1" :key="item.id">
+                    <input type="radio" name="leader" :checked="item.checked" :value="item.title">{{item.title}}
+                  </div>  
                 </div>
         </Card>
     </Col>
@@ -71,7 +74,7 @@ export default {
                 ],
                 data1: [
                  ],
-                select:null,
+                f_name: ''
             }
         },
     components:{
@@ -79,28 +82,27 @@ export default {
     },
     props:{
     },
-    
+    watch:{
+
+    },
    mounted(){
         this.$axios.get("/organization").then( res =>{
-            this.data = res.data[1];
-            this.data1  = res.data[0];
+            this.data = res.data.a;
+            this.data1 =  res.data.b;
         }).catch(error =>{
             console.log(error);
-        })
+        });
     },
     methods: {
             ok () {
                 this.$axios.post('/organization', {
                             params: {
-                                id: 0,
-                                v1:this.value1,
-                                v2:this.value2,
-                                v3:this.value3,
-                                v4:this.value4,
+                                parent_id: 0,
+                                name: this.f_name
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.data = res.data;
+                            this.data.push(res.data);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -110,24 +112,60 @@ export default {
             cancel () {
                 this.$Message.info('取消');
             },
-            selected_index(index){
-            let ch_id=this.data[index].checked_id;
-            for(let i=0;i<this.data1.length;i++){
-                if(ch_id.length!=0){
-                    for(let j=0;j<ch_id.length;j++){
-                        if(this.data1[i].id==ch_id[j]){
-                        this.data1[i].checked=true;
-                         break;
-                     }else{
-                        this.data1[i].checked=false;
-                     }
+            depthTraversal2:function(arr,id){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                            let ch_id=arr[i].checked_id;
+                            for(let j=0;j<this.data1.length;j++){
+                                if(ch_id.length!=0){
+                                    for(let k=0;k<ch_id.length;k++){
+                                        if(this.data1[j].id==ch_id[k]){
+                                        this.data1[j].checked=true;
+                                         break;
+                                     }else{
+                                        this.data1[j].checked=false;
+                                     }
+                                    }
+                                }else{
+                                this.data1[j].checked=false;    
+                                }
+                              } 
+                          return i;
+                      }
+                      let ret = this.depthTraversal2(arr[i].children,id);
+                      if (ret>=0) {
+                          return i;
+                      }
                     }
-                }else{
-                this.data1[i].checked=false;    
                 }
-              }  
             },
-
+            selected_index(id){
+                this.depthTraversal2(this.data, id);  
+             
+            },
+            save(){
+                var tree_id=[];
+                for(let i=0;i<data1.length;i++){
+                    if(data1[i].checked==true){
+                        tree_id[i]=data1[i].id;
+                    }
+                }
+                // this.$axios.patch('/organization', {
+                //             params: {
+                //                 user_id:this.users_data[this.select].id,
+                //                 id:tree_id,
+                //             }
+                //         }).then(function(res) {
+                //             console.log(res);
+                //             this.users_data[this.select].checked_id = res.data.checked_id;
+                //         }.bind(this))
+                //         .catch(function(error) {
+                //             console.log(error)
+                //         });
+                selected_index(index);
+                this.$Message.info('保存成功');
+            },
             show_modal(){
                 this.modal2=true;
                 this.value1="";
@@ -135,30 +173,6 @@ export default {
                 this.value3="";
                 this.value4="";
             },
-            save (){
-            // if(this.select==null){
-            //     this.$Message.info('请选中一个用户');
-            // }else{
-                let checked_tree = this.$refs.tree.getCheckedNodes();
-                let tree_id = [];
-                for(let i=0;i<checked_tree.length;i++){
-                    tree_id[i]=checked_tree[i].id;
-                }
-                this.$axios.patch('/organization', {
-                            params: {
-                                user_id:this.data[this.select].id,
-                                id:tree_id,
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            this.data[this.select].checked_id = res.data.checked_id;
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
-                        this.$Message.info('保存成功');
-            // }   
-        },
             check111(selectedList){
             if(selectedList[selectedList.length-1].checked==true){
                 selectedList[selectedList.length-1].checked=false;
