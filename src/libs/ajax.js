@@ -1,7 +1,8 @@
 
 import env from '../../build/env';
 import axios from 'axios';
-import store from '../store';
+import router from '../router/router';
+import store from '../store/index';
 
 const ajaxUrl = env === 'development'
     ? ''
@@ -27,10 +28,10 @@ const service = axios.create({
 });
 
 // Alter defaults after instance has been created
-service.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
+
 service.interceptors.request.use(function (config) {
     if(store.state.token){     
-        config.headers.common['Authentication-Token']=store.state.token
+         config.headers.common['Authorization']=store.state.token;
     }
     if (config.url.match(/\/user_token/)) {
         config.baseURL = 'http://127.0.0.1:3000';
@@ -55,6 +56,14 @@ service.interceptors.response.use(function (response) {
 }, function (error) {
     // debugger
     // Do something with response error
+    debugger
+    switch(error.response.status){
+        case 401:
+          store.commit('del_token'); 
+          router.push({ 
+                name: 'login'
+            });
+      }
     return Promise.reject(error);
 });
 

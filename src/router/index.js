@@ -3,10 +3,15 @@ import iView from 'iview';
 import Util from '../libs/util';
 import VueRouter from 'vue-router';
 import Cookies from 'js-cookie';
+import store from '../store'
 import {routers, otherRouter, appRouter} from './router';
 
 Vue.use(VueRouter);
 
+
+if (sessionStorage.getItem('token')) {
+store.commit('set_token', sessionStorage.getItem('token'))
+}
 // 路由配置
 const RouterConfig = {
     // mode: 'history',
