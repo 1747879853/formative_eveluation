@@ -97,7 +97,7 @@ export default {
         this.$axios
         .get("/approval_list")
         .then(res => {
-            this.approvalData = res.data || [];
+            this.approvalData = res.data.data || [];
         })
         .catch(error => {
             this.approvalData = [];
