@@ -22,11 +22,9 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
 import TreeGrid from './treeGrid'
 export default {
-    name: 'authority-manage',
+    name: 'cost',
      data() {
             return {
                 modal2:false,
@@ -52,12 +50,13 @@ export default {
                 f_name:"",
             }
         },
-         components: {
-            TreeGrid
+    components: {
+        TreeGrid
         },
     methods: {
             ok () {
                 this.$axios.post('/costList', {
+                            //parent_id = 0,表明是一级表
                             params: {
                                 name: this.f_name,
                                 parent_id: 0

@@ -402,7 +402,7 @@ export default {
        give_workshop(){
            if(this.model1==""&&this.model2==""){
               
-               alert("至少选择一个车间主任分配");
+               this.$Message.info("至少选择一个车间主任分配");
                this.dispatchWorkOrder =true;
 
            }else{
@@ -411,7 +411,7 @@ export default {
                    zupin: this.model2,
                    work_order_id: this.work_order_id
                }).then(res =>{
-                   alert(res.data.msg);
+                   this.$Message.info(res.data.msg);
                })
            }
 
