@@ -317,13 +317,13 @@ export default {
           })
           .then(res => {
             this.init();
-            alert(res.data.msg);
+            this.$Message.info(res.data.msg);
           })
           .catch(error => {
             console.log(error);
           });
       }else{
-        alert("完成数量不能为0");
+        this.$Message.info("完成数量不能为0");
         return;
       }
     },
@@ -336,13 +336,13 @@ export default {
           })
           .then(res => {
             this.init();
-            alert(res.data.msg);
+            this.$Message.info(res.data.msg);
           })
           .catch(error => {
             console.log(error);
           });
       }else{
-        alert("合格数量不能为0");
+        this.$Message.info("合格数量不能为0");
         return;
       }
     }

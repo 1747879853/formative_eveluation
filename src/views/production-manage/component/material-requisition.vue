@@ -213,6 +213,11 @@ export default {
           title: "状态",
           key: "status",
           align: "center"
+        },
+        {
+          title: "审批意见",
+          key: "approval_comment",
+          align: "center"
         }
       ],
       show_approval_detail:false,
@@ -259,7 +264,8 @@ export default {
     this.$axios
       .get("/team_task_boms", {
         params: {
-          material_id: this.$route.params.mid
+          material_id: this.$route.params.mid,
+          task_id:  this.team_task_id
         }
       })
       .then(res => {
@@ -280,7 +286,8 @@ export default {
     this.$axios
       .get("/team_task_boms", {
         params: {
-          material_id: this.$route.params.mid
+          material_id: this.$route.params.mid,
+          task_id:  this.team_task_id
         }
       })
       .then(res => {
@@ -320,7 +327,7 @@ export default {
         comment: this.name + "  *  "+this.number+" 件",
         team_task_id: this.team_task_id
       }).then(res =>{
-        alert(res.data.msg);
+        this.$Message.info(res.data.msg);
         if(res.data.msg="领料成功！"){
           this.boms_approval_list1();
         }

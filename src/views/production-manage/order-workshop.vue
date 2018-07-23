@@ -35,12 +35,14 @@
 
 
         <TabPane label="物料请领审批">
-            <Modal v-model="show_approval_detail" width="70%" title="领料明细">
+            <Modal v-model="show_approval_detail" width="70%" title="领料明细"  @on-ok="auditing_boms">
                   <Table :columns="approval_details_columns"   :data="approval_details"></Table>
-                  <br>
-            审核:<Select v-model="model1" style="width:200px" clearable>
-                <Option v-for="(item,index) in approval_arr" :value="index" :key="item">{{ item }}</Option>
-           </Select>             意见:<Input v-model="value" placeholder="审批意见..." style="width: 300px"></Input>
+                 <br/>
+              
+            审核结果:<Select v-model="result" style="width:200px" clearable>
+                <Option v-for="(item) in approval_arr" :value="item.id" :key="item.id">{{ item.text }}</Option>
+           </Select>             意见:<Input v-model="suggestion" placeholder="审批意见..." style="width: 300px"></Input>
+          
            </Modal>
 
            <Card>
@@ -50,7 +52,19 @@
                   <Table :columns="boms_approval_columns"  highlight-row @on-row-click="approval_select" :data="boms_approval_list"></Table>
                   </Card>
         </TabPane>
-        
+        <TabPane label="已审核单据">
+          <Modal v-model="show_approvaled_detail" width="70%" title="领料明细">
+                  <Table :columns="approval_details_columns"   :data="approval_details"></Table>
+                 <br/>
+          </Modal>
+          <Card>
+                    <p>
+                     <Icon type="ios-list"></Icon>   物料申请单   (点击记录查看详情)
+                    </p>
+                  <Table :columns="boms_approvaled_columns"  highlight-row @on-row-click="approval_select1" :data="boms_approvaled_list"></Table>
+                  </Card>
+          </Card>
+        </TabPane>
     </Tabs>
   
     
@@ -152,7 +166,7 @@ export default {
           }
         }
       ],
-      value:"",
+      value: "",
 
       boms_approval_columns: [
         {
@@ -191,12 +205,65 @@ export default {
           align: "center"
         }
       ],
-      approval_arr: ["审核中", "同意", "否决"],
+
+      boms_approvaled_columns: [
+        {
+          type: "index",
+          title: "序号",
+          width: 30
+        },
+        {
+          title: "单号",
+          key: "id",
+          align: "center"
+        },
+        {
+          title: "模板",
+          key: "apply_comment",
+          align: "center"
+        },
+        {
+          title: "申请日期",
+          key: "record_time",
+          align: "center"
+        },
+        {
+          title: "申请人",
+          key: "apply_name",
+          align: "center"
+        },
+        {
+          title: "审批人",
+          key: "approval_owner",
+          align: "center"
+        },
+        {
+          title: "审批结果",
+          key: "status",
+          align: "center"
+        },
+        {
+          title: "意见",
+          key: "approval_comment",
+          align: "center"
+        }
+      ],
+      approval_arr: [
+        {
+          id: 2,
+          text: "通过"
+        },
+        {
+          id: 3,
+          text: "否决"
+        }
+      ],
       boms_approval_list: [],
       workshop_workorders: [],
       workteams: [],
       dispatchWorkOrder: false,
       model1: "",
+      result: "",
       team_qty: 0,
       max_qty: 10,
       workshop_order_detail: [],
@@ -342,7 +409,11 @@ export default {
         }
       ],
       approval_details: [],
-      show_approval_detail: false
+      show_approval_detail: false,
+      show_approvaled_detail:false,
+      approval_id: "",
+      suggestion: "",
+      boms_approvaled_list: []
     };
   },
   computed: {
@@ -365,6 +436,7 @@ export default {
         console.log(error);
       });
     this.boms_approval_list1();
+    this.boms_approval_list2();
   },
   methods: {
     give_workteam() {
@@ -376,7 +448,7 @@ export default {
           work_order_id: this.work_order_id
         })
         .then(res => {
-          alert(res.data.msg);
+          this.$Message.info(res.data.msg);
         });
     },
     boms_approval_list1() {
@@ -391,7 +463,21 @@ export default {
           this.boms_approval_list = res.data.boms_approval_list;
         });
     },
+
+    boms_approval_list2() {
+      this.$axios
+        .get("/boms_approvals", {
+          params: {
+            user_id: Cookies.get("userid"),
+            approval: "23"
+          }
+        })
+        .then(res => {
+          this.boms_approvaled_list = res.data.boms_approval_list;
+        });
+    },
     approval_select(currentRow) {
+      this.approval_id = currentRow.id;
       this.$axios
         .get("/boms_approval_detail", {
           params: {
@@ -401,6 +487,38 @@ export default {
         .then(res => {
           this.show_approval_detail = true;
           this.approval_details = res.data.boms_approval_detail;
+        });
+    },
+    approval_select1(currentRow) {
+      this.approval_id = currentRow.id;
+      this.$axios
+        .get("/boms_approval_detail", {
+          params: {
+            approval_id: currentRow.id
+          }
+        })
+        .then(res => {
+          this.show_approvaled_detail = true;
+          this.approval_details = res.data.boms_approval_detail;
+        });
+    },
+
+    auditing_boms() {
+      console.log(this.approval_id);
+      console.log(this.result);
+      this.$axios
+        .post("/auditing_boms", {
+          id: this.approval_id,
+          status: this.result,
+          approval_comment: this.suggestion
+        })
+        .then(res => {
+          this.$Message.info(res.data.msg);
+          this.boms_approval_list1();
+          this.boms_approval_list2();
+        })
+        .catch(error => {
+          console.log(error);
         });
     }
     // row_select(currentRow) {
