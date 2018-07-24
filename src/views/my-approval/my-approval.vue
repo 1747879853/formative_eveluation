@@ -109,6 +109,7 @@
 
             </div>
         </Row>
+        <div slot="footer"> </div>
     </Modal>
     </Row>
       
@@ -215,7 +216,7 @@ export default {
     },
     mounted() {
         this.$axios
-        .get("/approval_list")
+        .get("/approval_list_inuse")
         .then(res => {
             this.approvalList = res.data.data || []; 
             this.to_me_num = res.data.rows;          

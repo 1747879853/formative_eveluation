@@ -46,6 +46,49 @@ export default {
                   key: "action",
                   align: "center",
                   render: (h, params) => {
+                    if(params.row.status == 1){
+                        return h('div', [
+                            h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.edit(params.row)
+                                    }
+                                }
+                            }, '编辑表单'),  
+                            h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.procedure(params.row)
+                                    }
+                                }
+                            }, '审批流程'),
+                            h('Button', {
+                                props: {
+                                    type: 'success',
+                                    size: 'small'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.stopUse(params.row)
+                                    }
+                                }
+                            }, '停用')
+                        ]);
+                    }else{
                         return h('div', [
                             h('Button', {
                                 props: {
@@ -82,11 +125,12 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.stopUse(params.row)
+                                        this.startUse(params.row)
                                     }
                                 }
-                            }, '停用')
+                            }, '启用')
                         ]);
+                    }
                     }
                 }
             ],
@@ -101,6 +145,7 @@ export default {
         })
         .catch(error => {
             this.approvalData = [];
+            this.$Message.error("获取数据失败！")
             console.log(error);
         });
     },
@@ -126,7 +171,11 @@ export default {
             });
             
         },
-        stopUse(app_id){
+        stopUse(row){
+            
+
+        },
+        startUser(row){
 
         },
         goto_design_approval(){

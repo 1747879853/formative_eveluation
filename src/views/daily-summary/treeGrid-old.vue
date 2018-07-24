@@ -1,7 +1,9 @@
 <template>
     <div :style="{width:tableWidth}" class='autoTbale'>
+        <BUTTON @click="recordExpended">测试</BUTTON>
+        <BUTTON @click="madeExpend">测试</BUTTON>
         <table class="table table-bordered" id='hl-tree-table'>
-            <thead>
+            <!-- <thead>
                 <tr>
                     <th v-for="(column,index) in cloneColumns">
                         <label v-if="column.type === 'selection'">
@@ -15,7 +17,7 @@
                         </label>
                     </th>
                 </tr>
-            </thead>
+            </thead> -->
             <tbody>
                 <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
                     <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
@@ -87,14 +89,25 @@ export default {
             c_name:"",
             e_name:"",
             id1:"",
+            expandedItems:[],
+            // data:0,
         }
     },
     computed: {
         tableWidth() {
             return this.tdsWidth > this.screenWidth && this.screenWidth > 0 ? this.screenWidth + 'px' : '100%'
-        }
+        }, 
+        // data1:function(){
+        //     return this.id1
+        //     debugger
+        // },
     },
     watch: {
+        // data:{
+        //     handler: function(after, before) {
+        //         debugger
+        //     },
+        // },
         screenWidth(val) {
             if (!this.timer) {
                 this.screenWidth = val
@@ -143,14 +156,31 @@ export default {
             this.screenWidth = document.body.clientWidth
         })
         window.onresize = () => {
+            // debugger
             return (() => {
                 window.screenWidth = document.body.clientWidth
                 this.screenWidth = window.screenWidth
             })()
         }
+        // // debugger
+        // this.init();
+      //   this.$nextTick(function () {
+      //   // Code that will run only after the
+      //   // entire view has been rendered
+      //   debugger
+      //       this.madeExpend();
+      // })
     },
     methods: {
+            // init(){
+            //     debugger
+            //     if (this.$route.params.flag == 1) {
+            //         this.expandedItems = this.$route.params.expandedItems;
+            //         this.madeExpend();
+            //     }
+            // },
             depthTraversal:function(arr,id,newarr){
+                debugger
                 if (arr!=null){  
                     for(let i=0;i<arr.length;i++){
                       if(arr[i].id==id){
@@ -163,6 +193,7 @@ export default {
                       }
                     }
                 }
+                // debugger
             },
             depthTraversal2:function(arr,id,newarr){
                 if (arr!=null){  
@@ -214,22 +245,57 @@ export default {
                 }
             },
             ok1 () {
+                // this.recordExpended();
                 // console.log(this.id1);
                 // this.id1 就是父类id
+
                 this.$axios.post('/costList', {
                             params: {
                                 name: this.c_name,
                                 parent_id: this.id1,
                             }
                         }).then(function(res) {
-                            console.log(res);
-                            let ret = this.depthTraversal(this.items, this.id1, res.data);
-                            Vue.set(this.items, ret, this.items[ret]);
+                            // console.log(res);
+                            // // debugger
+                            // //res添加的数据
+                            // let ret = this.depthTraversal(this.items, this.id1, res.data);
+                            // // debugger
+                            this.depthTraversal(this.items, this.id1, res.data);
+                            // console.log("status");
+                            // console.log(this.items);
+                            // Vue.set(this.items, ret, this.items[ret]);
+                            // debugger
+                            // console.log(this.items);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
                         });
                         this.$Message.info('添加成功');
+                        // this.recordExpended();
+                        // console.log(this.expandedItems);
+                        // Vue.nextTick()
+                        //   .then(function () {
+                        //     // DOM 更新了
+                        //     debugger
+                        //     console.log("xx");
+                        //     // this.madeExpend();
+                        // })
+                
+                // debugger
+                // let argu = { 
+                //         flag:1,
+                //         expandedItems:this.expandedItems,
+                //         };
+                // this.$router.push({
+                //     name: 'cost',
+                //     //保存成功后转到工作总结目录
+                //     params: argu
+                // });
+                // location.reload()
+                // this.madeExpend();
+                // this.expandedItems=[];
+                // debugger
+                // this.test();
             },
             cancel1 () {
                 this.$Message.info('取消');
@@ -249,6 +315,7 @@ export default {
                             console.log(error)
                         });
                         this.$Message.info('修改成功');
+                        // debugger
             },
             cancel2 () {
                 this.$Message.info('取消');
@@ -320,6 +387,7 @@ export default {
                         this.$Message.info('取消');
                     }
                 });
+            // debugger
         },
         // 点击事件 返回数据处理
         makeData(data) {
@@ -397,20 +465,45 @@ export default {
                 }
             })
         },
+        recordExpended(){
+            this.initItems.forEach((item)=>{
+                if (item.expanded == true) {
+                    this.expandedItems.push(item)
+                }
+            })
+            console.log(this.expandedItems);
+        },
+        madeExpend(){
+            if (this.expandedItems.length>0) {
+                this.expandedItems.forEach((item)=>{
+                let index = 0;
+                this.initItems.forEach((initItem)=>{
+                    if(initItem.id == item.id){
+                        this.toggle(index,initItem)
+                    }else{
+                        index=index+1;
+                    }
+                })
+            })
+            }
+        },
         //  隐藏显示
         show(item) {
             return ((item.level == 1) || (item.parent && item.parent.expanded && item.isShow));
         },
         toggle(index, item) {
+            // console.log(this.initItems)
             let level = item.level + 1;
             let spaceHtml = "";
             for (var i = 1; i < level; i++) {
                 spaceHtml += "<i class='ms-tree-space'></i>"
             }
             if (item.children) {
+                //关闭情况
                 if (item.expanded) {
                     item.expanded = !item.expanded;
                     this.close(index, item);
+                //展开情况
                 } else {
                     item.expanded = !item.expanded;
                     if (item.load) {
@@ -429,7 +522,9 @@ export default {
                     }
                 }
             }
+            // console.log(this.initItems)
         },
+
         open(index, item) {
             if (item.children) {
                 item.children.forEach((child, childIndex) => {
@@ -440,6 +535,7 @@ export default {
                 })
             }
         },
+
         close(index, item) {
             if (item.children) {
                 item.children.forEach((child, childIndex) => {
