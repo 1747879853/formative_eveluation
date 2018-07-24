@@ -94,12 +94,25 @@ var newid=5;
             };
             return arr;
      case 'patch'://修改权限
-        params = JSON.parse(options.body).params;
+        // params = JSON.parse(options.body).params;
+        //     arr = {
+        //         id: params.id,
+        //         name: params.name,
+        //     };
+        // return arr;
+         params = JSON.parse(options.body).params;
+         let i=parseInt(JSON.parse(options.body).params.user_id);
+         let j=JSON.parse(options.body).params.checked_id;
             arr = {
                 id: params.id,
                 name: params.name,
             };
         return arr;
+        
+        // var newarr;
+        // arr[i].checked_id=JSON.parse(options.body).params.checked_id;
+        // newarr=arr[i];
+        // break;
      case 'delete'://删除权限
         params = JSON.parse(options.body).params;
             arr = {

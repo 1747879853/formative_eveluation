@@ -19,7 +19,7 @@
                 </p>
                 <div style="overflow-y:auto;height:500px;">
                     <ul id="editable-new" class="iview-admin-draggable-list">                            
-                        <li v-for="(item, index) in users_data" :key="index" class="notwrap todolist-item" :data-index="index">
+                        <li v-for="(item, index) in users_data" :key="index" class="notwrap todolist-item" :data-index="index"> 
                         {{ item.username }}</li>
                     </ul>
                 </div>

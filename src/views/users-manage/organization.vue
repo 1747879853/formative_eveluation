@@ -33,7 +33,7 @@
                 <div style="overflow-y:auto;height:500px;">
                   <!--   <Tree ref="tree" :data="data1" show-checkbox @on-select-change="check111"></Tree> -->
                   <div v-for="(item, index) in data1" :key="item.id">
-                    <input type="radio" name="leader" :checked="item.checked" :value="item.title">{{item.title}}
+                    <input type="radio" name="leader" :checked="item.checked" :value="item.title" @click="CheckItem(item)">{{item.title}}
                   </div>  
                 </div>
         </Card>
@@ -74,16 +74,13 @@ export default {
                 ],
                 data1: [
                  ],
-                f_name: ''
+                f_name: '',
+                select :null,
+                id2:null,
             }
         },
     components:{
     	TreeGrid
-    },
-    props:{
-    },
-    watch:{
-
     },
    mounted(){
         this.$axios.get("/organization").then( res =>{
@@ -111,6 +108,12 @@ export default {
             },
             cancel () {
                 this.$Message.info('取消');
+            },
+            CheckItem(item){
+                for(let i=0;i<data1.length;i++){
+                    data1[i].checked=false;
+                }
+                item.checked=!item.checked;
             },
             depthTraversal2:function(arr,id){
                 if (arr!=null){  
@@ -141,30 +144,31 @@ export default {
                 }
             },
             selected_index(id){
-                this.depthTraversal2(this.data, id);  
-             
+                this.depthTraversal2(this.data, id);
+                this.id2 = id;  
             },
             save(){
-                var tree_id=[];
-                for(let i=0;i<data1.length;i++){
-                    if(data1[i].checked==true){
-                        tree_id[i]=data1[i].id;
+                var tree_id;
+                for(let i=0;i<this.data1.length;i++){
+                    if(this.data1[i].checked==true){
+                        tree_id=this.data1[i].id;
                     }
                 }
-                // this.$axios.patch('/organization', {
-                //             params: {
-                //                 user_id:this.users_data[this.select].id,
-                //                 id:tree_id,
-                //             }
-                //         }).then(function(res) {
-                //             console.log(res);
-                //             this.users_data[this.select].checked_id = res.data.checked_id;
-                //         }.bind(this))
-                //         .catch(function(error) {
-                //             console.log(error)
-                //         });
-                selected_index(index);
-                this.$Message.info('保存成功');
+                this.$axios.patch('/orgaLeader',{
+                    params:{
+                        user_id:this.id2,
+                        checked_id:tree_id,
+                        checked:true,
+                    }
+                }).then(function(res){
+                    console.log(res);
+                    this.data[this.id2].checked_id=res.data[0].checked_id;
+                    this.data1[tree_id].checked=res.data[1].checked;
+                }.bind(this))
+                .catch(function(error){
+                    console.log(error);
+                });
+                this.$Message.info('保存成功');   
             },
             show_modal(){
                 this.modal2=true;

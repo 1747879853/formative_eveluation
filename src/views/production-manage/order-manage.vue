@@ -6,9 +6,19 @@
 <template>
   <div>
 
-    <Modal width="70%" v-model="progress_table_show" :title="progress_order_id">
-            <Table :columns="progressColumns"   :data="progressData_list" style="width: 100%;"></Table>
+    <Modal width="70%"  style="margin-top:1px" v-model="progress_table_show" :title="progress_order_id">
+            <Table :columns="progressColumns"  highlight-row @on-row-click="material_process" :data="progressData_list" style="width: 100%;"></Table>
           
+           <div v-if="show_team_process">
+             <p slot="title">
+                <Icon type="ios-list"></Icon>
+                生产情况
+            </p>
+              <Table :data="workteam_materials"  :columns="teamOrderColumns"></Table>
+              
+               <label  v-if="process_details.length==0 ? false : true"> <Icon type="ios-list"></Icon>生产明细</label>
+               <Table :data="process_details"  v-if="process_details.length==0 ? false : true" :columns="processDetailsColumns"></Table>
+          </div>
     </Modal>
     
     
@@ -20,6 +30,7 @@
             </p>
              <Row type="flex" justify="center" align="top" >
                    <Table :columns="orderColumns"   :data="orderData" style="width: 100%;"></Table>
+                  
              </Row>
           </Card>>
        </Col>
@@ -93,14 +104,17 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.$axios.get("/progressData").then(res=>{
-                        this.progressData_list = res.data.children;
+                      this.$axios.get("/order_process",{params:{
+                        id:params.row.id
+                      }}).then(res=>{
+                        this.progressData_list = res.data.worklogs;
 
-                        console.log(progressData_list)
+                       
 
                       });
-                      this.progress_order_id ="订单："+params.row.order_id;
+                      this.progress_order_id ="订单："+params.row.no;
                       this.progress_table_show = true;
+                      this.show_team_process = false;
                     }
                   }
                 },
@@ -110,35 +124,101 @@ export default {
           }
         }
       ],
+      processDetailsColumns:[
+         {
+          title: "序号",
+          type: "index",
+          width: 80,
+          align: "center"
+        },
+        {
+          title: "提交人员",
+          align: "center",
+          key: "user_name"
+        },
+        {
+          title: "提交日期",
+          align: "center",
+          key: "record_time"
+        },
+         {
+          title: "完成数量",
+          align: "center",
+          key: "finished_number"
+        },
+        {
+          title: "合格数量",
+          align: "center",
+          key: "passed_number"
+        }
+      ],
+       teamOrderColumns: [
+        {
+          title: "序号",
+          type: "index",
+          width: 80,
+          align: "center"
+        },
+        
+        {
+          title: "模板",
+          align: "center",
+          key: "name"
+        },
+        {
+          title: "数量",
+          align: "center",
+          key: "number"
+        },
+        {
+          title: "已完成数量",
+          align: "center",
+          width: 120,
+          key: "finished_number"
+        },
+        {
+          title: "合格数量",
+          align: "center",
+          width: 120,
+          key: "passed_number"
+        },
+        {
+          title: "备注",
+          key: "comment"
+        }],
       progressColumns: [
         {
           type: "index",
           title: "序号",
-          width: 60
+          width: 80
         },
         {
           title: "工单号",
           key: "work_order_id",
-          align: "center"
+          align: "center",
+           width: 150
         },
         {
-          title: "模板",
-          key: "type",
-          align: "center"
+          title: "时间",
+          key:"record_time",
+          align:"center",
+           width: 200
         },
+      
         {
-          title: "下料(已完成/总数量)",
-          key: "xialiao"
+          title: "生产过程",
+          key: "description",
+          align: "left",
+          width: 600
         },
-         {
-          title: "组拼(已完成/总数量)",
-          key: "zupin"
-        }    
+    
         ],
       orderData: [],
       progress_order_id: "",
       progress_table_show: false,
-      progressData_list:[]
+      progressData_list:[],
+      workteam_materials:[],
+      show_team_process:false
     };
   },
   computed: {
@@ -159,6 +239,26 @@ export default {
       .catch(error => {
         console.log(error);
       });
+  },
+  methods:{
+    material_process(row){
+      console.log(row.owner_type);
+      console.log(row.owner_id);
+      if (row.owner_type=="WorkTeamTask")
+      this.$axios.get('/team_task_finish',{
+        params:{
+          id:row.owner_id
+        }
+      }).then(res =>{
+         this.show_team_process = true;
+         this.workteam_materials = res.data.data;
+         this.process_details =  res.data.wttd;
+          
+      });
+      else{
+        this.show_team_process =false;
+      }
+    }
   }
 };
 </script>
