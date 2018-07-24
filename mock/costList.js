@@ -10,19 +10,20 @@ let list = function (options) {
             arr = [
                 {
                     id: '1',
-                    name: '车辆费',
+                    title: '车辆费1',
                     children: [
                         {
                             id: '2',
-                            name: '保养费',
+                            title: '保养费2',
+                            children:[],
                         },
                         {
                             id: '5',
-                            name: '加油费',
+                            title: '加油费5',
                             children: [
                                 {
                                     id: '6',
-                                    name: '保险费',
+                                    title: '保险费6',
                                     children: [],
                                 }
                             ]
@@ -31,11 +32,11 @@ let list = function (options) {
                 },
                 {
                     id: '3',
-                    name: '邮电费',
+                    title: '邮电费3',
                     children: [
                         {
                             id: '4',
-                            name: '快递费',
+                            title: '快递费4',
                             children: []
                         }
                     ]
@@ -48,7 +49,7 @@ let list = function (options) {
             params = JSON.parse(options.body).params;
             arr = {
                 id: id,
-                name: params.name,
+                title: params.title,
                 children: []
             };
             break;
@@ -56,7 +57,7 @@ let list = function (options) {
             params = JSON.parse(options.body).params;
             arr = {
                 id: params.id,
-                name: params.name,
+                title: params.title,
             };
             break;
         case 'delete':// 删除
