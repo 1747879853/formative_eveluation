@@ -1,6 +1,18 @@
-
+<style scoped>
+    .time{
+        font-size: 14px;
+        font-weight: bold;
+    }
+    .content{
+        padding-left: 5px;
+    }
+    .border-line{
+        margin-top:20px;
+        border-top: 1px solid #ccc;
+    }
+</style>
 <template>    
-    
+    <Row>
     <Tabs value="name1" @on-click="changeTab">
         <TabPane label="发起审批" name="name1">
             <Row id="approval-list" v-if="showOrNot">
@@ -52,6 +64,54 @@
             </Row>
         </TabPane>
     </Tabs>
+    <Modal v-model="detailModalShow" :title="detailTitle">
+        <Row>
+            <div>
+                <p v-for="(key,value) in appno">
+                    {{value}}:{{key}}
+                </p>
+            </div>
+            <div>
+                <p v-for="(key,value) in main_record">
+                    {{value}}:{{key}}
+                </p>
+            </div>
+        
+            <div v-if="detail_records.length > 0">
+                <p v-for="(item,index) in detail_records" :key="index">                        
+                    <HashKeyValueDiv  v-bind:itemhash="item" v-bind:itemtitle="detail_title" v-bind:itemno="index"></HashKeyValueDiv>
+                </p>
+            </div>
+            <div  style="border-top:1px solid #ccc;padding-top:5px;margin-top:5px;">
+                <Timeline>
+                    <TimelineItem color="blue" v-for="(item,index) in proc_node_details" :key="index">
+                        <p v-if="item.title">{{item.title}}</p>
+                        <p class="time">
+                            <span v-if="item.whowho">{{item.whowho}}&nbsp;<Icon type="minus"></Icon>&nbsp;</span>
+                            <span v-if="item.act_str">
+                                {{item.act_str}} 
+                                <span v-if="item.act_time">&nbsp;<Icon type="minus"></Icon>&nbsp;{{item.act_time}} </span>
+                            </span>
+                        </p>
+                        <p v-if="item.comment" class="content">{{item.comment}}</p>
+                    </TimelineItem>
+                </Timeline>
+            </div>
+            <div v-if="to_me_flag">
+                <Input v-model="comment" type="textarea" :rows="4" placeholder="审批意见..."></Input>
+                
+                <Select v-model="submit_to_user_id" placeholder="请选择上一级审批人" style="margin-top:10px;">
+                    <Option v-for="(item,index) in submit_to_users" :key="item.id" :value="item.id">{{item.username}}</Option>               
+                </Select>
+                
+                <Button type="primary" @click="AppPass" >同意</Button>
+                <Button type="primary" @click="AppReject">拒绝</Button>
+
+            </div>
+        </Row>
+        <div slot="footer"> </div>
+    </Modal>
+    </Row>
       
 </template>
 
@@ -59,6 +119,7 @@
 import Vue from 'vue';
 import AutoForm from "./auto-form.vue"
 import iView from 'iview';
+import HashKeyValueDiv from "./hash-key-value-div.vue"
 export default {
     name: 'my-approval',
     data () {
@@ -138,35 +199,36 @@ export default {
                   align: "center"
                 }
             ],
+            detailModalShow: false,
+            detailTitle: '',
+
+            appno: {},
+            main_record: {},
+            detail_records: [],
+            proc_node_details: [], 
+            detail_title: '',
+            to_me_flag: false,
+            comment: '',
+            submit_to_users:[],
+            submit_to_user_id: 0    
             
         };
     },
     mounted() {
         this.$axios
-        .get("/approval_list")
+        .get("/approval_list_inuse")
         .then(res => {
-            this.approvalList = res.data || [];
+            this.approvalList = res.data.data || []; 
+            this.to_me_num = res.data.rows;          
         })
         .catch(error => {
             this.approvalList =[];
             console.log(error);
         });
 
-        this.$axios
-            .get("/approval_to_me")
-            .then(res => {
-                this.to_me_data = res.data.data || [];
-                this.to_me_num = res.data.rows || 0;
-            })
-            .catch(error => {
-                this.to_me_data =[];
-                console.log(error);
-            });
-
-
     },
     components:{
-        AutoForm
+        AutoForm,HashKeyValueDiv
     },
     created(){
     },
@@ -308,6 +370,7 @@ export default {
                     iView.LoadingBar.finish();
                     // console.log(res);
                     if(res.data.code == 1){
+                        this.initToMe();
                         this.$Message.success(res.data.msg);
                     }else{
                         this.$Message.error('保存失败，服务器保存数据错误！');
@@ -330,22 +393,44 @@ export default {
             console.log(this.formDynamicDetail_arr);
         },
         to_me_onRowClick (row, index) {
-          // this.$emit('on-row-clic', row, index)
-          // debugger
-          // alert(row);
+            this.detailTitle = row.title
+            this.app_cur_id = row.app_cur_id ;
+            this.$axios
+            .get("/approval_info?app_cur_id=" + row.app_cur_id)
+            .then(res => {
+                this.appno = res.data.appno ;
+                this.main_record = res.data.main_fields;
+                this.detail_records = res.data.detail_fields;
+                this.proc_node_details = res.data.procedure_nodes;
+                this.detail_title = res.data.detail_title;
+                this.to_me_flag = res.data.to_me_flag;
+                this.submit_to_users = res.data.submit_to_users;
+
+
+                this.detailModalShow = true ;
+
+            })
+            .catch(error => {
+                // this.to_me_data =[];
+                console.log(error);
+            });
+        },
+        initToMe(){
+            this.$axios
+            .get("/approval_to_me")
+            .then(res => {
+                this.to_me_data = res.data.data || [];
+                this.to_me_data.splice(0,0); //done nothing ,just in order to refresh page
+                this.to_me_num = res.data.rows || 0;
+            })
+            .catch(error => {
+                this.to_me_data =[];
+                console.log(error);
+            });
         },
         changeTab(name){
             if(name=="to_me_label"){
-                this.$axios
-                .get("/approval_to_me")
-                .then(res => {
-                    this.to_me_data = res.data.data || [];
-                    this.to_me_num = res.data.rows || 0;
-                })
-                .catch(error => {
-                    this.to_me_data =[];
-                    console.log(error);
-                });
+                this.initToMe();
             }
             else if(name=="to_me_done_label"){
 
@@ -370,6 +455,52 @@ export default {
                     console.log(error);
                 });
             }
+
+        },
+        AppPass(){
+            if(this.submit_to_user_id == 0){
+                this.$Message.error("请选择上一级审批人！");
+                return
+            }
+            this.$axios.post('/approval_pass', {
+                    app_cur_id: this.app_cur_id,
+                    comment: this.comment,
+                    submit_to_user_id: this.submit_to_user_id
+                })
+            .then(res => { 
+                if(res.data.code == 1){
+                    this.$Message.success(res.data.msg);
+                    this.detailModalShow = false ;
+                    this.initToMe();
+                }else{
+                    this.$Message.error(res.data.msg);
+                }               
+
+            })
+            .catch(error => {
+                // this.to_me_data =[];
+                console.log(error);
+            });
+
+        },
+        AppReject(){
+            this.$axios.post('/approval_reject', {
+                    app_cur_id: this.app_cur_id,
+                    comment: this.comment,
+            })
+            .then(res => {
+                if(res.data.code == 1){
+                    this.$Message.success(res.data.msg);
+                    this.detailModalShow = false ;
+                    this.initToMe();
+                }else{
+                    this.$Message.error(res.data.msg);
+                }
+            })
+            .catch(error => {
+                // this.to_me_data =[];
+                console.log(error);
+            });
 
         }    
     }
