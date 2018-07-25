@@ -12,6 +12,9 @@ Vue.use(VueRouter);
 if (sessionStorage.getItem('token')) {
 store.commit('set_token', sessionStorage.getItem('token'))
 }
+if (sessionStorage.getItem('auth_rules')) {
+store.commit('set_auth_rules', sessionStorage.getItem('auth_rules'))
+}
 // 路由配置
 const RouterConfig = {
     // mode: 'history',
