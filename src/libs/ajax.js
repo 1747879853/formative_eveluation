@@ -21,6 +21,12 @@ const devUrl = env === 'development'
         ? 'http://114.118.17.4:8080/api/v1'
         : '';
 
+const devUrl2 = env === 'development'
+    ? 'http://127.0.0.1:3000'
+    : env === 'production'
+    ? 'http://114.118.17.4:8080'
+    : '';
+
 const service = axios.create({
     baseURL: ajaxUrl,
     withCredentials: true,
@@ -34,7 +40,7 @@ service.interceptors.request.use(function (config) {
          config.headers.common['Authorization']=store.state.token;
     }
     if (config.url.match(/\/user_token/)) {
-        config.baseURL = 'http://127.0.0.1:3000';
+        config.baseURL = devUrl2;
         // config.baseURL = '';
     }
     // Do something before request is sent
