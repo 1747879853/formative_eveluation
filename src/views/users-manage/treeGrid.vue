@@ -69,7 +69,7 @@ export default {
             dataLength: 0, //树形数据长度
             modal1: false,
             modal3:false,
-            id1:"",
+            id1:"",//每个组织机构对应的id
             isChecked:-1,//是否与表格的行的下标一致
             f_name: ''
         }
