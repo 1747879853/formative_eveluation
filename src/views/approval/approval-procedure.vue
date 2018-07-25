@@ -195,8 +195,11 @@ export default {
                 // console.log(response);
                 // console.log(res);
                 this.$Message.success(res.data.msg);
+                this.$store.commit('clearCurrentTag', this);
+                this.$router.go(-1);
             })
             .catch(error => {
+                this.$Message.error('保存失败，请检查服务器设置！');
                 console.log(error);
             });
         }               

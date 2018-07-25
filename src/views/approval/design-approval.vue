@@ -222,6 +222,8 @@ export default {
                 iView.LoadingBar.finish();
                 // console.log(res);
                 this.$Message.success(res.data.msg);
+                this.$store.commit('clearCurrentTag', this);
+                this.$router.go(-1);
             })
             .catch(error => {
                 iView.LoadingBar.finish();
