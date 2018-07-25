@@ -80,7 +80,10 @@ export default {
                         }  
                     }).then(res => {
                         console.log(res.data);
-                        this.$store.commit('set_token', res.data.jwt);     
+                        this.$store.commit('set_token', res.data.jwt); 
+                        this.$store.commit('set_auth_rules', res.data.auth_rules);  
+                        console.log(store.state.token); 
+                        console.log(store.state.auth_rules); 
                         if (store.state.token) {
                         Cookies.set('user', this.form.userName);
                         Cookies.set('userid', 6);

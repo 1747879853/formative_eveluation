@@ -283,6 +283,7 @@ export const appRouter = [
         name: 'system-manage',
         title: '系统管理',
         access:'system-manage/index',
+        parent:'',
         component: Main,
         children: [
             {
@@ -291,6 +292,7 @@ export const appRouter = [
                 name: 'authority',
                 title: '权限管理',
                 access:'system-manage/authority',
+                parent:'system-manage/index',
                 component: () => import('@/views/system-manage/authority-manage.vue')
             },
             {
@@ -299,6 +301,7 @@ export const appRouter = [
                 name: 'authority-groups',
                 title: '权限组管理',
                 access:'system-manage/authority-groups',
+                parent:'system-manage/index',
                 component: () => import('@/views/system-manage/authority-groups-manage.vue')
             },
             {
@@ -307,6 +310,7 @@ export const appRouter = [
                 name: 'user-authority-groups',
                 title: '用户权限分配',
                 access:'system-manage/user-authority-groups',
+                parent:'system-manage/index',
                 component: () => import('@/views/system-manage/user-authority-allocation.vue')
             },
         ]
@@ -317,6 +321,7 @@ export const appRouter = [
         icon: 'settings',
         name: 'daily-summary',
         title: '日清总结',
+        access:'daily-summary/index',
         component: Main,
         children: [
             {

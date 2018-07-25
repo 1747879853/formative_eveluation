@@ -2,7 +2,7 @@ import {otherRouter, appRouter} from '@/router/router';
 import Util from '@/libs/util';
 import Cookies from 'js-cookie';
 import Vue from 'vue';
-
+import store from '../index'
 const app = {
     state: {
         cachePage: [],
@@ -38,19 +38,29 @@ const app = {
             state.tagsList.push(...list);
         },
         updateMenulist (state) {
-            let accessCode = parseInt(Cookies.get('access'));
+            let accessCode = ["Admin/index", "approval/index", "my-approval/index", "system-manage/authority-groups", "system-manage/user-authority-groups", "daily-summary/cost", "users-manage/user", "users-manage/organization"];
             let menuList = [];
+            for(let i=0;i<appRouter.length;i++){
+                if(appRouter[i].children.length>=1&&accessCode.indexOf(appRouter[i].access) <= 0){
+                    for(let j=0;j<appRouter[i].children.length;j++){
+                        if(accessCode.indexOf(appRouter[i].children[j].access) >= 0){
+                            accessCode.push(appRouter[i].access);
+                        }
+                    }
+                }
+            }
             appRouter.forEach((item, index) => {
                 if (item.access !== undefined) {
                     if (Util.showThisRoute(item.access, accessCode)) {
                         if (item.children.length === 1) {
                             menuList.push(item);
                         } else {
+                            
                             let len = menuList.push(item);
                             let childrenArr = [];
                             childrenArr = item.children.filter(child => {
                                 if (child.access !== undefined) {
-                                    if (child.access === accessCode) {
+                                    if ( accessCode.indexOf(child.access) >= 0 ) {
                                         return child;
                                     }
                                 } else {
