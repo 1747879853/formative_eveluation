@@ -50,7 +50,6 @@ new Vue({
         this.$store.commit('setTagsList', tagsList);
     }
 });
-
 // iView 相关的全局配置
 // message 配置
 iView.Message.config({

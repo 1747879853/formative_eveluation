@@ -39,6 +39,8 @@
 
 <script>
 import Cookies from 'js-cookie';
+import store from '../store';
+import { debug } from 'util';
 export default {
     data () {
         return {
@@ -60,18 +62,45 @@ export default {
         handleSubmit () {
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
-                    Cookies.set('user', this.form.userName);
-                    Cookies.set('userid', 6);
-                    Cookies.set('password', this.form.password);
-                    this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
-                    if (this.form.userName === 'iview_admin') {
-                        Cookies.set('access', 0);
-                    } else {
-                        Cookies.set('access', 1);
-                    }
-                    this.$router.push({
-                        name: 'home_index'
-                    });
+                    // Cookies.set('user', this.form.userName);
+                    // Cookies.set('userid', 6);
+                    // Cookies.set('password', this.form.password);
+                    // this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
+                    // if (this.form.userName === 'iview_admin') {
+                    //     Cookies.set('access', 0);
+                    // } else {
+                    //     Cookies.set('access', 1);
+                    // }
+                    // this.$router.push({
+                    //     name: 'home_index'
+                    // });                   
+                    this.$axios.post("/user_token", {
+                        auth:{
+                            email: this.form.userName,
+                            password: this.form.password
+                        }  
+                    }).then(function(res) {
+                        this.$store.commit('set_token', res.data.jwt); 
+                        this.$store.commit('set_auth_rules', res.data.auth_rules);  
+                        if (this.$store.state.token) {
+                            Cookies.set('user', this.form.userName);
+                            Cookies.set('userid', 6);
+                            Cookies.set('password', this.form.password);
+                            this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
+                            Cookies.set('access', 0);
+                            this.$router.push({ 
+                                name: 'home_index'
+                            });
+                        } else {
+                            // this.$router.replace('/login');
+                        }                     
+                    }.bind(this))
+                    .catch(error => {
+                        console.log(error)      
+                    })
+
+
+
                 }
             });
         }
