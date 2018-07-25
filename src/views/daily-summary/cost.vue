@@ -52,9 +52,12 @@ export default {
                 modal2:false,
                 modal3:false,
                 modal1:false,
+
                 f_name:"",
                 z_name:"",
                 e_name:"",
+                // node.node就是data
+                // root指所有数据
                 data: [],
                 parent_data:[],
                 self_data:[],
@@ -67,8 +70,7 @@ export default {
     },
     methods: {
             ok () {
-                // console.log(this.f_name.length)
-                // debugger
+    
                 if(this.f_name.length == 0){
                     this.$Message.error("添加内容不可为空")
                 }else{
@@ -81,7 +83,7 @@ export default {
                         }).then(function(res) {
                             // console.log(res);
                             this.data.push(res.data);
-                            // debugger
+                
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -90,12 +92,12 @@ export default {
                 }
 
             },
-            ok1 (data) {
-                this.show_moda3();
+            ok1 (root, node, data) {
+                this.show_moda3(node,root);
                 this.parent_data=data;
             },
             ok2(root, node, data){
-                this.show_moda4();
+                this.show_moda4(data);
                 this.self_data=data;
                 this.root=root;
                 this.node=node;
@@ -107,13 +109,13 @@ export default {
                 this.modal2=true;
                 this.f_name="";
             },
-            show_moda3(){
+            show_moda3(node,root){
                 this.modal3=true;
                 this.f_name="";
             },
-            show_moda4(){
+            show_moda4(data){
                 this.modal1=true;
-                this.e_name="";
+                this.e_name=data.title;
             },
             renderContent (h, { root, node, data }) {
                 return h('span', {
@@ -151,7 +153,7 @@ export default {
                                 title: '添加'
                             },
                             on: {
-                                click: () => { this.ok1(data); }
+                                click: () => { this.ok1(root,node,data) }
                             }
                         }),
                         h('Button', {
@@ -190,9 +192,10 @@ export default {
                             name: this.e_name,
                         }
                     }).then(function(res) {
+            
                         console.log(res);
                         console.log(this.data)
-                        debugger
+            
                         const parentKey = this.root.find(el => el === this.node).parent;
                         if(!(parentKey == undefined)){
                             const parent = this.root.find(el => el.nodeKey === parentKey).node;
@@ -211,32 +214,27 @@ export default {
                         console.log(error)
                     });
                     this.$Message.info('修改成功');
-                    // debugger
+        
             },
             append(){
-                // console.log(this.z_name);
-                // console.log(this.parent_data.id);
-                // let resdata = this.show_moda3(data);
                 if(this.z_name.length == 0){
                     this.$Message.error("添加内容不可为空")
                 }else{
                     this.$axios.post('/costList', {
-                            //parent_id = 0,表明是一级表
                             params: {
                                 title: this.z_name,
                                 parent_id: this.parent_data.id,
                             }
                         }).then(function(res) {
-                            debugger
+                
                             const children = this.parent_data.children || [];
                             children.push({
                                 id:res.data.id,
                                 title: res.data.title,
                                 children:[],
-                                expand: true
                             });
+                
                             this.$set(this.data, 'children', children);
-                            // return res.data;
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -252,11 +250,11 @@ export default {
                         this.$axios.delete('/costList', {
                             data: {
                                 params: {
-                                    id: this.id1,
+                                    id: data.id,
                                 }
                             }
                         }).then(function(res) {
-                            // debugger
+                
                             const parentKey = root.find(el => el === node).parent;
                             if(!(parentKey == undefined)){
                                 const parent = root.find(el => el.nodeKey === parentKey).node;
@@ -274,18 +272,6 @@ export default {
                             console.log(error)
                         });
                         this.$Message.info('删除成功');
-                        // const parentKey = root.find(el => el === node).parent;
-                        //     if(!(parentKey == undefined)){
-                        //         const parent = root.find(el => el.nodeKey === parentKey).node;
-                        //         const index = parent.children.indexOf(data);
-                        //         parent.children.splice(index, 1);
-                        //     }else{
-                        //         for(let i=0;i<this.data.length;i++){
-                        //             if(this.data[i].id == data.id){
-                        //                 this.data.pop(i);
-                        //             }
-                        //         }
-                        // }
                     },
                     onCancel: () => {
                         this.$Message.info('取消');
@@ -296,8 +282,7 @@ export default {
         },
         mounted(){
             this.$axios.get("/costList").then( res =>{
-                this.data = res.data;
-                // debugger
+                this.data = res.data;    
             }).catch(error =>{
                 console.log(error);
             })

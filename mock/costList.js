@@ -5,6 +5,7 @@ let params;
 let list = function (options) {
     /* 模拟删除数据的方式 */
     let rtype = options.type.toLowerCase(); // 获取请求类型
+    // debugger
     switch (rtype) {
         case 'get':
             arr = [
@@ -16,6 +17,7 @@ let list = function (options) {
                             id: '2',
                             title: '保养费2',
                             children:[],
+                            expand:true,
                         },
                         {
                             id: '5',
@@ -25,10 +27,13 @@ let list = function (options) {
                                     id: '6',
                                     title: '保险费6',
                                     children: [],
+                                    expand:true,
                                 }
-                            ]
+                            ],
+                            expand:true,
                         }
-                    ]
+                    ],
+                    expand:true,
                 },
                 {
                     id: '3',
@@ -37,9 +42,11 @@ let list = function (options) {
                         {
                             id: '4',
                             title: '快递费4',
-                            children: []
+                            children: [],
+                            expand:true,
                         }
-                    ]
+                    ],
+                    expand:true,
                 }
             ];
             break;
