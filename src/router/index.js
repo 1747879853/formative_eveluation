@@ -43,7 +43,8 @@ router.beforeEach((to, from, next) => {
         } else {
             const curRouterObj = Util.getRouterObjByName([otherRouter, ...appRouter], to.name);
             if (curRouterObj && curRouterObj.access !== undefined) { // 需要判断权限的路由
-                if (true) {
+                let accessCode = store.state.auth_rules;
+                if (Util.showThisRoute(curRouterObj.access, accessCode)) {
                     Util.toDefaultPage([otherRouter, ...appRouter], to.name, router, next); // 如果在地址栏输入的是一级菜单则默认打开其第一个二级菜单的页面
                 } else {
                     next({
