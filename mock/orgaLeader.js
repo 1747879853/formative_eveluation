@@ -92,28 +92,12 @@ var newid=5;
             };
             return arr;
      case 'patch'://修改权限
-        // params = JSON.parse(options.body).params;
-        //     arr = {
-        //         id: params.id,
-        //         name: params.name,
-        //     };
-        // return arr;
          params = JSON.parse(options.body).params;
             arr = {
                 id: params.id,
-                name: params.name,
                 checked_id:params.checked_id,
-            };
-            data1={
-              id:params.checked_id;
-              checked:params.checked;
-            }
-        return [arr,data1];
-        
-        // var newarr;
-        // arr[i].checked_id=JSON.parse(options.body).params.checked_id;
-        // newarr=arr[i];
-        // break;
+               }
+        return arr;
      case 'delete'://删除权限
         params = JSON.parse(options.body).params;
             arr = {
@@ -129,6 +113,6 @@ var newid=5;
 
 
 export default {
-    path: '/organization',
+    path: '/orgaLeader',
     data: list
 }

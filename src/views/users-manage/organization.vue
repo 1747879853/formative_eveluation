@@ -33,8 +33,8 @@
                 <div style="overflow-y:auto;height:500px;">
                   <!--   <Tree ref="tree" :data="data1" show-checkbox @on-select-change="check111"></Tree> -->
                   <div v-for="(item, index) in data1" :key="item.id">
-                    <input type="radio" name="leader" :checked="item.checked" :value="item.title" @click="CheckItem(item)">{{item.title}}
-                  </div>  
+                    <input type="radio" name="leader" :checked="item.checked" :value="item.title"  @click="tree_id=item.id">{{item.title}}
+                  </div>
                 </div>
         </Card>
     </Col>
@@ -45,11 +45,19 @@
 <script>
 import TreeGrid from './treeGrid'
 import Sortable from 'sortablejs'
+import Vue from 'vue'
 export default {
     name: 'organization',
      data() {
             return {
                 modal2:false,
+                data2:[{
+                    id:1,
+                    checked:true,
+                },{
+                    id:2,
+                    checked:false,
+                }],
                 columns: [{
                     title: '组织名',
                     key: 'name',
@@ -75,8 +83,8 @@ export default {
                 data1: [
                  ],
                 f_name: '',
-                select :null,
-                id2:null,
+                id2:'',//被选中的组织机构的id
+                tree_id:'',
             }
         },
     components:{
@@ -109,12 +117,14 @@ export default {
             cancel () {
                 this.$Message.info('取消');
             },
-            CheckItem(item){
-                for(let i=0;i<data1.length;i++){
-                    data1[i].checked=false;
-                }
-                item.checked=!item.checked;
-            },
+            // CheckItem(item){
+            //     // for(let i=0;i<data1.length;i++){
+            //     //     this.data1[i].checked=false;
+            //     // }
+            //     // item.checked=!item.checked;
+            //     // debugger;
+            //     return item.id;
+            // },
             depthTraversal2:function(arr,id){
                 if (arr!=null){  
                     for(let i=0;i<arr.length;i++){
@@ -133,7 +143,37 @@ export default {
                                 }else{
                                 this.data1[j].checked=false;    
                                 }
-                              } 
+                              }
+                          // arr[i].checked_id=newarr.checked_id; 
+                          return i;
+                      }
+                      let ret = this.depthTraversal2(arr[i].children,id);
+                      if (ret>=0) {
+                          return i;
+                      }
+                    }
+                }
+            },
+            depthTraversal1:function(arr,id,newarr){
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                      if(arr[i].id==id){
+                            let ch_id=arr[i].checked_id;
+                            for(let j=0;j<this.data1.length;j++){
+                                if(ch_id.length!=0){
+                                    for(let k=0;k<ch_id.length;k++){
+                                        if(this.data1[j].id==ch_id[k]){
+                                        this.data1[j].checked=true;
+                                         break;
+                                     }else{
+                                        this.data1[j].checked=false;
+                                     }
+                                    }
+                                }else{
+                                this.data1[j].checked=false;    
+                                }
+                              }
+                          arr[i].checked_id=newarr.checked_id; 
                           return i;
                       }
                       let ret = this.depthTraversal2(arr[i].children,id);
@@ -145,25 +185,30 @@ export default {
             },
             selected_index(id){
                 this.depthTraversal2(this.data, id);
-                this.id2 = id;  
+                this.id2 = id;
             },
             save(){
-                var tree_id;
-                for(let i=0;i<this.data1.length;i++){
-                    if(this.data1[i].checked==true){
-                        tree_id=this.data1[i].id;
-                    }
-                }
+                // var tree_id=CheckItem(item);
+                alert("organization_id"+this.id2);
+                alert("checked_id"+this.tree_id);
+                // for(let i=0;i<this.data1.length;i++){
+                //     if(this.data1[i].checked==true){
+                //         tree_id=this.data1[i].id;
+                //         debugger;
+                //     }
+                // }
                 this.$axios.patch('/orgaLeader',{
                     params:{
                         user_id:this.id2,
-                        checked_id:tree_id,
-                        checked:true,
+                        checked_id:this.tree_id,
                     }
                 }).then(function(res){
                     console.log(res);
-                    this.data[this.id2].checked_id=res.data[0].checked_id;
-                    this.data1[tree_id].checked=res.data[1].checked;
+                    let ret = this.depthTraversal1(this.data, this.id2, res.data);
+                    Vue.set(this.data, ret, this.data[ret]);
+                    // var id3=CheckItem(item,index);
+                    // alert(id3[1]);
+                    // this.data[id3[1]].checked_id=res.data.checked_id;
                 }.bind(this))
                 .catch(function(error){
                     console.log(error);

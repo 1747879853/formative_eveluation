@@ -233,12 +233,14 @@ export const appRouter = [
         icon: 'ios-infinite',
         name: 'production-manage',
         title: '生产管理',
+        access:'production-manage/index',
         component: Main,
         children: [
-            { path: 'order-manage', title: '订单', name: 'order-manage', icon: 'link', component: () => import('@/views/production-manage/order-manage.vue') },
-            { path: 'order-workshop', title: '车间', name: 'order-workshop', icon: 'link', component: () => import('@/views/production-manage/order-workshop.vue') },           
-            { path: 'order-team', title: '班组', name: 'order-team', icon: 'link', component: () => import('@/views/production-manage/order-team.vue') },
+            { path: 'order-manage', title: '订单', access:'production-manage/order-manage', name: 'order-manage', icon: 'link', component: () => import('@/views/production-manage/order-manage.vue') },
+            { path: 'order-workshop', title: '车间', access:'production-manage/order-workshop', name: 'order-workshop', icon: 'link', component: () => import('@/views/production-manage/order-workshop.vue') },           
+            { path: 'order-team', title: '班组', access:'production-manage/order-team', name: 'order-team', icon: 'link', component: () => import('@/views/production-manage/order-team.vue') },
             // { path: 'requisition-list', title: '领料单', name: 'requisition-list', icon: 'link', component: () => import('@/views/production-manage/requisition-list.vue') },
+
             
             // { path: 'argument-page', title: '带参页面', name: 'argument-page', icon: 'android-send', component: () => import('@/views/production-manage/argument-page.vue') }
         ]
@@ -248,9 +250,10 @@ export const appRouter = [
         icon: 'key',
         name: 'approval',
         title: '审批管理',
+        access:'approval/index',
         component: Main,
         children: [
-            { path: 'index', title: '审批管理', name: 'approval_index', component: () => import('@/views/approval/approval.vue') }
+            { path: 'index', title: '审批管理', access:'approval/index', name: 'approval_index', component: () => import('@/views/approval/approval.vue') }
         ]
     },  
 
@@ -259,9 +262,10 @@ export const appRouter = [
         icon: 'key',
         name: 'myapproval',
         title: '审批',
+        access:'my-approval/index',
         component: Main,
         children: [
-            { path: 'index', title: '审批', name: 'my_approval', component: () => import('@/views/my-approval/my-approval.vue') }
+            { path: 'index', title: '审批', access:'my-approval/index', name: 'my_approval', component: () => import('@/views/my-approval/my-approval.vue') }
         ]
     } , 
     
@@ -280,6 +284,8 @@ export const appRouter = [
         icon: 'settings',
         name: 'system-manage',
         title: '系统管理',
+        access:'system-manage/index',
+        parent:'',
         component: Main,
         children: [
             {
@@ -287,6 +293,8 @@ export const appRouter = [
                 icon: 'compose',
                 name: 'authority',
                 title: '权限管理',
+                access:'system-manage/authority',
+                parent:'system-manage/index',
                 component: () => import('@/views/system-manage/authority-manage.vue')
             },
             {
@@ -294,6 +302,8 @@ export const appRouter = [
                 icon: 'pound',
                 name: 'authority-groups',
                 title: '权限组管理',
+                access:'system-manage/authority-groups',
+                parent:'system-manage/index',
                 component: () => import('@/views/system-manage/authority-groups-manage.vue')
             },
             {
@@ -301,6 +311,8 @@ export const appRouter = [
                 icon: 'pound',
                 name: 'user-authority-groups',
                 title: '用户权限分配',
+                access:'system-manage/user-authority-groups',
+                parent:'system-manage/index',
                 component: () => import('@/views/system-manage/user-authority-allocation.vue')
             },
         ]
@@ -309,7 +321,8 @@ export const appRouter = [
         path: '/daily-summary',
         icon: 'settings',
         name: 'daily-summary',
-        title: '日清日结',
+        title: '日清总结',
+        access:'daily-summary/index',
         component: Main,
         children: [
             {
@@ -317,6 +330,7 @@ export const appRouter = [
                 icon: 'compose',
                 name: 'cost',
                 title: '花费科目',
+                access:'daily-summary/cost',
                 component: () => import('@/views/daily-summary/cost.vue')
             },
             {
@@ -324,6 +338,7 @@ export const appRouter = [
                 icon: 'compose',
                 name: 'daily-work',
                 title: '工作日报',
+                access:'daily-summary/daily-work',
                 component: () => import('@/views/daily-summary/daily-work.vue')
             },
         ]
@@ -333,6 +348,7 @@ export const appRouter = [
         icon: 'settings',
         name: 'users-name',
         title: '用户管理',
+        access:'users-manage/index',
         component: Main,
         children: [
               {
@@ -340,6 +356,7 @@ export const appRouter = [
                 icon: 'compose',
                 name: 'user',
                 title: '用户',
+                access:'users-manage/user',
                 component: () => import('@/views/users-manage/user.vue')
             },
             {
@@ -347,6 +364,7 @@ export const appRouter = [
                 icon: 'compose',
                 name: 'organization',
                 title: '组织管理',
+                access:'users-manage/organization',
                 component: () => import('@/views/users-manage/organization.vue')
             },
         ]
@@ -356,6 +374,7 @@ export const appRouter = [
         icon: 'settings',
         name: 'employee-name',
         title: '员工信息',
+        access:'employee-information/index',
         component: Main,
         children: [
               {
@@ -363,6 +382,7 @@ export const appRouter = [
                 icon: 'compose',
                 name: 'attendance-record',
                 title: '考勤记录',
+                access:'employee-information/attendance-record',
                 component: () => import('@/views/employee-information/attendance-record.vue')
             },
             {
