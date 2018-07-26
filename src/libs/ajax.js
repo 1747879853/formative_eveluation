@@ -16,8 +16,8 @@ const ajaxUrl = env === 'development'
     //     ? ''
     //     : 'http://192.168.192.128:3000/api/v1';
 const devUrl = env === 'development'
-    // ? 'http://127.0.0.1:3000/api/v1'
-    ? 'http://192.168.66.68:3000/api/v1'
+    ? 'http://127.0.0.1:3000/api/v1'
+    // ? 'http://192.168.66.68:3000/api/v1'
     : env === 'production'
         ? 'http://114.118.17.4:8080/api/v1'
         : '';
@@ -42,6 +42,7 @@ service.interceptors.request.use(function (config) {
     }
     if (config.url.match(/\/user_token/)) {
         config.baseURL = devUrl2;
+        // config.baseURL = devUrl;
         // config.baseURL = '';
     }
     // Do something before request is sent
@@ -64,7 +65,7 @@ service.interceptors.response.use(function (response) {
 }, function (error) {
     // debugger
     // Do something with response error
-    debugger
+    // debugger
     switch(error.response.status){
         case 401:
           store.commit('del_token'); 
