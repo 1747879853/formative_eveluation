@@ -6,7 +6,7 @@
         <Row>            
             <Card>
                 <p style="text-align:center;font-size:24px;color: #2db7f5;">
-                    {{approval_name}}流程设置
+                    {{approval_admin_name}}流程设置
                     <span style="float:right;margin-right:100px;"> <Button type="primary" @click="save_proc_nodes">保存</Button></span>
                 </p>                    
             </Card>                      
@@ -63,8 +63,8 @@ export default {
     name: 'approval-procedure',
     data () {
         return {
-            approval_id: 0,
-            approval_name: '',
+            approval_admin_id: 0,
+            approval_admin_name: '',
             user_groups: [],
             proc_nodes:[],
             new_proc_node: {
@@ -131,11 +131,11 @@ export default {
                 console.log(error);
             });
 
-            this.approval_id = this.$route.params.approval_id;
-            this.approval_name = this.$route.params.approval_name;
+            this.approval_admin_id = this.$route.params.approval_admin_id;
+            this.approval_admin_name = this.$route.params.approval_admin_name;
 
             this.$axios
-            .get("/procedure_nodes?approval_id=" + this.approval_id)
+            .get("/procedure_nodes?approval_admin_id=" + this.approval_admin_id)
             .then(res => {
                 this.proc_nodes = res.data || [];
             })
@@ -188,7 +188,7 @@ export default {
             }
             //发送数据到服务器保存。
             this.$axios.post('/procedure_create', {
-                approval_id: this.approval_id,
+                approval_admin_id: this.approval_admin_id,
                 proc_nodes: this.proc_nodes,
             })
             .then(res => {

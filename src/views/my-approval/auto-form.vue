@@ -1,9 +1,9 @@
 <style lang="less">
 </style>
 <template>
-    <div style="border-bottom: 1px solid #ccc;margin-bottom:5px;margin-top:5px;">
+    <div style="border-bottom: 1px solid #ccc;margin-bottom:5px;margin-top:5px;height:500px;">
       
-    <Form ref="formDynamic" :model="formDynamic" :label-width="80" style="width: 300px" >
+    <Form ref="formDynamic" :model="formDynamic" :label-width="80" style="width: 300px;" >
         <div>
             <div v-if="formDynamic.flag =='detail'">{{formDynamic.title}}({{arrIndex+1}})
                 <Button style="float:right;" size="small" type="primary" @click="delDetailData" icon="android-close">删除</Button>

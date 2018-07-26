@@ -63,7 +63,7 @@ export default {
     name: 'design-approval-tmpl',
     data () {
         return {
-            approval_id_s: '',
+            approval_admin_id: 0,
             existed_app_arr: [],
             approval_field_data: [],
             approval_detail_field_data: [],
@@ -133,21 +133,27 @@ export default {
     
     methods:{  
         init (){            
-            this.approval_id_s = this.$route.params.approval_id.toString();
+            this.approval_admin_id = this.$route.params.approval_admin_id;
             this.existed_app_arr = this.$route.params.existed_app;
-            if(this.approval_id_s=='-1'){
+            if(this.approval_admin_id == 0){
                 return;
             }
             else{
                 
-                this.approvalName = this.$route.params.approval_name;
-                this.approvalComment = this.$route.params.approval_comment;
+                this.approvalName = this.$route.params.approval_admin_name;
+                this.approvalComment = this.$route.params.approval_admin_comment;
 
                 this.$axios
-                .get("/approval_field_list?approval_id=" + this.approval_id_s)
+                .get("/approval_field_list",{params: {approval_admin_id: this.approval_admin_id}})
                 .then(res => {
-                    this.approval_field_data = res.data.approval_field_data || [];
-                    this.approval_detail_field_data = res.data.approval_detail_field_data || [];
+                    if(res.data.code == 1){
+                        this.approval_field_data = res.data.approval_field_data || [];
+                        this.approval_detail_field_data = res.data.approval_detail_field_data || [];
+                    }
+                    if(res.data.code == 0){
+                        this.$Message.info(res.data.msg);
+                    }
+
                 })
                 .catch(error => {
                     this.approval_field_data = [];
@@ -193,7 +199,7 @@ export default {
                 let se = parseInt(list[i].getAttribute("data-index"));
                 this.approval_detail_field_data[i].sequence = se;                                  
             }
-            if(this.approval_id_s=='-1'){
+            if(this.approval_admin_id==0){
                 for (let i = 0; i < this.existed_app_arr.length; i++) {
                     if(this.existed_app_arr[i].name == this.approvalName){
                         iView.LoadingBar.finish();
@@ -212,9 +218,9 @@ export default {
             //发送数据到服务器，然后建表并保存。
             //here has a bug,always post to server an additional data approval => {}  ???????????
             this.$axios.post('/approval_create', {
-                approval_id: this.approval_id_s,
-                approval_name: this.approvalName,
-                approval_comment: this.approvalComment,
+                approval_admin_id: this.approval_admin_id,
+                approval_admin_name: this.approvalName,
+                approval_admin_comment: this.approvalComment,
                 approval_field_data: this.approval_field_data,
                 approval_detail_field_data: this.approval_detail_field_data
             })

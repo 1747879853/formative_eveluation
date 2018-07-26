@@ -150,7 +150,7 @@ export default {
     methods: {
         init(){
             this.$axios
-            .get("/approval_list")
+            .get("/approval_admin_list")
             .then(res => {
                 this.approvalData = res.data.data || [];
                 this.approvalData.splice(0,0);
@@ -162,7 +162,7 @@ export default {
             });
         },
         edit (row) {
-            let argu = { approval_id: row.id,existed_app: this.approvalData, approval_name: row.name,approval_comment: row.comment };
+            let argu = { approval_admin_id: row.id,existed_app: this.approvalData, approval_admin_name: row.name,approval_admin_comment: row.comment };
             this.$router.push({
                 name: 'design-approval',
                 params: argu
@@ -170,7 +170,7 @@ export default {
             
         },
         procedure (row) {
-            let argu = { approval_id: row.id,approval_name: row.name };
+            let argu = { approval_admin_id: row.id,approval_admin_name: row.name };
             this.$router.push({
                 name: 'approval-procedure',
                 params: argu
@@ -178,8 +178,8 @@ export default {
             
         },
         stopUse(row){
-            this.$axios.post('/approval_stop', {
-                approval_id: row.id
+            this.$axios.post('/approval_admin_stop', {
+                approval_admin_id: row.id
             })
             .then(res => {
                 // console.log(res);
@@ -197,8 +197,8 @@ export default {
 
         },
         startUse(row){
-            this.$axios.post('/approval_start', {
-                approval_id: row.id
+            this.$axios.post('/approval_admin_start', {
+                approval_admin_id: row.id
             })
             .then(res => {
                 // console.log(res);
@@ -216,7 +216,7 @@ export default {
 
         },
         goto_design_approval(){
-            let argu = { approval_id: '-1',existed_app: this.approvalData };
+            let argu = { approval_admin_id: 0,existed_app: this.approvalData };
             this.$router.push({
                 name: 'design-approval',
                 params: argu
