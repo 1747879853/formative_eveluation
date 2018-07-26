@@ -162,6 +162,30 @@ const app = {
             state.cachePage = newCachepage;
             localStorage.pageOpenedList = JSON.stringify(state.pageOpenedList);
         },
+        clearCurrentTag (state, vm) {
+            let currentName = vm.$route.name;
+            let currentIndex = 0;
+            state.pageOpenedList.forEach((item, index) => {
+                if (item.name === currentName) {
+                    currentIndex = index;
+                }
+            });
+            
+            state.cachePage.forEach((item, index) => {
+                if (item === currentName) {
+                    state.cachePage.splice(index, 1);
+                }
+            });
+
+            state.pageOpenedList.splice(currentIndex,1);
+            
+            // let newCachepage = state.cachePage.filter(item => {
+            //     return item === currentName;
+            // });
+            // state.cachePage = newCachepage;
+            localStorage.pageOpenedList = JSON.stringify(state.pageOpenedList);
+            
+        },
         setOpenedList (state) {
             state.pageOpenedList = localStorage.pageOpenedList ? JSON.parse(localStorage.pageOpenedList) : [otherRouter.children[0]];
         },

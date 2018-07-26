@@ -149,7 +149,7 @@ export default {
             approvalList: [],
             approval_data: {},
             approval_name: '',
-            approval_id: 0,
+            approval_admin_id: 0,
             submit_users: [],
             submit_user_id: 0,
             to_me_num: 0,
@@ -239,9 +239,9 @@ export default {
         },
      
         AppFormShow(item){
-            this.approval_id = item.id;
+            this.approval_admin_id = item.id;
             this.$axios
-            .get("/approval_field_list?approval_id=" + item.id)
+            .get("/approval_field_list?approval_admin_id=" + item.id)
             .then(res => {
                 if(res.data.code == 1){
                     this.submit_users = res.data.submit_users;
@@ -361,7 +361,7 @@ export default {
             */
             if(allfilled){
                 this.$axios.post('/approval_save', {
-                    approvalid: this.approval_id,
+                    approvaladminid: this.approval_admin_id,
                     mainhash: m_hash,
                     detailhasharr: d_hash_arr,
                     submit_user_id: this.submit_user_id,  //审批人
@@ -472,8 +472,12 @@ export default {
                     this.$Message.success(res.data.msg);
                     this.detailModalShow = false ;
                     this.initToMe();
+                    this.comment = "";
+                    this.submit_to_user_id = 0;
                 }else{
                     this.$Message.error(res.data.msg);
+                    this.comment = "";
+                    this.submit_to_user_id = 0;
                 }               
 
             })
