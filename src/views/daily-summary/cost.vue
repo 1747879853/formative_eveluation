@@ -95,6 +95,10 @@ export default {
             ok1 (root, node, data) {
                 this.show_moda3(node,root);
                 this.parent_data=data;
+                console.log(root);
+                console.log(node);
+                console.log(data);
+                console.log(root[data.nodeKey].node);
             },
             ok2(root, node, data){
                 this.show_moda4(data);
@@ -189,7 +193,7 @@ export default {
                 this.$axios.patch('/costList', {
                         params: {
                             id: this.self_data.id,
-                            name: this.e_name,
+                            title: this.e_name,
                         }
                     }).then(function(res) {
             
@@ -253,6 +257,7 @@ export default {
                                     id: data.id,
                                 }
                             }
+
                         }).then(function(res) {
                 
                             const parentKey = root.find(el => el === node).parent;
