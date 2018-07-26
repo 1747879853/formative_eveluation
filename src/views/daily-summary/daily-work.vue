@@ -43,7 +43,6 @@
         <Card>
             <Table :columns="costColumns" :data="costData" style="width: 100%;"></Table>
         </Card>
-        <Table :columns="testcolumns" :data="testData" style="width: 100%;"></Table>
     </Row>
 </template>
 
@@ -85,6 +84,19 @@ export default {
     },
     mounted(){
         this.init();
+        this.$axios.get("/workList").then( res =>{
+            // this.costdata = res.data;
+            if (res.data.date.length > 0){
+                this.date = res.data.date;
+                this.address=res.data.address;
+                this.workcontent=res.data.workcontent;
+                this.transport=res.data.transport;
+                this.explain=res.data.explain;
+                this.costData=res.data.costdata;
+            }   
+        }).catch(error =>{
+            console.log(error);
+        })
     },
 
     methods: {
@@ -110,8 +122,8 @@ export default {
                 this.explain=this.$route.params.explain;
                 this.costData=this.$route.params.costData;
             }
-            console.log(this.flag);
-            console.log(this.costData);
+            // console.log(this.flag);
+            // console.log(this.costData);
         },
     },
 }

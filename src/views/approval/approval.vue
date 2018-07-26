@@ -78,7 +78,7 @@ export default {
                             }, '审批流程'),
                             h('Button', {
                                 props: {
-                                    type: 'success',
+                                    type: 'warning',
                                     size: 'small'
                                 },
                                 on: {
@@ -93,7 +93,8 @@ export default {
                             h('Button', {
                                 props: {
                                     type: 'primary',
-                                    size: 'small'
+                                    size: 'small',
+                                    disabled: 'disabled'
                                 },
                                 style: {
                                     marginRight: '5px'
@@ -107,7 +108,8 @@ export default {
                             h('Button', {
                                 props: {
                                     type: 'primary',
-                                    size: 'small'
+                                    size: 'small',
+                                    disabled: 'disabled'
                                 },
                                 style: {
                                     marginRight: '5px'
@@ -120,7 +122,7 @@ export default {
                             }, '审批流程'),
                             h('Button', {
                                 props: {
-                                    type: 'error',
+                                    type: 'primary',
                                     size: 'small'
                                 },
                                 on: {
@@ -138,16 +140,7 @@ export default {
         };
     },
     mounted() {
-        this.$axios
-        .get("/approval_list")
-        .then(res => {
-            this.approvalData = res.data.data || [];
-        })
-        .catch(error => {
-            this.approvalData = [];
-            this.$Message.error("获取数据失败！")
-            console.log(error);
-        });
+        this.init();
     },
     computed: {
         avatorPath () {
@@ -155,8 +148,21 @@ export default {
         }
     },
     methods: {
+        init(){
+            this.$axios
+            .get("/approval_admin_list")
+            .then(res => {
+                this.approvalData = res.data.data || [];
+                this.approvalData.splice(0,0);
+            })
+            .catch(error => {
+                this.approvalData = [];
+                this.$Message.error("获取数据失败！")
+                console.log(error);
+            });
+        },
         edit (row) {
-            let argu = { approval_id: row.id,existed_app: this.approvalData, approval_name: row.name,approval_comment: row.comment };
+            let argu = { approval_admin_id: row.id,existed_app: this.approvalData, approval_admin_name: row.name,approval_admin_comment: row.comment };
             this.$router.push({
                 name: 'design-approval',
                 params: argu
@@ -164,7 +170,7 @@ export default {
             
         },
         procedure (row) {
-            let argu = { approval_id: row.id,approval_name: row.name };
+            let argu = { approval_admin_id: row.id,approval_admin_name: row.name };
             this.$router.push({
                 name: 'approval-procedure',
                 params: argu
@@ -172,14 +178,45 @@ export default {
             
         },
         stopUse(row){
+            this.$axios.post('/approval_admin_stop', {
+                approval_admin_id: row.id
+            })
+            .then(res => {
+                // console.log(res);
+                this.init();
+                this.$Message.success(res.data.msg);
+                // this.$store.commit('clearCurrentTag', this);
+                // this.$router.go(-1);
+            })
+            .catch(error => {
+                this.$Message.error('保存失败，请检查服务器设置！');
+                console.log(error);
+            });
+
             
 
         },
-        startUser(row){
+        startUse(row){
+            this.$axios.post('/approval_admin_start', {
+                approval_admin_id: row.id
+            })
+            .then(res => {
+                // console.log(res);
+                this.init();
+                this.$Message.success(res.data.msg);
+                // this.$store.commit('clearCurrentTag', this);
+                // this.$router.go(-1);
+            })
+            .catch(error => {
+                this.$Message.error('保存失败，请检查服务器设置！');
+                console.log(error);
+            });
+
+            
 
         },
         goto_design_approval(){
-            let argu = { approval_id: '-1',existed_app: this.approvalData };
+            let argu = { approval_admin_id: 0,existed_app: this.approvalData };
             this.$router.push({
                 name: 'design-approval',
                 params: argu

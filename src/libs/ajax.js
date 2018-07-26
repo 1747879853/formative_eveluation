@@ -17,9 +17,16 @@ const ajaxUrl = env === 'development'
     //     : 'http://192.168.192.128:3000/api/v1';
 const devUrl = env === 'development'
     ? 'http://127.0.0.1:3000/api/v1'
+    // ? 'http://192.168.66.68:3000/api/v1'
     : env === 'production'
         ? 'http://114.118.17.4:8080/api/v1'
         : '';
+
+const devUrl2 = env === 'development'
+    ? 'http://127.0.0.1:3000'
+    : env === 'production'
+    ? 'http://114.118.17.4:8080'
+    : '';
 
 const service = axios.create({
     baseURL: ajaxUrl,
@@ -34,12 +41,12 @@ service.interceptors.request.use(function (config) {
          config.headers.common['Authorization']=store.state.token;
     }
     if (config.url.match(/\/user_token/)) {
-        config.baseURL = 'http://127.0.0.1:3000';
+        config.baseURL = devUrl2;
+        // config.baseURL = devUrl;
         // config.baseURL = '';
     }
     // Do something before request is sent
-    if (config.url.match(/\/work_teams|work_shops|work_team_task_list|boms_approvals|work_shop_order_list|orders|authRuleList|authUserList|authGroupList|users|userList|approval_list|approval_list_inuse|approval_field_list|approval_create|approval_save|approval_to_me|approval_to_me_done|approval_from_me|approval_info|approval_pass|approval_reject|procedure_nodes|procedure_create|user_group_list/)) {
-
+    if (config.url.match(/\/work_teams|work_shops|work_team_task_list|boms_approvals|work_shop_order_list|orders|authRuleList|authUserList|authGroupList|users|userList|approval_admin_list|approval_list|approval_list_inuse|approval_field_list|approval_create|approval_save|approval_to_me|approval_to_me_done|approval_from_me|approval_info|approval_pass|approval_reject|approval_admin_start|approval_admin_stop|procedure_nodes|procedure_create|user_group_list|costList|workList/)) {
         config.baseURL = devUrl;
         // config.baseURL = '';
     }
@@ -57,6 +64,10 @@ service.interceptors.response.use(function (response) {
 }, function (error) {
     // debugger
     // Do something with response error
+<<<<<<< HEAD
+=======
+
+>>>>>>> ce9b335bc1077677156ea6ac0e1f4fa9698feae6
     switch(error.response.status){
         case 401:
           store.commit('del_token'); 
