@@ -26,14 +26,19 @@
 
             <Row v-if="showOrNot == false">
                 <Button type="primary" @click="returnBack" icon="ios-arrow-thin-left">返回</Button>
-                
-                <span v-if="hasMainTable">
+
+                <span v-if="hasMainTable || hasDetailTable">
 
                     <Select v-model="submit_user_id" placeholder="请选择审批人" style="margin-left:50px;width:200px;">
                         <Option v-for="(item,index) in submit_users" :key="item.id" :value="item.id">{{item.username}}</Option>                            
                         
                     </Select>
                     <Button type="primary" @click="submitAllForm">提交</Button>
+                    <div style="border-bottom: 1px solid #ccc;margin-top:5px;"> </div>
+                </span>
+                
+                <span v-if="hasMainTable">
+                    
                     <div style="border-bottom: 1px solid #ccc;margin-top:5px;"> </div>
                 
                     <AutoForm  v-bind:formDynamic="formDynamicMain" v-bind:arrIndex="-1" ></AutoForm>
@@ -100,7 +105,7 @@
             <div v-if="to_me_flag">
                 <Input v-model="comment" type="textarea" :rows="4" placeholder="审批意见..."></Input>
                 
-                <Select v-model="submit_to_user_id" placeholder="请选择上一级审批人" style="margin-top:10px;">
+                <Select v-if="submit_to_users.length > 0" v-model="submit_to_user_id" placeholder="请选择上一级审批人" style="margin-top:10px;">
                     <Option v-for="(item,index) in submit_to_users" :key="item.id" :value="item.id">{{item.username}}</Option>               
                 </Select>
                 
@@ -360,6 +365,9 @@ export default {
             }
             */
             if(allfilled){
+                if(JSON.stringify(m_hash) == "{}"){
+                    m_hash["xxx"]="xxx"; //fuck rails not permit empty hash
+                }
                 this.$axios.post('/approval_save', {
                     approvaladminid: this.approval_admin_id,
                     mainhash: m_hash,
@@ -458,7 +466,7 @@ export default {
 
         },
         AppPass(){
-            if(this.submit_to_user_id == 0){
+            if(this.submit_to_users.length >0 && this.submit_to_user_id == 0){
                 this.$Message.error("请选择上一级审批人！");
                 return
             }
