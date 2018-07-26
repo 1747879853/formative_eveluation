@@ -44,21 +44,28 @@
             </Card>
             <Card>
                 <span style="float:center;margin-left:100px;font-size:20px;color: #2db7f5;"> 花费明细</span>
+                <span style="font-size:24px;float:right;margin-right:100px;"> <Button type="primary" @click="add">添加花费</Button></span>
             	<div style="text-align: left;font-size:15px;">
                 <div style="margin-left:100px;">
                     <Select v-model="option1" size="small" style="width:100px;" @on-change="selected1(option1)">
-                    <Option  v-for="(item,index) in costdata" :key="item.id" :value="index">{{ item.name }}</Option>
+                    <Option  v-for="(item,index) in costdata" :key="item.id" :value="index">{{ item.title }}</Option>
                     </Select>
                     <Select v-model="option2" size="small" style="width:100px;" @on-change="selected2(option2)">
-                        <Option  v-for="(item,index) in costdata2" :key="item.id" :value="index">{{ item.name }}</Option>
+                        <Option  v-for="(item,index) in costdata2" :key="item.id" :value="index">{{ item.title }}</Option>
                     </Select>
                     <Select v-model="option3" size="small" style="width:100px;" @on-change="selected3(option3)">
-                        <Option  v-for="(item,index) in costdata3" :key="item.id" :value="index">{{ item.name }}</Option>
+                        <Option  v-for="(item,index) in costdata3" :key="item.id" :value="index">{{ item.title }}</Option>
                     </Select>
-                </div>		
-                <table style="float:center;margin-left:100px;font-size:14px;">
-                <tr>
-                    <td>具体事由</td>
+                    &nbsp;&nbsp;&nbsp;
+                	具体事由：
+                    <Input v-model="thing" placeholder="请输入具体事由" clearable style="width: 250px"></Input>
+                    <!-- <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td> -->
+                    &nbsp;&nbsp;&nbsp;
+                    金额：
+                    <Input v-model="money" placeholder="请输入金额" clearable style="width: 250px"></Input>	
+                <!-- <table style="float:center;margin-left:100px;font-size:14px;">
+                <tr> -->
+                    <!-- <td>具体事由</td>
                     <td>
                         <Input v-model="thing" placeholder="请输入具体事由" clearable style="width: 250px"></Input>
                     </td>
@@ -66,11 +73,12 @@
                     <td>金额</td>
                     <td>
                         <Input v-model="money" placeholder="请输入金额" clearable style="width: 250px"></Input>
-                    </td>
-                </tr>
+                    </td> -->
+                <!-- </tr>
                 <tr>&nbsp;</tr>
-                </table>            
-                <span style="font-size:24px;float:right;margin-right:100px;"> <Button type="primary" @click="add">添加花费</Button></span>
+                </table>  -->
+                </div>           
+               <!--  <span style="font-size:24px;float:right;margin-right:100px;"> <Button type="primary" @click="add">添加花费</Button></span> -->
             	</div>
             </Card>
         </Row>
@@ -153,18 +161,19 @@ export default{
         selected1() {
             this.costdata2 = this.costdata[this.option1].children;
             this.costid = this.costdata[this.option1].id;
-            this.name = this.costdata[this.option1].name;
+            this.name = this.costdata[this.option1].title;
             // console.log(this.option1)
         },
         selected2() {
             this.costdata3 = this.costdata2[this.option2].children;
-            this.costid = this.costdata[this.option2].id;
-            this.name = this.costdata[this.option2].name;
+            this.costid = this.costdata2[this.option2].id;
+            this.name = this.costdata2[this.option2].title;
             // console.log(this.option2);
+            // console.log(this.name);
         },
         selected3() {
-            this.costid = this.costdata[this.option3].id;
-            this.name = this.costdata[this.option3].name;
+            this.costid = this.costdata3[this.option3].id;
+            this.name = this.costdata3[this.option3].title;
             // console.log(this.option3);
         },
 		add(){
@@ -174,16 +183,16 @@ export default{
             }else{
                 this.costData.push({
                     // cost的id
-                    costid:this.costid,
+                    // costid:this.costid,
                     name:this.name,
                     thing:this.thing,
                     money:this.money,
                 })
             }
-            console.log(this.costData);
+            // console.log(this.costData);
             // 添加后清空
             this.costid='';
-            this.name='';
+            // this.name='';
             this.thing='';
             this.money='';
 	    },
@@ -216,10 +225,10 @@ export default{
                     workcontent: this.workcontent,
                     transport: this.transport,
                     explain: this.explain,
-                    children: this.costData,
+                    costdata: this.costData,
                 }
                 }).then(function(res) {
-                    // console.log(res);
+                    console.log(res);
                     this.$Message.info('添加成功');
                 }.bind(this))
                 .catch(function(error) {
@@ -247,6 +256,7 @@ export default{
     mounted(){
         this.$axios.get("/costList").then( res =>{
             this.costdata = res.data;
+            console.log(res.data);
         }).catch(error =>{
             console.log(error);
         })
