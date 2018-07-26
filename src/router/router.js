@@ -367,6 +367,22 @@ export const appRouter = [
                 access:'users-manage/organization',
                 component: () => import('@/views/users-manage/organization.vue')
             },
+            {
+                path: 'workshop-maintenance',
+                icon: 'compose',
+                name: 'workshop-maintenance',
+                title: '车间维护',
+                access:'users-manage/workshop-maintenance',
+                component: () => import('@/views/users-manage/workshop-maintenance.vue')
+            },
+            {
+                path: 'workteam-maintenance',
+                icon: 'compose',
+                name: 'workteam-maintenance',
+                title: '班组维护',
+                access:'users-manage/workteam-maintenance',
+                component: () => import('@/views/users-manage/workteam-maintenance.vue')
+            },
         ]
     },
     {
