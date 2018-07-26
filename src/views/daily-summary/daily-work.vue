@@ -86,13 +86,15 @@ export default {
         this.init();
         this.$axios.get("/workList").then( res =>{
             // this.costdata = res.data;
-            if (res.data.date.length > 0){
+            if (res.data.length>0) {
+                if (res.data.date.length > 0){
                 this.date = res.data.date;
                 this.address=res.data.address;
                 this.workcontent=res.data.workcontent;
                 this.transport=res.data.transport;
                 this.explain=res.data.explain;
                 this.costData=res.data.costdata;
+            }
             }   
         }).catch(error =>{
             console.log(error);
