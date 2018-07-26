@@ -64,10 +64,6 @@ service.interceptors.response.use(function (response) {
 }, function (error) {
     // debugger
     // Do something with response error
-<<<<<<< HEAD
-=======
-
->>>>>>> ce9b335bc1077677156ea6ac0e1f4fa9698feae6
     switch(error.response.status){
         case 401:
           store.commit('del_token'); 
