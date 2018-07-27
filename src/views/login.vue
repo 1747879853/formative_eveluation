@@ -30,7 +30,7 @@
                             <Button @click="handleSubmit" type="primary" long>登录</Button>
                         </FormItem>
                     </Form>
-                    <p class="login-tip">输入任意用户名和密码即可</p>
+                    <p class="login-tip"><a style="color: #FF0000">{{failed}}</a></p>
                 </div>
             </Card>
         </div>
@@ -45,7 +45,7 @@ export default {
     data () {
         return {
             form: {
-                userName: 'admin',
+                userName: '',
                 password: ''
             },
             rules: {
@@ -55,7 +55,8 @@ export default {
                 password: [
                     { required: true, message: '密码不能为空', trigger: 'blur' }
                 ]
-            }
+            },
+            failed:''
         };
     },
     methods: {
@@ -82,6 +83,7 @@ export default {
                     }).then(function(res) {
                         this.$store.commit('set_token', res.data.jwt); 
                         this.$store.commit('set_auth_rules', res.data.auth_rules);  
+                        debugger
                         if (this.$store.state.token) {
                             Cookies.set('user', this.form.userName);
                             Cookies.set('userid', 6);
@@ -92,11 +94,12 @@ export default {
                                 name: 'home_index'
                             });
                         } else {
-                            // this.$router.replace('/login');
+                            // this.$router.replace('/login');  
                         }                     
                     }.bind(this))
                     .catch(error => {
-                        console.log(error)      
+                        console.log(error);
+                        this.failed='登录失败,请输入正确的用户名和密码！';     
                     })
 
 
