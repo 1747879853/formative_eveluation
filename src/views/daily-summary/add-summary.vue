@@ -47,13 +47,13 @@
                 <span style="font-size:24px;float:right;margin-right:100px;"> <Button type="primary" @click="add">添加花费</Button></span>
             	<div style="text-align: left;font-size:15px;">
                 <div style="margin-left:100px;">
-                    <Select v-model="option1" size="small" style="width:100px;" @on-change="selected1(option1)">
+                    <Select v-model="option1" clearable  size="small" style="width:100px;" @on-change="selected1(option1)" ref="element1">
                     <Option  v-for="(item,index) in costdata" :key="item.id" :value="index">{{ item.title }}</Option>
                     </Select>
-                    <Select v-model="option2" size="small" style="width:100px;" @on-change="selected2(option2)">
+                    <Select v-model="option2" clearable size="small" style="width:100px;" @on-change="selected2(option2)" ref="element2">
                         <Option  v-for="(item,index) in costdata2" :key="item.id" :value="index">{{ item.title }}</Option>
                     </Select>
-                    <Select v-model="option3" size="small" style="width:100px;" @on-change="selected3(option3)">
+                    <Select v-model="option3" clearable size="small" style="width:100px;" @on-change="selected3(option3)" ref="element3">
                         <Option  v-for="(item,index) in costdata3" :key="item.id" :value="index">{{ item.title }}</Option>
                     </Select>
                     &nbsp;&nbsp;&nbsp;
@@ -104,8 +104,9 @@ export default{
             costData:[],
             thing:'',
             money:'',
-            costid:'',
+            // costid:'',
             name:'',
+            isselect:true,
             costColumns:[
             {
                 type: "index",
@@ -159,22 +160,30 @@ export default{
         },
         //选择器被选中
         selected1() {
-            this.costdata2 = this.costdata[this.option1].children;
-            this.costid = this.costdata[this.option1].id;
-            this.name = this.costdata[this.option1].title;
-            // console.log(this.option1)
+            // console.log(this.costdata[this.option1]);
+            if (!(this.costdata[this.option1] == undefined)) {
+                this.costdata2 = this.costdata[this.option1].children;
+                // this.costid = this.costdata[this.option1].id;
+                this.name = this.costdata[this.option1].title;
+                // console.log(this.option1)
+            }
         },
-        selected2() {
-            this.costdata3 = this.costdata2[this.option2].children;
-            this.costid = this.costdata2[this.option2].id;
-            this.name = this.costdata2[this.option2].title;
-            // console.log(this.option2);
-            // console.log(this.name);
+        selected2(){
+            if (!(this.costdata[this.option1] == undefined)) {
+                this.costdata3 = this.costdata2[this.option2].children;
+                // this.costid = this.costdata2[this.option2].id;
+                this.name = this.costdata2[this.option2].title;
+                // console.log(this.option2);
+                // console.log(this.name);
+            }
         },
         selected3() {
-            this.costid = this.costdata3[this.option3].id;
-            this.name = this.costdata3[this.option3].title;
-            // console.log(this.option3);
+            if (!(this.costdata[this.option1] == undefined)) {
+                // this.costid = this.costdata3[this.option3].id;
+                this.name = this.costdata3[this.option3].title;
+                // console.log(this.name);
+            }
+
         },
 		add(){
             //如果没选或者填，提出警告
@@ -189,10 +198,25 @@ export default{
                     money:this.money,
                 })
             }
+            // this.isselect=false;
+            this.$refs.element1.clearSingleSelect();
+            if(this.costdata2.length > 0){
+                this.$refs.element3.clearSingleSelect();
+            }
+            if (this.costdata2) {
+                this.$refs.element3.clearSingleSelect();
+            }
+            
+            
             // console.log(this.costData);
             // 添加后清空
-            this.costid='';
-            // this.name='';
+            // this.costid='';
+            this.option1='';
+            this.option2='';
+            this.option3='';
+            // this.costdata2="";
+            // this.costdata3="";
+            this.name='';
             this.thing='';
             this.money='';
 	    },
@@ -228,7 +252,7 @@ export default{
                     costdata: this.costData,
                 }
                 }).then(function(res) {
-                    console.log(res);
+                    // console.log(res);
                     this.$Message.info('添加成功');
                 }.bind(this))
                 .catch(function(error) {
@@ -256,7 +280,7 @@ export default{
     mounted(){
         this.$axios.get("/costList").then( res =>{
             this.costdata = res.data;
-            console.log(res.data);
+            // console.log(res.data);
         }).catch(error =>{
             console.log(error);
         })
