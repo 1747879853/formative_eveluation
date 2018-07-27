@@ -1,6 +1,7 @@
 import authRuleList from './authRuleList'
 import authGroupList from './authGroupList'
 import authUserList from './authUserList'
+import attendanceList from './attendanceList'
 import Mock from 'mockjs'
 import navlist from './navlist'
 import login from './login'
@@ -16,7 +17,7 @@ import orgaLeader from './orgaLeader'
 import costList from './costList'
 import workList from './workList'
 
-let data = [].concat(authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,userList,costList,workList,orgaLeader)
+let data = [].concat(authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,userList,costList,workList,orgaLeader,attendanceList)
 
 
 

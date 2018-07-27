@@ -144,7 +144,7 @@ export default {
                 this.approvalComment = this.$route.params.approval_admin_comment;
 
                 this.$axios
-                .get("/approval_field_list",{params: {approval_admin_id: this.approval_admin_id}})
+                .get("/approval_field_edit",{params: {approval_admin_id: this.approval_admin_id}})
                 .then(res => {
                     if(res.data.code == 1){
                         this.approval_field_data = res.data.approval_field_data || [];
@@ -210,7 +210,8 @@ export default {
             }
             
 
-            if(this.approvalName==""||this.approvalComment==""||this.approval_field_data.length<=0){
+            // if(this.approvalName==""||this.approvalComment==""||this.approval_field_data.length<=0){
+            if(this.approvalName==""||this.approvalComment==""){
                 iView.LoadingBar.finish();
                 this.$Message.error("数据填写不完整!")
                 return
@@ -225,6 +226,11 @@ export default {
                 approval_detail_field_data: this.approval_detail_field_data
             })
             .then(res => {
+                
+                // this.sleep(6000).then(() => {
+                //     // Do something after the sleep!
+                // });
+                this.handleSpinCustom();
                 iView.LoadingBar.finish();
                 // console.log(res);
                 this.$Message.success(res.data.msg);
@@ -238,7 +244,29 @@ export default {
             });
            
              
-        }               
+        },
+        sleep (time) {
+          return new Promise((resolve) => setTimeout(resolve, time));
+        },
+        handleSpinCustom () {
+                this.$Spin.show({
+                    render: (h) => {
+                        return h('div', [
+                            h('Icon', {
+                                'class': 'demo-spin-icon-load',
+                                props: {
+                                    type: 'load-c',
+                                    size: 18
+                                }
+                            }),
+                            h('div', '创建时间稍长，请耐心等待...')
+                        ])
+                    }
+                });
+                setTimeout(() => {
+                    this.$Spin.hide();
+                }, 6000);
+            }               
     }
 };
 </script>
