@@ -150,6 +150,7 @@
                     // 退出登录
                     this.$store.commit('logout', this);
                     this.$store.commit('clearOpenedSubmenu');
+                    this.$store.commit('clearAllTags');
                     this.$router.push({
                         name: 'login'
                     });
