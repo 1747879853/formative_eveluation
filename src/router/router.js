@@ -410,6 +410,31 @@ export const appRouter = [
             },
         ]
     },
+     {
+        path: '/vehicle-manage',
+        icon: 'settings',
+        name: 'vehicle-manage',
+        title: '车辆管理',
+        access:'vehicle-manage/index',
+        component: Main,
+        children: [
+              {
+                path: 'vehicle-comeandgo-identify',
+                icon: 'compose',
+                name: 'vehicle-comeandgo-identify',
+                title: '车辆进出识别',
+                access:'vehicle-manage/vehicle-comeandgo-identify',
+                component: () => import('@/views/vehicle-manage/vehicle-comeandgo-identify.vue')
+            },
+            {
+                path: 'placeholder',
+                icon: 'compose',
+                name: 'placeholder',
+                title: '占位符',
+                component: () => import('@/views/vehicle-manage/placeholder.vue')
+            },
+        ]
+    },
     // {
     //     path: '/error-/page',
     //     icon: 'android-sad',
