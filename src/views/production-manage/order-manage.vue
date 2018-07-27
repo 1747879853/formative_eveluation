@@ -233,7 +233,7 @@ export default {
           "Content-Type":'application/json'
         }})
       .then(res => {
-        this.orderData = res.data.orders;
+        this.orderData = res.data.orders; 
         console.log(res);
       })
       .catch(error => {

@@ -297,7 +297,7 @@ export default {
       .get("/work_team_task_list")
       .then(res => {
         this.workteam_materials = res.data.data;
-        this.title = res.data.data[0]["team_name"];
+        this.title = res.data.data[0]["team_name"]; 
       })
       .catch(error => {
         console.log(error);
