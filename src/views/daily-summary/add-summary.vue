@@ -181,7 +181,7 @@ export default{
             if (!(this.costdata[this.option1] == undefined)) {
                 // this.costid = this.costdata3[this.option3].id;
                 this.name = this.costdata3[this.option3].title;
-                console.log(this.name);
+                // console.log(this.name);
             }
 
         },
@@ -252,7 +252,7 @@ export default{
                     costdata: this.costData,
                 }
                 }).then(function(res) {
-                    console.log(res);
+                    // console.log(res);
                     this.$Message.info('添加成功');
                 }.bind(this))
                 .catch(function(error) {

@@ -84,9 +84,11 @@ export default {
     },
     mounted(){
         this.init();
-        this.$axios.get("/workList").then( res =>{
+        if (this.$route.params.flag == undefined) {
+            this.$axios.get("/workList").then( res =>{
+            // debugger
             // this.costdata = res.data;
-            if (res.data.length>0) {
+            if (res.data.flag === 1) {
                 if (res.data.date.length > 0){
                 this.date = res.data.date;
                 this.address=res.data.address;
@@ -95,10 +97,12 @@ export default {
                 this.explain=res.data.explain;
                 this.costData=res.data.costdata;
             }
-            }   
+        }   
         }).catch(error =>{
             console.log(error);
         })
+
+        }
     },
 
     methods: {
