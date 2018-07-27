@@ -20,6 +20,20 @@
                <Table :data="process_details"  v-if="process_details.length==0 ? false : true" :columns="processDetailsColumns"></Table>
           </div>
     </Modal>
+    <Modal v-model="iscatdshow" style="margin-top:1px;width:500px" @on-ok="ok" @on-cancel="cancel" title="添加订单">
+      <table>
+        <tr>
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单号</td>
+          <td><Input v-model="no" placeholder="请输入订单号" style="width: 300px"></Input></td>
+        </tr>
+        <tr>&nbsp;</tr>
+        <tr>
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;客户名称</td>
+          <td><Input v-model="client_title" placeholder="请输入客户名称" style="width: 300px"></Input></td>
+        </tr>
+      </table>
+    </Modal>
+
     
     
  <Col span="24">
@@ -28,10 +42,13 @@
                 <Icon type="ios-list"></Icon>
                 订单列表
             </p>
+
              <Row type="flex" justify="center" align="top" >
-                   <Table :columns="orderColumns"   :data="orderData" style="width: 100%;"></Table>
-                  
+                  <Table :columns="orderColumns"   :data="orderData" style="width: 100%;"></Table>
+                  <span style="float:right;margin-right:765px;"></span>
+                  <span style="font-size:24px;float:right;margin-right:50px;"> <Button type="primary" @click="add_order">添加订单</Button></span>    
              </Row>
+
           </Card>>
        </Col>
   
@@ -218,7 +235,10 @@ export default {
       progress_table_show: false,
       progressData_list:[],
       workteam_materials:[],
-      show_team_process:false
+      show_team_process:false,
+      iscatdshow:false,
+      client_title:'',
+      no:'',
     };
   },
   computed: {
@@ -233,7 +253,7 @@ export default {
           "Content-Type":'application/json'
         }})
       .then(res => {
-        this.orderData = res.data.orders;
+        this.orderData = res.data.orders; 
         console.log(res);
       })
       .catch(error => {
@@ -241,6 +261,38 @@ export default {
       });
   },
   methods:{
+    add_order(){
+      if (this.iscatdshow) {
+        this.iscatdshow = false;
+      }else{
+        this.iscatdshow=true;
+      }
+    },
+    ok(){
+      if(this.no.length == 0){
+          this.$Message.error("添加内容不可为空")
+      }else{
+          this.$axios.post('/orders', {
+                  //parent_id = 0,表明是一级表
+                  params: {
+                      no: this.no,
+                      client_title: this.client_title
+                  }
+              }).then(function(res) {
+                  console.log(res);
+                  this.orderData.push(res.data.order);
+      
+              }.bind(this))
+              .catch(function(error) {
+                  console.log(error)
+              });
+              this.$Message.info('添加成功');
+      }
+
+    },
+    cancel(){
+      this.$Message.info('取消'); 
+    },
     material_process(row){
       console.log(row.owner_type);
       console.log(row.owner_id);

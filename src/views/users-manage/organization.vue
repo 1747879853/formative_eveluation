@@ -176,7 +176,7 @@ export default {
                           arr[i].checked_id=newarr.checked_id; 
                           return i;
                       }
-                      let ret = this.depthTraversal2(arr[i].children,id);
+                      let ret = this.depthTraversal1(arr[i].children,id,newarr);
                       if (ret>=0) {
                           return i;
                       }

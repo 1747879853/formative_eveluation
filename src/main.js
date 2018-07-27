@@ -8,7 +8,7 @@ import '@/locale';
 import 'iview/dist/styles/iview.css';
 import VueI18n from 'vue-i18n';
 import util from './libs/util';
-import axios from './libs/ajax';
+import axios from './libs/ajax'; 
 
 
 //// 生产环境中注释掉以下语句
