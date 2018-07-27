@@ -83,7 +83,6 @@ export default {
                     }).then(function(res) {
                         this.$store.commit('set_token', res.data.jwt); 
                         this.$store.commit('set_auth_rules', res.data.auth_rules);  
-                        debugger
                         if (this.$store.state.token) {
                             Cookies.set('user', this.form.userName);
                             Cookies.set('userid', 6);
@@ -99,7 +98,7 @@ export default {
                     }.bind(this))
                     .catch(error => {
                         console.log(error);
-                        this.failed='登录失败,请输入正确的用户名和密码！';     
+                        this.failed='登录失败,请输入正确的用户名和密码！';      
                     })
 
 
@@ -107,6 +106,9 @@ export default {
                 }
             });
         }
+    },
+    mounted (){
+        this.form.userName=Cookies.get('user');
     }
 };
 </script>
