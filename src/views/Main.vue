@@ -151,6 +151,8 @@
                     this.$store.commit('logout', this);
                     this.$store.commit('clearOpenedSubmenu');
                     this.$store.commit('clearAllTags');
+                    this.$store.commit('del_token');
+                    this.$store.commit('del_auth_rules');
                     this.$router.push({
                         name: 'login'
                     });

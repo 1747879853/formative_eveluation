@@ -53,6 +53,7 @@ service.interceptors.response.use(function (response) {
     switch (error.response.status) {
         case 401:
             store.commit('del_token');
+            store.commit('del_auth_rules');
             router.push({
                 name: 'login'
             });
