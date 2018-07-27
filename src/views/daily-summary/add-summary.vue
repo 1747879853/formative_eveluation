@@ -4,7 +4,7 @@
             <Card>
                 <div style="text-align:center;font-size:24px;color: #2db7f5;">
                     今日工作总结
-                    <span style="float:right;margin-right:100px;"> <Button type="primary" @click="save_and_use">保存并启用</Button></span>
+                    <span style="float:right;margin-right:100px;"> <Button type="primary" @click="save_and_use">保存</Button></span>
                 </div>
                 <table style="margin:auto;">
                 <tr>&nbsp;</tr>
@@ -44,9 +44,9 @@
             </Card>
             <Card>
                 <span style="float:center;margin-left:100px;font-size:20px;color: #2db7f5;"> 花费明细</span>
-                <span style="font-size:24px;float:right;margin-right:100px;"> <Button type="primary" @click="add">添加花费</Button></span>
             	<div style="text-align: left;font-size:15px;">
                 <div style="margin-left:100px;">
+                    <span style="font-size:24px;float:right;margin-right:100px;"> <Button type="primary" @click="add">添加花费</Button></span>
                     <Select v-model="option1" clearable  size="small" style="width:100px;" @on-change="selected1(option1)" ref="element1">
                     <Option  v-for="(item,index) in costdata" :key="item.id" :value="index">{{ item.title }}</Option>
                     </Select>
