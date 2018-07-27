@@ -72,7 +72,7 @@ export default {
         },
         {
           title: "负责人",
-          key: "user_id"
+          key: "username"
         },
         {
                   title: "操作",
