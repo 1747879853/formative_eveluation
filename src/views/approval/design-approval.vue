@@ -187,7 +187,6 @@ export default {
             }
         },
         save_and_use(){
-            iView.LoadingBar.start();
             let list= document.getElementById("editable").getElementsByTagName("li");
             for (let i = 0; i < list.length; i++) {                
                 let se = parseInt(list[i].getAttribute("data-index"));
@@ -202,7 +201,6 @@ export default {
             if(this.approval_admin_id==0){
                 for (let i = 0; i < this.existed_app_arr.length; i++) {
                     if(this.existed_app_arr[i].name == this.approvalName){
-                        iView.LoadingBar.finish();
                         this.$Message.error("审批名称与已有审批重名!")
                         return
                     }
@@ -212,10 +210,26 @@ export default {
 
             // if(this.approvalName==""||this.approvalComment==""||this.approval_field_data.length<=0){
             if(this.approvalName==""||this.approvalComment==""){
-                iView.LoadingBar.finish();
                 this.$Message.error("数据填写不完整!")
                 return
             }
+
+            this.$Spin.show({
+                render: (h) => {
+                    return h('div', [
+                        h('Icon', {
+                            'class': 'demo-spin-icon-load',
+                            props: {
+                                type: 'load-c',
+                                size: 18
+                            }
+                        }),
+                        h('div', 'Loading')
+                    ])
+                }
+            });
+
+            
             //发送数据到服务器，然后建表并保存。
             //here has a bug,always post to server an additional data approval => {}  ???????????
             this.$axios.post('/approval_create', {
@@ -226,47 +240,40 @@ export default {
                 approval_detail_field_data: this.approval_detail_field_data
             })
             .then(res => {
-                
-                // this.sleep(6000).then(() => {
-                //     // Do something after the sleep!
-                // });
-                this.handleSpinCustom();
-                iView.LoadingBar.finish();
-                // console.log(res);
+                this.$Spin.hide();
                 this.$Message.success(res.data.msg);
                 this.$store.commit('clearCurrentTag', this);
                 this.$router.go(-1);
             })
             .catch(error => {
-                iView.LoadingBar.finish();
+                this.$Spin.hide();
                 this.$Message.error('保存失败，请检查服务器设置！');
                 console.log(error);
             });
-           
-             
+
         },
         sleep (time) {
           return new Promise((resolve) => setTimeout(resolve, time));
         },
         handleSpinCustom () {
-                this.$Spin.show({
-                    render: (h) => {
-                        return h('div', [
-                            h('Icon', {
-                                'class': 'demo-spin-icon-load',
-                                props: {
-                                    type: 'load-c',
-                                    size: 18
-                                }
-                            }),
-                            h('div', '创建时间稍长，请耐心等待...')
-                        ])
-                    }
-                });
-                setTimeout(() => {
-                    this.$Spin.hide();
-                }, 6000);
-            }               
+            this.$Spin.show({
+                render: (h) => {
+                    return h('div', [
+                        h('Icon', {
+                            'class': 'demo-spin-icon-load',
+                            props: {
+                                type: 'load-c',
+                                size: 18
+                            }
+                        }),
+                        h('div', '创建时间稍长，请耐心等待...')
+                    ])
+                }                
+            });
+            setTimeout(() => {
+                this.$Spin.hide();
+            }, 6000);
+        }               
     }
 };
 </script>

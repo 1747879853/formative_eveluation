@@ -25,31 +25,47 @@
 
 
             <Row v-if="showOrNot == false">
-                <Button type="primary" @click="returnBack" icon="ios-arrow-thin-left">返回</Button>
+                <Row>
+                    <Button type="primary" @click="returnBack" icon="ios-arrow-thin-left">返回</Button>
 
-                <span v-if="hasMainTable || hasDetailTable">
+                    <span v-if="hasMainTable || hasDetailTable">
 
-                    <Select v-model="submit_user_id" placeholder="请选择审批人" style="margin-left:50px;width:200px;">
-                        <Option v-for="(item,index) in submit_users" :key="item.id" :value="item.id">{{item.username}}</Option>                            
-                        
-                    </Select>
-                    <Button type="primary" @click="submitAllForm">提交</Button>
-                    <div style="border-bottom: 1px solid #ccc;margin-top:5px;"> </div>
-                </span>
-                
-                <span v-if="hasMainTable">
+                        <Select v-model="submit_user_id" placeholder="请选择审批人" style="margin-left:50px;width:200px;">
+                            <Option v-for="(item,index) in submit_users" :key="item.id" :value="item.id">{{item.username}}</Option>                            
+                            
+                        </Select>
+                        <Button type="primary" @click="submitAllForm">提交</Button>
+                    </span>
+                </Row>
+                <Row>
+                    <Col span="24">
+                        <Card>
+                            <p slot="title" >
+                                <Icon type="android-funnel"></Icon>
+                                主表
+                            </p>
+                            <span v-if="hasMainTable">          
+                                <AutoForm  v-bind:formDynamic="formDynamicMain" v-bind:arrIndex="-1" ></AutoForm>
+                            </span>
+                            <span v-else>
+                                未设置主表
+                            </span>
+                        </Card>
                     
-                    <div style="border-bottom: 1px solid #ccc;margin-top:5px;"> </div>
-                
-                    <AutoForm  v-bind:formDynamic="formDynamicMain" v-bind:arrIndex="-1" ></AutoForm>
-                </span>
-                <div v-if="hasDetailTable">
-                    <AutoForm  v-for="(item,index) in formDynamicDetail_arr" :key="index" v-bind:formDynamic="item" v-bind:arrIndex="index" v-on:delitem="delDetailItem"></AutoForm>
-                    
-                    <p>如需采购多种产品，请点击“增加明细”</p>
-                    <Button type="primary" @click="addDetailData" icon="plus">增加明细</Button>
-                </div>
-                
+                        <Card>
+                            <p slot="title" >
+                                <Icon type="android-funnel"></Icon>
+                                详单
+                            </p>
+                            <div v-if="hasDetailTable">
+                                <AutoForm  v-for="(item,index) in formDynamicDetail_arr" :key="index" v-bind:formDynamic="item" v-bind:arrIndex="index" v-on:delitem="delDetailItem"></AutoForm>
+                                
+                                <p>如需采购多种产品，请点击“增加明细”</p>
+                                <Button type="primary" @click="addDetailData" icon="plus">增加明细</Button>
+                            </div>
+                        </Card>
+                    </Col>
+                </Row>
             </Row>
         </TabPane>
         <TabPane :label="label2" name="to_me_label">
@@ -240,6 +256,8 @@ export default {
     methods: {
         returnBack(){
             this.showOrNot = true
+            //多次点击返回和某个审批，该数组会不断增加，所以每次清空
+            this.formDynamicDetail_arr = [];
             this.formDynamicMain.items = [];
         },
      
@@ -299,8 +317,11 @@ export default {
                         this.formDynamicDetail.title = this.approval_name + "明细";
                         this.formDynamicDetail_arr.push(JSON.parse(JSON.stringify(this.formDynamicDetail)));
                         this.formDynamicDetail.title = '';
+
+                        this.showOrNot = false
                     }
                 }else{
+                    this.showOrNot = true
                     this.$Message.error(res.data.msg);
                     return
                 }
@@ -310,7 +331,7 @@ export default {
                 this.detail_fields = [];
                 console.log(error);
             });
-            this.showOrNot = false
+            
         },
         addDetailData(){
             this.formDynamicDetail.title = this.approval_name + "明细";
