@@ -253,8 +253,10 @@ export default {
                             "load": false
                         });
                         parent.children.push(origin_item);
-                        if (parent.load)
-                            this.initItems.splice((this.current_index + this.ChildrenLength(parent)), 0, item);
+                        if (parent.load){
+                            let len = this.ChildrenLength(parent);
+                            this.initItems.splice((this.current_index + len), 0, item);
+                        }
                         if (!parent.expanded)
                             this.toggle(this.current_index, this.current_item);
                         
@@ -294,22 +296,35 @@ export default {
         },
         // 返回子节点长度
         ChildrenLength(item) {
-            debugger;
             let length = item.children.length;
             item.children.forEach((child) => {
-                if (child.children) {
-                    length += this.ChildrenLength(child.children)
-                }
+                length += this.ChildrenLength(child);
             })
             return length;
         },
-        depthDelete(item, index) {
+        depthDelete(index) {
+            let item = this.initItems[index];
             if (item.children && item.load) {
-                for (var i=item.children.length-1; i>=0; i--){
-                    this.depthDelete(item.children[i], index + i + 1);
+                // for (var i=item.children.length-1; i>=0; i--){
+                //     this.depthDelete(item.children[i], index + i + 1);
+                // }
+                for (var i=0; i<item.children.length; i++)
+                    this.depthDelete(index + 1);
+                // item.children.forEach((child) => {
+                //     this.depthDelete(child, index + 1);
+                // })
+            }
+
+            this.initItems.splice(index, 1);
+
+            if (item == this.current_item) {
+                let parent = item.parent;
+                if (parent){
+                    parent.children = parent.children.filter(function(child) { 
+                        return item.id !== child.id;
+                    })
                 }
             }
-            this.initItems.splice(index, 1);
             console.log(index);
         },
         deleteClick(item, index) {  
@@ -327,7 +342,7 @@ export default {
                             }
                         }
                     }).then(function(res) {
-                        this.depthDelete(this.current_item, this.current_index);
+                        this.depthDelete(this.current_index);
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
