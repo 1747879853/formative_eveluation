@@ -32,7 +32,7 @@
                    <Table :columns="orderColumns"   :data="orderData" style="width: 100%;"></Table>
                   
              </Row>
-          </Card>>
+          </Card>
        </Col>
   
     </div>
