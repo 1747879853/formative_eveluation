@@ -77,6 +77,12 @@ export default {
           width: 80,
           align: "center"
         },
+            {
+          title: "班组单号",
+          key: "id",
+          width: 100,
+          align: "center"
+        },
         {
           title: "图号",
           key: "action",
@@ -131,7 +137,7 @@ export default {
           key: "finished_number"
         },
         {
-          title: "质检数量",
+          title: "合格数量",
           align: "center",
           width: 120,
           key: "passed_number"
@@ -190,26 +196,7 @@ export default {
                 },
                 "完成"
               ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
-                  on: {
-                    click: () => {
-                      this.pass_qty =0;
-                      this.show_pass = true;
-                      this.team_task_id = params.row.id;
-                    }
-                  }
-                },
-                "质检"
-              )
+
             ]);
           }
         }
@@ -297,7 +284,7 @@ export default {
       .get("/work_team_task_list")
       .then(res => {
         this.workteam_materials = res.data.data;
-        this.title = res.data.data[0]["team_name"];
+        this.title = res.data.data[0]["team_name"]; 
       })
       .catch(error => {
         console.log(error);

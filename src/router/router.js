@@ -239,6 +239,8 @@ export const appRouter = [
             { path: 'order-manage', title: '订单', access:'production-manage/order-manage', name: 'order-manage', icon: 'link', component: () => import('@/views/production-manage/order-manage.vue') },
             { path: 'order-workshop', title: '车间', access:'production-manage/order-workshop', name: 'order-workshop', icon: 'link', component: () => import('@/views/production-manage/order-workshop.vue') },           
             { path: 'order-team', title: '班组', access:'production-manage/order-team', name: 'order-team', icon: 'link', component: () => import('@/views/production-manage/order-team.vue') },
+            { path: 'quality-checking', title: '质检', access:'production-manage/quality-checking', name: 'quality-checking', icon: 'link', component: () => import('@/views/production-manage/quality-checking.vue') },
+   
             // { path: 'requisition-list', title: '领料单', name: 'requisition-list', icon: 'link', component: () => import('@/views/production-manage/requisition-list.vue') },
 
             
