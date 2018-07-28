@@ -34,19 +34,6 @@ let list = function (options) {
                         }
                     ],
                     expand:true,
-                },
-                {
-                    id: '3',
-                    title: '邮电费3',
-                    children: [
-                        {
-                            id: '4',
-                            title: '快递费4',
-                            children: [],
-                            expand:true,
-                        }
-                    ],
-                    expand:true,
                 }
             ];
             break;

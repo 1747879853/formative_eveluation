@@ -25,16 +25,34 @@
             <img width="100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531138272810&di=fb25ebec179ae86ec8df80f3fb7aba90&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F12%2F81%2F58PIC5R58PICsqy_1024.jpg"></img>
         </Modal>
           <!-- <Button @click="dispatchWorkOrder = true" type="primary">分派工单</Button> -->
+        <Modal v-model="isshowaddworkorder" title="添加工单" @on-ok="append">
+            <table>
+                <tr><td>名称</td><td>
+                <Input v-model="title" placeholder="请输入名称" clearable style="width: 300px"></Input></td></tr>
+                <tr>&nbsp;</tr>
+                <tr><td>设计</td><td>
+                <Input v-model="maker" placeholder="请输入设计" clearable style="width: 300px"></Input></td></tr>
+                <tr>&nbsp;</tr>
+                <tr><td>数量</td><td>
+                <Input v-model="number" placeholder="请输入数量" clearable style="width: 300px"></Input></td></tr>
+                <tr>&nbsp;</tr>
+                <tr><td>模板名称</td><td>
+                <Input v-model="template_type" placeholder="请输入模板名称" clearable style="width: 400px"></Input></td></tr>
+                <tr>&nbsp;</tr>
+            </table>           
+        </Modal>
         <div >
             <Row>
                 <Card>
                     <p slot="title">
                         <Icon type="compose"></Icon>
                         订单-工单
+                        <!-- &nbsp;  
+                        <Button @click="show_modal()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加工单</Button> -->
                     </p>
-                    <!-- <p>
-                        <Button @click="dispatchWorkOrder = true" type="primary">分派工单</Button>
-                    </p> -->
+                    <p>
+                        <Button @click="add_workorder" class="ivu-btn ivu-btn-primary ivu-btn-small">添加工单</Button>
+                    </p>
 
                     <Table highlight-row ref="currentRowTable" @on-current-change="row_select" :columns="work_order_col" :data="work_order_data_arr"></Table>
                     <br/>
@@ -111,8 +129,18 @@ export default {
         return {
             model1: '',
             model2: '',
+            workshop_directors: [],
+            workshop_packaging: [],
+            work_order_id :'',
+            graph_no: '',
+            showPic: false,
+            isshowaddworkorder: false,
+            template_type: '',
+            number: '',
+            maker: '',
+            title: '',
             work_order_col: [
-                 {
+                {
                     type: 'index',
                     title: '序号',
                     width: 30
@@ -142,31 +170,56 @@ export default {
                     key: 'number',
                     align: 'center'
                 },
-                  {
-                        title: '分派工单',
-                        key: 'action',
-                        width: 150,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.dispatchWorkOrder=true;
-                                        }
+                {
+                    title: '添加模板',
+                    key: 'action_add',
+                    width: 150,
+                    align: 'center',
+                    render: (h, params) => {
+                        return h('div', [
+                            h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small',
+                                    // row: params
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.flag = false;
                                     }
-                                }, '分派工单'),
-                             
-                            ]);
-                        }
+                                }
+                            }, '添加模板'),
+                        ]);
                     }
+                },
+                {
+                    title: '分派工单',
+                    key: 'action',
+                    width: 150,
+                    align: 'center',
+                    render: (h, params) => {
+                        return h('div', [
+                            h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: () => {       
+                                        this.dispatchWorkOrder=true; 
+                                    }
+                                }
+                            }, '分派工单'),
+                         
+                        ]);
+                    }
+                }
             ],
             work_order_data_arr: [],
             materials_col: [
@@ -268,8 +321,7 @@ export default {
                 },
             ],
             boms_data_hash: {},
-
-
+            flag:true,
             showInfo: false,
             dispatchWorkOrder: false,
             order_col: [
@@ -372,28 +424,52 @@ export default {
                     music: '演员'
                 }
             ],
-            workshop_directors:[],
-            workshop_packaging:[],
-            work_order_id :'',
-            graph_no: '',
-            showPic: false
         };
     },
     methods: {
-             
-       
+        append(){
+            var _this = this;
+            if(this.title==""&&this.template_type==""){    
+               this.$Message.error("内容填写不全");
+               }else{
+                   this.$axios.post('/work_order_details',{
+                       title: this.title,
+                       template_type: this.template_type,
+                       maker: this.maker,
+                       number:this.number,
+                       order_id:this.$route.params.order_id
+                   }).then(res =>{
+                        // debugger
+                       _this.work_order_data_arr.push(res.data.work_order)
+                   })
+               }
+        },
+        add_workorder(){
+            this.isshowaddworkorder = true;
+        }, 
         row_select(currentRow){
-        //    console.log(currentRow);
-           this.$axios.get("/work_order_details",{params:{
-             work_order_id: currentRow.id
-           }})
-           .then(res => {
-               this.work_order_detail = res.data.materials_boms;
-               this.work_order_id = currentRow.id;
-            //    console.log(this.work_order_data_arr);
-           }).catch(error =>{
-                console.log(error);
-           })
+           console.log(currentRow);
+           debugger
+           if(this.flag){
+                this.$axios.get("/work_order_details",{params:{
+                 work_order_id: currentRow.id
+               }})
+               .then(res => {
+                   this.work_order_detail = res.data.materials_boms;
+                   this.work_order_id = currentRow.id;
+                //    console.log(this.work_order_data_arr);
+               }).catch(error =>{
+                    console.log(error);
+               })
+           }else{
+            let argu = { work_order_id: currentRow.id};
+            this.$router.push({
+                name: 'add-template',
+                params: argu
+            });
+
+           }
+           
         },
          pic_show(picno){
            this.graph_no= picno;
@@ -420,20 +496,18 @@ export default {
        
     },
     mounted () {
-        
-        this.$axios.get("/xialiao")
-        .then(res =>{
-            
-            this.workshop_directors = res.data.manager;
-           
+        var _this = this;
+        this.$axios.get("/xialiao").then(res =>{
+            _this.workshop_directors = res.data.manager;  
+            // debugger
         })
         .catch( error => {
             console.log(error);
         });
         this.$axios.get("/zupin")
         .then(res =>{
-            
-            this.workshop_packaging = res.data.manager;
+            // debugger
+            _this.workshop_packaging = res.data.manager;
            
         })
         .catch( error => {
@@ -443,7 +517,8 @@ export default {
             order_id:  this.$route.params.order_id
         }})
         .then(res =>{
-            this.work_order_data_arr = res.data.work_orders;
+            // debugger
+            _this.work_order_data_arr = res.data.work_orders;
         })
         .catch( error => {
             console.log(error);

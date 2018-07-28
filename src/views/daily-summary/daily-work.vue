@@ -84,9 +84,9 @@ export default {
     },
     mounted(){
         this.init();
+        //没绑定this照样可以？
         if (this.$route.params.flag == undefined) {
             this.$axios.get("/workList").then( res =>{
-            // debugger
             // this.costdata = res.data;
             if (res.data.flag === 1) {
                 if (res.data.date.length > 0){

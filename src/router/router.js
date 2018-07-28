@@ -70,6 +70,7 @@ export const otherRouter = {
         { path: 'approval-procedure/:approval_id', title: '审批流程', name: 'approval-procedure', component: () => import('@/views/approval/approval-procedure.vue') },
         { path: 'approval-new/:approval_id', title: '创建新审批', name: 'approval-new', component: () => import('@/views/my-approval/approval-new.vue') },
         { path: 'add-dailySummary', title: '填写工作日报', name: 'add-dailySummary', component: () => import('@/views/daily-summary/add-summary.vue') },
+        { path: 'add-template/:work_order_id', title: '填写模板', name: 'add-template', component: () => import('@/views/production-manage/component/add_template.vue') },
     ]
 };
 

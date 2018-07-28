@@ -11,7 +11,7 @@
 		        <tr>
 		        	<td>日期</td>
 		        	<td>
-     					<DatePicker format="yyyy-MM-dd" @on-change="time1" type="date" placeholder="Select date" style="width: 200px"></DatePicker>
+     					<DatePicker format="yyyy-MM-dd" @on-change="time1" type="date" placeholder="选择日期" style="width: 200px"></DatePicker>
      				</td>&nbsp;
 		        	<td>工作地点</td>
 		        	<td>
@@ -278,12 +278,15 @@ export default{
     },
     //获取cost三级目录
     mounted(){
+        var _this = this;
         this.$axios.get("/costList").then( res =>{
-            this.costdata = res.data;
-            // console.log(res.data);
+            _this.costdata = res.data.costs;
+            // debugger
+            console.log(res.data);
         }).catch(error =>{
             console.log(error);
         })
+        
     },
 }
 </script>

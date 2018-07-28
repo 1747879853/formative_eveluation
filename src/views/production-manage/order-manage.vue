@@ -42,11 +42,12 @@
                 <Icon type="ios-list"></Icon>
                 订单列表
             </p>
-
+            <p>
+              <span style="font-size:24px;"> <Button type="primary" @click="add_order">添加订单</Button></span>
+            </p>
              <Row type="flex" justify="center" align="top" >
                   <Table :columns="orderColumns"   :data="orderData" style="width: 100%;"></Table>
-                  <span style="float:right;margin-right:765px;"></span>
-                  <span style="font-size:24px;float:right;margin-right:50px;"> <Button type="primary" @click="add_order">添加订单</Button></span>    
+                  <span style="float:right;margin-right:765px;"></span>    
              </Row>
 
           </Card>>

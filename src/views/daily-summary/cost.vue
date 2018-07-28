@@ -235,6 +235,7 @@ export default {
                             children.push({
                                 id:res.data.id,
                                 title: res.data.title,
+                                expend:true,
                                 children:[],
                             });
                 
@@ -286,8 +287,11 @@ export default {
             },
         },
         mounted(){
+            // debugger
+            var _this = this;
             this.$axios.get("/costList").then( res =>{
-                this.data = res.data;    
+                _this.data = res.data.costs;  
+                // debugger  
             }).catch(error =>{
                 console.log(error);
             })
