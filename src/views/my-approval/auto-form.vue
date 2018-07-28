@@ -1,7 +1,6 @@
 <style lang="less">
 </style>
 <template>
-    <div style="border-bottom: 1px solid #ccc;margin-bottom:5px;margin-top:5px;">
       
     <Form ref="formDynamic" :model="formDynamic" :label-width="80" style="width: 300px;" >
         <div>

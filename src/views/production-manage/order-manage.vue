@@ -50,7 +50,8 @@
                   <span style="float:right;margin-right:765px;"></span>    
              </Row>
 
-          </Card>>
+          </Card>
+
        </Col>
   
     </div>
@@ -130,7 +131,7 @@ export default {
                        
 
                       });
-                      this.progress_order_id ="订单："+params.row.no;
+                      this.progress_order_id ="订单："+params.row.no+"  (点击记录查看生产进度明细)";
                       this.progress_table_show = true;
                       this.show_team_process = false;
                     }
@@ -295,8 +296,8 @@ export default {
       this.$Message.info('取消'); 
     },
     material_process(row){
-      console.log(row.owner_type);
-      console.log(row.owner_id);
+      // console.log(row.owner_type);
+      // console.log(row.owner_id);
       if (row.owner_type=="WorkTeamTask")
       this.$axios.get('/team_task_finish',{
         params:{

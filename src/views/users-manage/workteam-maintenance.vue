@@ -67,12 +67,12 @@ export default {
         },
         {
           title: "车间名称",
-          key: "work_shop_id",
+          key: "work_shop_name",
           align: "center"
         },
         {
           title: "负责人",
-          key: "user_id"
+          key: "username"
         },
         {
                   title: "操作",
