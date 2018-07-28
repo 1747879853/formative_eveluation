@@ -43,7 +43,7 @@
                         <div v-if="column.type === 'action'">
                             <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal(item, index);">添加子权限</button>
                             <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="show_modal(item, index, 1);">修改</button>
-                            <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="current_id=renderId(item); deleteClick();">删除</button>
+                            <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="deleteClick(item, index);">删除</button>
                         </div>
                         <label @click="toggle(index,item)" v-if="!column.type">
                             <span v-if='snum==iconRow()'>
@@ -187,70 +187,6 @@ export default {
             this.current_index = index;
             this.f_modal = true; 
         },
-        
-        depthTraversal:function(arr,id,newarr){
-            if (arr!=null){  
-                for(let i=0;i<arr.length;i++){
-                    if(arr[i].id==id){
-                        arr[i].children.push(newarr);
-                        return i;
-                    }
-                    let ret = this.depthTraversal(arr[i].children,id,newarr);
-                    if (ret>=0) {
-                        return i;
-                    }
-                }
-            }
-        },
-        depthTraversal2:function(arr,id,newarr){
-            if (arr!=null){  
-                for(let i=0;i<arr.length;i++){
-                    if(arr[i].id==id){
-                        arr[i].authority = newarr.authority;
-                        arr[i].name = newarr.name;
-                        arr[i].condition = newarr.condition;
-                        arr[i].status = newarr.status;
-                        return i;
-                    }
-                    let ret = this.depthTraversal2(arr[i].children,id,newarr);
-                    if (ret>=0) {
-                        return i;
-                    }
-                }
-            }
-        },
-        depthTraversal4:function(arr,id){
-            if (arr!=null){  
-                for(let i=0;i<arr.length;i++){
-                    if(arr[i].id==id){
-                        arr.splice(i, 1);
-                        return i;
-                    }
-                    let ret = this.depthTraversal4(arr[i].children,id);
-                    if (ret>=0) {
-                        return i;
-                    }
-                }
-            }
-        },
-        depthTraversal3:function(arr,id){
-            let found = false;
-            let i;
-            if (arr!=null){  
-                for(i=0;i<arr.length;i++){
-                    if(arr[i].id==id){
-                        arr.splice(i, 1);
-                    return -1;
-                    }
-                    else{
-                        let ret = this.depthTraversal4(arr[i].children,id);
-                        if(ret>=0)
-                            return ret;
-                    }
-                
-                }    
-            }
-        },
         ok () {
             if(this.c_status=='激活'){
                 this.c_status=1;
@@ -318,7 +254,7 @@ export default {
                         });
                         parent.children.push(origin_item);
                         if (parent.load)
-                            this.initItems.splice((this.current_index + parent.children.length), 0, item);
+                            this.initItems.splice((this.current_index + this.ChildrenLength(parent)), 0, item);
                         if (!parent.expanded)
                             this.toggle(this.current_index, this.current_item);
                         
@@ -356,11 +292,34 @@ export default {
         cancel () {
             this.$Message.info('取消');
         },
-        deleteClick() {  
+        // 返回子节点长度
+        ChildrenLength(item) {
+            debugger;
+            let length = item.children.length;
+            item.children.forEach((child) => {
+                if (child.children) {
+                    length += this.ChildrenLength(child.children)
+                }
+            })
+            return length;
+        },
+        depthDelete(item, index) {
+            if (item.children && item.load) {
+                for (var i=item.children.length-1; i>=0; i--){
+                    this.depthDelete(item.children[i], index + i + 1);
+                }
+            }
+            this.initItems.splice(index, 1);
+            console.log(index);
+        },
+        deleteClick(item, index) {  
             this.$Modal.confirm({
                 title: '删除权限',
                 content: '<p>确定要删除此权限吗？</p>',
                 onOk: () => {
+                    this.current_item = item;
+                    this.current_index = index;
+                    this.current_id = this.renderId(item);
                     this.$axios.delete('/authRuleList', {
                         data: {
                             params: {
@@ -368,10 +327,7 @@ export default {
                             }
                         }
                     }).then(function(res) {
-                        console.log(res);
-                        let ret=this.depthTraversal3(this.items, this.current_id);
-                        if(ret>=0)
-                            Vue.set(this.items, ret, this.items[ret]);
+                        this.depthDelete(this.current_item, this.current_index);
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
