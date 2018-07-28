@@ -41,8 +41,8 @@
                 <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
                     <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
                         <div v-if="column.type === 'action'">
-                            <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal(item);">添加子权限</button>
-                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="show_modal(item, 1);">修改</button>
+                            <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal(item, index);">添加子权限</button>
+                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="show_modal(item, index, 1);">修改</button>
                             <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="current_id=renderId(item); deleteClick();">删除</button>
                         </div>
                         <label @click="toggle(index,item)" v-if="!column.type">
@@ -91,6 +91,8 @@ export default {
             f_status: "",
             f_condition: "",
             current_id: 0,
+            current_item: null,
+            current_index: -1,
         }
     },
     computed: {
@@ -154,7 +156,7 @@ export default {
         }
     },
     methods: {
-        show_modal(item, flag){
+        show_modal(item, index, flag){
             if (item==undefined){
                 this.f_title = "添加权限";
                 this.current_id = 0;
@@ -181,6 +183,8 @@ export default {
                 this.f_status = this.renderStatus(item);
                 this.f_condition = this.renderCondition(item);
             }
+            this.current_item = item;
+            this.current_index = index;
             this.f_modal = true; 
         },
         
@@ -253,7 +257,6 @@ export default {
             }
             switch (this.f_modal_action) {
                 case 1:
-                debugger
                     this.$axios.post('/authRuleList', {
                         params: {
                             name: this.f_name,
@@ -263,9 +266,24 @@ export default {
                             parent_id: 0
                         }
                     }).then(function(res) {
-                        debugger
-                        console.log(res);
-                        this.items.push(res.data);
+                        let item = res.data;
+                        let level = 1;
+                        let parent = null;
+                        let spaceHtml = "";
+                        for (var i = 1; i < level; i++) {
+                            spaceHtml += "<i class='ms-tree-space'></i>"
+                        }
+                        item = Object.assign({}, item, {
+                            "parent": parent,
+                            "level": level,
+                            "spaceHtml": spaceHtml,
+                            "expanded": false,
+                            "isShow": false,
+                            "isChecked": false,
+                            "load": false
+                        });
+                        //debugger
+                        this.initItems.push(item);
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
@@ -282,9 +300,28 @@ export default {
                             parent_id: this.current_id,
                         }
                     }).then(function(res) {
-                        console.log(res);
-                        let ret = this.depthTraversal(this.items, this.current_id, res.data);
-                        Vue.set(this.items, ret, this.items[ret]);
+                        let origin_item = res.data;
+                        let level = this.current_item.level + 1;
+                        let parent = this.current_item;
+                        let spaceHtml = "";
+                        for (var i = 1; i < level; i++) {
+                            spaceHtml += "<i class='ms-tree-space'></i>"
+                        }
+                        let item = Object.assign({}, origin_item, {
+                            "parent": parent,
+                            "level": level,
+                            "spaceHtml": spaceHtml,
+                            "expanded": false,
+                            "isShow": true,
+                            "isChecked": false,
+                            "load": false
+                        });
+                        parent.children.push(origin_item);
+                        if (parent.load)
+                            this.initItems.splice((this.current_index + parent.children.length), 0, item);
+                        if (!parent.expanded)
+                            this.toggle(this.current_index, this.current_item);
+                        
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
@@ -301,9 +338,11 @@ export default {
                             condition: this.f_condition,
                         }
                     }).then(function(res) {
-                        console.log(res);
-                        let ret = this.depthTraversal2(this.items, this.current_id, res.data);
-                        Vue.set(this.items, ret, this.items[ret]);
+                        this.initItems[this.current_index].name = res.data.name;
+                        this.initItems[this.current_index].authority = res.data.authority;
+                        this.initItems[this.current_index].status = res.data.status;
+                        this.initItems[this.current_index].condition = res.data.condition;
+                        // Vue.set(this.items, ret, this.items[ret]);
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
