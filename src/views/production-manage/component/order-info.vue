@@ -176,6 +176,7 @@ export default {
                     width: 150,
                     align: 'center',
                     render: (h, params) => {
+                        // debugger
                         return h('div', [
                             h('Button', {
                                 props: {
@@ -188,7 +189,13 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        this.flag = false;
+                                        // this.flag = false;
+                                        console.log(params.row)
+                                        let argu = { work_order_id: params.row.id};
+                                        this.$router.push({
+                                            name: 'add-template',
+                                            params: argu
+                                        });
                                     }
                                 }
                             }, '添加模板'),
@@ -321,7 +328,7 @@ export default {
                 },
             ],
             boms_data_hash: {},
-            flag:true,
+            // flag:true,
             showInfo: false,
             dispatchWorkOrder: false,
             order_col: [
@@ -449,8 +456,9 @@ export default {
         }, 
         row_select(currentRow){
            console.log(currentRow);
-           debugger
-           if(this.flag){
+           // debugger
+           // if(this.flag){
+                this.flag = false;
                 this.$axios.get("/work_order_details",{params:{
                  work_order_id: currentRow.id
                }})
@@ -461,14 +469,15 @@ export default {
                }).catch(error =>{
                     console.log(error);
                })
-           }else{
-            let argu = { work_order_id: currentRow.id};
-            this.$router.push({
-                name: 'add-template',
-                params: argu
-            });
+           // }else{
+           //  this.flag = true;
+           //  let argu = { work_order_id: currentRow.id};
+           //  this.$router.push({
+           //      name: 'add-template',
+           //      params: argu
+           //  });
 
-           }
+           // }
            
         },
          pic_show(picno){

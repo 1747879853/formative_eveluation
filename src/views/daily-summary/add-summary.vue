@@ -228,7 +228,7 @@ export default{
                 onOk: () => {
                     // console.log(this.costData.length);
                     // console.log(index);
-                    this.costData.pop(index);
+                    this.costData.splice(index,1);
                     // console.log(this.costData.length);
                     // console.log(index);
                     this.$Message.info('删除成功');
