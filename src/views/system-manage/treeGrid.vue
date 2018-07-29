@@ -1,4 +1,25 @@
 <template>
+<div>
+    <div>
+    <Button @click="show_modal()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加权限</Button>
+    <Modal
+        v-model="f_modal"
+        :title="f_title"
+        @on-ok="ok"
+        @on-cancel="cancel">
+        <table>
+        <tr><td>权限名</td><td>
+        <Input v-model="f_name" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr>
+        <tr>&nbsp;</tr>
+        <tr><td>权限</td><td>
+        <Input v-model="f_authority" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
+        <tr>&nbsp;</tr><tr><td>是否激活</td><td>
+        <Input v-model="f_status" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
+        <tr>&nbsp;</tr><tr><td>条件</td><td>
+        <Input v-model="f_condition" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
+        <tr>&nbsp;</tr></table>
+    </Modal>
+    </div>
     <div :style="{width:tableWidth}" class='autoTbale'>
         <table class="table table-bordered" id='hl-tree-table'>
             <thead>
@@ -20,42 +41,9 @@
                 <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
                     <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
                         <div v-if="column.type === 'action'">
-                            <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal1();
-                            id1=renderId(item);">添加子权限</button>
-                            <Modal
-                                v-model="modal1"
-                                title="添加子权限"
-                                @on-ok="ok1"
-                                @on-cancel="cancel1">
-                                <table>
-                                <tr><td>权限名</td><td>
-                                <Input v-model="c_name" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
-                                <tr><td>权限</td><td>
-                                <Input v-model="c_authority" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
-                                <tr><td>是否激活</td><td>
-                                <Input v-model="c_status" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
-                                <tr><td>条件</td><td>
-                                <Input v-model="c_condition" placeholder="条件" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
-                                </table>
-                            </Modal>
-                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);e_name=renderName(item);e_authority=renderAuthority(item);e_condition=renderCondition(item);e_status=renderStatus(item);">修改</button>
-                            <Modal
-                                v-model="modal3"
-                                title="修改子权限"
-                                @on-ok="ok2"
-                                @on-cancel="cancel2">
-                                <table>
-                                <tr><td>权限名</td><td>
-                                <Input v-model="e_name" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
-                                <tr><td>权限</td><td>
-                                <Input v-model="e_authority" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
-                                <tr><td>是否激活</td><td>
-                                <Input v-model="e_status" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
-                                <tr><td>条件</td><td>
-                                <Input v-model="e_condition" placeholder="条件" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
-                                </table>
-                            </Modal>
-                            <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="id1=renderId(item); deleteClick();">删除</button>
+                            <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal(item, index);">添加子权限</button>
+                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="show_modal(item, index, 1);">修改</button>
+                            <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="deleteClick(item, index);">删除</button>
                         </div>
                         <label @click="toggle(index,item)" v-if="!column.type">
                             <span v-if='snum==iconRow()'>
@@ -69,6 +57,7 @@
             </tbody>
         </table>
     </div>
+</div>
 </template>
 <script>
 import Vue from 'vue';
@@ -94,17 +83,16 @@ export default {
             tdsWidth: 0, //td总宽
             timer: false, //控制监听时长
             dataLength: 0, //树形数据长度
-            modal1: false,
-            modal3:false,
-            c_name:"",
-            c_authority:"",
-            c_status:"",
-            c_condition:"",
-            e_name:"",
-            e_authority:"",
-            e_status:"",
-            e_condition:"",
-            id1:"",
+            f_modal: false,
+            f_modal_action: 0,
+            f_title: '添加权限',
+            f_name: "",
+            f_authority: "",
+            f_status: "",
+            f_condition: "",
+            current_id: 0,
+            current_item: null,
+            current_index: -1,
         }
     },
     computed: {
@@ -168,135 +156,215 @@ export default {
         }
     },
     methods: {
-            depthTraversal:function(arr,id,newarr){
-                if (arr!=null){  
-                    for(let i=0;i<arr.length;i++){
-                      if(arr[i].id==id){
-                          arr[i].children.push(newarr);
-                          return i;
-                      }
-                      let ret = this.depthTraversal(arr[i].children,id,newarr);
-                      if (ret>=0) {
-                          return i;
-                      }
-                    }
-                }
-            },
-            depthTraversal2:function(arr,id,newarr){
-                if (arr!=null){  
-                    for(let i=0;i<arr.length;i++){
-                      if(arr[i].id==id){
-                          arr[i].authority = newarr.authority;
-                          arr[i].name = newarr.name;
-                          arr[i].condition = newarr.condition;
-                          arr[i].status = newarr.status;
-                          return i;
-                      }
-                      let ret = this.depthTraversal2(arr[i].children,id,newarr);
-                      if (ret>=0) {
-                          return i;
-                      }
-                    }
-                }
-            },
-            depthTraversal4:function(arr,id){
-                if (arr!=null){  
-                    for(let i=0;i<arr.length;i++){
-                      if(arr[i].id==id){
-                          arr.splice(i, 1);
-                          return i;
-                      }
-                      let ret = this.depthTraversal4(arr[i].children,id);
-                      if (ret>=0) {
-                          return i;
-                      }
-                    }
-                }
-            },
-            depthTraversal3:function(arr,id){
-                let found = false;
-                let i;
-                if (arr!=null){  
-                    for(i=0;i<arr.length;i++){
-                      if(arr[i].id==id){
-                          arr.splice(i, 1);
-                        return -1;
-                      }
-                        else{
-                            let ret = this.depthTraversal4(arr[i].children,id);
-                            if(ret>=0)
-                                return ret;
+        show_modal(item, index, flag){
+            if (item==undefined){
+                this.f_title = "添加权限";
+                this.current_id = 0;
+                this.f_modal_action = 1;
+                this.f_name = "";
+                this.f_authority = "";
+                this.f_status = "";
+                this.f_condition = "";
+            }else if (flag == undefined){
+                this.f_title = "添加子权限";
+                this.current_id = this.renderId(item);
+                this.f_modal_action = 2;
+                this.f_name = "";
+                this.f_authority = "";
+                this.f_status = "";
+                this.f_condition = "";
+            }
+            else {
+                this.f_title = "修改子权限";
+                this.current_id = this.renderId(item);
+                this.f_modal_action = 3;
+                this.f_name = this.renderName(item);
+                this.f_authority = this.renderAuthority(item);
+                this.f_status = this.renderStatus(item);
+                this.f_condition = this.renderCondition(item);
+            }
+            this.current_item = item;
+            this.current_index = index;
+            this.f_modal = true; 
+        },
+        ok () {
+            if(this.c_status=='激活'){
+                this.c_status=1;
+            }
+            switch (this.f_modal_action) {
+                case 1:
+                    this.$axios.post('/authRuleList', {
+                        params: {
+                            title: this.f_name,
+                            name: this.f_authority,
+                            status: this.f_status,
+                            condition: this.f_condition,
+                            parent_id: 0
                         }
-                    
-                    }    
-                }
-            },
-            ok1 () {
-                if(this.c_status=='激活'){
-                    this.c_status=1;
-                }
-                this.$axios.post('/authRuleList', {
-                            params: {
-                                title: this.c_name,
-                                name: this.c_authority,
-                                status: this.c_status,
-                                condition: this.c_condition,
-                                parent_id: this.id1,
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            let ret = this.depthTraversal(this.items, this.id1, res.data);
-                            Vue.set(this.items, ret, this.items[ret]);
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log(error)
+                    }).then(function(res) {
+                        let item = res.data;
+                        let level = 1;
+                        let parent = null;
+                        let spaceHtml = "";
+                        for (var i = 1; i < level; i++) {
+                            spaceHtml += "<i class='ms-tree-space'></i>"
+                        }
+                        item = Object.assign({}, item, {
+                            "parent": parent,
+                            "level": level,
+                            "spaceHtml": spaceHtml,
+                            "expanded": false,
+                            "isShow": false,
+                            "isChecked": false,
+                            "load": false
                         });
-                        this.$Message.info('添加成功');
-            },
-            cancel1 () {
-                this.$Message.info('取消');
-            },
-            ok2 () {
-                if(this.e_status=='激活'){
-                    this.e_status=1;
-                }
-                this.$axios.patch('/authRuleList', {
-                            params: {
-                                id:this.id1,
-                                title: this.e_name,
-                                name: this.e_authority,
-                                status: this.e_status,
-                                condition: this.e_condition,
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            let ret = this.depthTraversal2(this.items, this.id1, res.data);
-                            Vue.set(this.items, ret, this.items[ret]);
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log(error)
+                        //debugger
+                        this.initItems.push(item);
+                    }.bind(this))
+                    .catch(function(error) {
+                        console.log(error)
+                    });
+                    this.$Message.info('添加成功');
+                    break;
+                case 2:
+                    this.$axios.post('/authRuleList', {
+                        params: {
+                            title: this.f_name,
+                            name: this.f_authority,
+                            status: this.f_status,
+                            condition: this.f_condition,
+                            parent_id: this.current_id,
+                        }
+                    }).then(function(res) {
+                        let origin_item = res.data;
+                        let level = this.current_item.level + 1;
+                        let parent = this.current_item;
+                        let spaceHtml = "";
+                        for (var i = 1; i < level; i++) {
+                            spaceHtml += "<i class='ms-tree-space'></i>"
+                        }
+                        let item = Object.assign({}, origin_item, {
+                            "parent": parent,
+                            "level": level,
+                            "spaceHtml": spaceHtml,
+                            "expanded": false,
+                            "isShow": true,
+                            "isChecked": false,
+                            "load": false
                         });
-                        this.$Message.info('修改成功');
-            },
-            cancel2 () {
-                this.$Message.info('取消');
-            },
-            show_modal1(){
-                this.modal1=true; 
-                this.c_name="";
-                this.c_authority="";
-                this.c_status="";
-                this.c_condition="";
-            },
-      // 有无多选框折叠位置优化
-      iconRow() {
+                        parent.children.push(origin_item);
+                        if (parent.load){
+                            let len = this.ChildrenLength(parent);
+                            this.initItems.splice((this.current_index + len), 0, item);
+                        }
+                        if (!parent.expanded)
+                            this.toggle(this.current_index, this.current_item);
+                        
+                    }.bind(this))
+                    .catch(function(error) {
+                        console.log(error)
+                    });
+                    this.$Message.info('添加成功');
+                    break;
+                case 3:
+                    this.$axios.patch('/authRuleList', {
+                        params: {
+                            id: this.current_id,
+                            title: this.f_name,
+                            name: this.f_authority,
+                            status: this.f_status,
+                            condition: this.f_condition,
+                        }
+                    }).then(function(res) {
+                        this.initItems[this.current_index].name = res.data.name;
+                        this.initItems[this.current_index].authority = res.data.authority;
+                        this.initItems[this.current_index].status = res.data.status;
+                        this.initItems[this.current_index].condition = res.data.condition;
+                        // Vue.set(this.items, ret, this.items[ret]);
+                    }.bind(this))
+                    .catch(function(error) {
+                        console.log(error)
+                    });
+                    this.$Message.info('修改成功');
+                    break;
+                default:
+                    break;
+            }
+        },
+        cancel () {
+            this.$Message.info('取消');
+        },
+        // 返回子节点长度
+        ChildrenLength(item) {
+            let length = item.children.length;
+            item.children.forEach((child) => {
+                length += this.ChildrenLength(child);
+            })
+            return length;
+        },
+        depthDelete(index) {
+            let item = this.initItems[index];
+            if (item.children && item.load) {
+                // for (var i=item.children.length-1; i>=0; i--){
+                //     this.depthDelete(item.children[i], index + i + 1);
+                // }
+                for (var i=0; i<item.children.length; i++)
+                    this.depthDelete(index + 1);
+                // item.children.forEach((child) => {
+                //     this.depthDelete(child, index + 1);
+                // })
+            }
+
+            this.initItems.splice(index, 1);
+
+            if (item == this.current_item) {
+                let parent = item.parent;
+                if (parent){
+                    parent.children = parent.children.filter(function(child) { 
+                        return item.id !== child.id;
+                    })
+                }
+            }
+            console.log(index);
+        },
+        deleteClick(item, index) {  
+            this.$Modal.confirm({
+                title: '删除权限',
+                content: '<p>确定要删除此权限吗？</p>',
+                onOk: () => {
+                    this.current_item = item;
+                    this.current_index = index;
+                    this.current_id = this.renderId(item);
+                    this.$axios.delete('/authRuleList', {
+                        data: {
+                            params: {
+                                id: this.current_id,
+                            }
+                        }
+                    }).then(function(res) {
+                        this.depthDelete(this.current_index);
+                    }.bind(this))
+                    .catch(function(error) {
+                        console.log(error)
+                    });
+                    this.$Message.info('删除成功');
+                },
+                onCancel: () => {
+                    this.$Message.info('取消');
+                }
+            });
+        },
+        
+        // 有无多选框折叠位置优化
+        iconRow() {
         for (var i = 0, len = this.columns.length; i < len; i++) {
-          if (this.columns[i].type == 'selection') {
+            if (this.columns[i].type == 'selection') {
             return 1
-          }
+            }
         }
         return 0
-      },
+        },
+
         // 设置td宽度,td的align
         tdStyle(column) {
             var style = {}
@@ -324,34 +392,7 @@ export default {
             let result = this.makeData(data)
             this.$emit('on-row-click', result, event, index, text)
         },
-        deleteClick() {
-            
-            this.$Modal.confirm({
-                    title: '删除权限',
-                    content: '<p>确定要删除此权限吗？</p>',
-                    onOk: () => {
-                        this.$axios.delete('/authRuleList', {
-                            data: {
-                                params: {
-                                    id: this.id1,
-                                }
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            let ret=this.depthTraversal3(this.items, this.id1);
-                            if(ret>=0)
-                                Vue.set(this.items, ret, this.items[ret]);
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
-                        this.$Message.info('删除成功');
-                    },
-                    onCancel: () => {
-                        this.$Message.info('取消');
-                    }
-                });
-        },
+
         // 点击事件 返回数据处理
         makeData(data) {
             const t = this.type(data);
