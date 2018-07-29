@@ -18,9 +18,15 @@
             <tr><td>班组名称</td><td>
             <Input v-model="name" placeholder="请输入班组名称" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
             <tr><td>车间名称</td><td>
-            <Input v-model="work_shop_id" placeholder="请输入车间名称" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+            <Select v-model="option1" clearable  size="middle" style="width:300px;" @on-change="selected1(option1)" ref="element1">
+            <Option  v-for="(item,index) in shopData" :key="item.id" :value="index">{{ item.name }}</Option>
+            </Select>
+            </td></tr><tr>&nbsp;</tr>
             <tr><td>负责人</td><td>
-            <Input v-model="user_id" placeholder="请输入负责人" clearable style="width: 300px"></Input></td></tr>
+            <Select v-model="option2" clearable  size="middle" style="width:300px;" @on-change="selected2(option2)" ref="element1">
+            <Option  v-for="(item,index) in userData" :key="item.id" :value="index">{{ item.username }}</Option>
+            </Select>
+            </td></tr>
             </table>
             </Modal>
             <Modal
@@ -32,9 +38,15 @@
             <tr><td>班组名称</td><td>
             <Input v-model="name" placeholder="请输入班组名称" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
             <tr><td>车间名称</td><td>
-            <Input v-model="work_shop_id" placeholder="请输入车间名称" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+            <Select v-model="option1" clearable  size="middle" style="width:300px;" @on-change="selected1(option1)" ref="element1">
+            <Option  v-for="(item,index) in shopData" :key="item.id" :value="index">{{ item.name }}</Option>
+            </Select>
+            </td></tr><tr>&nbsp;</tr>
             <tr><td>负责人</td><td>
-            <Input v-model="user_id" placeholder="请输入负责人" clearable style="width: 300px"></Input></td></tr>
+            <Select v-model="option2" clearable  size="middle" style="width:300px;" @on-change="selected2(option2)" ref="element1">
+            <Option  v-for="(item,index) in userData" :key="item.id" :value="index">{{ item.username }}</Option>
+            </Select>
+            </td></tr>
             </table>
             </Modal>
         </div>
@@ -52,6 +64,8 @@ export default {
       modal2:false,
       id: 0,
       name:'',
+      option1:'',
+      option2:'',
       work_shop_id:'',
       user_id:'',
       teamColumns: [
@@ -110,7 +124,9 @@ export default {
                 }
         
      ],
-      teamData: []
+      teamData: [],
+      shopData:[],
+      userData:[]
     };
   },
   computed: {
@@ -122,16 +138,30 @@ export default {
     this.$axios
       .get("/work_teams")
       .then(res => {
-        this.teamData = res.data;
+        this.teamData = res.data.a;
+        this.shopData = res.data.b;
+        this.userData = res.data.c;
       })
       .catch(error => {
         console.log(error);
       });
   },
   methods:{
+    selected1() {
+        if (!(this.shopData[this.option1] == undefined)) {
+            this.work_shop_id = this.shopData[this.option1].id;
+        }
+    },
+    selected2() {
+        if (!(this.userData[this.option2] == undefined)) {
+            this.user_id = this.userData[this.option2].id;
+        }
+    },
     show_modal1()
     {
                 this.modal1=true;
+                this.option1="";
+                this.option2="";
                 this.name="";
                 this.work_shop_id="";
                 this.user_id="";
@@ -147,7 +177,7 @@ export default {
                             }
                         }).then(function(res) {
                             console.log(res);
-                            this.teamData.push(res.data);
+                            this.teamData.push(res.data[0]);
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -161,6 +191,18 @@ export default {
                 this.name=this.teamData[index].name;
                 this.work_shop_id=this.teamData[index].work_shop_id;
                 this.user_id=this.teamData[index].user_id;
+                for(let i=0;i<this.shopData.length;i++){
+                  if(this.shopData[i].id==this.work_shop_id){
+                    this.option1=i;
+                    break;
+                  }
+                }
+                for(let j=0;j<this.userData.length;j++){
+                  if(this.userData[j].id==this.user_id){
+                    this.option2=j;
+                    break;
+                  }
+                }
     },
     ok2 () 
     {
@@ -173,12 +215,14 @@ export default {
                             }
                         }).then(function(res) {
                             console.log(res);
-                            let id = res.data.id;
+                            let id = res.data[0].id;
                             for(let i = 0; i < this.teamData.length; i++){
                               if (this.teamData[i].id == id){
-                                this.teamData[i].name = res.data.name;
-                                this.teamData[i].work_shop_id = res.data.work_shop_id;
-                                this.teamData[i].user_id = res.data.user_id;
+                                this.teamData[i].name = res.data[0].name;
+                                this.teamData[i].work_shop_id = res.data[0].work_shop_id;
+                                this.teamData[i].user_id = res.data[0].user_id;
+                                this.teamData[i].username = res.data[0].username;
+                                this.teamData[i].work_shop_name = res.data[0].work_shop_name;
                                 break;
                               }
                             }
