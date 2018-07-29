@@ -204,6 +204,7 @@ const app = {
         },
         clearOpenedSubmenu (state) {
             state.openedSubmenuArr.length = 0;
+            state.menuList=[];
         },
         setMessageCount (state, count) {
             state.messageCount = count;

@@ -19,8 +19,11 @@
             <Input v-model="name" placeholder="请输入车间名称" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
             <tr><td>车间类型</td><td>
             <Input v-model="dept_type" placeholder="请输入车间类型" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
-            <tr><td>负责人</td><td>
-            <Input v-model="user_id" placeholder="请输入负责人" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>负责人</td><td>            
+            <Select v-model="option" clearable  size="middle" style="width:300px;" @on-change="selected(option)" ref="element1">
+            <Option  v-for="(item,index) in userData" :key="item.id" :value="index">{{ item.username }}</Option>
+            </Select>
+            </td></tr>
             </table>
             </Modal>
             <Modal
@@ -34,7 +37,10 @@
             <tr><td>车间类型</td><td>
             <Input v-model="dept_type" placeholder="请输入车间类型" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
             <tr><td>负责人</td><td>
-            <Input v-model="user_id" placeholder="请输入负责人" clearable style="width: 300px"></Input></td></tr>
+            <Select v-model="option" clearable  size="middle" style="width:300px;" @on-change="selected(option)" ref="element1">
+            <Option  v-for="(item,index) in userData" :key="item.id" :value="index">{{ item.username }}</Option>
+            </Select>
+            </td></tr>
             </table>
             </Modal>
         </div>
@@ -52,6 +58,7 @@ export default {
       modal2:false,
       id: 0,
       name:'',
+      option:'',
       dept_type:'',
       user_id:'',
       shopColumns: [
@@ -110,7 +117,8 @@ export default {
                 }
         
      ],
-      shopData: []
+      shopData: [],
+      userData:[]
     };
   },
   computed: {
@@ -122,16 +130,23 @@ export default {
     this.$axios
       .get("/work_shops")
       .then(res => {
-        this.shopData = res.data;
+        this.shopData = res.data.a;
+        this.userData = res.data.b;
       })
       .catch(error => {
         console.log(error);
       });
   },
   methods:{
+    selected() {
+        if (!(this.userData[this.option] == undefined)) {
+            this.user_id = this.userData[this.option].id;
+        }
+    },
     show_modal1()
     {
                 this.modal1=true;
+                this.option="";
                 this.name="";
                 this.dept_type="";
                 this.user_id="";
@@ -161,6 +176,12 @@ export default {
                 this.name=this.shopData[index].name;
                 this.dept_type=this.shopData[index].dept_type;
                 this.user_id=this.shopData[index].user_id;
+                for(let j=0;j<this.userData.length;j++){
+                  if(this.userData[j].id==this.user_id){
+                    this.option=j;
+                    break;
+                  }
+                }
     },
     ok2 () 
     {
@@ -179,6 +200,7 @@ export default {
                                 this.shopData[i].name = res.data.name;
                                 this.shopData[i].dept_type = res.data.dept_type;
                                 this.shopData[i].user_id = res.data.user_id;
+                                this.shopData[i].username = res.data.username;
                                 break;
                               }
                             }
