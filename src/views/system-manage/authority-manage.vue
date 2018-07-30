@@ -1,10 +1,8 @@
 <template>
-    <Card>
-        <tree-grid 
+    <tree-grid 
         :items='data' 
         :columns='columns'
-      ></tree-grid>          
-    </Card>   
+    ></tree-grid>            
 </template>
 
 <script>

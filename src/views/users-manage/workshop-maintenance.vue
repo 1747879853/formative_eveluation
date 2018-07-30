@@ -18,9 +18,12 @@
             <tr><td>车间名称</td><td>
             <Input v-model="name" placeholder="请输入车间名称" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
             <tr><td>车间类型</td><td>
-            <Input v-model="dept_type" placeholder="请输入车间类型" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+            <Select v-model="option2" size="middle" style="width:300px;" @on-change="selected2(option2)" ref="element1">
+            <Option  v-for="(item,index) in typeData" :key="item.id" :value="index">{{ item.typename }}</Option>
+            </Select>
+            </td></tr><tr>&nbsp;</tr>
             <tr><td>负责人</td><td>            
-            <Select v-model="option" clearable  size="middle" style="width:300px;" @on-change="selected(option)" ref="element1">
+            <Select v-model="option1" size="middle" style="width:300px;" @on-change="selected1(option1)" ref="element1">
             <Option  v-for="(item,index) in userData" :key="item.id" :value="index">{{ item.username }}</Option>
             </Select>
             </td></tr>
@@ -35,9 +38,12 @@
             <tr><td>车间名称</td><td>
             <Input v-model="name" placeholder="请输入车间名称" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
             <tr><td>车间类型</td><td>
-            <Input v-model="dept_type" placeholder="请输入车间类型" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
+            <Select v-model="option2" size="middle" style="width:300px;" @on-change="selected2(option2)" ref="element1">
+            <Option  v-for="(item,index) in typeData" :key="item.id" :value="index">{{ item.typename }}</Option>
+            </Select>
+            </td></tr><tr>&nbsp;</tr>
             <tr><td>负责人</td><td>
-            <Select v-model="option" clearable  size="middle" style="width:300px;" @on-change="selected(option)" ref="element1">
+            <Select v-model="option1" size="middle" style="width:300px;" @on-change="selected1(option1)" ref="element1">
             <Option  v-for="(item,index) in userData" :key="item.id" :value="index">{{ item.username }}</Option>
             </Select>
             </td></tr>
@@ -58,7 +64,7 @@ export default {
       modal2:false,
       id: 0,
       name:'',
-      option:'',
+      option1:'',
       dept_type:'',
       user_id:'',
       shopColumns: [
@@ -118,7 +124,14 @@ export default {
         
      ],
       shopData: [],
-      userData:[]
+      userData:[],
+      typeData:[{
+        id:1,
+        typename:'下料'
+      },{
+        id:2,
+        typename:'组拼'
+      }]
     };
   },
   computed: {
@@ -138,15 +151,21 @@ export default {
       });
   },
   methods:{
-    selected() {
-        if (!(this.userData[this.option] == undefined)) {
-            this.user_id = this.userData[this.option].id;
+    selected1() {
+        if (!(this.userData[this.option1] == undefined)) {
+            this.user_id = this.userData[this.option1].id;
+        }
+    },
+    selected2() {
+        if (!(this.typeData[this.option2] == undefined)) {
+            this.dept_type = this.typeData[this.option2].typename;
         }
     },
     show_modal1()
     {
                 this.modal1=true;
-                this.option="";
+                this.option1="";
+                this.option2="";
                 this.name="";
                 this.dept_type="";
                 this.user_id="";
@@ -176,9 +195,15 @@ export default {
                 this.name=this.shopData[index].name;
                 this.dept_type=this.shopData[index].dept_type;
                 this.user_id=this.shopData[index].user_id;
-                for(let j=0;j<this.userData.length;j++){
-                  if(this.userData[j].id==this.user_id){
-                    this.option=j;
+                for(let i=0;i<this.userData.length;i++){
+                  if(this.userData[i].id==this.user_id){
+                    this.option1=i;
+                    break;
+                  }
+                }
+                for(let j=0;j<this.typeData.length;j++){
+                  if(this.typeData[j].typename==this.dept_type){
+                    this.option2=j;
                     break;
                   }
                 }

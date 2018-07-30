@@ -1,62 +1,75 @@
 <template>
 <div>
-    <div>
-    <Button @click="show_modal()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加权限</Button>
-    <Modal
-        v-model="f_modal"
-        :title="f_title"
-        @on-ok="ok"
-        @on-cancel="cancel">
-        <table>
-        <tr><td>权限名</td><td>
-        <Input v-model="f_name" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr>
-        <tr>&nbsp;</tr>
-        <tr><td>权限</td><td>
-        <Input v-model="f_authority" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
-        <tr>&nbsp;</tr><tr><td>是否激活</td><td>
-        <Input v-model="f_status" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
-        <tr>&nbsp;</tr><tr><td>条件</td><td>
-        <Input v-model="f_condition" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
-        <tr>&nbsp;</tr></table>
-    </Modal>
-    </div>
-    <div :style="{width:tableWidth}" class='autoTbale'>
-        <table class="table table-bordered" id='hl-tree-table'>
-            <thead>
-                <tr>
-                    <th v-for="(column,index) in cloneColumns">
-                        <label v-if="column.type === 'selection'">
-                            <input type="checkbox" v-model="checks" @click="handleCheckAll">
-                        </label>
-                        <label v-else>
-                            {{ renderHeader(column, index) }}
-                            <span class="ivu-table-sort" v-if="column.sortable">
-                                
-                            </span>
-                        </label>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
-                    <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
-                        <div v-if="column.type === 'action'">
-                            <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal(item, index);">添加子权限</button>
-                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="show_modal(item, index, 1);">修改</button>
-                            <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="deleteClick(item, index);">删除</button>
-                        </div>
-                        <label @click="toggle(index,item)" v-if="!column.type">
-                            <span v-if='snum==iconRow()'>
-                                <i v-html='item.spaceHtml'></i>
-                                <i v-if="item.children&&item.children.length>0" class="ivu-icon" :class="{'ivu-icon-plus-circled':!item.expanded,'ivu-icon-minus-circled':item.expanded }"></i>
-                                <i v-else class="ms-tree-space"></i>
-                            </span> {{renderBody(item,column) }}
-                        </label>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <Row>            
+        <Card>
+            <div style="text-align:center;font-size:24px;color: #2db7f5;">
+                权限管理
+            </div>                  
+        </Card>                      
+    </Row>
+    <Row>            
+        <Card>
+            <p slot="title" style="font-size:20px;height: 33px;">
+                <Icon type="android-funnel"></Icon>
+                权限列表&nbsp;&nbsp;&nbsp;
+                <Button @click="show_modal()" type="primary">添加权限</Button>
+                <Modal
+                    v-model="f_modal"
+                    :title="f_title"
+                    @on-ok="ok"
+                    @on-cancel="cancel">
+                    <table>
+                    <tr><td>权限名</td><td>
+                    <Input v-model="f_name" placeholder="请输入权限名" clearable style="width: 300px"></Input></td></tr>
+                    <tr>&nbsp;</tr>
+                    <tr><td>权限</td><td>
+                    <Input v-model="f_authority" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
+                    <tr>&nbsp;</tr><tr><td>是否激活</td><td>
+                    <Input v-model="f_status" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
+                    <tr>&nbsp;</tr><tr><td>条件</td><td>
+                    <Input v-model="f_condition" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
+                    <tr>&nbsp;</tr></table>
+                </Modal>
+            </p>
+            <div :style="{width:tableWidth}" class='autoTbale'>
+                <table class="table table-bordered" id='hl-tree-table'>
+                    <thead>
+                        <tr>
+                            <th v-for="(column,index) in cloneColumns">
+                                <label v-if="column.type === 'selection'">
+                                    <input type="checkbox" v-model="checks" @click="handleCheckAll">
+                                </label>
+                                <label v-else>
+                                    {{ renderHeader(column, index) }}
+                                    <span class="ivu-table-sort" v-if="column.sortable">
+                                        
+                                    </span>
+                                </label>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
+                            <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
+                                <div v-if="column.type === 'action'">
+                                    <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal(item, index);">添加子权限</button>
+                                    <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="show_modal(item, index, 1);">修改</button>
+                                    <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="deleteClick(item, index);">删除</button>
+                                </div>
+                                <label @click="toggle(index,item)" v-if="!column.type">
+                                    <span v-if='snum==iconRow()'>
+                                        <i v-html='item.spaceHtml'></i>
+                                        <i v-if="item.children&&item.children.length>0" class="ivu-icon" :class="{'ivu-icon-plus-circled':!item.expanded,'ivu-icon-minus-circled':item.expanded }"></i>
+                                        <i v-else class="ms-tree-space"></i>
+                                    </span> {{renderBody(item,column) }}
+                                </label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </Card>                      
+    </Row>
 </div>
 </template>
 <script>
