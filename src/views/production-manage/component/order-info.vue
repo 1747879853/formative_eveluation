@@ -191,7 +191,13 @@ export default {
                                     click: () => {
                                         // this.flag = false;
                                         console.log(params.row)
-                                        let argu = { work_order_id: params.row.id};
+                                        var _this = this;
+
+                                        let argu = { 
+                                            work_order_id: params.row.id,
+                                            order_id:  _this.$route.params.order_id 
+                                        };
+                                        // debugger
                                         this.$router.push({
                                             name: 'add-template',
                                             params: argu
@@ -505,6 +511,35 @@ export default {
        
     },
     mounted () {
+        // var _this = this;
+        // this.$axios.get("/xialiao").then(res =>{
+        //     _this.workshop_directors = res.data.manager;  
+        //     // debugger
+        // })
+        // .catch( error => {
+        //     console.log(error);
+        // });
+        // this.$axios.get("/zupin")
+        // .then(res =>{
+        //     // debugger
+        //     _this.workshop_packaging = res.data.manager;
+           
+        // })
+        // .catch( error => {
+        //     console.log(error);
+        // });
+        // this.$axios.get("/order_details",{params:{
+        //     order_id:  this.$route.params.order_id
+        // }})
+        // .then(res =>{
+        //     // debugger
+        //     _this.work_order_data_arr = res.data.work_orders;
+        // })
+        // .catch( error => {
+        //     console.log(error);
+        // })
+    },
+    activated () {
         var _this = this;
         this.$axios.get("/xialiao").then(res =>{
             _this.workshop_directors = res.data.manager;  
@@ -532,9 +567,6 @@ export default {
         .catch( error => {
             console.log(error);
         })
-    },
-    activated () {
-        
     }
 };
 </script>

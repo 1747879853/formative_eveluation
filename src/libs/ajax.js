@@ -31,7 +31,7 @@ service.interceptors.request.use(function (config) {
 
     // Do something before request is sent
 
-    if (config.url.match(/\/work_teams|work_shops|work_team_task_list|boms_approvals|work_shop_order_list|orders|authRuleList|authUserList|authGroupList|users|userList|approval_admin_list|approval_list|approval_list_inuse|approval_field_list|approval_field_edit|approval_create|approval_save|approval_to_me|approval_to_me_done|approval_from_me|approval_info|approval_pass|approval_reject|approval_admin_start|approval_admin_stop|procedure_nodes|procedure_create|user_group_list|costList|workList|xialiao|zupin|order_details|images/)) {
+    if (config.url.match(/\/work_teams|work_shops|work_team_task_list|boms_approvals|work_shop_order_list|orders|authRuleList|authUserList|authGroupList|users|userList|approval_admin_list|approval_list|approval_list_inuse|approval_field_list|approval_field_edit|approval_create|approval_save|approval_to_me|approval_to_me_done|approval_from_me|approval_info|approval_pass|approval_reject|approval_admin_start|approval_admin_stop|procedure_nodes|procedure_create|user_group_list|costList|workList|xialiao|zupin|order_details|images|template/)) {
 
         config.baseURL = devUrl;
         // config.baseURL = '';
