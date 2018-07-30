@@ -239,7 +239,7 @@ export default {
       .catch(error => {
         console.log(error);
       });
-  },
+  }, 
   methods:{
     material_process(row){
       console.log(row.owner_type);

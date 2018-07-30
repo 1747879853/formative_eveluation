@@ -18,7 +18,7 @@
     </div>
  <tree-grid 
         :items='data' 
-        :columns='columns'
+        :columns='columns' 
         @selectedindex="selected_index"
       ></tree-grid>
 </Card>
@@ -31,7 +31,6 @@
                     <Button type="primary" @click="save()">保存</Button>
                 </p>
                 <div style="overflow-y:auto;height:500px;">
-                  <!--   <Tree ref="tree" :data="data1" show-checkbox @on-select-change="check111"></Tree> -->
                   <div v-for="(item, index) in data1" :key="item.id">
                     <input type="radio" name="leader" :checked="item.checked" :value="item.title"  @click="tree_id=item.id">{{item.title}}
                   </div>
@@ -103,7 +102,7 @@ export default {
                 this.$axios.post('/organization', {
                             params: {
                                 parent_id: 0,
-                                name: this.f_name
+                                name: this.f_name 
                             }
                         }).then(function(res) {
                             console.log(res);
@@ -117,14 +116,6 @@ export default {
             cancel () {
                 this.$Message.info('取消');
             },
-            // CheckItem(item){
-            //     // for(let i=0;i<data1.length;i++){
-            //     //     this.data1[i].checked=false;
-            //     // }
-            //     // item.checked=!item.checked;
-            //     // debugger;
-            //     return item.id;
-            // },
             depthTraversal2:function(arr,id){
                 if (arr!=null){  
                     for(let i=0;i<arr.length;i++){
@@ -188,15 +179,6 @@ export default {
                 this.id2 = id;
             },
             save(){
-                // var tree_id=CheckItem(item);
-                alert("organization_id"+this.id2);
-                alert("checked_id"+this.tree_id);
-                // for(let i=0;i<this.data1.length;i++){
-                //     if(this.data1[i].checked==true){
-                //         tree_id=this.data1[i].id;
-                //         debugger;
-                //     }
-                // }
                 this.$axios.patch('/orgaLeader',{
                     params:{
                         user_id:this.id2,

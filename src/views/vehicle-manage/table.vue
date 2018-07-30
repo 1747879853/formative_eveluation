@@ -16,7 +16,7 @@
                                         type: 'person'
                                     }
                                 }),
-                                // h('strong', params.row.name)
+                                h('strong', params.row.name)
                             ]);
                         }
                     },
