@@ -20,9 +20,8 @@
 
         </Modal>
 
-        <Modal width="60%" v-model="showPic" :title="graph_no">
-           
-            <img width="100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531138272810&di=fb25ebec179ae86ec8df80f3fb7aba90&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F12%2F81%2F58PIC5R58PICsqy_1024.jpg"></img>
+        <Modal width="60%" v-model="showPic">         
+            <img width="100%" :src="'http://127.0.0.1:3000/_attachment/' + graph_no" v-if="visible"></img>
         </Modal>
           <!-- <Button @click="dispatchWorkOrder = true" type="primary">分派工单</Button> -->
         <Modal v-model="isshowaddworkorder" title="添加工单" @on-ok="append">
@@ -139,6 +138,8 @@ export default {
             number: '',
             maker: '',
             title: '',
+            item: '',
+            visible: false,
             work_order_col: [
                 {
                     type: 'index',
@@ -261,6 +262,7 @@ export default {
                                         on: {
                                         click: () => {
                                             this.pic_show(item)
+                                            // debugger
                                         }
                                     }
                                         }, item)
@@ -486,9 +488,10 @@ export default {
            // }
            
         },
-         pic_show(picno){
-           this.graph_no= picno;
+        pic_show(picno){
+           this.graph_no= picno; 
            this.showPic=true;
+           this.visible = true;
        },
        give_workshop(){
            if(this.model1==""&&this.model2==""){
