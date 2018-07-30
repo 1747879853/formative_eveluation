@@ -18,12 +18,12 @@
             <tr><td>班组名称</td><td>
             <Input v-model="name" placeholder="请输入班组名称" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
             <tr><td>车间名称</td><td>
-            <Select v-model="option1" clearable  size="middle" style="width:300px;" @on-change="selected1(option1)" ref="element1">
+            <Select v-model="option1" size="middle" style="width:300px;" @on-change="selected1(option1)" ref="element1">
             <Option  v-for="(item,index) in shopData" :key="item.id" :value="index">{{ item.name }}</Option>
             </Select>
             </td></tr><tr>&nbsp;</tr>
             <tr><td>负责人</td><td>
-            <Select v-model="option2" clearable  size="middle" style="width:300px;" @on-change="selected2(option2)" ref="element1">
+            <Select v-model="option2" size="middle" style="width:300px;" @on-change="selected2(option2)" ref="element1">
             <Option  v-for="(item,index) in userData" :key="item.id" :value="index">{{ item.username }}</Option>
             </Select>
             </td></tr>
@@ -38,12 +38,12 @@
             <tr><td>班组名称</td><td>
             <Input v-model="name" placeholder="请输入班组名称" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
             <tr><td>车间名称</td><td>
-            <Select v-model="option1" clearable  size="middle" style="width:300px;" @on-change="selected1(option1)" ref="element1">
+            <Select v-model="option1" size="middle" style="width:300px;" @on-change="selected1(option1)" ref="element1">
             <Option  v-for="(item,index) in shopData" :key="item.id" :value="index">{{ item.name }}</Option>
             </Select>
             </td></tr><tr>&nbsp;</tr>
             <tr><td>负责人</td><td>
-            <Select v-model="option2" clearable  size="middle" style="width:300px;" @on-change="selected2(option2)" ref="element1">
+            <Select v-model="option2" size="middle" style="width:300px;" @on-change="selected2(option2)" ref="element1">
             <Option  v-for="(item,index) in userData" :key="item.id" :value="index">{{ item.username }}</Option>
             </Select>
             </td></tr>
