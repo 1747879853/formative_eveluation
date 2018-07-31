@@ -1,4 +1,4 @@
-<style lang="less">
+ <style lang="less">
     @import '../../../styles/common.less';
     @import '../advanced-router.less';
 </style>
