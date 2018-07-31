@@ -14,6 +14,7 @@ let list = function(options){
  			cagt:'2018-04-01 05:40',
  			type:'1',
  			pic:'图片',
+ 			src:'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2918674298,1152356746&fm=27&gp=0.jpg',
  		},
  		{
  			id:'643',
@@ -22,6 +23,7 @@ let list = function(options){
  			cagt:'2018-04-01 05:40',
  			type:'1',
  			pic:'图片',
+ 			src:'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2918674298,1152356746&fm=27&gp=0.jpg',
  		},
  		{
  			id:'644',
@@ -30,6 +32,7 @@ let list = function(options){
  			cagt:'2018-04-01 05:40',
  			type:'1',
  			pic:'图片',
+ 			src:'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2918674298,1152356746&fm=27&gp=0.jpg',
  		},
  		{
  			id:'645',
@@ -38,6 +41,7 @@ let list = function(options){
  			cagt:'2018-04-01 05:40',
  			type:'1',
  			pic:'图片',
+ 			src:'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2918674298,1152356746&fm=27&gp=0.jpg',
  		},
  		{
  			id:'646',
@@ -46,6 +50,7 @@ let list = function(options){
  			cagt:'2018-04-01 05:40',
  			type:'1',
  			pic:'图片',
+ 			src:'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2918674298,1152356746&fm=27&gp=0.jpg',
  		},
  		{
  			id:'647',
@@ -54,6 +59,7 @@ let list = function(options){
  			cagt:'2018-04-01 05:40',
  			type:'1',
  			pic:'图片',
+ 			src:'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2918674298,1152356746&fm=27&gp=0.jpg',
  		},
  		{
  			id:'648',
@@ -62,6 +68,7 @@ let list = function(options){
  			cagt:'2018-04-01 05:40',
  			type:'1',
  			pic:'图片',
+ 			src:'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2918674298,1152356746&fm=27&gp=0.jpg',
  		},
  		{
  			id:'649',
@@ -70,6 +77,7 @@ let list = function(options){
  			cagt:'2018-04-01 05:40',
  			type:'1',
  			pic:'图片',
+ 			src:'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2918674298,1152356746&fm=27&gp=0.jpg',
  		},
  		{
  			id:'650',
@@ -78,6 +86,7 @@ let list = function(options){
  			cagt:'2018-04-01 05:40',
  			type:'1',
  			pic:'图片',
+ 			src:'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2918674298,1152356746&fm=27&gp=0.jpg',
  		},
  		{
  			id:'651',
@@ -86,6 +95,7 @@ let list = function(options){
  			cagt:'2018-04-01 05:40',
  			type:'1',
  			pic:'图片',
+ 			src:'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2918674298,1152356746&fm=27&gp=0.jpg',
  		},
  		{
  			id:'652',
@@ -94,6 +104,7 @@ let list = function(options){
  			cagt:'2018-04-01 05:40',
  			type:'1',
  			pic:'图片',
+ 			src:'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2918674298,1152356746&fm=27&gp=0.jpg',
  		},
  		]
  		return arr;

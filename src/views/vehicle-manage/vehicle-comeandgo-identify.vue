@@ -200,13 +200,14 @@
 
             show (index) {
                 this.id1 = this.data[index].id;
-                this.$axios.get('/vehicleList',{
-                    params:{
-                        id:this.id1
-                    }
-                }).then(res =>{
-                    console.log(res.data);
-                    this.src1=res.data.src;
+                this.$axios.get('/vehicleList'//,{
+                    // params:{
+                    //     id:this.id1
+                    // }
+                //}
+                ).then(res =>{
+                    console.log(res.data[index].src);
+                    this.src1=res.data[index].src;
                 }).catch(error =>{
                     console.log(error);
                 })
