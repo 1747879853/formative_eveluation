@@ -214,20 +214,48 @@ export default {
         },
         saveEditPass () {
             if(this.editPasswordForm.newPass==this.editPasswordForm.rePass&&this.editPasswordForm.newPass.length>=6&&this.editPasswordForm.newPass.length<=32){
-               this.$axios.patch('/userpass', {
+                let vm = this;
+                let i =null;
+                vm.$axios.get('/userpass', {
                 params: {
-                    email: this.userName,
-                    password: this.editPasswordForm.newPass,
+                    password: vm.editPasswordForm.oldPass,
                 }
                 }).then(function(res) {
                     console.log(res);
-                }.bind(this))
+                    i=res.data.a;
+                    if(i){
+                    vm.$axios.patch('/userpass', {
+                    params: {
+                        password: vm.editPasswordForm.newPass,
+                    }
+                    }).then(function(res) {
+                        console.log(res);
+                        vm.$Message.info('密码修改成功,请重新登录');
+                        vm.loginout();
+                    }.bind(vm))
+                    .catch(function(error) {
+                        console.log(error)
+                    });
+                }else{
+                    vm.$Message.info('原密码输入错误');
+                } 
+                }.bind(vm))
                 .catch(function(error) {
                     console.log(error)
                 });
-                this.$Message.info('修改成功'); 
-            }            
+
+            }
         },
+        loginout(){
+            this.$store.commit('logout', this);
+            this.$store.commit('clearOpenedSubmenu');
+            this.$store.commit('clearAllTags');
+            this.$store.commit('del_token');
+            this.$store.commit('del_auth_rules');
+            this.$router.push({
+                name: 'login'
+            });
+        }
         // init () {
         //     this.userForm.name = 'Lison';
         //     this.userForm.cellphone = '17712345678';
