@@ -213,7 +213,10 @@ export default {
             this.$Message.info('取消');
         },
         saveEditPass () {
-            if(this.editPasswordForm.newPass==this.editPasswordForm.rePass&&this.editPasswordForm.newPass.length>=6&&this.editPasswordForm.newPass.length<=32){
+            debugger
+            if(this.editPasswordForm.oldPass==''){
+                this.$Message.info('原密码不得为空');
+            }else if(this.editPasswordForm.newPass==this.editPasswordForm.rePass&&this.editPasswordForm.newPass.length>=6&&this.editPasswordForm.newPass.length<=32){
                 let vm = this;
                 let i =null;
                 vm.$axios.get('/userpass', {
@@ -244,6 +247,8 @@ export default {
                     console.log(error)
                 });
 
+            }else{
+                this.$Message.info('两次输入密码不一致');
             }
         },
         loginout(){
