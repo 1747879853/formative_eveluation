@@ -19,6 +19,23 @@ export const page404 = {
     component: () => import('@/views/error-page/404.vue')
 };
 
+export const padteam = {
+    path: '/padteam',
+    name: 'padteam',
+    meta: {
+        title: '班组'
+    },
+   component: () => import('@/views/production-manage/pad-order-team.vue')
+};
+
+export const padmaterial = {
+    path: '/padmaterial',
+    name: 'padmaterial',
+    meta: {
+        title: '领料'
+    },
+    component: () => import('@/views/production-manage/component/pad-material-requisition.vue')
+};
 export const page403 = {
     path: '/403',
     meta: {
@@ -456,8 +473,11 @@ export const routers = [
     otherRouter,
     preview,
     locking,
+    padteam,
+    padmaterial,
     ...appRouter,
     page500,
     page403,
     page404
+    
 ];

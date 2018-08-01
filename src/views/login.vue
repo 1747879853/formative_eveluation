@@ -56,7 +56,8 @@ export default {
                     { required: true, message: '密码不能为空', trigger: 'blur' }
                 ]
             },
-            failed:''
+            failed:'',
+            pad:false
         };
     },
     methods: {
@@ -82,6 +83,7 @@ export default {
                         }  
                     }).then(function(res) {
                         this.$store.commit('set_token', res.data.jwt); 
+                        console.log(res.data);
                         this.$store.commit('set_auth_rules', res.data.auth_rules);  
                         if (this.$store.state.token) {
                             Cookies.set('user', this.form.userName);
@@ -89,9 +91,13 @@ export default {
                             Cookies.set('password', this.form.password);
                             this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
                             Cookies.set('access', 0);
+                            if(this.pad&&res.data.banzu){
+                                this.$router.replace('/padteam');  
+                            }else{
                             this.$router.push({ 
                                 name: 'home_index'
                             });
+                        }
                         } else {
                             // this.$router.replace('/login');  
                         }                     
@@ -105,10 +111,21 @@ export default {
 
                 }
             });
-        }
+        },
+    _isMobile() {
+      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+      return flag;
+    }
     },
     mounted (){
         this.form.userName=Cookies.get('user');
+        if(this._isMobile()){
+         this.pad = true;
+        }else{
+         this.pad = false;
+        }
+
+        
     }
 };
 </script>
