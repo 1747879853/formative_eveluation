@@ -32,6 +32,7 @@
                <Card>
                     
                      <p >
+                        <Button type="primary"  @click="backpage">返回</Button>
                         <Icon type="compose"></Icon>
                         模板名称:{{name}}  *  {{number}}件;
                         <Button type="primary"  @click="apply_material">申请领料</Button>
@@ -349,6 +350,9 @@ export default {
         this.show_approval_detail =true;
         this.approval_details = res.data.boms_approval_detail;
       })
+    },
+    backpage(){
+      this.$router.go(-1);
     }
   }
 };

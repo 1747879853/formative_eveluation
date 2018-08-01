@@ -74,19 +74,19 @@ export default {
         {
           title: "序号",
           type: "index",
-          width: 80,
+           width: 30,
           align: "center"
         },
             {
           title: "班组单号",
           key: "id",
-          width: 100,
+          width: 80,
           align: "center"
         },
         {
           title: "图号",
           key: "action",
-          width: 150,
+      
           align: "center",
           render: (h, params) => {
             return h(
@@ -133,13 +133,13 @@ export default {
         {
           title: "完成数量",
           align: "center",
-          width: 120,
+         
           key: "finished_number"
         },
         {
           title: "合格数量",
           align: "center",
-          width: 120,
+         
           key: "passed_number"
         },
         {
@@ -149,7 +149,7 @@ export default {
         {
           title: "操作",
           key: "action",
-          width: 200,
+          width: 160,
           align: "center",
           render: (h, params) => {
             return h("div", [
