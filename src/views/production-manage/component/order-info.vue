@@ -1,4 +1,4 @@
-<style lang="less">
+ <style lang="less">
     @import '../../../styles/common.less';
     @import '../advanced-router.less';
 </style>
@@ -20,9 +20,8 @@
 
         </Modal>
 
-        <Modal width="60%" v-model="showPic" :title="graph_no">
-           
-            <img width="100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531138272810&di=fb25ebec179ae86ec8df80f3fb7aba90&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F12%2F81%2F58PIC5R58PICsqy_1024.jpg"></img>
+        <Modal width="60%" v-model="showPic">         
+            <img width="100%" :src="'http://127.0.0.1:3000/_attachment/' + graph_no" v-if="visible"></img>
         </Modal>
           <!-- <Button @click="dispatchWorkOrder = true" type="primary">分派工单</Button> -->
         <Modal v-model="isshowaddworkorder" title="添加工单" @on-ok="append">
@@ -139,6 +138,8 @@ export default {
             number: '',
             maker: '',
             title: '',
+            item: '',
+            visible: false,
             work_order_col: [
                 {
                     type: 'index',
@@ -191,7 +192,13 @@ export default {
                                     click: () => {
                                         // this.flag = false;
                                         console.log(params.row)
-                                        let argu = { work_order_id: params.row.id};
+                                        var _this = this;
+
+                                        let argu = { 
+                                            work_order_id: params.row.id,
+                                            order_id:  _this.$route.params.order_id 
+                                        };
+                                        // debugger
                                         this.$router.push({
                                             name: 'add-template',
                                             params: argu
@@ -255,6 +262,7 @@ export default {
                                         on: {
                                         click: () => {
                                             this.pic_show(item)
+                                            // debugger
                                         }
                                     }
                                         }, item)
@@ -480,9 +488,10 @@ export default {
            // }
            
         },
-         pic_show(picno){
-           this.graph_no= picno;
+        pic_show(picno){
+           this.graph_no= picno; 
            this.showPic=true;
+           this.visible = true;
        },
        give_workshop(){
            if(this.model1==""&&this.model2==""){
@@ -505,6 +514,35 @@ export default {
        
     },
     mounted () {
+        // var _this = this;
+        // this.$axios.get("/xialiao").then(res =>{
+        //     _this.workshop_directors = res.data.manager;  
+        //     // debugger
+        // })
+        // .catch( error => {
+        //     console.log(error);
+        // });
+        // this.$axios.get("/zupin")
+        // .then(res =>{
+        //     // debugger
+        //     _this.workshop_packaging = res.data.manager;
+           
+        // })
+        // .catch( error => {
+        //     console.log(error);
+        // });
+        // this.$axios.get("/order_details",{params:{
+        //     order_id:  this.$route.params.order_id
+        // }})
+        // .then(res =>{
+        //     // debugger
+        //     _this.work_order_data_arr = res.data.work_orders;
+        // })
+        // .catch( error => {
+        //     console.log(error);
+        // })
+    },
+    activated () {
         var _this = this;
         this.$axios.get("/xialiao").then(res =>{
             _this.workshop_directors = res.data.manager;  
@@ -532,9 +570,6 @@ export default {
         .catch( error => {
             console.log(error);
         })
-    },
-    activated () {
-        
     }
 };
 </script>

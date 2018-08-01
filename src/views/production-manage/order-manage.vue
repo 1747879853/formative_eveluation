@@ -102,6 +102,7 @@ export default {
                   on: {
                     click: () => {
                       let argu = { order_id: params.row.id };
+                      // debugger
                       this.$router.push({
                         name: "order-info",
                         params: argu

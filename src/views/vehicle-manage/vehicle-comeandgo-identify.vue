@@ -69,7 +69,6 @@
                     {
                         title: '详情图片',
                         key: 'pic',
-                        sortable: true
                     },
                 ],
                 data: [],
