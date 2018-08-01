@@ -29,7 +29,8 @@ module.exports = merge(webpackBaseConfig, {
             minChunks: Infinity
         }),
         new HtmlWebpackPlugin({
-            title: 'iView admin v' + package.version,
+            // title: 'iView admin v' + package.version,
+            title: '智慧秘书-瑞鸿',
             filename: '../index.html',
             inject: false
         }),
