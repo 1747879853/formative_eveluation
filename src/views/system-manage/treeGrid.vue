@@ -4,7 +4,7 @@
         <Card>
             <div style="text-align:center;font-size:24px;color: #2db7f5;">
                 权限管理
-            </div>                  
+            </div>              
         </Card>                      
     </Row>
     <Row>            
