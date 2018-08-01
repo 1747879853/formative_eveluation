@@ -9,7 +9,7 @@
                 <Icon type="person"></Icon>
                 个人信息
             </p>
-            <div>
+            <!-- <div>
                 <Form 
                     ref="userForm"
                     :model="userForm" 
@@ -53,7 +53,8 @@
                         <Button type="primary" style="width: 100px;" :loading="save_loading" @click="saveEdit">保存</Button>
                     </div>
                 </Form>
-            </div>
+            </div> -->
+        <Button type="text" size="small" @click="showEditPassword">修改密码</Button>
         </Card>
         <Modal v-model="editPasswordModal" :closable='false' :mask-closable=false :width="500">
             <h3 slot="header" style="color:#2D8CF0">修改密码</h3>
@@ -80,14 +81,14 @@
 export default {
     name: 'ownspace_index',
     data () {
-        const validePhone = (rule, value, callback) => {
-            var re = /^1[0-9]{10}$/;
-            if (!re.test(value)) {
-                callback(new Error('请输入正确格式的手机号'));
-            } else {
-                callback();
-            }
-        };
+        // const validePhone = (rule, value, callback) => {
+        //     var re = /^1[0-9]{10}$/;
+        //     if (!re.test(value)) {
+        //         callback(new Error('请输入正确格式的手机号'));
+        //     } else {
+        //         callback();
+        //     }
+        // };
         const valideRePassword = (rule, value, callback) => {
             if (value !== this.editPasswordForm.newPass) {
                 callback(new Error('两次输入密码不一致'));
