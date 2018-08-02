@@ -182,11 +182,12 @@ export default {
                         }).then(function(res) {
                             console.log(res);
                             this.shopData.push(res.data);
+                            this.$Message.info('添加成功');
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
                         });
-                        this.$Message.info('添加成功');
+                        
           },
     show_modal2(index)
     {
@@ -229,11 +230,12 @@ export default {
                                 break;
                               }
                             }
+                            this.$Message.info('修改成功');
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
                         });
-                        this.$Message.info('修改成功');
+                        
     },
     cancel2 () 
     {this.$Message.info('取消');},
@@ -254,11 +256,12 @@ export default {
                         }).then(function(res) {
                             console.log(res);
                             this.shopData.splice(index,1);
+                            this.$Message.info('删除成功');
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
                         });
-                        this.$Message.info('删除成功');
+                        
                        },
            onCancel: () => { this.$Message.info('取消'); }});
     },

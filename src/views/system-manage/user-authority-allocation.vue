@@ -118,11 +118,12 @@ import Sortable from 'sortablejs';
                         }).then(function(res) {
                             console.log(res);
                             this.users_data[this.select].checked_id = res.data.checked_id;
+                            this.$Message.info('保存成功');
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
                         });
-                        this.$Message.info('保存成功');
+                        
             }   
         },
         check111(selectedList){

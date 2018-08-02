@@ -233,11 +233,11 @@ export default {
                         });
                         //debugger
                         this.initItems.push(item);
+                        this.$Message.info('添加成功');
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
-                    });
-                    this.$Message.info('添加成功');
+                    });                    
                     break;
                 case 2:
                     this.$axios.post('/authRuleList', {
@@ -270,14 +270,14 @@ export default {
                             let len = this.ChildrenLength(parent);
                             this.initItems.splice((this.current_index + len), 0, item);
                         }
-                        if (!parent.expanded)
+                        if (!parent.expanded){
                             this.toggle(this.current_index, this.current_item);
-                        
+                        }
+                        this.$Message.info('添加成功');
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
-                    });
-                    this.$Message.info('添加成功');
+                    });                    
                     break;
                 case 3:
                     this.$axios.patch('/authRuleList', {
@@ -293,12 +293,12 @@ export default {
                         this.initItems[this.current_index].authority = res.data.authority;
                         this.initItems[this.current_index].status = res.data.status;
                         this.initItems[this.current_index].condition = res.data.condition;
+                        this.$Message.info('修改成功');
                         // Vue.set(this.items, ret, this.items[ret]);
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
-                    });
-                    this.$Message.info('修改成功');
+                    });                    
                     break;
                 default:
                     break;
@@ -340,11 +340,12 @@ export default {
             }
             console.log(index);
         },
-        deleteClick(item, index) {  
+        deleteClick(item, index) { 
             this.$Modal.confirm({
                 title: '删除权限',
                 content: '<p>确定要删除此权限吗？</p>',
                 onOk: () => {
+
                     this.current_item = item;
                     this.current_index = index;
                     this.current_id = this.renderId(item);
@@ -356,11 +357,12 @@ export default {
                         }
                     }).then(function(res) {
                         this.depthDelete(this.current_index);
+                        this.$Message.info('删除成功');
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
                     });
-                    this.$Message.info('删除成功');
+                    
                 },
                 onCancel: () => {
                     this.$Message.info('取消');

@@ -93,11 +93,12 @@ import Sortable from 'sortablejs';
                         }).then(function(res) {
                             console.log(res);
                             vm.groups_data.splice(parseInt(el.getAttribute('data-index')),1);
+                            vm.$Message.info('删除成功');
                         }.bind(vm))
                         .catch(function(error) {
                             console.log(error)
                         });
-                        vm.$Message.info('删除成功');
+                        
                         vm.select=null;
                     },
                     onCancel: () => {
@@ -160,11 +161,11 @@ import Sortable from 'sortablejs';
                         }).then(function(res) {
                             console.log(res);
                             this.groups_data.push(res.data);
+                            this.$Message.info('添加成功');
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
-                        });
-                        this.$Message.info('添加成功');
+                        });                        
         },
         cancel () {
             this.$Message.info('取消');
@@ -186,11 +187,11 @@ import Sortable from 'sortablejs';
                             }).then(function(res) {
                                 console.log(res);
                                 this.groups_data[this.select].checked_id = res.data.checked_id;
+                                this.$Message.info('保存成功');
                             }.bind(this))
                             .catch(function(error) {
                                 console.log(error)
-                            });
-                            this.$Message.info('保存成功');  
+                            });                              
             } 
         },
         check111(selectedList){

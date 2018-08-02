@@ -51,12 +51,25 @@ service.interceptors.response.use(function (response) {
     // debugger
     // Do something with response error
     switch (error.response.status) {
+        //router跳转不了，还未解决。
         case 401:
             store.commit('del_token');
             store.commit('del_auth_rules');
+            alert('登录信息已过期，请重新登录！');
             router.push({
                 name: 'login'
             });
+            break;
+        case 403:
+            alert('您的权限不足！');
+            router.push({
+                name: 'error-403'
+            });
+            break;
+        case 500:
+            alert('操作失败，服务器发生了错误！');
+            break;
+        default:
     }
     return Promise.reject(error);
 });
