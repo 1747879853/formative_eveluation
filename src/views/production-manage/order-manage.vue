@@ -262,7 +262,7 @@ export default {
       .catch(error => {
         console.log(error);
       });
-  },
+  }, 
   methods:{
     add_order(){
       if (this.iscatdshow) {

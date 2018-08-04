@@ -16,8 +16,9 @@ import organization from './organization'
 import orgaLeader from './orgaLeader'
 import costList from './costList'
 import workList from './workList'
+import vehicleList from './vehicleList'
 
-let data = [].concat(authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,userList,costList,workList,orgaLeader,attendanceList)
+let data = [].concat(authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,userList,costList,workList,orgaLeader,attendanceList,vehicleList)
 
 
 
