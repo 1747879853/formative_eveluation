@@ -9,12 +9,13 @@
            
             <img width="100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531138272810&di=fb25ebec179ae86ec8df80f3fb7aba90&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F12%2F81%2F58PIC5R58PICsqy_1024.jpg"></img>
         </Modal>
-         <Modal width="60%" v-model="show_finish" title="添加完成数量" @on-ok="material_finished">
-             添加完成数量：<InputNumber v-model="finish_qty"></InputNumber>
+   
+         <Modal width="60%" v-model="show_procedure" title="添加制作工序(  务必按顺序添加  )" @on-ok="give_task_to_team">
+           <!-- {{model10}} -->
+            <Select v-model="model10" multiple style="width:500px" placeholder="请按顺序添加生产工序">
+            <Option v-for="item in workteams" :value="item.id" :key="item.id">{{ item.name }}</Option>
           
-        </Modal>
-         <Modal width="60%" v-model="show_pass" title="添加合格数量" @on-ok="material_passed">
-             添加合格数量：<InputNumber v-model="pass_qty"  :max="max_number"></InputNumber>
+            </Select>
           
         </Modal>
         
@@ -79,20 +80,8 @@ export default {
         },
         {
           title: "工单号",
-          key: "wo_id",
-        
-          align: "center"
-        },
-         {
-          title: "单据来源",
-          key: "team_name",
-         
-          align: "center"
-        },
-        {
-          title: "班组单号",
           key: "id",
-        
+          width: 100,
           align: "center"
         },
         {
@@ -145,15 +134,10 @@ export default {
         // {
         //   title: "完成数量",
         //   align: "center",
-          
+        //   width: 120,
         //   key: "finished_number"
         // },
-        {
-          title: "合格数量",
-          align: "center",
-         
-          key: "passed_number"
-        },
+
         {
           title: "备注",
           key: "comment"
@@ -165,8 +149,6 @@ export default {
           align: "center",
           render: (h, params) => {
             return h("div", [
-
-              
               h(
                 "Button",
                 {
@@ -179,20 +161,48 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.pass_qty =0;
-                      this.show_pass = true;
-                      this.team_task_id = params.row.id;
-                      this.max_number = params.row.number;
+                      let argu = {
+                        mid: params.row.mid,
+                        name: params.row.name,
+                        team_task_id: params.row.id
+                      };
+                      this.$router.push({
+                        name: "material-requisition",
+                        params: argu
+                      });
                     }
                   }
                 },
-                "添加合格数量"
+                "所需物料"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      this.teams();
+                      this.mid = params.row.mid;
+                      this.mnumber = params.row.number;
+                      this.show_procedure = true;
+
+                    }
+                  }
+                },
+                "分派与工序"
               )
             ]);
           }
         }
       ],
-
+      model10: [],
+      show_procedure:false,
       boms_col: [
         {
           type: "index",
@@ -247,7 +257,10 @@ export default {
       team_task_id: "",
       finish_qty: 0,
       pass_qty: 0,
-      max_number:0 
+      work_shop_id:"",
+      mid:"",
+      mnumber: ""
+     
     };
   },
   methods: {
@@ -271,74 +284,52 @@ export default {
     // handleChange(val, index) {
     //   this.$Message.success("修改了第" + (index + 1) + "行数据");
     // },
-    init(){
-       this.$axios
-      .get("/checking_list")
-      .then(res => {
-        this.workteam_materials = res.data.data;
-        this.title = "质量管理"; 
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    init() {
+      this.$axios
+        .get("/xialiao_shoptasks")
+        .then(res => {
+          this.workteam_materials = res.data.data;
+          this.title = res.data.data[0]["shop_name"];
+          this.work_shop_id = res.data.data[0]["work_shop_id"];
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     pic_show(picno) {
       this.graph_no = picno;
       this.showPic = true;
     },
-    material_finished() {
-      
-      if (this.finish_qty != 0) {
-        this.$axios
-          .post("/team_task_material_finished", {
-            finish_number: this.finish_qty,
-            team_task_id: this.team_task_id
-          })
-          .then(res => {
-            this.init();
-            this.$Message.info(res.data.msg);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      }else{
-        this.$Message.info("完成数量不能为0");
-        return;
-      }
-    },
-    material_passed(){
-       if (this.pass_qty != 0) {
-        this.$axios
-          .post("/team_task_material_passed", {
-            pass_number: this.pass_qty,
-            team_task_id: this.team_task_id
-          })
-          .then(res => {
-            this.init();
-            this.$Message.info(res.data.msg);
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      }else{
-        this.$Message.info("合格数量不能为0");
-        return;
-      }
-    }
-    //      row_select(currentRow){
-    //          console.log(currentRow);
-    //         this.$axios.get("/team_boms").then(res =>{
 
-    //             this.team_boms =  res.data;
-    //             this.bom_name =currentRow.name;
-    //         }).catch(err =>{
-    //             console.log(err);
-    //         })
-    //    },
+    teams() {
+      this.$axios
+        .get("/teams", {
+          params: {
+            work_shop_id: this.work_shop_id
+          }
+        })
+        .then(res => {
+          this.workteams = res.data.teams;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    give_task_to_team(){
+      this.$axios.post('/give_task_to_team',{
+        procedure: this.model10.join(","),
+        mid: this.mid,
+        mnumber: this.mnumber,
+        wst_id: this.work_shop_id
+      }).then(res=>{
+        this.$Message.info(res.data.msg);
+      })
+    }
   },
   created() {},
   mounted() {
     this.init();
+   
     // this.$axios
     //   .get("/workteams")
     //   .then(res => {

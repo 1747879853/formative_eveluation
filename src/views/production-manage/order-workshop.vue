@@ -14,6 +14,10 @@
                 <Option v-for="item in workteams" :value="item.id" :key="item.id">{{ item.name }}</Option>
             </Select>
             数量：<InputNumber :max="max_qty" :min=1 v-model="team_qty"></InputNumber>
+        </Modal>  
+            <Modal width="1000" v-model="showlogs" title="生产进度" >
+           
+               <Table :columns="progressColumns"  highlight-row :data="logs" style="width: 100%;"></Table>
         </Modal>    
         <Row>
                 <Card>
@@ -90,7 +94,8 @@ export default {
 
         {
           title: "模板",
-          key: "template_type"
+          key: "template_type",
+           width:400
         },
         {
           title: "数量",
@@ -99,7 +104,7 @@ export default {
         {
           title: "操作",
           key: "action",
-          width: 240,
+          width: 360,
           align: "center",
           render: (h, params) => {
             return h("div", [
@@ -132,6 +137,7 @@ export default {
                         });
                       this.dispatchWorkOrder = true;
                       this.work_order_id = params.row.work_order_id;
+                      this.wst_id = params.row.wstid;
                     }
                   }
                 },
@@ -161,13 +167,63 @@ export default {
                   }
                 },
                 "工单详情"
+              ),
+                          h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      // console.log(params.row);
+                      this.$axios.get('/workshop_logs').then(res=>{
+                        this.logs =  res.data.work_logs;
+                        this.showlogs =true;
+                      })
+                    }
+                  }
+                },
+                "查看进度"
               )
             ]);
           }
         }
       ],
+       progressColumns: [
+        {
+          type: "index",
+          title: "序号",
+          width: 100
+        },
+        {
+          title: "工单号",
+          key: "work_order_id",
+          align: "center",
+           width: 100
+        },
+        {
+          title: "时间",
+          key:"record_time",
+          align:"center",
+           width: 200
+        },
+      
+        {
+          title: "生产过程",
+          key: "description",
+          align: "left",
+          width: 550
+        },
+    
+        ],
       value: "",
-
+      logs: [],
+      showlogs: false,
       boms_approval_columns: [
         {
           type: "index",
@@ -261,6 +317,7 @@ export default {
       boms_approval_list: [],
       workshop_workorders: [],
       workteams: [],
+      wst_id: "",
       dispatchWorkOrder: false,
       model1: "",
       result: "",
@@ -445,6 +502,7 @@ export default {
           work_team_id: this.model1,
           user_id: this.user_id,
           number: this.team_qty,
+          wst_id:this.wst_id,
           work_order_id: this.work_order_id
         })
         .then(res => {

@@ -127,17 +127,17 @@ export default {
           key: "name"
         },
         {
-          title: "数量",
+          title: "分配数量",
           align: "center",
         
           key: "number"
         },
-        {
-          title: "完成数量",
-          align: "center",
+        // {
+        //   title: "完成数量",
+        //   align: "center",
        
-          key: "finished_number"
-        },
+        //   key: "finished_number"
+        // },
         {
           title: "合格数量",
           align: "center",
@@ -178,27 +178,7 @@ export default {
                 },
                 "物料"
               ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
-                  on: {
-                    click: () => {
-                      this.finish_qty = 0;
-                      this.show_finish = true;
-                      this.team_task_id = params.row.id;
-                     
-                    }
-                  }
-                },
-                "完成"
-              ),
+        
 
             ]);
           }

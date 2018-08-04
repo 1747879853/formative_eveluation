@@ -4,7 +4,9 @@
 
 
 <template>
-  <div>
+   <Tabs type="card">
+        <TabPane label="订单列表">
+
 
     <Modal width="70%"  style="margin-top:1px" v-model="progress_table_show" :title="progress_order_id">
             <Table :columns="progressColumns"  highlight-row @on-row-click="material_process" :data="progressData_list" style="width: 100%;"></Table>
@@ -38,10 +40,7 @@
     
  <Col span="24">
        <Card>
-            <p slot="title">
-                <Icon type="ios-list"></Icon>
-                订单列表
-            </p>
+       
             <p>
               <span style="font-size:24px;"> <Button type="primary" @click="add_order">添加订单</Button></span>
             </p>
@@ -53,8 +52,42 @@
           </Card>
 
        </Col>
+
+
+        </TabPane>
+        <TabPane label="分配与进度查询">
+     
+
+    
+    
+ <Col span="24">
+       <Card>
+            <p slot="title">
+                <Icon type="ios-list"></Icon>
+                分配与进度列表
+            </p>
+<!--       
+             <Row type="flex" justify="center" align="top" >
+                  <Table :columns="orderColumns"   :data="work_logs" style="width: 100%;"></Table>
+                  <span style="float:right;margin-right:765px;"></span>    
+             </Row> -->
+            <Input v-model="w_order_id" placeholder="工单号" clearable style="width: 80px" />
+            <Input v-model="client_name" placeholder="客户名称" clearable style="width: 200px" />
+            <Input v-model="type_name" placeholder="模板名称" clearable style="width: 200px" />
+             <Button type="primary" icon="ios-search" @click="search_process">查询</Button>
+             <Tree :data="data1" empty-text></Tree>
+
+          </Card>
+
+       </Col>
   
-    </div>
+
+
+        </TabPane>
+    </Tabs>
+  
+  
+  
 </template>
 
 <script>
@@ -190,12 +223,12 @@ export default {
           align: "center",
           key: "number"
         },
-        {
-          title: "已完成数量",
-          align: "center",
-          width: 120,
-          key: "finished_number"
-        },
+        // {
+        //   title: "已完成数量",
+        //   align: "center",
+        //   width: 120,
+        //   key: "finished_number"
+        // },
         {
           title: "合格数量",
           align: "center",
@@ -242,6 +275,10 @@ export default {
       iscatdshow:false,
       client_title:'',
       no:'',
+       data1:[],
+    w_order_id:"",
+    client_name:"",
+    type_name: ""
     };
   },
   computed: {
@@ -257,6 +294,19 @@ export default {
         }})
       .then(res => {
         this.orderData = res.data.orders; 
+        console.log(res);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+         this.$axios
+      .get("/work_log_tree",{
+        headers: {
+          "Content-Type":'application/json'
+        }})
+      .then(res => {
+        this.data1 = res.data.data1; 
         console.log(res);
       })
       .catch(error => {
@@ -312,6 +362,34 @@ export default {
       });
       else{
         this.show_team_process =false;
+      }
+    },
+        search_process(){
+      if(this.w_order_id==""&&this.type_name==""&&this.client_name==""){
+               this.$axios
+      .get("/work_log_tree",{
+        headers: {
+          "Content-Type":'application/json'
+        }})
+      .then(res => {
+        this.data1 = res.data.data1; 
+        console.log(res);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+      }else{
+        this.$axios.get('/work_log_tree',{
+          params:{
+            client_name: this.client_name,
+            type_name: this.type_name,
+            w_order_id: this.w_order_id
+          }
+        }).then(res=>{
+          this.data1 = res.data.data1;
+        }) .catch(error => {
+        console.log(error);
+      });
       }
     }
   }

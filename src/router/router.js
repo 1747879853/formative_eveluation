@@ -255,9 +255,12 @@ export const appRouter = [
         component: Main,
         children: [
             { path: 'order-manage', title: '订单', access:'production-manage/order-manage', name: 'order-manage', icon: 'link', component: () => import('@/views/production-manage/order-manage.vue') },
-            { path: 'order-workshop', title: '车间', access:'production-manage/order-workshop', name: 'order-workshop', icon: 'link', component: () => import('@/views/production-manage/order-workshop.vue') },           
+            { path: 'order-workshop', title: '组拼车间', access:'production-manage/order-workshop', name: 'order-workshop', icon: 'link', component: () => import('@/views/production-manage/order-workshop.vue') },           
+            { path: 'order-workshop-xialiao', title: '下料车间', access:'production-manage/order-workshop-xialiao', name: 'order-workshop-xialiao', icon: 'link', component: () => import('@/views/production-manage/order-workshop-xialiao.vue') },           
+            
             { path: 'order-team', title: '班组', access:'production-manage/order-team', name: 'order-team', icon: 'link', component: () => import('@/views/production-manage/order-team.vue') },
             { path: 'quality-checking', title: '质检', access:'production-manage/quality-checking', name: 'quality-checking', icon: 'link', component: () => import('@/views/production-manage/quality-checking.vue') },
+            { path: 'allot-process', title: '分配与进度', access:'production-manage/allot-process', name: 'allot-process', icon: 'link', component: () => import('@/views/production-manage/allot-process.vue') },
    
             // { path: 'requisition-list', title: '领料单', name: 'requisition-list', icon: 'link', component: () => import('@/views/production-manage/requisition-list.vue') },
 
