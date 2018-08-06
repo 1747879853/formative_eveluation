@@ -32,7 +32,7 @@
                                   
                                     :columns-list="teamOrderColumns"
                                 ></can-edit-table>
-
+                       <Page :total="total" show-total  page-size=3 @on-change="handleChange"/>
                                  <br/>
                                      <div v-if="team_boms.length!=0">
                         <Icon type="compose"></Icon>模板：{{bom_name}};
@@ -247,7 +247,8 @@ export default {
       team_task_id: "",
       finish_qty: 0,
       pass_qty: 0,
-      max_number:0 
+      max_number:0 ,
+      total: 0
     };
   },
   methods: {
@@ -276,6 +277,7 @@ export default {
       .get("/checking_list")
       .then(res => {
         this.workteam_materials = res.data.data;
+        this.total = res.data.count;
         this.title = "质量管理"; 
       })
       .catch(error => {
@@ -324,7 +326,19 @@ export default {
         this.$Message.info("合格数量不能为0");
         return;
       }
-    }
+    },
+      handleChange(page) {
+            this.$axios
+      .get("/checking_list",{params:{page: page}})
+      .then(res => {
+        this.workteam_materials = res.data.data;
+        this.total =res.data.count;
+        this.title = "质量管理"; 
+      })
+      .catch(error => {
+        console.log(error);
+      });
+        }
     //      row_select(currentRow){
     //          console.log(currentRow);
     //         this.$axios.get("/team_boms").then(res =>{

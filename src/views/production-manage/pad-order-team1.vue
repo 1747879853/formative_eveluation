@@ -71,7 +71,118 @@ export default {
   data() {
     return {
       teamOrderColumns: [
+        {
+          title: "序号",
+          type: "index",
+           width: 40,
+          align: "left"
+        },
+            {
+          title: "班组单号",
+          key: "id",
+          width: 90,
+          align: "center"
+        },
+        {
+          title: "图号",
+          key: "action",
+          width: 150,
+          align: "center",
+          render: (h, params) => {
+            return h(
+              "div",
+              {
+                slot: "content"
+              },
+              [
+                h(
+                  "ul",
+                  params.row.graph_no.split(",").map(item => {
+                    return h(
+                      "li",
+                      {
+                        style: {
+                          textAlign: "center",
+                          padding: "4px",
+                          color: "blue"
+                        },
+                        on: {
+                          click: () => {
+                            this.pic_show(item);
+                          }
+                        }
+                      },
+                      item
+                    );
+                  })
+                )
+              ]
+            );
+          }
+        },
+        {
+          title: "模板",
+          align: "center",
+         
+          key: "name"
+        },
+        {
+          title: "分配数量",
+          align: "center",
+        
+          key: "number"
+        },
+        // {
+        //   title: "完成数量",
+        //   align: "center",
        
+        //   key: "finished_number"
+        // },
+        {
+          title: "合格数量",
+          align: "center",
+        
+          key: "passed_number"
+        },
+        {
+          title: "备注",
+          key: "comment",
+         
+        },
+        {
+          title: "操作",
+          key: "action",
+          width: 130,
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      let argu = { mid: params.row.mid, name: params.row.name, team_task_id: params.row.id };
+                      this.$router.push({
+                        name: "padmaterial",
+                        params: argu
+                      });
+                    }
+                  }
+                },
+                "物料"
+              ),
+        
+
+            ]);
+          }
+        }
       ],
 
       boms_col: [
@@ -152,219 +263,11 @@ export default {
     //   this.$Message.success("修改了第" + (index + 1) + "行数据");
     // },
     init(){
-     
-
-  this.teamOrderColumns=[ {
-          title: "序号",
-          type: "index",
-          width: 80,
-          align: "center"
-        },
-            {
-          title: "班组单号",
-          key: "id",
-          width: 100,
-          align: "center"
-        },
-        {
-          title: "图号",
-          key: "action",
-          width: 150,
-          align: "center",
-          render: (h, params) => {
-            return h(
-              "div",
-              {
-                slot: "content"
-              },
-              [
-                h(
-                  "ul",
-                  params.row.graph_no.split(",").map(item => {
-                    return h(
-                      "li",
-                      {
-                        style: {
-                          textAlign: "center",
-                          padding: "4px",
-                          color: "blue"
-                        },
-                        on: {
-                          click: () => {
-                            this.pic_show(item);
-                          }
-                        }
-                      },
-                      item
-                    );
-                  })
-                )
-              ]
-            );
-          }
-        },
-        {
-          title: "模板",
-          align: "center",
-          key: "name"
-        },
-        {
-          title: "分配数量",
-          align: "center",
-          key: "number"
-        },
-        // {
-        //   title: "完成数量",
-        //   align: "center",
-        //   width: 120,
-        //   key: "finished_number"
-        // },
-        // {
-        //   title: "合格数量",
-        //   align: "center",
-        //   width: 120,
-        //   key: "passed_number"
-        // },
-        {
-          title: "备注",
-          key: "comment"
-        },
-      ];
-       
-
        this.$axios
       .get("/work_team_task_list")
       .then(res => {
         this.workteam_materials = res.data.data;
         this.title = res.data.data[0]["team_name"]; 
-        if(this.workteam_materials[0]["flow"]&& this.workteam_materials[0]["flow"].length!=0){
-          this.teamOrderColumns.push({  
-          title: "全流程",
-          key: "flow",
-          align: "center"
-        },{
-            
-          title: "目前流程",
-          key: "current_flow",
-          align: "center"
-       
-        },
-          {
-          title: "操作",
-          key: "action",
-          width: 200,
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
-                  on: {
-                    click: () => {
-                       let argu = { mid: params.row.mid, name: params.row.name, team_task_id: params.row.id };
-                      this.$router.push({
-                        name: "material-requisition",
-                        params: argu
-                      });
-                    }
-                  }
-                },
-                "物料"
-              ),
-
-                   h(
-                "Button",
-                {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px",
-                   
-                  },
-                  on: {
-                    click: () => {
-                     this.flow_finished(params.row.id);
-                    
-                    }
-                  }
-                },
-                "完成"
-              ),
-             
-            ]);
-          }
-        })
-        }else{
-          this.teamOrderColumns.push({ 
-
-                
-          title: "操作",
-          key: "action",
-          width: 200,
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
-                  on: {
-                    click: () => {
-                      let argu = { mid: params.row.mid, name: params.row.name, team_task_id: params.row.id };
-                      this.$router.push({
-                        name: "material-requisition",
-                        params: argu
-                      });
-                    }
-                  }
-                },
-                "物料"
-              ),
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
-                  on: {
-                    click: () => {
-                      this.$axios.post('/zupin_finished',{
-                        id: params.row.id
-                      }).then(res=>{
-                        this.$Message.info("进入质检");
-                       this.init();
-                      })
-                   
-                    }
-                  }
-                },
-                "完成"
-              ),
-              
-              
-              ])}
-              })
-        }
-      
       })
       .catch(error => {
         console.log(error);
@@ -412,12 +315,6 @@ export default {
         this.$Message.info("合格数量不能为0");
         return;
       }
-    },
-    flow_finished(id){
-      this.$axios.post('/flow_finished',{team_task_id: id}).then(res=>{
-        this.$Message.info(res.data.msg);
-        this.init();
-      })
     }
     //      row_select(currentRow){
     //          console.log(currentRow);
@@ -432,10 +329,7 @@ export default {
   },
   created() {},
   mounted() {
-    this.teamOrderColumns = [];
-    
     this.init();
-  
     // this.$axios
     //   .get("/workteams")
     //   .then(res => {
