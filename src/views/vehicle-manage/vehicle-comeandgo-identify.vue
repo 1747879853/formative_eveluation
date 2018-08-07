@@ -1,16 +1,21 @@
 <template>
 	<div>
     	<Row>
-            <label>开始日期</label>
-            <DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change1' :value='value1'></DatePicker>
-            <label>结束日期</label>
-            <DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change2' :value='value1'></DatePicker>
-            车牌号：
-            <Input v-model="modal2" style="width: 178px;position:relative;z-index:998;" placeholder="请输入或选择车牌号"></Input>
-            <Select v-model="modal2" style="width:200px;position:absolute;left:559px;top:0;z-index:99;color: rgba(0,0,0,0);" >
-                 <Option v-for="(item,index) in vidList1" :value="item" :key="index" >{{ item }}</Option>
-            </Select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <Button @click="showTable" shape="circle" icon="ios-search">查询</Button>
+            <table>
+            <tr>
+            <td>开始日期</td>
+            <td><DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change1' :value='value1'></DatePicker></td>
+            <td>结束日期</td>
+            <td><DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change2' :value='value1'></DatePicker></td>
+            <td>车牌号：</td>
+            <td><Input v-model="modal2" style="width: 300px;" placeholder="请输入或选择车牌号">
+                <Select v-model="modal2" slot="append" style="width: 110px">
+                    <Option v-for="(item,index) in vidList1" :value="item" :key="index" >{{ item }}</Option>
+                </Select>
+            </Input></td>
+            <td><Button @click="showTable" shape="circle" icon="ios-search">查询</Button></td>
+            </tr>
+            </table>
     	</Row>
     	<Row v-if="modal1">
     		<Table border :columns="columns" :data="data">
