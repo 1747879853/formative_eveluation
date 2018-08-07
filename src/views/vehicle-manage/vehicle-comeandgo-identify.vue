@@ -5,31 +5,39 @@
             <DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change1' :value='value1'></DatePicker>
             <label>结束日期</label>
             <DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change2' :value='value1'></DatePicker>
-            车牌号：<Select v-model="model2" style="width:200px" @on-change='change' >
-                         <Option v-for="item in vidList" :value="item.vid" :key="item.id" >{{ item.vid }}</Option>
-                    </Select>
+            车牌号：
+            <Input v-model="modal2" style="width: 178px;position:relative;z-index:998;" placeholder="请输入或选择车牌号"></Input>
+            <Select v-model="modal2" style="width:200px;position:absolute;left:559px;top:0;z-index:99;color: rgba(0,0,0,0);" >
+                 <Option v-for="(item,index) in vidList1" :value="item" :key="index" >{{ item }}</Option>
+            </Select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <Button @click="showTable" shape="circle" icon="ios-search">查询</Button>
     	</Row>
     	<Row v-if="modal1">
     		<Table border :columns="columns" :data="data">
-    			<label slot='header'>显示</label>
-    			<Select  slot='header' v-model="model" style="width:200px">
-        			<Option v-for="item in Arr" :value="item.value" :key="item.value">{{ item.label }}</Option>
-    			</Select>
-    			<label slot='header'>项结果</label>
     		</Table>
     		<Row>
     			<Col offset="8">
-    				<Page :total="pageTotal" :page-size="pageSize" show-sizer @on-change='changePage'></Page>
+    				<Page :total="pageTotal" :page-size="pageSize" @on-change="changePage"></Page>
     			</Col>
     		</Row>
     	</Row>
         <Modal v-model='modal3'>
             <img :src="src1">
         </Modal>
+        <Modal v-model='modal4'>
+            <p>图片已丢失</p>
+        </Modal>
 	</div>
 </template>
 <script>
+//节流函数
+const delay = (function() {
+  let timer = 0;
+  return function(callback, ms) {
+    clearTimeout(timer);
+    timer = setTimeout(callback, ms);
+  };
+})();
     export default {
         data () {
             return {
@@ -40,34 +48,47 @@
                         sortable: true
                     },
                     {
+                        title: '姓名',
+                        key: 'cname',
+                    },
+                    {
                         title: '车牌号',
-                        key: 'vid',//vehicleid
+                        key: 'carno',
+                    },
+                    {
+                        title: '车辆进入时间',
+                        key: 'in_time',
                         sortable: true
                     },
                     {
-                        title: '出/入',
-                        key: 'cag',//come and go
+                        title: '车辆离开时间',
+                        key: 'out_time',
                         sortable: true
                     },
                     {
-                        title: '出/入时间',
-                        key: 'cagt',//come and go time
-                        sortable: true
-                    },
-                    {
-                        title: '车辆类型',
-                        key: 'type',
-                        sortable: true
-                    },
-                    {
-                        title: '详情图片',
-                        key: 'pic',
+                        title: '车辆进入时拍照',
+                        key: 'i_picno',
                         render: (h, params) => {
                             return h('div', [
                                 h('Button', {
                                     on: {
                                         click: () => {
-                                            this.show(params.index)
+                                            this.showin(params.index)
+                                        }
+                                    }
+                                }, params.row.pic)
+                            ]);
+                        }
+                    },
+                    {
+                        title: '车辆离开时拍照',
+                        key: 'o_picno',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    on: {
+                                        click: () => {
+                                            this.showout(params.index)
                                         }
                                     }
                                 }, params.row.pic)
@@ -78,88 +99,60 @@
                 data: [],
                 InitData:[],
                 vidList:[],//下拉框里的车牌号列表
+                vidList1:[],
+                modal4:false,
                 modal3:false,//显示对话框，放大图片
                 modal2:'',
                 modal1:false,//表格是否显示
-                modal:'',
                 value:'',
                 value1:new Date(),
-                vid_value:'',
-                Arr:[{
-                        value: '10',
-                        label: '10'
-                    },
-                    {
-                        value: '25',
-                        label: '25'
-                    },
-                    {
-                        value: '50',
-                        label: '50'
-                    },
-                    {
-                        value: '100',
-                        label: '100'
-                    },
-                    ],
                 pageTotal:0,
-                pageSize:10,
-                time1:'',
-                time2:'',
+                pageSize:20,
+                time1:new Date(),
+                time2:new Date(),
                 src1:'',//通过后台拿到的图片的src
                 id1:'',//item的id
             }
         },
-
         mounted(){
-            this.$axios.get('/vehicleList').then(res =>{
+            this.modal1=true;
+            let cardata=[];
+            this.$axios.get('/vehicleList'
+            ).then(res =>{
                 console.log(res.data);
-                this.vidList = res.data;
-                let arr={
-                    id:'0',
-                    vid:'全部',
-                    cag:'',
-                    cagt:'',
-                    type:'',
-                    pic:'',
-                };
-                this.vidList.unshift(arr);
+                // 保存取到的所有数据
+                this.InitData=res.data;
+                this.pageTotal=res.data.length;
+                // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
+                if(res.data.length < this.pageSize){
+                    cardata=this.InitData;
+                  }else{
+                    cardata=this.InitData.slice(0,this.pageSize);
+                }
+                this.data=cardata;
+                this.vidList=this.CreatevidList(res.data);
+                this.vidList1=this.vidList;
             }).catch(error =>{
                 console.log(error)
-            });
+            }); 
         },
-
+        watch: {
+            //watch modal2 change
+            modal2() {
+                delay(() => {
+                    this.fetchvidList1();
+                }, 300);
+            },
+        },
         methods:{
         	showTable(){
         		this.modal1=true;
-                if(this.vid_value =='全部'){
-                  this.$axios.get('/vehicleList'//,{
-                //     params:{
-                //         time1:this.time1,
-                //         time2:this.time2,
-                //     }
-                // }
-                ).then(res =>{
-                    console.log(res.data);
-                    // 保存取到的所有数据
-                    this.InitData=res.data;
-                    this.pageTotal=res.data.length;
-                    // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
-                    if(res.data.length < this.pageSize){
-                        this.employeeData=this.InitData;
-                      }else{
-                        this.employeeData=this.InitData.slice(0,this.pageSize);
-                    }
-                        this.data=res.data;
-                }).catch(error =>{
-                    console.log(error)
-                });  
-            }else{
-                this.$axios.get('/vehicleList',{
+                let cardata=[];
+                this.$axios.post('/vehicleList',{
                     params:{
-                        time1:this.time1,
-                        time2:this.time2,
-                        vid:this.vid_value,
+                        up_time:this.time1,
+                        down_time:this.time2,
+                        carno:this.modal2,
                     }
                 }
                 ).then(res =>{
@@ -169,21 +162,17 @@
                     this.pageTotal=res.data.length;
                     // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
                     if(res.data.length < this.pageSize){
-                        this.employeeData=this.InitData;
+                        cardata=this.InitData;
                       }else{
-                        this.employeeData=this.InitData.slice(0,this.pageSize);
+                        cardata=this.InitData.slice(0,this.pageSize);
                     }
-                        this.data=res.data;
+                    this.data=cardata;
+                    this.vidList=this.CreatevidList(res.data);
+                    this.vidList1=this.vidList;
                 }).catch(error =>{
                     console.log(error)
-                });
-            }
-        		
+                });        		
         	},
-            change(value){
-                this.vid_value = value;
-            },
-
             change1(value){
                 this.time1=value;
             },
@@ -198,20 +187,59 @@
                 this.data = this.InitData.slice(_start,_end);
             },
 
-            show (index) {
-                this.id1 = this.data[index].id;
-                this.$axios.get('/vehicleList'//,{
-                    // params:{
-                    //     id:this.id1
-                    // }
-                //}
-                ).then(res =>{
-                    console.log(res.data[index].src);
-                    this.src1=res.data[index].src;
-                }).catch(error =>{
-                    console.log(error);
-                })
-                this.modal3 = true; 
+            showin(index) {
+                if(this.InitData[index].i_picno==-1){
+                    this.modal4 = true;
+                }else{
+                    this.src1="/_attachment/"+this.InitData[index].i_picno;
+                    this.modal3 = true; 
+                }                
+            },
+            showout(index) {
+                if(this.InitData[index].o_picno==-1){
+                    this.modal4 = true;
+                }else{
+                this.src1="/_attachment/"+this.InitData[index].o_picno;
+                this.modal3 = true;
+                } 
+            },
+            CreatevidList(data){
+                let arr = data;
+                let arr2 = [];
+                let result = [];
+                for(let i=0;i<arr.length;i++){
+                    arr2[i]=arr[i].carno;
+                }                             
+                for(let k = 0; k < arr2.length; k++){
+                    for(let j = k + 1; j < arr2.length; j++){
+                        if(arr2[k] === arr2[j]){
+                            j = ++k;
+                        }
+                    }
+                    result.push(arr2[k]);
+                }
+                return result;
+            },
+            fetchvidList1(){
+                if(this.modal2===''){
+                    this.vidList1=this.vidList;
+                }else{
+                    let arr=[];
+                    let i;
+                    for(i=0;i<this.vidList.length;i++){
+                        arr[i]=this.vidList[i];
+                    }
+                    for(i=0;i<arr.length;i++){
+                        if(arr[i]!=null){
+                            if(arr[i].indexOf(this.modal2.toUpperCase( ))<0){
+                                arr.splice(i,1);
+                                i--;
+                            }
+                        }                        
+                    } 
+                    this.vidList1=arr;  
+                }
+                
             },
     }
 }
