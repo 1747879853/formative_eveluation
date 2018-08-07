@@ -8,11 +8,15 @@
             <td>结束日期</td>
             <td><DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change2' :value='value1'></DatePicker></td>
             <td>车牌号：</td>
-            <td><Input v-model="modal2" style="width: 300px;" placeholder="请输入或选择车牌号">
+            <td>
+            <Select v-model="modal2" filterable placeholder="请选择车牌号">
+                <Option v-for="(item,index) in vidList1" :value="item" :key="index">{{ item }}</Option>
+            </Select>
+            <!-- <Input v-model="modal2" style="width: 300px;" placeholder="请输入或选择车牌号">
                 <Select v-model="modal2" slot="append" style="width: 110px">
                     <Option v-for="(item,index) in vidList1" :value="item" :key="index" >{{ item }}</Option>
                 </Select>
-            </Input></td>
+            </Input> --></td>
             <td><Button @click="showTable" shape="circle" icon="ios-search">查询</Button></td>
             </tr>
             </table>
@@ -35,14 +39,6 @@
 	</div>
 </template>
 <script>
-//节流函数
-const delay = (function() {
-  let timer = 0;
-  return function(callback, ms) {
-    clearTimeout(timer);
-    timer = setTimeout(callback, ms);
-  };
-})();
     export default {
         data () {
             return {
@@ -141,14 +137,6 @@ const delay = (function() {
                 console.log(error)
             }); 
         },
-        watch: {
-            //watch modal2 change
-            modal2() {
-                delay(() => {
-                    this.fetchvidList1();
-                }, 300);
-            },
-        },
         methods:{
         	showTable(){
         		this.modal1=true;
@@ -224,27 +212,6 @@ const delay = (function() {
                     result.push(arr2[k]);
                 }
                 return result;
-            },
-            fetchvidList1(){
-                if(this.modal2===''){
-                    this.vidList1=this.vidList;
-                }else{
-                    let arr=[];
-                    let i;
-                    for(i=0;i<this.vidList.length;i++){
-                        arr[i]=this.vidList[i];
-                    }
-                    for(i=0;i<arr.length;i++){
-                        if(arr[i]!=null){
-                            if(arr[i].indexOf(this.modal2.toUpperCase( ))<0){
-                                arr.splice(i,1);
-                                i--;
-                            }
-                        }                        
-                    } 
-                    this.vidList1=arr;  
-                }
-                
             },
     }
 }
