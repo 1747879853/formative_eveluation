@@ -183,6 +183,7 @@ export default {
                       this.show_pass = true;
                       this.team_task_id = params.row.id;
                       this.max_number = params.row.number;
+                      this.p_number = params.row.passed_number ?params.row.passed_number : 0 ;
                     }
                   }
                 },
@@ -248,7 +249,8 @@ export default {
       finish_qty: 0,
       pass_qty: 0,
       max_number:0 ,
-      total: 0
+      total: 0,
+      p_number: 0
     };
   },
   methods: {
@@ -309,7 +311,7 @@ export default {
       }
     },
     material_passed(){
-       if (this.pass_qty != 0) {
+       if (this.pass_qty != 0 &&(this.pass_qty+this.p_number>=0) ) {
         this.$axios
           .post("/team_task_material_passed", {
             pass_number: this.pass_qty,
@@ -323,7 +325,7 @@ export default {
             console.log(error);
           });
       }else{
-        this.$Message.info("合格数量不能为0");
+        this.$Message.info("添加的合格数量不能为0或合格数量与添加的合格数量相加不能小于0");
         return;
       }
     },
