@@ -25,7 +25,7 @@
     			</Col>
     		</Row>
     	</Row>
-        <Modal v-model='modal3'>
+        <Modal v-model='modal3' width="1020">
             <img :src="src1">
         </Modal>
         <Modal v-model='modal4'>
