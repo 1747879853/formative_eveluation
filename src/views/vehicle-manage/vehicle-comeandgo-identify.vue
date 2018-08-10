@@ -67,7 +67,8 @@
                         title: '进入照片',
                         key: 'i_picno',
                         render: (h, params) => {
-                            if(this.InitData[params.index].i_picno!=-1){
+                            if(this.InitData[params.index].i_picno!=-1||
+                                this.InitData[params.index].i_picno==""){
                                 return h('div', [
                                     h('Button', {
                                         props: {
@@ -91,7 +92,8 @@
                         title: '离开照片',
                         key: 'o_picno',
                         render: (h, params) => {
-                            if(this.InitData[params.index].o_picno!=-1){
+                            if(this.InitData[params.index].o_picno!=-1||
+                                this.InitData[params.index].o_picno==""){
                                 return h('div',[
                                     h('Button', {
                                         props: {
