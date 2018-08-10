@@ -67,12 +67,19 @@
                         render: (h, params) => {
                             return h('div', [
                                 h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
                                     on: {
                                         click: () => {
                                             this.showin(params.index)
                                         }
                                     }
-                                }, params.row.pic)
+                                }, '查看照片')
                             ]);
                         }
                     },
@@ -82,12 +89,19 @@
                         render: (h, params) => {
                             return h('div', [
                                 h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
                                     on: {
                                         click: () => {
                                             this.showout(params.index)
                                         }
                                     }
-                                }, params.row.pic)
+                                }, '查看照片')
                             ]);
                         }
                     },
