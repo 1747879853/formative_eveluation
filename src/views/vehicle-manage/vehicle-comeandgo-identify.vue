@@ -39,8 +39,10 @@
             return {
                 columns: [
                     {
-                        title: '编号',
-                        key: 'id',
+                        type: "index",
+                        title: '序号',
+                        width: 80,
+                        align: "center",
                         sortable: true
                     },
                     {
@@ -65,44 +67,48 @@
                         title: '进入照片',
                         key: 'i_picno',
                         render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.showin(params.index)
+                            if(this.InitData[params.index].i_picno!=-1){
+                                return h('div', [
+                                    h('Button', {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.showin(params.index)
+                                            }
                                         }
-                                    }
-                                }, '查看照片')
-                            ]);
+                                    }, '查看照片')
+                                ]);
+                            }                            
                         }
                     },
                     {
                         title: '离开照片',
                         key: 'o_picno',
                         render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.showout(params.index)
+                            if(this.InitData[params.index].o_picno!=-1){
+                                return h('div',[
+                                    h('Button', {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.showout(params.index)
+                                            }
                                         }
-                                    }
-                                }, '查看照片')
-                            ]);
+                                    }, '查看照片')
+                                ]);
+                            }                            
                         }
                     },
                 ],
@@ -171,20 +177,12 @@
             },
 
             showin(index) {
-                if(this.InitData[index].i_picno==-1){
-                    this.modal4 = true;
-                }else{
-                    this.src1="http://114.118.17.4:8080/_attachment/"+this.InitData[index].i_picno;
-                    this.modal3 = true; 
-                }                
+                this.src1="http://114.118.17.4:8080/_attachment/"+this.InitData[index].i_picno;
+                this.modal3 = true;                
             },
             showout(index) {
-                if(this.InitData[index].o_picno==-1){
-                    this.modal4 = true;
-                }else{
                 this.src1="http://114.118.17.4:8080/_attachment/"+this.InitData[index].o_picno;
                 this.modal3 = true;
-                } 
             },
             CreatevidList(data){
                 let arr = data;
