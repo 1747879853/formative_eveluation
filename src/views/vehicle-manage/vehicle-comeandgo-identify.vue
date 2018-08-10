@@ -4,9 +4,9 @@
             <table>
             <tr>
             <td>开始日期</td>
-            <td><DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change1' :value='value1'></DatePicker></td>
+            <td><DatePicker type="datetime" placeholder="请选择时间" style="width: 200px" @on-change='change1' :value='value1'></DatePicker></td>
             <td>结束日期</td>
-            <td><DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change2' :value='value1'></DatePicker></td>
+            <td><DatePicker type="datetime" placeholder="请选择时间" style="width: 200px" @on-change='change2' :value='value1'></DatePicker></td>
             <td>车牌号：</td>
             <td>
             <Select v-model="modal2" filterable placeholder="请选择车牌号">
