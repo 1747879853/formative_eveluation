@@ -267,6 +267,7 @@ export default {
             .get("/approval_field_list?approval_admin_id=" + item.id)
             .then(res => {
                 if(res.data.code == 1){
+                    debugger
                     this.submit_users = res.data.submit_users;
                     this.approval_data = res.data.approval_data;
                     this.approval_name = this.approval_data.name;
@@ -317,9 +318,8 @@ export default {
                         this.formDynamicDetail.title = this.approval_name + "明细";
                         this.formDynamicDetail_arr.push(JSON.parse(JSON.stringify(this.formDynamicDetail)));
                         this.formDynamicDetail.title = '';
-
-                        this.showOrNot = false
                     }
+                    this.showOrNot = false
                 }else{
                     this.showOrNot = true
                     this.$Message.error(res.data.msg);
