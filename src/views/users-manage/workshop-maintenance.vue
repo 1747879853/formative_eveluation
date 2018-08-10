@@ -131,6 +131,10 @@ export default {
       },{
         id:2,
         typename:'组拼'
+      },
+      {
+        id:3,
+        typename:'喷漆'
       }]
     };
   },

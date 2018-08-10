@@ -236,7 +236,11 @@ export default {
       .get("/work_team_task_list")
       .then(res => {
         this.workteam_materials = res.data.data;
-        this.title = res.data.data[0]["team_name"]; 
+        if (res.data.paint){
+        this.title = "喷漆"; 
+        }else{
+          this.title = res.data.data[0]["team_name"]; 
+        }
         if(this.workteam_materials[0]["flow"]&& this.workteam_materials[0]["flow"].length!=0){
           this.teamOrderColumns.push({  
           title: "全流程",
@@ -270,7 +274,7 @@ export default {
                     click: () => {
                        let argu = { mid: params.row.mid, name: params.row.name, team_task_id: params.row.id };
                       this.$router.push({
-                        name: "padmaterial",
+                        name: "material-requisition",
                         params: argu
                       });
                     }
@@ -303,7 +307,48 @@ export default {
             ]);
           }
         })
-        }else{
+        }else if( res.data.paint){
+          this.teamOrderColumns.push({ 
+
+                
+          title: "操作",
+          key: "action",
+          width: 200,
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+           
+              
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                      this.$axios.post('/paint_finished',{
+                        id: params.row.id
+                      }).then(res=>{
+                        this.$Message.info(res.data.msg);
+                       this.init();
+                      })
+                   
+                    }
+                  }
+                },
+                "喷漆完成"
+              ),
+              
+              
+              ])}
+              })
+        }
+        else{
           this.teamOrderColumns.push({ 
 
                 
@@ -327,7 +372,7 @@ export default {
                     click: () => {
                       let argu = { mid: params.row.mid, name: params.row.name, team_task_id: params.row.id };
                       this.$router.push({
-                        name: "padmaterial",
+                        name: "material-requisition",
                         params: argu
                       });
                     }

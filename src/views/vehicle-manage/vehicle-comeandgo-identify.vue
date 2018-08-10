@@ -9,28 +9,23 @@
             <td><DatePicker type="datetime" placeholder="请选择时间" style="width: 200px" @on-change='change2' :value='value1'></DatePicker></td>
             <td>车牌号：</td>
             <td>
-            <Select v-model="modal2" filterable placeholder="请选择车牌号">
+            <Select v-model="modal2" filterable clearable placeholder="请选择车牌号">
                 <Option v-for="(item,index) in vidList1" :value="item" :key="index">{{ item }}</Option>
             </Select>
-            <!-- <Input v-model="modal2" style="width: 300px;" placeholder="请输入或选择车牌号">
-                <Select v-model="modal2" slot="append" style="width: 110px">
-                    <Option v-for="(item,index) in vidList1" :value="item" :key="index" >{{ item }}</Option>
-                </Select>
-            </Input> --></td>
-            <td><Button @click="showTable" shape="circle" icon="ios-search">查询</Button></td>
+            </td>
+            <td><Button @click="showTable" type="ghost" shape="circle" icon="ios-search">查询</Button></td>
             </tr>
             </table>
     	</Row>
     	<Row v-if="modal1">
-    		<Table border :columns="columns" :data="data">
-    		</Table>
+    		<Table border :columns="columns" :data="data"></Table>
     		<Row>
     			<Col offset="8">
     				<Page :total="pageTotal" :page-size="pageSize" @on-change="changePage"></Page>
     			</Col>
     		</Row>
     	</Row>
-        <Modal v-model='modal3'>
+        <Modal v-model='modal3' width="1020">
             <img :src="src1">
         </Modal>
         <Modal v-model='modal4'>
@@ -116,26 +111,7 @@
             }
         },
         mounted(){
-            this.modal1=true;
-            let cardata=[];
-            this.$axios.get('/vehicleList'
-            ).then(res =>{
-                console.log(res.data);
-                // 保存取到的所有数据
-                this.InitData=res.data;
-                this.pageTotal=res.data.length;
-                // 初始化显示，小于每页显示条数，全显，大于每页显示条数，取前每页条数显示
-                if(res.data.length < this.pageSize){
-                    cardata=this.InitData;
-                  }else{
-                    cardata=this.InitData.slice(0,this.pageSize);
-                }
-                this.data=cardata;
-                this.vidList=this.CreatevidList(res.data);
-                this.vidList1=this.vidList;
-            }).catch(error =>{
-                console.log(error)
-            }); 
+
         },
         methods:{
         	showTable(){
@@ -143,8 +119,8 @@
                 let cardata=[];
                 this.$axios.post('/vehicleList',{
                     params:{
-                        up_time:this.time1,
-                        down_time:this.time2,
+                        s_time:this.time1,
+                        e_time:this.time2,
                         carno:this.modal2,
                     }
                 }
@@ -184,7 +160,7 @@
                 if(this.InitData[index].i_picno==-1){
                     this.modal4 = true;
                 }else{
-                    this.src1="/_attachment/"+this.InitData[index].i_picno;
+                    this.src1="http://114.118.17.4:8080/_attachment/"+this.InitData[index].i_picno;
                     this.modal3 = true; 
                 }                
             },
@@ -192,7 +168,7 @@
                 if(this.InitData[index].o_picno==-1){
                     this.modal4 = true;
                 }else{
-                this.src1="/_attachment/"+this.InitData[index].o_picno;
+                this.src1="http://114.118.17.4:8080/_attachment/"+this.InitData[index].o_picno;
                 this.modal3 = true;
                 } 
             },
