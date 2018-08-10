@@ -67,8 +67,8 @@
                         title: '进入照片',
                         key: 'i_picno',
                         render: (h, params) => {
-                            if(this.InitData[params.index].i_picno!=-1||
-                                this.InitData[params.index].i_picno==""){
+                            if(this.data[params.index].i_picno!=-1&&
+                                this.data[params.index].i_picno!==""){
                                 return h('div', [
                                     h('Button', {
                                         props: {
@@ -92,8 +92,8 @@
                         title: '离开照片',
                         key: 'o_picno',
                         render: (h, params) => {
-                            if(this.InitData[params.index].o_picno!=-1||
-                                this.InitData[params.index].o_picno==""){
+                            if(this.data[params.index].o_picno!=-1&&
+                                this.data[params.index].o_picno!==""){
                                 return h('div',[
                                     h('Button', {
                                         props: {
@@ -179,11 +179,11 @@
             },
 
             showin(index) {
-                this.src1="http://114.118.17.4:8080/_attachment/"+this.InitData[index].i_picno;
+                this.src1="http://114.118.17.4:8080/_attachment/"+this.data[index].i_picno;
                 this.modal3 = true;                
             },
             showout(index) {
-                this.src1="http://114.118.17.4:8080/_attachment/"+this.InitData[index].o_picno;
+                this.src1="http://114.118.17.4:8080/_attachment/"+this.data[index].o_picno;
                 this.modal3 = true;
             },
             CreatevidList(data){
