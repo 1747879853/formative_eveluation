@@ -3,10 +3,10 @@
     	<Row>
             <table>
             <tr>
-            <td>开始日期</td>
-            <td><DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change1' :value='value1'></DatePicker></td>
-            <td>结束日期</td>
-            <td><DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change2' :value='value1'></DatePicker></td>
+            <td>开始时间</td>
+            <td><DatePicker type="datetime" placeholder="请选择时间" style="width: 200px" @on-change='change1' :value='value1'></DatePicker></td>
+            <td>结束时间</td>
+            <td><DatePicker type="datetime" placeholder="请选择时间" style="width: 200px" @on-change='change2' :value='value1'></DatePicker></td>
             <td>车牌号：</td>
             <td>
             <Select v-model="modal2" filterable clearable placeholder="请选择车牌号">
@@ -52,17 +52,17 @@
                         key: 'carno',
                     },
                     {
-                        title: '车辆进入时间',
+                        title: '进入时间',
                         key: 'in_time',
                         sortable: true
                     },
                     {
-                        title: '车辆离开时间',
+                        title: '离开时间',
                         key: 'out_time',
                         sortable: true
                     },
                     {
-                        title: '车辆进入时拍照',
+                        title: '进入照片',
                         key: 'i_picno',
                         render: (h, params) => {
                             return h('div', [
@@ -84,7 +84,7 @@
                         }
                     },
                     {
-                        title: '车辆离开时拍照',
+                        title: '离开照片',
                         key: 'o_picno',
                         render: (h, params) => {
                             return h('div', [
