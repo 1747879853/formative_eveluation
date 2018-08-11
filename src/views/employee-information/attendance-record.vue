@@ -8,9 +8,9 @@
             <table>
             <tr>
             <td>开始日期</td>
-            <td><DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change1' :value='value1'></DatePicker></td>
+            <td><DatePicker type="datetime" placeholder="请选择日期" style="width: 200px" @on-change='change1' :value='value1'></DatePicker></td>
             <td>结束日期</td>
-            <td><DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change2' :value='value1'></DatePicker></td>
+            <td><DatePicker type="datetime" placeholder="请选择日期" style="width: 200px" @on-change='change2' :value='value2'></DatePicker></td>
             <td>员工：</td>
             <td>
             <Select v-model="modal1" filterable clearable placeholder="请选择员工">
@@ -70,9 +70,10 @@ export default {
       employeeList1:[],
       modal1:'',
       modal2:false,
-      value1:new Date(),//设置DatePicker显示的初始值
+      value1:new Date(new Date(new Date().toLocaleDateString()).getTime()),
+      value2:new Date(),
       value:'',//存放被选中的下拉框的值
-      time1:new Date(),//起始时间
+      time1:new Date(new Date(new Date().toLocaleDateString()).getTime()),//起始时间
       time2:new Date(),//终止时间
       pageTotal: 0,
       pageSize: 20,

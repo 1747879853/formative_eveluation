@@ -6,7 +6,7 @@
             <td>开始时间</td>
             <td><DatePicker type="datetime" placeholder="请选择时间" style="width: 200px" @on-change='change1' :value='value1'></DatePicker></td>
             <td>结束时间</td>
-            <td><DatePicker type="datetime" placeholder="请选择时间" style="width: 200px" @on-change='change2' :value='value1'></DatePicker></td>
+            <td><DatePicker type="datetime" placeholder="请选择时间" style="width: 200px" @on-change='change2' :value='value2'></DatePicker></td>
             <td>车牌号：</td>
             <td>
             <Select v-model="modal2" filterable clearable placeholder="请选择车牌号">
@@ -123,10 +123,11 @@
                 modal2:'',
                 modal1:false,//表格是否显示
                 value:'',
-                value1:new Date(),
+                value1:new Date(new Date(new Date().toLocaleDateString()).getTime()),
+                value2:new Date(),
                 pageTotal:0,
                 pageSize:20,
-                time1:new Date(),
+                time1:new Date(new Date(new Date().toLocaleDateString()).getTime()),
                 time2:new Date(),
                 src1:'',//通过后台拿到的图片的src
                 id1:'',//item的id
