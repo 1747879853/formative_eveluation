@@ -48,7 +48,7 @@
                                 <AutoForm  v-bind:formDynamic="formDynamicMain" v-bind:arrIndex="-1" ></AutoForm>
                             </span>
                             <span v-else>
-                                未设置主表
+                                主表为空
                             </span>
                         </Card>
                     
