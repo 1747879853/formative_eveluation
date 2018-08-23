@@ -3,10 +3,10 @@
     	<Row>
             <table>
             <tr>
-            <td>开始日期</td>
-            <td><DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change1' :value='value1'></DatePicker></td>
-            <td>结束日期</td>
-            <td><DatePicker type="date" placeholder="请选择日期" style="width: 200px" @on-change='change2' :value='value1'></DatePicker></td>
+            <td>开始时间</td>
+            <td><DatePicker type="datetime" placeholder="请选择时间" style="width: 200px" @on-change='change1' :value='value1'></DatePicker></td>
+            <td>结束时间</td>
+            <td><DatePicker type="datetime" placeholder="请选择时间" style="width: 200px" @on-change='change2' :value='value2'></DatePicker></td>
             <td>车牌号：</td>
             <td>
             <Select v-model="modal2" filterable clearable placeholder="请选择车牌号">
@@ -25,7 +25,7 @@
     			</Col>
     		</Row>
     	</Row>
-        <Modal v-model='modal3'>
+        <Modal v-model='modal3' width="1020">
             <img :src="src1">
         </Modal>
         <Modal v-model='modal4'>
@@ -39,8 +39,10 @@
             return {
                 columns: [
                     {
-                        title: '编号',
-                        key: 'id',
+                        type: "index",
+                        title: '序号',
+                        width: 80,
+                        align: "center",
                         sortable: true
                     },
                     {
@@ -52,43 +54,63 @@
                         key: 'carno',
                     },
                     {
-                        title: '车辆进入时间',
+                        title: '进入时间',
                         key: 'in_time',
                         sortable: true
                     },
                     {
-                        title: '车辆离开时间',
+                        title: '离开时间',
                         key: 'out_time',
                         sortable: true
                     },
                     {
-                        title: '车辆进入时拍照',
+                        title: '进入照片',
                         key: 'i_picno',
                         render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    on: {
-                                        click: () => {
-                                            this.showin(params.index)
+                            if(this.data[params.index].i_picno!=-1&&
+                                this.data[params.index].i_picno!==""){
+                                return h('div', [
+                                    h('Button', {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.showin(params.index)
+                                            }
                                         }
-                                    }
-                                }, params.row.pic)
-                            ]);
+                                    }, '查看照片')
+                                ]);
+                            }                            
                         }
                     },
                     {
-                        title: '车辆离开时拍照',
+                        title: '离开照片',
                         key: 'o_picno',
                         render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    on: {
-                                        click: () => {
-                                            this.showout(params.index)
+                            if(this.data[params.index].o_picno!=-1&&
+                                this.data[params.index].o_picno!==""){
+                                return h('div',[
+                                    h('Button', {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small'
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.showout(params.index)
+                                            }
                                         }
-                                    }
-                                }, params.row.pic)
-                            ]);
+                                    }, '查看照片')
+                                ]);
+                            }                            
                         }
                     },
                 ],
@@ -101,10 +123,11 @@
                 modal2:'',
                 modal1:false,//表格是否显示
                 value:'',
-                value1:new Date(),
+                value1:new Date(new Date(new Date().toLocaleDateString()).getTime()),
+                value2:new Date(),
                 pageTotal:0,
                 pageSize:20,
-                time1:new Date(),
+                time1:new Date(new Date(new Date().toLocaleDateString()).getTime()),
                 time2:new Date(),
                 src1:'',//通过后台拿到的图片的src
                 id1:'',//item的id
@@ -157,20 +180,12 @@
             },
 
             showin(index) {
-                if(this.InitData[index].i_picno==-1){
-                    this.modal4 = true;
-                }else{
-                    this.src1="http://114.118.17.4:8080/_attachment/"+this.InitData[index].i_picno;
-                    this.modal3 = true; 
-                }                
+                this.src1="http://114.118.17.4:8080/_attachment/"+this.data[index].i_picno;
+                this.modal3 = true;                
             },
             showout(index) {
-                if(this.InitData[index].o_picno==-1){
-                    this.modal4 = true;
-                }else{
-                this.src1="http://114.118.17.4:8080/_attachment/"+this.InitData[index].o_picno;
+                this.src1="http://114.118.17.4:8080/_attachment/"+this.data[index].o_picno;
                 this.modal3 = true;
-                } 
             },
             CreatevidList(data){
                 let arr = data;

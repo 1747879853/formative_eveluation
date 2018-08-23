@@ -40,24 +40,15 @@
                 <Row>
                     <Col span="24">
                         <Card>
-                            <p slot="title" >
-                                <Icon type="android-funnel"></Icon>
-                                主表
-                            </p>
-                            <span v-if="hasMainTable">          
+                            <div v-if="hasMainTable">
+                               
                                 <AutoForm  v-bind:formDynamic="formDynamicMain" v-bind:arrIndex="-1" ></AutoForm>
-                            </span>
-                            <span v-else>
-                                未设置主表
-                            </span>
+                            </div>
                         </Card>
                     
-                        <Card>
-                            <p slot="title" >
-                                <Icon type="android-funnel"></Icon>
-                                详单
-                            </p>
+                        <Card>                            
                             <div v-if="hasDetailTable">
+                                
                                 <AutoForm  v-for="(item,index) in formDynamicDetail_arr" :key="index" v-bind:formDynamic="item" v-bind:arrIndex="index" v-on:delitem="delDetailItem"></AutoForm>
                                 
                                 <p>如需采购多种产品，请点击“增加明细”</p>
@@ -259,6 +250,9 @@ export default {
             //多次点击返回和某个审批，该数组会不断增加，所以每次清空
             this.formDynamicDetail_arr = [];
             this.formDynamicMain.items = [];
+            //是否存在主表和详表点击返回后，也要初始化为false
+            this.hasMainTable = false;
+            this.hasDetailTable = false;
         },
      
         AppFormShow(item){
@@ -291,7 +285,7 @@ export default {
                             this.main_fields[i]["en_name_value"] = undefined;                    
                         }
                         this.formDynamicMain.items = this.main_fields;
-                        this.formDynamicMain.title = this.approval_name+"主表";
+                        this.formDynamicMain.title = this.approval_name;
                     }
                     if(res.data.approval_detail_field_data.length > 0){
                         this.hasDetailTable = true;
@@ -317,9 +311,8 @@ export default {
                         this.formDynamicDetail.title = this.approval_name + "明细";
                         this.formDynamicDetail_arr.push(JSON.parse(JSON.stringify(this.formDynamicDetail)));
                         this.formDynamicDetail.title = '';
-
-                        this.showOrNot = false
                     }
+                    this.showOrNot = false
                 }else{
                     this.showOrNot = true
                     this.$Message.error(res.data.msg);
