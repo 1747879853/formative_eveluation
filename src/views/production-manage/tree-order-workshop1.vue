@@ -26,7 +26,7 @@
  
         </Col>
         <Col span="18">
-          <Modal width="60%" v-model="show_procedure" title="添加制作工序(  务必按顺序添加  )">
+          <Modal width="60%" v-model="show_procedure" title="添加制作工序(  务必按顺序添加  )" @on-ok="give_task_teamx">
            <!-- {{model10}} -->
             <Select v-model="model10" multiple style="width:500px" placeholder="请按顺序添加生产工序">
             <Option v-for="item in workteams" :value="item.id" :key="item.id">{{ item.name }}</Option>
@@ -69,6 +69,7 @@ export default {
     //     console.log(this.$refs.tree2.getCheckedKeys());
     //   },
     checkChange(data, checked) {
+      // console.log(checked);
       var j = 0;
       var datatable1 = this.$refs.tree2.getCheckedNodes();
       var length1 = datatable1.length;
@@ -90,6 +91,27 @@ export default {
       } else {
         this.datatable = [];
       }
+    //    this.datatable = [];
+    //   if(checked){
+    //      if (data&&!data.children){
+    //     this.datatable.push(data);
+    //   }
+    //   else if (data.children&&!data.children[0].children){
+    //       this.datatable =data.children;
+    //     }
+    //   else if (data.children[0].children){
+    //      for(var i= 0;i<data.children.length;i++){
+    //        this.datatable.push(...data.children[i]["children"])
+    //      }
+    //     }
+        
+
+     
+     
+    // } else{
+    //   this.datatable = [];
+    // }
+
     },
     bouncer(arr) {
       return arr.filter(function(val) {
@@ -160,6 +182,13 @@ export default {
         .catch(error => {
           console.log(error);
         });
+    },
+    give_task_teamx(){
+      this.$axios.post('/give_task_teamx',{
+          data: this.$refs.tree2.getCheckedNodes()
+      }).then(res=>{
+        
+      })
     }
   },
   mounted() {
@@ -229,11 +258,11 @@ export default {
                     //  _this.changedata2(params.row.id,params.row.given_number);
                   },
                   "on-blur"(e) {
-                    console.log(e);
+                    // console.log(e);
                     // _this.datatable[params.index] = params.row;
-                    params.row.given_number = e.target.value;
-                    if (params.row.given_number <= 0) {
-                      _this.$Message.info("分配数量不可小于等于0");
+                    params.row.given_number = e.target.value ? e.target.value : '';
+                    if (params.row.given_number < 0) {
+                      _this.$Message.info("分配数量不可小于0");
                       params.row.given_number = "";
                     }
                     if (params.row.number < params.row.given_number) {
