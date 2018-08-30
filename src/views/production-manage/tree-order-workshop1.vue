@@ -36,7 +36,15 @@
            
         </Modal>
          <Input v-model="searchConName2" @on-change="handleSearch2" icon="search" placeholder="请输入名称搜索..." style="width: 200px" />
-         <Button type="primary" shape="circle" @click="show_proc">分配</Button>
+         <Poptip
+        confirm
+        title="确定分配吗?"
+        @on-ok="show_proc"
+        placement="bottom"
+       >
+        <Button type="primary" shape="circle">分配</Button>
+    </Poptip>
+         <!-- <Button type="primary" shape="circle" @click="show_proc">分配</Button> -->
         <Table :columns="columns1" :data="datatable"  highlight-row @on-row-click="thisrow"></Table>
      
         
@@ -59,152 +67,14 @@ export default {
       this.$refs.tree2.filter(val);
     }
   },
-
-  methods: {
-    filterNode(value, data) {
-      if (!value) return true;
-      return data.name.indexOf(value) !== -1;
-    },
-    // getCheckedKeys() {
-    //     console.log(this.$refs.tree2.getCheckedKeys());
-    //   },
-    checkChange(data, checked) {
-      // console.log(checked);
-      var j = 0;
-      var datatable1 = this.$refs.tree2.getCheckedNodes();
-      var length1 = datatable1.length;
-      if (length1 > 0) {
-        for (j = 0; j < datatable1.length; j++) {
-          if (
-            datatable1[j]["id"].toString().indexOf("m") > -1 ||
-            datatable1[j]["id"].toString().indexOf("w") > -1
-          ) {
-            delete datatable1[j];
-          }
-        }
-        // if (checked){
-        //  this.datatable = this.bouncer(datatable1);
-        // }else{
-        //   this.removeByValue(this.datatable,data);
-        // }
-        this.datatable = this.bouncer(datatable1);
-      } else {
-        this.datatable = [];
-      }
-    //    this.datatable = [];
-    //   if(checked){
-    //      if (data&&!data.children){
-    //     this.datatable.push(data);
-    //   }
-    //   else if (data.children&&!data.children[0].children){
-    //       this.datatable =data.children;
-    //     }
-    //   else if (data.children[0].children){
-    //      for(var i= 0;i<data.children.length;i++){
-    //        this.datatable.push(...data.children[i]["children"])
-    //      }
-    //     }
-        
-
-     
-     
-    // } else{
-    //   this.datatable = [];
-    // }
-
-    },
-    bouncer(arr) {
-      return arr.filter(function(val) {
-        return !(!val || val === "");
-      });
-    },
-    changedata2(id, values, total) {
-      for (let value of this.data2) {
-        if (value["children"]) {
-          for (let val of value["children"]) {
-            for (let val1 of val["children"]) {
-              if (val1["id"] == id) {
-                val1["give_number"] = values;
-              }
-            }
-          }
-        }
-      }
-      this.checkChange();
-    },
-    handleSearch2() {
-      this.checkChange();
-      this.datac = this.datatable;
-
-      this.datatable = this.search(this.datac, {
-        name: this.searchConName2
-      });
-    },
-    search(data, argumentObj) {
-      let res = data;
-      let dataClone = data;
-      for (let argu in argumentObj) {
-        if (argumentObj[argu].length > 0) {
-          res = dataClone.filter(d => {
-            return d[argu].indexOf(argumentObj[argu]) > -1;
-          });
-          dataClone = res;
-        }
-      }
-
-      return res;
-    },
-
-    removeByValue(arr, val) {
-      for (var i = 0; i < arr.length; i++) {
-        if (arr[i] == val) {
-          arr.splice(i, 1);
-          break;
-        }
-      }
-    },
-    show_proc(){
-      this.teams();
-      this.show_procedure = true;
-      
-    },
-    thisrow(row) {},
-    teams() {
-      this.$axios
-        .get("/teams", {
-          params: {
-            work_shop_id: 1
-          }
-        })
-        .then(res => {
-          this.workteams = res.data.teams;
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-    give_task_teamx(){
-      this.$axios.post('/give_task_teamx',{
-          data: this.$refs.tree2.getCheckedNodes()
-      }).then(res=>{
-        
-      })
-    }
-  },
-  mounted() {
-    this.$axios.get("/tree_shop_task").then(res => {
-      this.data2 = res.data.data;
-    });
-  },
-
-  data() {
+ data() {
     return {
       filterText: "",
       datatable: [],
       searchConName2: "",
       datac: [],
-      workteams:[],
-        model10: [],
+      workteams: [],
+      model10: [],
       show_procedure: false,
       columns1: [
         {
@@ -260,7 +130,9 @@ export default {
                   "on-blur"(e) {
                     // console.log(e);
                     // _this.datatable[params.index] = params.row;
-                    params.row.given_number = e.target.value ? e.target.value : '';
+                    params.row.given_number = e.target.value
+                      ? e.target.value
+                      : "";
                     if (params.row.given_number < 0) {
                       _this.$Message.info("分配数量不可小于0");
                       params.row.given_number = "";
@@ -340,6 +212,157 @@ export default {
         give_number: "give_number"
       }
     };
-  }
+  },
+  methods: {
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.name.indexOf(value) !== -1;
+    },
+    // getCheckedKeys() {
+    //     console.log(this.$refs.tree2.getCheckedKeys());
+    //   },
+    checkChange(data, checked) {
+      // console.log(checked);
+      var j = 0;
+      var datatable1 = this.$refs.tree2.getCheckedNodes();
+      var length1 = datatable1.length;
+      if (length1 > 0) {
+        for (j = 0; j < datatable1.length; j++) {
+          if (
+            datatable1[j]["id"].toString().indexOf("m") > -1 ||
+            datatable1[j]["id"].toString().indexOf("w") > -1
+          ) {
+            delete datatable1[j];
+          }
+        }
+        // if (checked){
+        //  this.datatable = this.bouncer(datatable1);
+        // }else{
+        //   this.removeByValue(this.datatable,data);
+        // }
+        this.datatable = this.bouncer(datatable1);
+      } else {
+        this.datatable = [];
+      }
+      //    this.datatable = [];
+      //   if(checked){
+      //      if (data&&!data.children){
+      //     this.datatable.push(data);
+      //   }
+      //   else if (data.children&&!data.children[0].children){
+      //       this.datatable =data.children;
+      //     }
+      //   else if (data.children[0].children){
+      //      for(var i= 0;i<data.children.length;i++){
+      //        this.datatable.push(...data.children[i]["children"])
+      //      }
+      //     }
+
+      // } else{
+      //   this.datatable = [];
+      // }
+    },
+    bouncer(arr) {
+      return arr.filter(function(val) {
+        return !(!val || val === "");
+      });
+    },
+    changedata2(id, values, total) {
+      for (let value of this.data2) {
+        if (value["children"]) {
+          for (let val of value["children"]) {
+            for (let val1 of val["children"]) {
+              if (val1["id"] == id) {
+                val1["give_number"] = values;
+              }
+            }
+          }
+        }
+      }
+      this.checkChange();
+    },
+    handleSearch2() {
+      this.checkChange();
+      this.datac = this.datatable;
+
+      this.datatable = this.search(this.datac, {
+        name: this.searchConName2
+      });
+    },
+    search(data, argumentObj) {
+      let res = data;
+      let dataClone = data;
+      for (let argu in argumentObj) {
+        if (argumentObj[argu].length > 0) {
+          res = dataClone.filter(d => {
+            return d[argu].indexOf(argumentObj[argu]) > -1;
+          });
+          dataClone = res;
+        }
+      }
+
+      return res;
+    },
+
+    removeByValue(arr, val) {
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i] == val) {
+          arr.splice(i, 1);
+          break;
+        }
+      }
+    },
+    show_proc() {
+      this.teams();
+      this.show_procedure = true;
+    },
+    thisrow(row) {},
+    teams() {
+      this.$axios
+        .get("/teams", {
+          params: {
+            work_shop_id: 1
+          }
+        })
+        .then(res => {
+          this.workteams = res.data.teams;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    give_task_teamx() {
+      this.checkChange();
+      if (this.datatable && this.datatable.length > 0&&this.model10.length>0) {
+        this.$axios
+          .post("/give_task_teamx", {
+            data: this.datatable,
+            procedure: this.model10.join(","),
+          })
+          .then(res => {
+            this.$Message.info("分配成功");
+            this.init();
+          });
+      }
+    },
+    init(){
+         this.$axios.get("/tree_shop_task").then(res => {
+      
+      if(res.data.data[0].children[0].children&&res.data.data[0].children[0].children.length>0){
+         this.data2 = res.data.data;
+      }else{
+        this.data2 =[];
+      }
+     
+    });
+  },
+    
+  },
+  created() {},
+  mounted() {
+    this.init();
+  },
+
+ 
 };
 </script>
