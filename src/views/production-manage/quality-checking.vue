@@ -4,7 +4,14 @@
 </style>
 
 <template>
-    <div>
+
+<Tabs type="card">
+        
+        <TabPane label="下料质检">
+           <Table :columns="xialiaoColumns" :data="xialiaoData"> </Table>
+        </TabPane>
+      <TabPane label="组拼质检">
+        
         <Modal width="60%" v-model="showPic" :title="graph_no">
            
             <img width="100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531138272810&di=fb25ebec179ae86ec8df80f3fb7aba90&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F12%2F81%2F58PIC5R58PICsqy_1024.jpg"></img>
@@ -18,7 +25,7 @@
           
         </Modal>
         
-        <Row class="margin-top-10">
+       
             <Col span="24">
                 <Card> 
                     <p slot="title">
@@ -32,7 +39,7 @@
                                   
                                     :columns-list="teamOrderColumns"
                                 ></can-edit-table>
-                       <Page :total="total" show-total  page-size=3 @on-change="handleChange"/>
+                       <Page :total="total" show-total  @on-change="handleChange"/>
                                  <br/>
                                      <div v-if="team_boms.length!=0">
                         <Icon type="compose"></Icon>模板：{{bom_name}};
@@ -56,8 +63,11 @@
                    
                 </Card>
             </Col>
-        </Row>
-    </div>
+       
+    
+        </TabPane>
+    </Tabs>
+
 </template>
 
 <script>
@@ -250,7 +260,82 @@ export default {
       pass_qty: 0,
       max_number:0 ,
       total: 0,
-      p_number: 0
+      p_number: 0,
+            xialiaoColumns: [
+              {
+          title: "序号",
+          type: "index",
+          width: 80,
+          align: "left"
+        },
+        {
+          title: "产品",
+          align: "center",
+          key: "template_type"
+        },
+        {
+          title: "模板名称",
+          align: "center",
+          key: "m_name"
+        },
+        {
+          title: "物料名称",
+          align: "center",
+          key: "b_name"
+        },
+        {
+          title: "规格",
+          align: "center",
+          key: "spec"
+        },
+        {
+          title: "宽度",
+          align: "center",
+          key: "width"
+        },
+        {
+          title: "长度",
+          align: "center",
+          key: "length"
+        },
+        {
+          title: "数量",
+          align: "center",
+          key: "number"
+        },
+        {
+          title: "备注",
+          align: "center",
+          key: "comment"
+        },
+       
+        {
+          title: "操作",
+          key: "action",
+         
+          align: "center",
+          render: (h, params) => {
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "primary",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "5px"
+                  },
+                  on: {
+                    click: () => {
+                       this.flow_finished(params.row.id,params.row.bid);
+                    }
+                  }
+                },
+                "完成")])}
+              }
+      ],
+       xialiaoData:[],
     };
   },
   methods: {
@@ -285,6 +370,12 @@ export default {
       .catch(error => {
         console.log(error);
       });
+
+      this.$axios.get("/xialiao_checking_list").then(res => {
+
+        console.log(res.data.data)
+        this.xialiaoData = res.data.data;
+      })
     },
     pic_show(picno) {
       this.graph_no = picno;
