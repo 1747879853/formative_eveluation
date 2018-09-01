@@ -171,6 +171,11 @@ export default {
                     key: 'number',
                     align: 'center'
                 },
+                  {
+                    title: '已分配车间',
+                    key: 'comment',
+                    align: 'center'
+                },
                 {
                     title: '添加模板',
                     key: 'action_add',
@@ -222,11 +227,15 @@ export default {
                                     size: 'small'
                                 },
                                 style: {
-                                    marginRight: '5px'
+                                    marginRight: '5px',
+                                    display: params.row.status==1 ? "display" : "none"
                                 },
                                 on: {
-                                    click: () => {       
+                                    click: () => {
+                                         this.model2 ="";
+                                          this.model1 ="";
                                         this.dispatchWorkOrder=true; 
+                                       
                                     }
                                 }
                             }, '分派工单'),
@@ -285,6 +294,7 @@ export default {
                     key: 'number',
                     align: 'center'
                 },
+               
                 {
                     title: '备注',
                     key: 'comment',
@@ -506,41 +516,28 @@ export default {
                    work_order_id: this.work_order_id
                }).then(res =>{
                    this.$Message.info(res.data.msg);
+                   this.init();
                })
            }
 
             
+       },
+       init(){
+            this.$axios.get("/order_details",{params:{
+            order_id:  this.$route.params.order_id
+        }})
+        .then(res =>{
+            // debugger
+            this.work_order_data_arr = res.data.work_orders;
+        })
+        .catch( error => {
+            console.log(error);
+        })
        }
        
     },
-    mounted () {
-        // var _this = this;
-        // this.$axios.get("/xialiao").then(res =>{
-        //     _this.workshop_directors = res.data.manager;  
-        //     // debugger
-        // })
-        // .catch( error => {
-        //     console.log(error);
-        // });
-        // this.$axios.get("/zupin")
-        // .then(res =>{
-        //     // debugger
-        //     _this.workshop_packaging = res.data.manager;
-           
-        // })
-        // .catch( error => {
-        //     console.log(error);
-        // });
-        // this.$axios.get("/order_details",{params:{
-        //     order_id:  this.$route.params.order_id
-        // }})
-        // .then(res =>{
-        //     // debugger
-        //     _this.work_order_data_arr = res.data.work_orders;
-        // })
-        // .catch( error => {
-        //     console.log(error);
-        // })
+    mounted() {
+        
     },
     activated () {
         var _this = this;

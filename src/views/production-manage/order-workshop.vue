@@ -95,11 +95,18 @@ export default {
         {
           title: "模板",
           key: "template_type",
-           width:400
+          align: "center",
+      
         },
         {
           title: "数量",
-          key: "number"
+          key: "number",
+          align: "center",
+        },
+         {
+          title: "已分配数量",
+          key: "assign_number",
+          align: "center",
         },
         {
           title: "操作",
@@ -121,8 +128,8 @@ export default {
                   on: {
                     click: () => {
                       // console.log(params.row);
-                      this.team_qty = params.row.number;
-                      this.max_qty = params.row.number;
+                      this.team_qty = params.row.w_number;
+                      this.max_qty = params.row.w_number;
                       this.$axios
                         .get("/teams", {
                           params: {
@@ -479,7 +486,13 @@ export default {
     }
   },
   mounted() {
-    this.$axios
+   this.init();
+    this.boms_approval_list1();
+    this.boms_approval_list2();
+  },
+  methods: {
+    init(){
+       this.$axios
       .get("/work_shop_order_list", { params: { user_id: 6 } })
       .then(res => {
         this.workshop_name = res.data.data[0]["name"];
@@ -492,10 +505,7 @@ export default {
       .catch(error => {
         console.log(error);
       });
-    this.boms_approval_list1();
-    this.boms_approval_list2();
-  },
-  methods: {
+    },
     give_workteam() {
       this.$axios
         .post("/work_team_task", {
@@ -507,6 +517,7 @@ export default {
         })
         .then(res => {
           this.$Message.info(res.data.msg);
+          this.init();
         });
     },
     boms_approval_list1() {

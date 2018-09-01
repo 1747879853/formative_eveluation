@@ -16,8 +16,8 @@
            
             <img width="100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1531138272810&di=fb25ebec179ae86ec8df80f3fb7aba90&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F12%2F81%2F58PIC5R58PICsqy_1024.jpg"></img>
         </Modal>
-         <Modal width="60%" v-model="show_finish" title="添加完成数量" @on-ok="material_finished">
-             添加完成数量：<InputNumber v-model="finish_qty"></InputNumber>
+         <Modal width="60%" v-model="show_passed" title="添加合格数量" @on-ok="xialiao_passed">
+             添加完成数量：<InputNumber v-model="xialiao_qty" :max="max_xialiao_number"></InputNumber>
           
         </Modal>
          <Modal width="60%" v-model="show_pass" title="添加合格数量" @on-ok="material_passed">
@@ -193,7 +193,7 @@ export default {
                       this.show_pass = true;
                       this.team_task_id = params.row.id;
                       this.max_number = params.row.number;
-                      this.p_number = params.row.passed_number ?params.row.passed_number : 0 ;
+                      this.p_number = params.row.passed_number ? params.row.passed_number : 0 ;
                     }
                   }
                 },
@@ -258,8 +258,10 @@ export default {
       team_task_id: "",
       finish_qty: 0,
       pass_qty: 0,
+      xialiao_qty: 0,
       max_number:0 ,
       total: 0,
+      x_number: 0,
       p_number: 0,
             xialiaoColumns: [
               {
@@ -304,6 +306,11 @@ export default {
           key: "number"
         },
         {
+          title: "合格数量",
+          align: "center",
+          key: "passed_number"
+        },
+        {
           title: "备注",
           align: "center",
           key: "comment"
@@ -328,37 +335,40 @@ export default {
                   },
                   on: {
                     click: () => {
-                       this.flow_finished(params.row.id,params.row.bid);
+                       this.show_passed =true;
+                       this.xialiao_qty = params.row.passed_number ? (params.row.number-params.row.passed_number) : params.row.number ;
+                       this.max_xialiao_number = params.row.passed_number ? (params.row.number-params.row.passed_number) : params.row.number ;
+                       this.teamx_id = params.row.id;
+                       this.bom_id =params.row.bid;
+                       this.x_number = params.row.passed_number ? params.row.passed_number : 0 ;
                     }
                   }
                 },
-                "完成")])}
+                "添加合格数量")])}
               }
       ],
        xialiaoData:[],
+       show_passed:false,
+       max_xialiao_number:0,
+       teamx_id:"",
+       bom_id:""
     };
   },
   methods: {
-    // handleNetConnect(state) {
-    //   this.breakConnect = state;
-    // },
-    // handleLowSpeed(state) {
-    //   this.lowNetSpeed = state;
-    // },
-    // getCurrentData() {
-    //   this.showCurrentTableData = true;
-    // },
-    // handleDel(val, index) {
-    //   this.$Message.success("删除了第" + (index + 1) + "行数据");
-    // },
-    // handleCellChange(val, index, key) {
-    //   this.$Message.success(
-    //     "修改了第 " + (index + 1) + " 行列名为 " + key + " 的数据"
-    //   );
-    // },
-    // handleChange(val, index) {
-    //   this.$Message.success("修改了第" + (index + 1) + "行数据");
-    // },
+    xialiao_passed(){
+       if (this.xialiao_qty != 0 &&(this.xialiao_qty+this.x_number>=0) ) {
+      this.$axios.post('/xialiao_passed',{
+        passed_number: this.xialiao_qty,
+        teamx_id: this.teamx_id,
+        bom_id: this.bom_id
+      }).then(res=>{
+        this.$Message.info("保存成功！");
+        this.init();
+      })}else{
+         this.$Message.info("添加的合格数量不能为0或合格数量与添加的合格数量相加不能小于0");
+        return;
+      }
+    },
     init(){
        this.$axios
       .get("/checking_list")

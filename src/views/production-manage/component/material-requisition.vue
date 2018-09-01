@@ -68,7 +68,7 @@ export default {
         {
           type: "index",
           title: "序号",
-          width: 30
+          width: 60
         },
         {
           title: "名称",
@@ -96,7 +96,12 @@ export default {
           key: "qty",
           align: "center"
         },
-
+        
+        {
+          title: "完成数量",
+          key: "passed_number",
+          align: "center"
+        },
         {
           title: "备注",
           key: "comment",

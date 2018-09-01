@@ -452,6 +452,7 @@ export default {
             painting_team: this.model10
         }).then(res=>{
             this.$Message.info("分派成功");
+            this.init();
         })
     }
 
