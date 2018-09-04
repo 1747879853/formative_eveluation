@@ -41,7 +41,8 @@ const app = {
         updateMenulist (state) {
             let accessCode = store.state.auth_rules;
             let menuList = [];
-            appRouter.forEach((item, index) => {
+            let myAppRouter = JSON.parse(JSON.stringify(appRouter));
+            myAppRouter.forEach((item, index) => {
                 if (item.access !== undefined) {
                     if (Util.showThisRoute(item.access, accessCode) || item.children.some(child => Util.showThisRoute(child.access, accessCode))) {
                         if (item.children.length === 1) {
