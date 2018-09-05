@@ -37,8 +37,12 @@
         </Card>
         <Card v-if= "isSummaryShow">
             <!-- <Input v-model="summarySearch" icon="ios-search" placeholder="搜索..." style="width: 200px" /> -->
+            <Row>
+                <Col span="12">&nbsp;</Col>
+                <Col span="12"><Page @on-change= 'on_change' @on-page-size-change='on_page_size_change' :total="total" show-sizer style="float: right"/></Col>
+            </Row>
             <Table :columns="summaryColumns" :data="summaries" style="width: 100%"></Table>
-            <Page @on-change= 'on_change' @on-page-size-change='on_page_size_change' :total="total" show-sizer />
+            
         </Card>
         <Card v-if = "isCostShow">
             <!-- <Input v-model="costSearch" icon="ios-search" placeholder="搜索..." style="width: 200px" /> -->
