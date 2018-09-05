@@ -256,9 +256,9 @@ export const appRouter = [
         children: [
             { path: 'order-manage', title: '订单', access:'production-manage/order-manage', name: 'order-manage', icon: 'link', component: () => import('@/views/production-manage/order-manage.vue') },
             { path: 'order-workshop', title: '组拼车间', access:'production-manage/order-workshop', name: 'order-workshop', icon: 'link', component: () => import('@/views/production-manage/order-workshop.vue') },           
-            { path: 'tree-order-workshop', title: '下料车间', access:'production-manage/tree-order-workshop', name: 'tree-order-workshop', icon: 'link', component: () => import('@/views/production-manage/tree-order-workshop.vue') },           
+            // { path: 'tree-order-workshop', title: '下料车间', access:'production-manage/tree-order-workshop', name: 'tree-order-workshop', icon: 'link', component: () => import('@/views/production-manage/tree-order-workshop.vue') },           
             { path: 'painting', title: '喷漆车间', access:'production-manage/painting', name: 'painting', icon: 'link', component: () => import('@/views/production-manage/painting.vue') },           
-            { path: 'tree-order-workshop1', title: '树形车间', access:'production-manage/tree-order-workshop1', name: 'tree-order-workshop1', icon: 'link', component: () => import('@/views/production-manage/tree-order-workshop1.vue') },           
+            { path: 'tree-order-workshop1', title: '下料车间', access:'production-manage/tree-order-workshop1', name: 'tree-order-workshop1', icon: 'link', component: () => import('@/views/production-manage/tree-order-workshop1.vue') },           
             // // { path: 'order-workshop-xialiao', title: '下料车间', access:'production-manage/order-workshop-xialiao', name: 'order-workshop-xialiao', icon: 'link', component: () => import('@/views/production-manage/order-workshop-xialiao.vue') },           
             
             { path: 'order-team', title: '班组', access:'production-manage/order-team', name: 'order-team', icon: 'link', component: () => import('@/views/production-manage/order-team.vue') },
