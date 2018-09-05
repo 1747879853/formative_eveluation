@@ -367,6 +367,14 @@ export const appRouter = [
                 access:'daily-summary/daily-work',
                 component: () => import('@/views/daily-summary/daily-work.vue')
             },
+            {
+                path: 'query',
+                icon: 'pound',
+                name: 'query',
+                title: '查询',
+                access:'daily-summary/query',
+                component: () => import('@/views/daily-summary/query.vue')
+            },
         ]
     },
     {
