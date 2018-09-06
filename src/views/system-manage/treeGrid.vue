@@ -24,8 +24,10 @@
                     <tr>&nbsp;</tr>
                     <tr><td>权限</td><td>
                     <Input v-model="f_authority" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
-                    <tr>&nbsp;</tr><tr><td>是否激活</td><td>
-                    <Input v-model="f_status" placeholder="是否激活" clearable style="width: 300px"></Input></td></tr>
+                    <tr>&nbsp;</tr><tr><td>是否激活</td><td>                    
+                    <Select v-model="option" size="middle" style="width:300px;" @on-change="selected(option)" ref="element1">
+                    <Option  v-for="(item,index) in statusData" :key="item.id" :value="index">{{ item.name }}</Option>
+                    </Select></td></tr>
                     <tr>&nbsp;</tr><tr><td>条件</td><td>
                     <Input v-model="f_condition" placeholder="条件" clearable style="width: 300px"></Input></td></tr>
                     <tr>&nbsp;</tr></table>
@@ -106,6 +108,8 @@ export default {
             current_id: 0,
             current_item: null,
             current_index: -1,
+            option:'',
+            statusData:[{id:1,name:'激活'},{id:2,name:'停用'}],
         }
     },
     computed: {
@@ -169,6 +173,11 @@ export default {
         }
     },
     methods: {
+        selected() {
+            if (!(this.statusData[this.option] == undefined)) {
+                this.f_status = this.statusData[this.option].id;
+            }
+        },
         show_modal(item, index, flag){
             if (item==undefined){
                 this.f_title = "添加权限";
@@ -178,6 +187,7 @@ export default {
                 this.f_authority = "";
                 this.f_status = "";
                 this.f_condition = "";
+                this.option = "";
             }else if (flag == undefined){
                 this.f_title = "添加子权限";
                 this.current_id = this.renderId(item);
@@ -186,6 +196,7 @@ export default {
                 this.f_authority = "";
                 this.f_status = "";
                 this.f_condition = "";
+                this.option = "";
             }
             else {
                 this.f_title = "修改子权限";
@@ -195,6 +206,12 @@ export default {
                 this.f_authority = this.renderAuthority(item);
                 this.f_status = this.renderStatus(item);
                 this.f_condition = this.renderCondition(item);
+                for(let i=0;i<this.statusData.length;i++){
+                  if(this.statusData[i].name==this.f_status){
+                    this.option=this.statusData[i].id-1;
+                    break;
+                  }
+                }
             }
             this.current_item = item;
             this.current_index = index;
