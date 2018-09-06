@@ -89,39 +89,39 @@ export default {
           key: "username"
         },
         {
-                  title: "操作",
-                  key: "action",
-                  align: "center",
-                  render: (h, params) => {
-                        return h('div', [
-                            h('Button', {
-                                props: {
-                                    type: 'primary',
-                                    size: 'small'
-                                },
-                                style: {
-                                    marginRight: '5px'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.show_modal2(params.index);
-                                    }
+            title: "操作",
+            key: "action",
+            align: "center",
+            render: (h, params) => {
+                  return h('div', [
+                      h('Button', {
+                          props: {
+                              type: 'primary',
+                              size: 'small'
+                          },
+                          style: {
+                              marginRight: '5px'
+                          },
+                          on: {
+                              click: () => {
+                                  this.show_modal2(params.index);
+                              }
+                          }
+                      }, '编辑班组'),  
+                      h('Button', {
+                          props: {
+                              type: 'error',
+                              size: 'small'
+                          },
+                          on: {
+                              click: () => {
+                                  this.deleteClick(params.index);
                                 }
-                            }, '编辑班组'),  
-                            h('Button', {
-                                props: {
-                                    type: 'error',
-                                    size: 'small'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.deleteClick(params.index);
-                                      }
-                                }
-                            }, '删除班组')
-                        ]);
-                    }
-                }
+                          }
+                      }, '删除班组')
+                  ]);
+              }
+          }
         
      ],
       teamData: [],

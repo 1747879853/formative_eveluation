@@ -341,6 +341,15 @@ export const appRouter = [
                 parent:'system-manage/index',
                 component: () => import('@/views/system-manage/user-authority-allocation.vue')
             },
+            {
+                path: 'menu-manage',
+                icon: 'compose',
+                name: 'menu-manage',
+                title: '菜单管理',
+                access:'system-manage/menu-manage',
+                parent:'system-manage/index',
+                component: () => import('@/views/system-manage/menu-manage.vue')
+            },
         ]
     },
     {
