@@ -387,6 +387,24 @@ export const appRouter = [
         ]
     },
     {
+        path: '/job-evaluation',
+        icon: 'settings',
+        name: 'job-evaluation',
+        title: '工作评价',
+        access:'job-evaluation/index',
+        component: Main,
+        children: [
+            {
+                path: 'job_item_content',
+                icon: 'compose',
+                name: 'job_item_content',
+                title: '工作项-工作内容',
+                access:'job-evaluation/job_item_content',
+                component: () => import('@/views/job-evaluation/job_item_content.vue')
+            },
+        ]
+    },
+    {
         path: '/users-manage',
         icon: 'settings',
         name: 'users-name',

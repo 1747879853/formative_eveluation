@@ -176,12 +176,12 @@ export default {
             }
             function depthTraversal1(arr,m){  
                 if (arr!=null){  
-                    for(let i=0;i<arr.length;i++){
+                    for(let i=0;i<arr.length && xx=="";i++){
                       if(arr[i].authority==m){
                           xx=arr[i].id;
-                          break;
+                          // break;
                       }
-                      if(arr[i]!=null){
+                      if(arr[i]!=null && xx==""){
                         depthTraversal1(arr[i].children,m);
                       }                  
                     }
@@ -225,7 +225,8 @@ export default {
                         this.$Message.info('后台权限添加成功！');
                     }.bind(this))
                     .catch(function(error) {
-                        console.log(error)
+                        console.log(error);
+                        this.$Message.info('该菜单权限在后台中已存在！');
                     });
                 }else if(x==1){
                     this.$Message.info('该菜单权限在后台中已存在！');
