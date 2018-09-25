@@ -356,7 +356,7 @@ export const appRouter = [
         path: '/daily-summary',
         icon: 'settings',
         name: 'daily-summary',
-        title: '日清总结',
+        title: '日清日结',
         access:'daily-summary/index',
         component: Main,
         children: [

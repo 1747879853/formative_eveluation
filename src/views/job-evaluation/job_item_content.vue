@@ -1,45 +1,36 @@
 <template>
     <Card>
     <div>
-    <Button @click="show_modal()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加花费科目</Button>
+    
+    
     <Modal
-        v-model="modal2"
-        title="添加花费科目"
-        @on-ok="ok"
-        @on-cancel="cancel">
-        <table>
-        <tr><td>花费科目名</td><td>
-        <Input v-model="f_name" placeholder="请输入花费科目名" clearable style="width: 300px"></Input></td></tr>
-        <tr>&nbsp;</tr>
-        </table>
-    </Modal>
-    <Modal
-        v-model="modal3"
-        title="添加子花费科目"
+        v-model="modal_append"
+        title="添加工作项"
         @on-ok="append"
         @on-cancel="cancel">
         <table>
-        <tr><td>子花费科目名</td><td>
-        <Input v-model="z_name" placeholder="请输入子花费科目名" clearable style="width: 300px"></Input></td></tr>
-        <tr>&nbsp;</tr>
+            <tr>
+                <td><Input v-model="item_title" placeholder="名称" clearable></Input>
+                </td>
+            </tr>
+            <tr>
+                <td><Input v-model="item_weight" placeholder="比重（数字）" clearable></Input></td>
+            </tr>
+            <tr>
+                <label>写法示例：“质量,0.5;时间,0.3;数量,0.2”，标点用英文标点，汉字之间不要有空格 </label>
+                <Input v-model="item_stds" placeholder="评价指标及百分比" clearable></Input>
+            </tr>
+            <tr>
+                <label>写法示例：“内容1-质量,时间;内容2-质量,数量”，标点用英文标点，汉字之间不要有空格</label>
+                <Input v-model="item_cnts" placeholder="工作内容" clearable></Input>
+            </tr>
+            <tr>&nbsp;</tr>
         </table>
     </Modal>
-    <Modal
-        v-model="modal1"
-        title="修改子花费科目"
-        @on-ok="edit"
-        @on-cancel="cancel">
-        <table>
-        <tr><td>花费科目名</td><td>
-        <Input v-model="e_name" placeholder="请输入子花费科目名" clearable style="width: 300px"></Input></td></tr><tr>&nbsp;</tr>
-        </table>
-    </Modal>
+   
     </div>
-        <!-- <tree-grid 
-        :items='data' 
-        :columns='columns'
-      ></tree-grid>    -->
-      <Tree :data="data" :render="renderContent"></Tree>       
+        
+      <Table :columns="columns1" :data="jic_list"></Table>       
     </Card>   
 </template>
 
@@ -49,25 +40,94 @@ export default {
     name: 'cost',
      data() {
             return {
-                modal2:false,
-                modal3:false,
-                modal1:false,
+                columns1: [
+                    {
+                        title: '角色',
+                        key: 'title'
+                    },
+                    {
+                        title: '工作项',
+                        key: 'item_title'
+                    },
+                    {
+                        title: '工作项比重',
+                        key: 'item_weight'
+                    },
+                    {
+                        title: '工作项评价指标',
+                        key: 'item_stds'
+                    },
+                    {
+                        title: '工作内容',
+                        key: 'item_cnts'
+                    },
+                    {
+                        title: '操作',
+                        key: 'show_more',
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('span', {
+                                style: {                                    
+                                }
+                                }, [
+                                    h('Button', {
+                                        props: Object.assign({}, this.buttonProps, {
+                                            icon: 'ios-plus-empty'
+                                        }),
+                                        style: {
+                                            marginRight: '8px'
+                                        },
+                                        attrs: {
+                                            title: '添加'
+                                        },
+                                        on: {
+                                            click: () => { 
+                                                this.modal_append = true;
+                                                this.current_row = params.row; 
+                                            }
+                                        }
+                                    }),
+                                    h('Button', {
+                                        props: Object.assign({}, this.buttonProps, {
+                                            icon: 'ios-minus-empty'
+                                        }),
+                                        style: {
+                                            marginRight: '8px'
+                                        },
+                                        attrs: {
+                                            title: '删除'
+                                        },
+                                        on: {
+                                            click: () => { this.remove(params.row) }
+                                        }
+                                    }),
+                                    h('Button', {
+                                        props: Object.assign({}, this.buttonProps, {
+                                            icon: 'ios-cog-outline'
+                                            // icon: 'ios-minus-empty'
+                                        }),
+                                        attrs: {
+                                            title: '修改'
+                                        },
+                                        on: {
+                                            click: () => { this.ok2(root, node, data) }
+                                        }
+                                    }),
+                                ]);
+                        }
+                    }
+                ],
+                modal_append:false,
+                current_row: "",
+                item_title: "",
+                item_weight: "",
+                item_stds: "",
+                item_cnts: "",
 
-                f_name:"",
-                z_name:"",
-                e_name:"",
-                // node.node就是data
-                // root指所有数据
-                data: [],
-                parent_data:[],
-                self_data:[],
-                root:[],
-                node:[],
+                jic_list: [],
             }
         },
-    components: {
-        // TreeGrid
-    },
+
     methods: {
             ok () {
     
@@ -109,167 +169,90 @@ export default {
             cancel () {
                 this.$Message.info('取消');
             },
-            show_modal(){
-                this.modal2=true;
-                this.f_name="";
-            },
-            show_moda3(node,root){
-                this.modal3=true;
-                this.f_name="";
-            },
-            show_moda4(data){
-                this.modal1=true;
-                this.e_name=data.title;
-            },
-            renderContent (h, { root, node, data }) {
-                return h('span', {
-                    style: {
-                        display: 'inline-block',
-                        width: '100%'
-                    }
-                }, [
-                    h('span', [
-                        h('Icon', {
-                            props: {
-                                type: 'ios-paper-outline'
-                            },
-                            style: {
-                                marginRight: '8px'
-                            }
-                        }),
-                        h('span', data.title)
-                    ]),
-                    h('span', {
-                        style: {
-                            display: 'inline-block',
-                            float: 'right',
-                            marginRight: '102px'
-                        }
-                    }, [
-                        h('Button', {
-                            props: Object.assign({}, this.buttonProps, {
-                                icon: 'ios-plus-empty'
-                            }),
-                            style: {
-                                marginRight: '8px'
-                            },
-                            attrs: {
-                                title: '添加'
-                            },
-                            on: {
-                                click: () => { this.ok1(root,node,data) }
-                            }
-                        }),
-                        h('Button', {
-                            props: Object.assign({}, this.buttonProps, {
-                                icon: 'ios-minus-empty'
-                            }),
-                            style: {
-                                marginRight: '8px'
-                            },
-                            attrs: {
-                                title: '删除'
-                            },
-                            on: {
-                                click: () => { this.remove(root, node, data) }
-                            }
-                        }),
-                        h('Button', {
-                            props: Object.assign({}, this.buttonProps, {
-                                icon: 'ios-pricetags-outline'
-                                // icon: 'ios-minus-empty'
-                            }),
-                            attrs: {
-                                title: '修改'
-                            },
-                            on: {
-                                click: () => { this.ok2(root, node, data) }
-                            }
-                        }),
-                    ])
-                ]);
-            },
-            edit(){
-                this.$axios.patch('/costList', {
-                        params: {
-                            id: this.self_data.id,
-                            title: this.e_name,
-                        }
-                    }).then(function(res) {
             
-                        console.log(res);
-                        console.log(this.data)
-            
-                        const parentKey = this.root.find(el => el === this.node).parent;
-                        if(!(parentKey == undefined)){
-                            const parent = this.root.find(el => el.nodeKey === parentKey).node;
-                            const index = parent.children.indexOf(this.self_data);
-                            parent.children[index].title = this.e_name;
-                        }else{
-                            for(let i=0;i<this.data.length;i++){
-                                if(this.data[i].id == this.self_data.id){
-                                    this.data[i].title = this.e_name;
-                                }
-                            }
-                        }
-                        // for()
-                    }.bind(this))
-                    .catch(function(error) {
-                        console.log(error)
-                    });
-                    this.$Message.info('修改成功');
-        
-            },
             append(){
-                if(this.z_name.length == 0){
-                    this.$Message.error("添加内容不可为空")
+                
+                if(this.item_title == "" || this.item_weight == "" || this.item_stds == "" || this.item_cnts == "" ){
+                    this.$Message.error("添加内容不可为空");
                 }else{
-                    this.$axios.post('/costList', {
+                    var _this = this;
+                    this.$axios.post('/jicList', {
                             params: {
-                                title: this.z_name,
-                                parent_id: this.parent_data.id,
+                                auth_group_id: this.current_row.id,
+                                item_title: this.item_title,
+                                item_weight: this.item_weight,
+                                item_stds: this.item_stds,
+                                item_cnts: this.item_cnts
                             }
                         }).then(function(res) {
-                
-                            const children = this.parent_data.children || [];
-                            children.push({
-                                id:res.data.id,
-                                title: res.data.title,
-                                expend:true,
-                                children:[],
+                            debugger
+                            this.jic_list.push({
+                                id: this.current_row.id,
+                                jic_id: res.data.id,
+                                title: this.current_row.title,
+                                
+                                item_title: res.data.item_title,
+                                item_weight: res.data.item_weight,
+                                item_stds: res.data.item_stds,
+                                item_cnts: res.data.item_cnts
                             });
-                
-                            this.$set(this.data, 'children', children);
+                            // this.jic_list.splice(0,0);
+                            console.log(this.jic_list);
+                            _this.$Message.success("添加成功！");
+                            this.current_row = "";
+                            this.item_title = "";
+                            this.item_weight = "";
+                            this.item_stds = "";
+                            this.item_cnts = "";
                         }.bind(this))
                         .catch(function(error) {
-                            console.log(error)
+                            console.log(error);
+                            _this.$Message.error("添加失败！");
+                            this.current_row = "";
+                            this.item_title = "";
+                            this.item_weight = "";
+                            this.item_stds = "";
+                            this.item_cnts = "";
                         });
-                    }
-                this.z_name="";
+                }
+                
             },
-            remove (root, node, data) {
+            remove (row) {
                 this.$Modal.confirm({
-                    title: '删除花费科目',
-                    content: '<p>确定要删除此花费科目吗？</p>',
+                    title: '删除工作项',
+                    content: '<p>确定要删除此工作项吗？</p>',
                     onOk: () => {
-                        this.$axios.delete('/costList', {
+                        this.$axios.delete('/jicList', {
                             data: {
                                 params: {
-                                    id: data.id,
+                                    jic_id: row.jic_id,
                                 }
                             }
 
                         }).then(function(res) {
-                
-                            const parentKey = root.find(el => el === node).parent;
-                            if(!(parentKey == undefined)){
-                                const parent = root.find(el => el.nodeKey === parentKey).node;
-                                const index = parent.children.indexOf(data);
-                                parent.children.splice(index, 1);
-                            }else{
-                                for(let i=0;i<this.data.length;i++){
-                                    if(this.data[i].id == data.id){
-                                        this.data.splice(i,1);
+                            let count=0;
+                            for(let i=0;i<this.jic_list.length;i++){
+                                if(this.jic_list[i].id == row.id){
+                                    count = count + 1;
+                                }
+                            }
+                            if(count>1){
+                                for(let i=0;i<this.jic_list.length;i++){
+                                    if(this.jic_list[i].jic_id == row.jic_id){
+                                        this.jic_list.splice(i,1);
+                                        break;
+                                    }
+                                }
+                            }else{                                
+                                for(let i=0;i<this.jic_list.length;i++){
+                                    if(this.jic_list[i].jic_id == row.jic_id){
+                                        
+                                        this.jic_list[i].jic_id = 0;
+                                        this.jic_list[i].item_title = "" ;
+                                        this.jic_list[i].item_weight = "" ;
+                                        this.jic_list[i].item_stds = "" ;
+                                        this.jic_list[i].item_cnts = "" ;
+                                        break;
                                     }
                                 }
                             }
@@ -287,11 +270,10 @@ export default {
             },
         },
     mounted(){
-        // debugger
         var _this = this;
-        this.$axios.get("/costList").then( res =>{
-            _this.data = res.data.costs;  
-            // debugger  
+        this.$axios.get("/jicList").then( res =>{
+            _this.jic_list = res.data.jic_list; 
+            // debugger
         }).catch(error =>{
             console.log(error);
         })

@@ -23,14 +23,18 @@
 		        	<td>工作内容</td>
 		        	<td>
 		        		<Input v-model="workcontent" placeholder="请输入工作内容" clearable style="width: 300px"></Input>
-		        	</td>&nbsp;
+		        	</td>
+
+
+
+                </tr>
+                <tr>&nbsp;</tr>
+                <tr>
 					<td>交通工具</td>
 					<td>
 						<Input v-model="transport" placeholder="请输入交通工具" clearable style="width: 300px"></Input>
 					</td>
-		        </tr>
-		        <tr>&nbsp;</tr>
-		        <tr>
+		        
 		        	<td>工作说明</td>
 		        	<td>
 		        		<Input v-model="explain" placeholder="请输入工作说明" clearable style="width: 300px"></Input>
@@ -63,22 +67,8 @@
                     &nbsp;&nbsp;&nbsp;
                     金额：
                     <Input v-model="money" placeholder="请输入金额" clearable style="width: 250px"></Input>	
-                <!-- <table style="float:center;margin-left:100px;font-size:14px;">
-                <tr> -->
-                    <!-- <td>具体事由</td>
-                    <td>
-                        <Input v-model="thing" placeholder="请输入具体事由" clearable style="width: 250px"></Input>
-                    </td>
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                    <td>金额</td>
-                    <td>
-                        <Input v-model="money" placeholder="请输入金额" clearable style="width: 250px"></Input>
-                    </td> -->
-                <!-- </tr>
-                <tr>&nbsp;</tr>
-                </table>  -->
+                
                 </div>           
-               <!--  <span style="font-size:24px;float:right;margin-right:100px;"> <Button type="primary" @click="add">添加花费</Button></span> -->
             	</div>
             </Card>
         </Row>
@@ -90,6 +80,7 @@ export default{
 	name:"addSummary",
 	data(){
 		return{
+            jics: [],
 			date:'',
 			address:'',
 			workcontent:'',
@@ -104,8 +95,13 @@ export default{
             costData:[],
             thing:'',
             money:'',
-            // costid:'',
-            name:'',
+            costid1: 0,
+            costid2: 0,
+            costid3: 0,
+            // name:'',
+            name1: '',
+            name2: '',
+            name3: '',
             isselect:true,
             costColumns:[
             {
@@ -114,7 +110,7 @@ export default{
                 width: 60
             },
             {
-                title:'花费科目',
+                title:'花费明细',
                 key: "name",
                 align: "center"
             },
@@ -124,7 +120,7 @@ export default{
                 align: "center"
             },
             {
-                title:'费用',
+                title:'金额',
                 key: "money",
                 align: "center"
 
@@ -161,64 +157,92 @@ export default{
         //选择器被选中
         selected1() {
             // console.log(this.costdata[this.option1]);
-            if (!(this.costdata[this.option1] == undefined)) {
+            if(this.option1 == undefined){
+                this.$refs.element2.clearSingleSelect();
+                this.$refs.element3.clearSingleSelect();
+                this.costdata2 = [];
+                this.costdata3 = [];
+                this.costid1 = 0;
+                this.name1 = "";
+                this.name2 = "";
+                this.name3 = "";
+            }
+            else if (this.costdata[this.option1] != undefined) {
+
+                this.$refs.element2.clearSingleSelect();
+                this.$refs.element3.clearSingleSelect();
                 this.costdata2 = this.costdata[this.option1].children;
-                // this.costid = this.costdata[this.option1].id;
-                this.name = this.costdata[this.option1].title;
+                this.costdata3 = [];
+                this.costid1 = this.costdata[this.option1].id;
+                this.name1 = this.costdata[this.option1].title;
                 // console.log(this.option1)
             }
         },
         selected2(){
-            if (!(this.costdata[this.option1] == undefined)) {
+            if(this.option2 == undefined){
+                this.$refs.element3.clearSingleSelect();
+                this.costdata3 = [];
+                this.costid2 = 0;
+                this.name2 = "";
+                this.name3 = "";
+            }
+            else if (this.costdata2[this.option2] != undefined) {
+
+                this.$refs.element3.clearSingleSelect();
                 this.costdata3 = this.costdata2[this.option2].children;
-                // this.costid = this.costdata2[this.option2].id;
-                this.name = this.costdata2[this.option2].title;
+                this.costid2 = this.costdata2[this.option2].id;
+                this.name2 = this.costdata2[this.option2].title;
                 // console.log(this.option2);
                 // console.log(this.name);
             }
         },
         selected3() {
-            if (!(this.costdata[this.option1] == undefined)) {
-                // this.costid = this.costdata3[this.option3].id;
-                this.name = this.costdata3[this.option3].title;
+            if (this.costdata3[this.option3] != undefined) {
+                this.costid3 = this.costdata3[this.option3].id;
+                this.name3 = this.costdata3[this.option3].title;
                 // console.log(this.name);
             }
 
         },
 		add(){
             //如果没选或者填，提出警告
-            if((this.option1 === '')||(this.money === '')){
+            if(( this.option1 == undefined )||(this.money == "")){
                 this.$Message.error("首选项和金额不能为空！");
             }else{
+                let names = this.name1;
+                if(this.name2 != "")  names += '-'+this.name2 ;
+                if(this.name3 != "")  names += '-'+this.name3 ;
+
+                let last_costid = 0;
+                if(this.costid1 != 0) last_costid = this.costid1;
+                if(this.costid2 != 0) last_costid = this.costid2;
+                if(this.costid3 != 0) last_costid = this.costid3;
+                
                 this.costData.push({
                     // cost的id
-                    // costid:this.costid,
-                    name:this.name,
-                    thing:this.thing,
-                    money:this.money,
+                    costid: last_costid,
+                    name:  names,
+                    thing: this.thing,
+                    money: this.money,
                 })
             }
             // this.isselect=false;
-            this.$refs.element1.clearSingleSelect();
-            if(this.costdata2.length > 0){
-                this.$refs.element3.clearSingleSelect();
-            }
-            if (this.costdata2) {
-                this.$refs.element3.clearSingleSelect();
-            }
+            // this.$refs.element1.clearSingleSelect();
+            // if(this.costdata2.length > 0){
+            //     this.$refs.element3.clearSingleSelect();
+            // }
+            // if (this.costdata2) {
+            //     this.$refs.element3.clearSingleSelect();
+            // }
             
             
-            // console.log(this.costData);
-            // 添加后清空
-            // this.costid='';
-            this.option1='';
-            this.option2='';
-            this.option3='';
-            // this.costdata2="";
-            // this.costdata3="";
-            this.name='';
-            this.thing='';
-            this.money='';
+            // 如果需要添加后清空,可以使用下面的代码
+            // this.option1='';
+            // this.option2='';
+            // this.option3='';
+            // this.name='';
+            // this.thing='';
+            // this.money='';
 	    },
         deleteClick(index) 
         {
@@ -282,10 +306,20 @@ export default{
         this.$axios.get("/costList").then( res =>{
             _this.costdata = res.data.costs;
             // debugger
-            console.log(res.data);
+            // console.log(res.data);
         }).catch(error =>{
+            _this.$Message.info('服务器错误，无法获取花费选项！');
             console.log(error);
-        })
+        });
+
+        this.$axios.get("/get_current_user_jic").then( res =>{
+            _this.jics = res.data.jics;
+            // debugger
+            // console.log(res.data);
+        }).catch(error =>{
+            _this.$Message.info('服务器错误，无法获取当前用户的工作项！');
+            console.log(error);
+        });
         
     },
 }
