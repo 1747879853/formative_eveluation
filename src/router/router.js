@@ -384,26 +384,17 @@ export const appRouter = [
                 access:'daily-summary/query',
                 component: () => import('@/views/daily-summary/query.vue')
             },
-        ]
-    },
-    {
-        path: '/job-evaluation',
-        icon: 'settings',
-        name: 'job-evaluation',
-        title: '工作评价',
-        access:'job-evaluation/index',
-        component: Main,
-        children: [
             {
                 path: 'job_item_content',
-                icon: 'compose',
+                icon: 'settings',
                 name: 'job_item_content',
                 title: '工作项-工作内容',
-                access:'job-evaluation/job_item_content',
-                component: () => import('@/views/job-evaluation/job_item_content.vue')
+                access:'daily-summary/job_item_content',
+                component: () => import('@/views/daily-summary/job_item_content.vue')
             },
         ]
     },
+    
     {
         path: '/users-manage',
         icon: 'settings',

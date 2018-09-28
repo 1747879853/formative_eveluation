@@ -11,30 +11,39 @@
 		        <tr>
 		        	<td>日期</td>
 		        	<td>
-     					<DatePicker format="yyyy-MM-dd" @on-change="time1" type="date" placeholder="选择日期" style="width: 200px"></DatePicker>
-     				</td>&nbsp;
+     					<DatePicker format="yyyy-MM-dd" @on-change="time1" type="date" placeholder="选择日期" style="width: 300px"></DatePicker>
+     				</td>
+                </tr>
+                <tr>
 		        	<td>工作地点</td>
 		        	<td>
 		        		<Input v-model="address" placeholder="请输入工作地点" clearable style="width: 300px"></Input>
 		        	</td>
 		        </tr>
 		        <tr>&nbsp;</tr>
-		        <tr>
-		        	<td>工作内容</td>
-		        	<td>
-		        		<Input v-model="workcontent" placeholder="请输入工作内容" clearable style="width: 300px"></Input>
-		        	</td>
-
-
-
-                </tr>
+		          
+                <tr>
+                    <td>工作项和工作内容</td>
+                    <td>
+                        <span v-for="(item, indexi) in itemArr" :key="indexi" >
+                            <Checkbox v-model="item.chk">{{item.item_title}}</Checkbox>
+                            <span v-for="(cnt, indexj) in item.cntArr" :key="indexj" >
+                                <Checkbox v-model="cnt.chk">{{cnt.cnt_title}}</Checkbox>
+                                <Input v-model="cnt.num" size="small" style="margin-right:20px; width:40px;"></Input>
+                            </span>
+                            <br>
+                        </span>
+                        <span>填写说明：请先选择工作项后再选择相关工作内容并填写该工作的度量值（整数），否则无效</span>
+                    </td>
+                </tr>                      
                 <tr>&nbsp;</tr>
                 <tr>
 					<td>交通工具</td>
 					<td>
 						<Input v-model="transport" placeholder="请输入交通工具" clearable style="width: 300px"></Input>
 					</td>
-		        
+		        </tr>
+                <tr>
 		        	<td>工作说明</td>
 		        	<td>
 		        		<Input v-model="explain" placeholder="请输入工作说明" clearable style="width: 300px"></Input>
@@ -50,7 +59,8 @@
                 <span style="float:center;margin-left:100px;font-size:20px;color: #2db7f5;"> 花费明细</span>
             	<div style="text-align: left;font-size:15px;">
                 <div style="margin-left:100px;">
-                    <span style="font-size:24px;float:right;margin-right:100px;"> <Button type="primary" @click="add">添加花费</Button></span>
+                    <span style="font-size:24px;float:right;margin-right:100px;"> <Button type="primary" @click="addCost">添加花费</Button>
+                    </span>
                     <Select v-model="option1" clearable  size="small" style="width:100px;" @on-change="selected1(option1)" ref="element1">
                     <Option  v-for="(item,index) in costdata" :key="item.id" :value="index">{{ item.title }}</Option>
                     </Select>
@@ -60,13 +70,15 @@
                     <Select v-model="option3" clearable size="small" style="width:100px;" @on-change="selected3(option3)" ref="element3">
                         <Option  v-for="(item,index) in costdata3" :key="item.id" :value="index">{{ item.title }}</Option>
                     </Select>
-                    &nbsp;&nbsp;&nbsp;
-                	具体事由：
-                    <Input v-model="thing" placeholder="请输入具体事由" clearable style="width: 250px"></Input>
+                    </div>
+                    <div style="margin-left:100px;margin-top:10px;">
+                	事由：
+                    <Input v-model="thing" placeholder="请输入具体事由" clearable style="width: 300px"></Input>
                     <!-- <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td> -->
-                    &nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div style="margin-left:100px;margin-top:10px;">
                     金额：
-                    <Input v-model="money" placeholder="请输入金额" clearable style="width: 250px"></Input>	
+                    <input v-model="money" type="number" placeholder="请输入金额" style="width: 300px"/>	
                 
                 </div>           
             	</div>
@@ -80,7 +92,7 @@ export default{
 	name:"addSummary",
 	data(){
 		return{
-            jics: [],
+            itemArr: [],
 			date:'',
 			address:'',
 			workcontent:'',
@@ -98,7 +110,6 @@ export default{
             costid1: 0,
             costid2: 0,
             costid3: 0,
-            // name:'',
             name1: '',
             name2: '',
             name3: '',
@@ -111,7 +122,7 @@ export default{
             },
             {
                 title:'花费明细',
-                key: "name",
+                key: "names",
                 align: "center"
             },
             {
@@ -156,6 +167,7 @@ export default{
         },
         //选择器被选中
         selected1() {
+            // debugger
             // console.log(this.costdata[this.option1]);
             if(this.option1 == undefined){
                 this.$refs.element2.clearSingleSelect();
@@ -192,36 +204,35 @@ export default{
                 this.costdata3 = this.costdata2[this.option2].children;
                 this.costid2 = this.costdata2[this.option2].id;
                 this.name2 = this.costdata2[this.option2].title;
-                // console.log(this.option2);
-                // console.log(this.name);
+                this.name3 = "";
             }
         },
         selected3() {
             if (this.costdata3[this.option3] != undefined) {
                 this.costid3 = this.costdata3[this.option3].id;
                 this.name3 = this.costdata3[this.option3].title;
-                // console.log(this.name);
             }
 
         },
-		add(){
+		addCost(){
             //如果没选或者填，提出警告
             if(( this.option1 == undefined )||(this.money == "")){
                 this.$Message.error("首选项和金额不能为空！");
             }else{
-                let names = this.name1;
+                let names = "";
+                if(this.name1 != "")  names += this.name1;
                 if(this.name2 != "")  names += '-'+this.name2 ;
                 if(this.name3 != "")  names += '-'+this.name3 ;
 
-                let last_costid = 0;
-                if(this.costid1 != 0) last_costid = this.costid1;
-                if(this.costid2 != 0) last_costid = this.costid2;
-                if(this.costid3 != 0) last_costid = this.costid3;
+                let costids = "";
+                if(this.costid1 != 0) costids += this.costid1;
+                if(this.costid2 != 0) costids += '-'+this.costid2;
+                if(this.costid3 != 0) costids += '-'+this.costid3;
                 
                 this.costData.push({
                     // cost的id
-                    costid: last_costid,
-                    name:  names,
+                    costids: costids,
+                    names:  names,
                     thing: this.thing,
                     money: this.money,
                 })
@@ -262,31 +273,55 @@ export default{
         save_and_use(){
             // console.log(this.costData);
             // 这里children为空？
+            var _this = this;
             if (this.date == '') {
                 this.$Message.error("有内容为空！");
             }else{
                 // debugger
-                this.$axios.post('/workList', {
+                let workcnt = '';
+                if (this.itemArr.length!=0){
+                    this.itemArr.forEach((item,index)=>{ 
+                        if(item.chk){
+                            workcnt += item.item_id;
+                            workcnt += ';'
+                            item.cntArr.forEach((cnt,jj)=>{
+                                if(cnt.chk){
+                                    workcnt += cnt.cnt_title;
+                                    workcnt += ':';
+                                    workcnt += cnt.num;
+                                    workcnt += ',';
+                                }
+                            });
+                            
+                            workcnt += '|';
+                        }
+                    });                        
+                }
+
+
+                this.$axios.post('/saveSummary', {
                 params: {
                     date: this.date,
                     address: this.address,
-                    workcontent: this.workcontent,
+                    workcontent: workcnt,
                     transport: this.transport,
                     explain: this.explain,
                     costdata: this.costData,
                 }
                 }).then(function(res) {
                     // console.log(res);
-                    this.$Message.info('添加成功');
+                    this.$Message.success('添加成功');
                 }.bind(this))
                 .catch(function(error) {
-                    console.log(error)
+                    _this.$Message.error('服务器错误，添加失败！');
+                    console.log(error);
                 });
+
                 let argu = { 
                         flag:1,
                         date: this.date,
                         address: this.address,
-                        workcontent: this.workcontent,
+                        workcontent: workcnt,
                         transport: this.transport,
                         explain: this.explain,
                         costData: this.costData, };
@@ -296,9 +331,12 @@ export default{
                     params: argu
                 });
             }
-            
+        },
+        checkItemChange(){
+
 
         },
+       
     },
     //获取cost三级目录
     mounted(){
@@ -313,9 +351,28 @@ export default{
         });
 
         this.$axios.get("/get_current_user_jic").then( res =>{
-            _this.jics = res.data.jics;
-            // debugger
-            // console.log(res.data);
+
+            let tt = res.data.jics;
+            let tmpItemArr = [];
+            if (tt.length!=0){
+                tt.forEach((item,index)=>{ 
+                    let hh = {};
+                    hh.item_id = item.id;
+                    hh.item_title = item.item_title ;
+                    hh.chk = false;
+                    hh.cntArr = [];              
+                    item.item_cnts.split(';').forEach((cnt,jj) =>{
+                        let hi = {};
+                        hi.cnt_title = cnt;
+                        hi.chk = false;
+                        hi.num = null;
+                        hh.cntArr.push(hi);
+                    });
+                    tmpItemArr.push(hh);
+                });
+            }
+            _this.itemArr = tmpItemArr;
+
         }).catch(error =>{
             _this.$Message.info('服务器错误，无法获取当前用户的工作项！');
             console.log(error);
@@ -323,5 +380,7 @@ export default{
         
     },
 }
+
+
 </script>
-<style></style>
+
