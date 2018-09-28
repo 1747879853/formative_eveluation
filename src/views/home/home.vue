@@ -49,12 +49,12 @@
                 </Row>
                 <Row :gutter="10">
                    
-                  <Col :md="24" :lg="24" :style="{marginBottom: '10px'}">
+                  <!-- <Col :md="24" :lg="24" :style="{marginBottom: '10px'}">
                    <Card>
                        <div id="allmap" style="widht:800px;height:700px"></div>
                         </Card>
-                   </Col>
-                    <!-- <Col :md="24" :lg="12" :style="{marginBottom: '10px'}">
+                   </Col> -->
+                    <Col :md="24" :lg="12" :style="{marginBottom: '10px'}">
                         <Card>
                             <p slot="title" class="card-title">
                                 <Icon type="android-map"></Icon>
@@ -75,7 +75,7 @@
                                 <data-source-pie></data-source-pie>
                             </div>
                         </Card>
-                    </Col> -->
+                    </Col>
                 </Row>
             </Col>
             <Col :md="24" :lg="8">
@@ -249,7 +249,7 @@ export default {
     }
   },
   mounted() {
-    this.initMap();
+    // this.initMap();
   },
   methods: {
     addNewToDoItem() {
