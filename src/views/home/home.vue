@@ -1,6 +1,6 @@
 <style lang="less">
-    @import "./home.less";
-    @import "../../styles/common.less";
+@import "./home.less";
+@import "../../styles/common.less";
 </style>
 <template>
     <div class="home-main">
@@ -47,8 +47,14 @@
                         ></infor-card>
                     </Col>
                 </Row>
-                <Row :gutter="5">
-                    <Col :md="24" :lg="12" :style="{marginBottom: '10px'}">
+                <Row :gutter="10">
+                   
+                  <Col :md="24" :lg="24" :style="{marginBottom: '10px'}">
+                   <Card>
+                       <div id="allmap" style="widht:800px;height:700px"></div>
+                        </Card>
+                   </Col>
+                    <!-- <Col :md="24" :lg="12" :style="{marginBottom: '10px'}">
                         <Card>
                             <p slot="title" class="card-title">
                                 <Icon type="android-map"></Icon>
@@ -69,7 +75,7 @@
                                 <data-source-pie></data-source-pie>
                             </div>
                         </Card>
-                    </Col>
+                    </Col> -->
                 </Row>
             </Col>
             <Col :md="24" :lg="8">
@@ -191,77 +197,214 @@
 </template>
 
 <script>
-import cityData from './map-data/get-city-value.js';
-import homeMap from './components/map.vue';
-import dataSourcePie from './components/dataSourcePie.vue';
-import visiteVolume from './components/visiteVolume.vue';
-import serviceRequests from './components/serviceRequests.vue';
-import userFlow from './components/userFlow.vue';
-import countUp from './components/countUp.vue';
-import inforCard from './components/inforCard.vue';
-import mapDataTable from './components/mapDataTable.vue';
-import toDoListItem from './components/toDoListItem.vue';
+import cityData from "./map-data/get-city-value.js";
+import homeMap from "./components/map.vue";
+import dataSourcePie from "./components/dataSourcePie.vue";
+import visiteVolume from "./components/visiteVolume.vue";
+import serviceRequests from "./components/serviceRequests.vue";
+import userFlow from "./components/userFlow.vue";
+import countUp from "./components/countUp.vue";
+import inforCard from "./components/inforCard.vue";
+import mapDataTable from "./components/mapDataTable.vue";
+import toDoListItem from "./components/toDoListItem.vue";
+import inMap from "inMap";
 
 export default {
-    name: 'home',
-    components: {
-        homeMap,
-        dataSourcePie,
-        visiteVolume,
-        serviceRequests,
-        userFlow,
-        countUp,
-        inforCard,
-        mapDataTable,
-        toDoListItem
-    },
-    data () {
-        return {
-            toDoList: [
-                {
-                    title: '完成工单一的设计'
-                },
-                {
-                    title: '出差了解工地情况'
-                }
-            ],
-            count: {
-                newOrders: 4,
-                finishedWorkOrders: 23,
-                qsPassRate: 98.3,
-                failureRate: 0.345
-            },
-            cityData: cityData,
-            showAddNewTodo: false,
-            newToDoItemValue: ''
-        };
-    },
-    computed: {
-        avatorPath () {
-            return localStorage.avatorImgPath;
-        }
-    },
-    methods: {
-        addNewToDoItem () {
-            this.showAddNewTodo = true;
+  name: "home",
+  components: {
+    homeMap,
+    dataSourcePie,
+    visiteVolume,
+    serviceRequests,
+    userFlow,
+    countUp,
+    inforCard,
+    mapDataTable,
+    toDoListItem
+  },
+  data() {
+    return {
+      toDoList: [
+        {
+          title: "完成工单一的设计"
         },
-        addNew () {
-            if (this.newToDoItemValue.length !== 0) {
-                this.toDoList.unshift({
-                    title: this.newToDoItemValue
-                });
-                setTimeout(() => {
-                    this.newToDoItemValue = '';
-                }, 200);
-                this.showAddNewTodo = false;
-            } else {
-                this.$Message.error('请输入待办事项内容');
-            }
-        },
-        cancelAdd () {
-            this.showAddNewTodo = false;
-            this.newToDoItemValue = '';
+        {
+          title: "出差了解工地情况"
         }
+      ],
+      count: {
+        newOrders: 4,
+        finishedWorkOrders: 23,
+        qsPassRate: 98.3,
+        failureRate: 0.345
+      },
+      cityData: cityData,
+      showAddNewTodo: false,
+      newToDoItemValue: ""
+    };
+  },
+  computed: {
+    avatorPath() {
+      return localStorage.avatorImgPath;
     }
+  },
+  mounted() {
+    this.initMap();
+  },
+  methods: {
+    addNewToDoItem() {
+      this.showAddNewTodo = true;
+    },
+    addNew() {
+      if (this.newToDoItemValue.length !== 0) {
+        this.toDoList.unshift({
+          title: this.newToDoItemValue
+        });
+        setTimeout(() => {
+          this.newToDoItemValue = "";
+        }, 200);
+        this.showAddNewTodo = false;
+      } else {
+        this.$Message.error("请输入待办事项内容");
+      }
+    },
+    cancelAdd() {
+      this.showAddNewTodo = false;
+      this.newToDoItemValue = "";
+    },
+    initMap() {
+      /**
+ *在全局定义.auto样式
+ <style>
+ .auto { padding:5px 15px; border:0; background:#fff; }
+ </style>
+
+ 
+ */
+    
+   this.$axios.get('/location_lasts').then(res=>{
+     var  data =res.data.data;
+       if (!data){
+           data = []
+       }
+  
+//     var data =[
+//   {
+//     "shifts": "334;334;337;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;339;",
+//     "w_time": "2018-09-18 22:44:22",
+//     "r_time": "2018-09-14 17:20:00",
+//     "altitude": "3.2",
+//     "record_time": "2018-09-19 18:30:43",
+//     "write_time": "2018-09-19 18:30:47",
+//     "bd_lng": 118.17299700000001,
+//     "bd_lat": 37.570204333333336,
+//     "geometry": {
+//       "type": "Point",
+//       "coordinates": [
+//         118.17299700000001,
+//         37.570204333333336
+//       ]
+//     },
+//     "location": "山东省东营市利津县G2516(东吕高速)"
+//   },
+//   {
+//     "shifts": null,
+//     "w_time": null,
+//     "r_time": null,
+//     "altitude": "5.0",
+//     "record_time": "2018-09-17 22:40:43",
+//     "write_time": "2018-09-18 22:39:20",
+//     "bd_lng": 118.17305316666668,
+//     "bd_lat": 37.570134833333334,
+//     "geometry": {
+//       "type": "Point",
+//       "coordinates": [
+//         118.17305316666668,
+//         37.570134833333334
+//       ]
+//     },
+//     "location": "山东省东营市利津县G2516(东吕高速)"
+//   }
+// ];
+      var inmap = new inMap.Map({
+        id: "allmap",
+         skin: "Blueness",
+        center: [105.403119, 38.028658],
+        zoom: {
+          value: 5,
+          show: true,
+          max: 18,
+          min: 5
+        }
+      });
+      var overlay = new inMap.PointOverlay({
+        tooltip: {
+          show: true,
+         
+          formatter: function(params) {
+             
+            return (
+              "<div style='background-color:white'>" +
+              "<div>" +
+              "<span>设备编号：</span><span>" +
+              params.basket_id +
+              "</span>" +
+              " </div>" +
+              "<div>" +
+              "<span>当前位置：</span><span>" +
+              params.location +
+              "</span>" +
+              " </div>" +
+              " <div>" +
+              " <span>当前位移：</span><span>" +
+              params.shift+
+              "</span>" +
+              "</div>" +
+               "<div>" +
+              "<span>当前海拔：</span><span>" +
+              params.altitude +
+              "</span>" +
+              " </div>" +
+              "<div>" +
+              "<span>最近更新：</span><span>" +
+              params.w_time +
+              "</span>" +
+              " </div>" +
+              "</div>"
+            );
+          },
+          offsets: {
+            top: 15,
+            left: -150,
+            right:150
+
+          },
+          customClass: "auto"
+        },
+        style: {
+          normal: {
+            backgroundColor: "green", // 填充颜色
+            shadowColor: "rgba(255, 255, 255, 1)", // 投影颜色
+            shadowBlur: 35, // 投影模糊级数
+            globalCompositeOperation: "lighter", // 颜色叠加方式
+            size: 6 // 半径
+          },
+          mouseOver: {
+            backgroundColor: "rgba(200, 200, 200, 1)",
+            borderColor: "rgba(255,255,255,1)",
+            borderWidth: 1
+          },
+          selected: {
+            borderWidth: 1,
+            backgroundColor: "rgba(184,0,0,1)",
+            borderColor: "rgba(255,255,255,1)"
+          }
+        },
+        data: data
+      });
+      inmap.add(overlay); })
+    }
+    
+  }
 };
 </script>

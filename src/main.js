@@ -11,7 +11,7 @@ import util from './libs/util';
 import axios from './libs/ajax'; 
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-
+import BaiduMap from 'vue-baidu-map'
 
 //// 生产环境中注释掉以下语句
 import '../mock/index.js';
@@ -19,7 +19,10 @@ import '../mock/index.js';
 Vue.use(VueI18n);
 Vue.use(iView);
 Vue.use(ElementUI);
-
+Vue.use(BaiduMap, {
+    /* Visit http://lbsyun.baidu.com/apiconsole/key for details about app key. */
+    ak: 'lYpbye8GuExR4olb3XmG2yGAmgI1BM4c'
+  })
 
 // 注册组件到Vue
 Vue.prototype.$axios = axios;
