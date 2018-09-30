@@ -85,12 +85,13 @@ export default {
             }
     },
     mounted(){
+
         // this.init();
         //没绑定this照样可以？
         // if (this.$route.params.flag == undefined) {
         this.$axios.get("/getSummary").then( res =>{
-        // this.costdata = res.data;
-            if (res.data.flag === 1) {
+        // this.costdata = res.data;        
+            // if (res.data.flag === 1) {
                 if (res.data.date.length > 0){
                     this.date = res.data.date;
                     this.address=res.data.address;
@@ -99,7 +100,7 @@ export default {
                     this.explain=res.data.explain;
                     this.costData=res.data.costdata;
                 }
-            }   
+            // }   
         }).catch(error =>{
             console.log(error);
         })

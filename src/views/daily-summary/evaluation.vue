@@ -6,16 +6,17 @@
             </div>
             <br>
             <Row  type="flex" justify="center">
-                <Col span="6">查询时间范围:
-                    <DatePicker type="daterange" placement="bottom-end" placeholder="请选择时间范围" format="yyyy-MM-dd" @on-change="timeselect" style="width:200px"></DatePicker>
-                </Col>
-                <Col span="6">查询人员:
+            <Col span="7">人员:
                     <Select v-model="userid" clearable placeholder="请选择人员" style="width:200px;">
                         <Option v-for="item in subUserList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </Col>
-                <Col span="6">
-                    <Button type="primary" @click="summaryquery" icon="ios-search">日报查询</Button>
+                <Col span="7">时间范围:
+                    <DatePicker type="daterange" placement="bottom-end" placeholder="请选择时间范围" format="yyyy-MM-dd" @on-change="timeselect" style="width:200px"></DatePicker>
+                </Col>
+                
+                <Col span="3">
+                    <Button type="primary" @click="summaryquery" icon="ios-search">查询</Button>
                 </Col>
             </Row>
             <br>                         
@@ -99,7 +100,17 @@ export default {
                     title:'工作内容',
                     key: "workcontent",
                     sortable: true,
-                    align: "center"
+                    align: "left",
+                    minWidth: 200,
+                    render: (h,params) => {
+                        return h("span",
+                        {
+                            domProps:{
+                                innerHTML: params.row.workcontentformat
+                            }
+
+                        })
+                    }
 
                 },
                 {

@@ -317,18 +317,18 @@ export default{
                     console.log(error);
                 });
 
-                let argu = { 
-                        flag:1,
-                        date: this.date,
-                        address: this.address,
-                        workcontent: workcnt,
-                        transport: this.transport,
-                        explain: this.explain,
-                        costData: this.costData, };
+                // let argu = { 
+                //         flag:1,
+                //         date: this.date,
+                //         address: this.address,
+                //         workcontent: workcnt,
+                //         transport: this.transport,
+                //         explain: this.explain,
+                //         costData: this.costData, };
                 this.$router.push({
                     name: 'daily-work',
                     //保存成功后转到工作总结目录
-                    params: argu
+                    // params: argu
                 });
             }
         },

@@ -96,38 +96,53 @@ export default {
                     type: "index",
                     title: "序号",
                     sortable: true,
-                    width: 60
+                    align: "center",
+                    
                 },
                 {
                     title:'姓名',
                     key: "name",
                     sortable: true,
-                    align: "center"
+                    align: "center",
+                    
                 },
                 {
                     title:'日期',
                     key: "date",
                     sortable: true,
-                    align: "center"
+                    align: "center",
+                    
                 },
                 {
                     title:'工作内容',
-                    key: "workcontent",
+                    key: "workcontentformat",
                     sortable: true,
-                    align: "center"
+                    align: "left",
+                    minWidth: 200,
+                    render: (h,params) => {
+                        return h("span",
+                        {
+                            domProps:{
+                                innerHTML: params.row.workcontentformat
+                            }
+
+                        })
+                    }
 
                 },
                 {
                     title:'花费',
                     key: "money",
                     sortable: true,
-                    align: "center"
+                    align: "center",
+                    
 
                 },
                 {
                     title:'操作',
                     key: "set",
                     align: "center",
+                    
                     render: (h, params) => {
                         return h('div', [ 
                             h('Button', {
@@ -274,9 +289,8 @@ export default {
                            offset: _this.offset, 
                         }
                     }).then( res =>{
-                        // debugger
                         _this.total = res.data.total
-                        // debugger
+                        
                         _this.summaries = res.data.summaries;    
                     }).catch(error =>{
                         console.log(error);
