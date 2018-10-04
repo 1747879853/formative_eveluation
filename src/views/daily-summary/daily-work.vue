@@ -23,7 +23,9 @@
             <tr>
                 <td>工作内容:</td>
                 <td>
-                    {{ workcontent }}
+                    <span v-for="(item, indexi) in workcontent" :key="indexi" >
+                        <span v-html="item"></span> <br>
+                    </span>
                 </td>
                 <td>交通工具:</td>
                 <td>
@@ -66,7 +68,7 @@ export default {
                     },
                     {
                         title:'花费科目',
-                        key: "name",
+                        key: "names",
                         align: "center"
                     },
                     {
@@ -83,26 +85,27 @@ export default {
             }
     },
     mounted(){
-        this.init();
+
+        // this.init();
         //没绑定this照样可以？
-        if (this.$route.params.flag == undefined) {
-            this.$axios.get("/workList").then( res =>{
-            // this.costdata = res.data;
-            if (res.data.flag === 1) {
+        // if (this.$route.params.flag == undefined) {
+        this.$axios.get("/getSummary").then( res =>{
+        // this.costdata = res.data;        
+            // if (res.data.flag === 1) {
                 if (res.data.date.length > 0){
-                this.date = res.data.date;
-                this.address=res.data.address;
-                this.workcontent=res.data.workcontent;
-                this.transport=res.data.transport;
-                this.explain=res.data.explain;
-                this.costData=res.data.costdata;
-            }
-        }   
+                    this.date = res.data.date;
+                    this.address=res.data.address;
+                    this.workcontent=res.data.workcontentformat;
+                    this.transport=res.data.transport;
+                    this.explain=res.data.explain;
+                    this.costData=res.data.costdata;
+                }
+            // }   
         }).catch(error =>{
             console.log(error);
         })
 
-        }
+        // }
     },
 
     methods: {
@@ -114,23 +117,23 @@ export default {
                 // params: argu
             });
         },
-        init(){
-            // this.date = this.$route.params.data;
-            // console.log(this.$route.params.flag == undefined);
-            // debugger
-            if (this.$route.params.flag == undefined) {
-                return;
-            }else{
-                this.date = this.$route.params.date;
-                this.address=this.$route.params.address;
-                this.workcontent=this.$route.params.workcontent;
-                this.transport=this.$route.params.transport;
-                this.explain=this.$route.params.explain;
-                this.costData=this.$route.params.costData;
-            }
-            // console.log(this.flag);
-            // console.log(this.costData);
-        },
+        // init(){
+        //     // this.date = this.$route.params.data;
+        //     // console.log(this.$route.params.flag == undefined);
+        //     // debugger
+        //     if (this.$route.params.flag == undefined) {
+        //         return;
+        //     }else{
+        //         this.date = this.$route.params.date;
+        //         this.address=this.$route.params.address;
+        //         this.workcontent=this.$route.params.workcontent;
+        //         this.transport=this.$route.params.transport;
+        //         this.explain=this.$route.params.explain;
+        //         this.costData=this.$route.params.costData;
+        //     }
+        //     // console.log(this.flag);
+        //     // console.log(this.costData);
+        // },
     },
 }
 </script>

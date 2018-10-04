@@ -356,18 +356,11 @@ export const appRouter = [
         path: '/daily-summary',
         icon: 'settings',
         name: 'daily-summary',
-        title: '日清总结',
+        title: '日清日结',
         access:'daily-summary/index',
         component: Main,
         children: [
-            {
-                path: 'cost',
-                icon: 'compose',
-                name: 'cost',
-                title: '花费科目',
-                access:'daily-summary/cost',
-                component: () => import('@/views/daily-summary/cost.vue')
-            },
+            
             {
                 path: 'daily-work',
                 icon: 'compose',
@@ -380,12 +373,37 @@ export const appRouter = [
                 path: 'query',
                 icon: 'pound',
                 name: 'query',
-                title: '查询',
+                title: '工作日报查询',
                 access:'daily-summary/query',
                 component: () => import('@/views/daily-summary/query.vue')
             },
+            {
+                path: 'evaluation',
+                icon: 'pound',
+                name: 'evaluation',
+                title: '工作日报评价',
+                access:'daily-summary/evaluation',
+                component: () => import('@/views/daily-summary/evaluation.vue')
+            },
+            {
+                path: 'job_item_content',
+                icon: 'settings',
+                name: 'job_item_content',
+                title: '工作项-工作内容',
+                access:'daily-summary/job_item_content',
+                component: () => import('@/views/daily-summary/job_item_content.vue')
+            },
+            {
+                path: 'cost',
+                icon: 'compose',
+                name: 'cost',
+                title: '花费科目',
+                access:'daily-summary/cost',
+                component: () => import('@/views/daily-summary/cost.vue')
+            },
         ]
     },
+    
     {
         path: '/users-manage',
         icon: 'settings',

@@ -25,7 +25,7 @@
                     <tr><td>权限</td><td>
                     <Input v-model="f_authority" placeholder="请输入权限" clearable style="width: 300px"></Input></td></tr>
                     <tr>&nbsp;</tr><tr><td>是否激活</td><td>                    
-                    <Select v-model="option" size="middle" style="width:300px;" @on-change="selected(option)" ref="element1">
+                    <Select v-model="option" style="width:300px;" @on-change="selected(option)" ref="element1">
                     <Option  v-for="(item,index) in statusData" :key="item.id" :value="index">{{ item.name }}</Option>
                     </Select></td></tr>
                     <tr>&nbsp;</tr><tr><td>条件</td><td>
