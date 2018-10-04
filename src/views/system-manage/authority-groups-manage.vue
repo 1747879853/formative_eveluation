@@ -175,6 +175,11 @@ import Sortable from 'sortablejs';
                 this.$Message.info('请选中一个权限组');
             }else{
                 let checked_tree = this.$refs.tree.getCheckedNodes();
+                for(var i=0;i<checked_tree.length;i++){
+                    if(checked_tree[i].children.length!=0){
+                        checked_tree.splice(i,1);
+                    }
+                }
                 let tree_id = [];
                 for(let i=0;i<checked_tree.length;i++){
                     tree_id[i]=checked_tree[i].id;
