@@ -40,9 +40,40 @@
             
         </Card>
         
-        <Modal v-model="showCostModal" title="花费明细"  @on-ok="ok"  @on-cancel="cancel">
+        <Modal v-model="showCostModal" title="花费明细"  @on-ok="costModalOk"  @on-cancel="cancel">
             <Card>
                 <Table :columns="costColumn" :data="costs" style="width: 100%;"></Table>
+            </Card>
+        </Modal>
+        <Modal v-model="showEvaluationModal" title="工作日报评价"  @on-ok="showEvaluationModalOk"  @on-cancel="cancel">
+            <Card>
+                <!-- <Table :columns="costColumn" :data="costs" style="width: 100%;"></Table> -->
+                <p>{{evaluation_jic}}</p>
+                <p>{{user_name}}</p>
+                <p>{{role_name}}</p>
+            </Card>
+        </Modal>
+        <Modal v-model="goEvaluationModal" title="工作日报评价"  @on-ok="saveEvaluation"  @on-cancel="cancel">
+            <Card>
+                <!-- <Table :columns="costColumn" :data="costs" style="width: 100%;"></Table> -->
+                <!-- <p>{{evaluation_jic}}</p>
+                <p>{{user_name}}</p>
+                <p>{{role_name}}</p> -->
+                <table>
+                    <tr v-for="(item,index) in evaluation_jic" :key="index" :data-index="index">
+                        <td >{{item.item_title}}</td>
+                        <td >{{item.item_weight}}</td>
+                        <td>
+                        <span v-for="(itemitem,index) in item.item_stds_arr">
+                            {{itemitem.title}}(占比：{{itemitem.proportion}})
+                            <Input v-model="itemitem.score" clearable style="width:100px;"></Input>
+                            </br>
+                        </span>
+                        </td>
+
+                    </tr>
+                </table>
+
             </Card>
         </Modal>
     </div>
@@ -54,6 +85,10 @@ export default {
     name: 'query',
     data() {
             return {
+                evaluation_jic: [],
+                paramrow_clicked: '',
+                user_name: '',
+                role_name: '',
                 userid:'',
                 date_search:'',
                 subUserList: [],
@@ -66,6 +101,8 @@ export default {
                 offset: 0,
                 costSearch: '',
                 showCostModal: false,
+                showEvaluationModal: false,
+                goEvaluationModal: false,
                 summarySearch: '',
                 date:'',
                 summary_date_s: 0,
@@ -125,21 +162,58 @@ export default {
                     key: "set",
                     align: "center",
                     render: (h, params) => {
-                        return h('div', [ 
-                            h('Button', {
-                                props: {
-                                    type: 'error',
-                                    size: 'small'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.show_cost_modal_data(params.row.id);
-                                      }
-                                }
-                            }, '花费详情')
-                        ]);
+                        if(params.row.evaluated == true){
+                            return h('div', [ 
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.show_cost_modal_data(params.row.id);
+                                          }
+                                    }
+                                }, '花费详情'),
+                                h('Button', {
+                                    props: {
+                                        type: 'success',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.show_evaluation_modal(params.row);
+                                          }
+                                    }
+                                }, '查看评价')
+                            ]);                        
+                        }else{
+                            return h('div', [ 
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.show_cost_modal_data(params.row.id);
+                                          }
+                                    }
+                                }, '花费详情'),
+                                h('Button', {
+                                    props: {
+                                        type: 'success',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.go_evaluation_modal(params.row);
+                                          }
+                                    }
+                                }, '去评价')
+                            ]);
+                        }
                     }
-
                 }],
                 costColumn:[
                     {
@@ -262,7 +336,7 @@ export default {
                 if(this.userid != ''){
                     // console.log(this.userid);
                     // console.log(this.date_search instanceof Object );
-                    this.$axios.get("/get_summaries",{  //params参数必写 , 如果没有参数传{}也可以
+                    this.$axios.get("/get_summaries_scores",{  //params参数必写 , 如果没有参数传{}也可以
                         params: {  
                            userid: _this.userid,
                            date: _this.date_search,
@@ -418,6 +492,57 @@ export default {
                 this.$Message.error('请选择用户！');
             } 
         },
+        show_evaluation_modal(paramrow){
+            var _this = this;
+            this.paramrow_clicked = paramrow;
+            this.$axios.get("/get_evaluation_jics",{
+                params: {  
+                    workcnt: paramrow.workcontent,
+                    userid: _this.userid,
+                    summaryid: paramrow.id
+                }
+            }).then( res =>{
+                _this.evaluation_jic = res.data.jic_arr; 
+                _this.user_name = res.data.user_name;
+                _this.role_name = res.data.role_name; 
+                _this.showEvaluationModal = true;
+            }).catch(error =>{
+                console.log(error);
+            });
+            
+        },
+        go_evaluation_modal(paramrow){
+            var _this = this;
+            this.paramrow_clicked = paramrow;
+            this.$axios.get("/get_evaluation_jics",{
+                params: {  
+                    workcnt: paramrow.workcontent,
+                    userid: _this.userid,
+                    summaryid: paramrow.id
+                }
+            }).then( res =>{
+
+                let tmp_jic = res.data.jic_arr; 
+                tmp_jic.forEach((item,index)=>{
+                    item.item_stds_arr = [];
+                    item.item_stds.split(';').forEach((title_pro,jj) =>{
+                        let hi = {};
+                        let tp = title_pro.split(',');
+                        hi.title = tp[0];
+                        hi.proportion = tp[1];
+                        hi.score = 0 ;
+                        item.item_stds_arr.push(hi);                        
+                    });
+                });
+                _this.evaluation_jic = tmp_jic;
+                _this.user_name = res.data.user_name;
+                _this.role_name = res.data.role_name; 
+                _this.goEvaluationModal = true;
+            }).catch(error =>{
+                console.log(error);
+            });
+            
+        },
         show_cost_modal_data(id){
             // console.log(id);
             var _this = this;
@@ -438,7 +563,7 @@ export default {
             });
             this.showCostModal = true;
         },
-        ok(){
+        costModalOk(){
             this.showCostModal = false;
             // this.address = '';
             // this.date = '';
@@ -446,6 +571,27 @@ export default {
             // this.transport = '';
             // this.workcontent = '';
             this.costData = [];
+        },
+        showEvaluationModalOk(){
+            this.showEvaluationModal = false;            
+        },
+        saveEvaluation(){
+            var _this = this;            
+            this.$axios.get("/save_evaluation",{
+                params: {  
+                    summaryscore: _this.evaluation_jic,
+                    summaryid: _this.paramrow_clicked.id,
+                }
+            }).then( res =>{
+                _this.paramrow_clicked.evaluated = true ;
+                // this.summaries.splice(0,0);  //this code maybe not used????????
+                _this.goEvaluationModal = false;
+                _this.$Message.success('保存成功！');
+            }).catch(error =>{
+                console.log(error);
+                _this.$Message.error('保存失败，请检查服务器！');
+            });
+
         },
         cancel(){
             this.$Message.info('取消');
