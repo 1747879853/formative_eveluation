@@ -552,19 +552,18 @@ export default {
                 item.item_stds_arr = [];
                 
                 let stds_arr = item.item_stds.split(';');
-                let score_arr;
-                if(item.score){
-                    score_arr = item.score.split(',')
-                }else{
-                     score_arr = new Array(stds_arr.length);
-                     score_arr.fill(0);
-                }
+                let score_arr = item.score.split(',')
+               
                 stds_arr.forEach((title_pro,jj) =>{
                     let hi = {};
                     let tp = title_pro.split(',');
                     hi.title = tp[0];
                     hi.proportion = tp[1];
-                    hi.score = parseFloat(score_arr[jj]) ;
+                    if(score_arr[jj]){
+                        hi.score = parseFloat(score_arr[jj]);
+                    }else{
+                        hi.score = null;
+                    }
                     item.item_stds_arr.push(hi);                        
                 });
             });

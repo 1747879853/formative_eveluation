@@ -34,6 +34,7 @@
                             <br>
                         </span>
                         <span>填写说明：请先选择工作项后再选择相关工作内容并填写该工作的度量值（整数），否则无效</span>
+                        
                     </td>
                 </tr>                      
                 <tr>&nbsp;</tr>
@@ -275,7 +276,7 @@ export default{
             // 这里children为空？
             var _this = this;
             if (this.date == '') {
-                this.$Message.error("有内容为空！");
+                this.$Message.error("内容填写不完整！");
             }else{
                 // debugger
                 let workcnt = '';
