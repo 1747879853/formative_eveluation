@@ -525,7 +525,7 @@ export default {
             });
             
         },
-        go_evaluation_modal(paramrow){
+        go_evaluation_modal(paramrow){ //去评价
             var _this = this;
             this.paramrow_clicked = paramrow;
             this.$axios.get("/get_evaluation_jics",{
@@ -552,7 +552,8 @@ export default {
                 item.item_stds_arr = [];
                 
                 let stds_arr = item.item_stds.split(';');
-                let score_arr = item.score.split(',')
+                let score_arr = [];
+                if(item.score) { item.score.split(',');}
                
                 stds_arr.forEach((title_pro,jj) =>{
                     let hi = {};

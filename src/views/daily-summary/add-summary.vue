@@ -25,15 +25,18 @@
                 <tr>
                     <td>工作项和工作内容</td>
                     <td>
-                        <span v-for="(item, indexi) in itemArr" :key="indexi" >
-                            <Checkbox v-model="item.chk">{{item.item_title}}</Checkbox>
-                            <span v-for="(cnt, indexj) in item.cntArr" :key="indexj" >
-                                <Checkbox v-model="cnt.chk">{{cnt.cnt_title}}</Checkbox>
-                                <Input v-model="cnt.num" size="small" style="margin-right:20px; width:40px;"></Input>
+                        <span v-if="itemArr.length > 0">
+                            <span v-for="(item, indexi) in itemArr" :key="indexi" >
+                                <Checkbox v-model="item.chk">{{item.item_title}}</Checkbox>
+                                <span v-for="(cnt, indexj) in item.cntArr" :key="indexj" >
+                                    <Checkbox v-model="cnt.chk">{{cnt.cnt_title}}</Checkbox>
+                                    <Input v-model="cnt.num" size="small" style="margin-right:20px; width:40px;"></Input>
+                                </span>
+                                <br>
                             </span>
-                            <br>
+                            <span>填写说明：请先选择工作项后再选择相关工作内容并填写该工作的度量值（整数），否则无效</span>
                         </span>
-                        <span>填写说明：请先选择工作项后再选择相关工作内容并填写该工作的度量值（整数），否则无效</span>
+                        <span v-else>后台未设置该角色的工作项和工作内容，请联系管理员从后台添加。</span>
                         
                     </td>
                 </tr>                      
