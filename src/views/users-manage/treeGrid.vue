@@ -3,10 +3,10 @@
         <table class="table table-bordered" id='hl-tree-table'>
             <tbody>
                 <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{color:isChecked== index}" @click="id1=renderId(item);changeColor(index)" :data-index="index">
-                    <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
+                    <td v-for="(column,snum) in columns" :key="column.key" style="width:100px;">
                         <div v-if="column.type === 'action'">
                             <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal1();
-                            id1=renderId(item);">添加</button>
+                            id1=renderId(item);">添加子机构</button>
                             <Modal
                                 v-model="modal1"
                                 title="添加组织机构"
@@ -17,14 +17,14 @@
                                 <Input v-model="f_name" placeholder="请输入组织名" clearable style="width: 300px"></Input></td></tr>
                                 </table>
                             </Modal>
-                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);f_name=renderName(item);">修改</button>
+                            <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="modal3=true;id1=renderId(item);f_name=renderName(item);">修改名称</button>
                             <Modal
                                 v-model="modal3"
                                 title="修改组织名"
                                 @on-ok="ok2"
                                 @on-cancel="cancel2">
                                 <table>
-                                <tr><td>权限名</td><td>
+                                <tr><td>组织名</td><td>
                                 <Input v-model="f_name" placeholder="请输入组织名" clearable style="width: 300px"></Input></td></tr>
                                 </table>
                             </Modal>
@@ -211,7 +211,7 @@ export default {
                                 name: this.f_name
                             }
                         }).then(function(res) {
-                            console.log(res);
+                            // console.log(res);
                             let ret = this.depthTraversal(this.items, this.id1, res.data);
                             Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
@@ -230,7 +230,7 @@ export default {
                                 name:this.f_name,
                             }
                         }).then(function(res) {
-                            console.log(res);
+                            // console.log(res);
                             let ret = this.depthTraversal2(this.items, this.id1, res.data);
                             Vue.set(this.items, ret, this.items[ret]);
                         }.bind(this))
@@ -283,9 +283,8 @@ export default {
             this.$emit('on-row-click', result, event, index, text)
         },
         deleteClick() {
-            
             this.$Modal.confirm({
-                    title: '删除权限',
+                    title: '删除组织机构',
                     content: '<p>确定要删除此组织机构吗？</p>',
                     onOk: () => {
                         this.$axios.delete('/organization', {
