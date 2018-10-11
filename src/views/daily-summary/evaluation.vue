@@ -40,10 +40,58 @@
             
         </Card>
         
-        <Modal v-model="showCostModal" title="花费明细"  @on-ok="ok"  @on-cancel="cancel">
+        <Modal v-model="showCostModal" title="花费明细"  @on-ok="costModalOk"  @on-cancel="cancel">
             <Card>
                 <Table :columns="costColumn" :data="costs" style="width: 100%;"></Table>
             </Card>
+        </Modal>
+        <Modal v-model="showEvaluationModal" title="工作日报评价"  @on-ok="showEvaluationModalOk"  @on-cancel="showEvaluationModalOk">
+            
+                <table>
+                    <thead>
+                        <tr><th>工作项及权重</th><th>评价指标及占比</th><th></th></tr>
+                    </thead>
+                    <tr v-for="(item,index) in evaluation_jic" :key="index" :data-index="index">
+                        <td >{{item.item_title}}（权重：{{item.item_weight}}）</td>
+                        <td>
+                        <span v-for="(itemitem,index) in item.item_stds_arr">
+                            {{itemitem.title}}(占比：{{itemitem.proportion}})
+                            &nbsp;&nbsp;&nbsp;
+                            <Input v-model="itemitem.score" size="small" placeholder="请输入评价成绩（0-100）" clearable style="width:100px;"></Input>
+                            </br>
+                        </span>
+                        </td>
+                    </tr>
+                </table>
+            <div slot="footer">
+                <Button type="info"  @click="showEvaluationModalOk">关闭</Button>
+            </div>
+        </Modal>
+        <Modal v-model="goEvaluationModal" title="工作日报评价"  @on-ok="saveEvaluation"  @on-cancel="cancel">
+                <!-- <Table :columns="costColumn" :data="costs" style="width: 100%;"></Table> -->
+                <!-- <p>{{evaluation_jic}}</p>
+                <p>{{user_name}}</p>
+                <p>{{role_name}}</p> -->
+                <table>
+                    <thead>
+                        <tr><th>工作项及权重</th><th>评价指标及占比&nbsp;&nbsp;&nbsp;评价成绩（0-100）</th></tr>
+                    </thead>
+                    <tr v-for="(item,index) in evaluation_jic" :key="index" :data-index="index">
+                        <td >{{item.item_title}}（权重：{{item.item_weight}}）</td>
+                        <td>
+                        <span v-for="(itemitem,index) in item.item_stds_arr">
+                            {{itemitem.title}}(占比：{{itemitem.proportion}})
+                            &nbsp;&nbsp;&nbsp;
+                            <Input v-model="itemitem.score" size="small" placeholder="请输入评价成绩（0-100）" clearable style="width:100px;"></Input>
+                            </br>
+                        </span>
+                        </td>
+                    </tr>
+                </table>
+            <div slot="footer">
+                <Button type="info"  @click="goEvaluationModalClose">关闭</Button>
+                <Button type="success"  @click="saveEvaluation">保存</Button>
+            </div>
         </Modal>
     </div>
 </template>
@@ -54,6 +102,10 @@ export default {
     name: 'query',
     data() {
             return {
+                evaluation_jic: [],
+                paramrow_clicked: '',
+                user_name: '',
+                role_name: '',
                 userid:'',
                 date_search:'',
                 subUserList: [],
@@ -66,6 +118,8 @@ export default {
                 offset: 0,
                 costSearch: '',
                 showCostModal: false,
+                showEvaluationModal: false,
+                goEvaluationModal: false,
                 summarySearch: '',
                 date:'',
                 summary_date_s: 0,
@@ -112,12 +166,35 @@ export default {
                         })
                     }
 
-                },
+                },                
                 {
                     title:'花费',
                     key: "money",
                     sortable: true,
-                    align: "center"
+                    align: "center",
+                    render: (h,params) =>{
+                        return h('div',[
+                            h('Tooltip',{props:{
+                                content: "花费明细",
+                                placement: "top"
+                            }},[
+                                h('a',{
+                                    props:{
+                                        type: 'primary',
+                                        size: 'small'
+                                        },
+                                    style:{
+                                        // marginRight:'5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.show_cost_modal_data(params.row.id)
+                                        }
+                                    }
+                                },params.row.money)
+                            ])
+                        ])
+                    }
 
                 },
                 {
@@ -125,21 +202,33 @@ export default {
                     key: "set",
                     align: "center",
                     render: (h, params) => {
-                        return h('div', [ 
-                            h('Button', {
-                                props: {
-                                    type: 'error',
-                                    size: 'small'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.show_cost_modal_data(params.row.id);
-                                      }
-                                }
-                            }, '花费详情')
-                        ]);
+                        if(params.row.evaluated == true){
+                            return  h('Button', {
+                                    props: {
+                                        type: 'success',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.show_evaluation_modal(params.row);
+                                          }
+                                    }
+                                }, '查看评价');
+                                                    
+                        }else{
+                            return  h('Button', {
+                                    props: {
+                                        type: 'success',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.go_evaluation_modal(params.row);
+                                          }
+                                    }
+                                }, '去评价');
+                        }
                     }
-
                 }],
                 costColumn:[
                     {
@@ -262,7 +351,7 @@ export default {
                 if(this.userid != ''){
                     // console.log(this.userid);
                     // console.log(this.date_search instanceof Object );
-                    this.$axios.get("/get_summaries",{  //params参数必写 , 如果没有参数传{}也可以
+                    this.$axios.get("/get_summaries_scores",{  //params参数必写 , 如果没有参数传{}也可以
                         params: {  
                            userid: _this.userid,
                            date: _this.date_search,
@@ -270,7 +359,6 @@ export default {
                            offset: _this.offset, 
                         }
                     }).then( res =>{
-                        // debugger
                         _this.total = res.data.total
                         // debugger
                         _this.summaries = res.data.summaries;    
@@ -418,6 +506,70 @@ export default {
                 this.$Message.error('请选择用户！');
             } 
         },
+        show_evaluation_modal(paramrow){
+            var _this = this;
+            this.paramrow_clicked = paramrow;
+            this.$axios.get("/get_evaluation_jics",{
+                params: {  
+                    workcnt: paramrow.workcontent,
+                    userid: _this.userid,
+                    summaryid: paramrow.id
+                }
+            }).then( res =>{
+                _this.evaluation_jic = this.handle_jic_arr(res.data.jic_arr);; 
+                _this.user_name = res.data.user_name;
+                _this.role_name = res.data.role_name; 
+                _this.showEvaluationModal = true;
+            }).catch(error =>{
+                console.log(error);
+            });
+            
+        },
+        go_evaluation_modal(paramrow){ //去评价
+            var _this = this;
+            this.paramrow_clicked = paramrow;
+            this.$axios.get("/get_evaluation_jics",{
+                params: {  
+                    workcnt: paramrow.workcontent,
+                    userid: _this.userid,
+                    summaryid: paramrow.id
+                }
+            }).then( res =>{
+
+                _this.evaluation_jic = this.handle_jic_arr(res.data.jic_arr);
+                _this.user_name = res.data.user_name;
+                _this.role_name = res.data.role_name; 
+                _this.goEvaluationModal = true;
+            }).catch(error =>{
+                console.log(error);
+            });
+            
+        },
+        handle_jic_arr(tmp_jic){
+            // "item_stds": "质量,0.5;时间,0.3;数量,0.2"
+                 
+            tmp_jic.forEach((item,index)=>{
+                item.item_stds_arr = [];
+                
+                let stds_arr = item.item_stds.split(';');
+                let score_arr = [];
+                if(item.score) { item.score.split(',');}
+               
+                stds_arr.forEach((title_pro,jj) =>{
+                    let hi = {};
+                    let tp = title_pro.split(',');
+                    hi.title = tp[0];
+                    hi.proportion = tp[1];
+                    if(score_arr[jj]){
+                        hi.score = parseFloat(score_arr[jj]);
+                    }else{
+                        hi.score = null;
+                    }
+                    item.item_stds_arr.push(hi);                        
+                });
+            });
+            return tmp_jic;
+        },
         show_cost_modal_data(id){
             // console.log(id);
             var _this = this;
@@ -438,7 +590,7 @@ export default {
             });
             this.showCostModal = true;
         },
-        ok(){
+        costModalOk(){
             this.showCostModal = false;
             // this.address = '';
             // this.date = '';
@@ -446,6 +598,30 @@ export default {
             // this.transport = '';
             // this.workcontent = '';
             this.costData = [];
+        },
+        showEvaluationModalOk(){
+            this.showEvaluationModal = false;
+        },
+        saveEvaluation(){
+            var _this = this;            
+            this.$axios.get("/save_evaluation",{
+                params: {  
+                    summaryscore: _this.evaluation_jic,
+                    summaryid: _this.paramrow_clicked.id,
+                }
+            }).then( res =>{
+                _this.paramrow_clicked.evaluated = true ;
+                // this.summaries.splice(0,0);  //this code maybe not used????????
+                _this.goEvaluationModal = false;
+                _this.$Message.success('保存成功！');
+            }).catch(error =>{
+                console.log(error);
+                _this.$Message.error('保存失败，请检查服务器！');
+            });
+
+        },
+        goEvaluationModalClose(){
+            this.goEvaluationModal = false;
         },
         cancel(){
             this.$Message.info('取消');
@@ -469,6 +645,21 @@ export default {
 }
 </script>
 
-<style>
-    
+    <style scoped>
+    .top,.bottom{
+        text-align: center;
+    }
+    .center{
+        width: 300px;
+        margin: 10px auto;
+        overflow: hidden;
+    }
+    .center-left{
+        float: left;
+    }
+    .center-right{
+        float: right;
+    }
+    td{border:1px black solid; padding:2px;} 
+    table{border-collapse:collapse;width:100%;text-align: center;} 
 </style>

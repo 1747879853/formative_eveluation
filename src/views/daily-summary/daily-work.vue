@@ -7,13 +7,16 @@
             <div style="text-align:center;font-size:24px;color: #2db7f5;">
                         今日工作总结                  
             </div>
-            <table style="text-align:center;width:900px;">
+            <table style="text-align:left; margin:auto;">
             <tr>&nbsp;</tr>
             <tr>
                 <td>日期:</td>
                 <td>
                     {{ date }}
                 </td>
+            </tr>
+            <tr>&nbsp;</tr>
+            <tr>
                 <td>工作地点:</td>
                 <td>
                     {{ address }}
@@ -23,10 +26,11 @@
             <tr>
                 <td>工作内容:</td>
                 <td>
-                    <span v-for="(item, indexi) in workcontent" :key="indexi" >
-                        <span v-html="item"></span> <br>
-                    </span>
+                    <span v-html="workcontent"></span>
                 </td>
+            </tr>
+            <tr>&nbsp;</tr>
+            <tr>
                 <td>交通工具:</td>
                 <td>
                     {{ transport }}
