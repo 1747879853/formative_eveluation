@@ -46,7 +46,7 @@
             </Card>
         </Modal>
         <Modal v-model="showEvaluationModal" title="工作日报评价"  @on-ok="showEvaluationModalOk"  @on-cancel="showEvaluationModalOk">
-            
+                
                 <table>
                     <thead>
                         <tr><th>工作项及权重</th><th>评价指标及占比</th><th></th></tr>
@@ -299,10 +299,11 @@ export default {
     },
     mounted(){
         var _this = this;
-        this.subUserList.push({value: "0",label: "全体"});
+        // this.subUserList.push({value: "0",label: "全体"});
         this.$axios.get("/sub_user_list").then( res =>{
+            // debugger
             res.data.forEach((item,index)=>{                
-                _this.subUserList.push({value: item.id,label: item.username});
+                _this.subUserList.push({value: item.id,label: item.user_name});
             })
         }).catch(error =>{
             console.log(error);
@@ -547,13 +548,12 @@ export default {
         },
         handle_jic_arr(tmp_jic){
             // "item_stds": "质量,0.5;时间,0.3;数量,0.2"
-                 
             tmp_jic.forEach((item,index)=>{
                 item.item_stds_arr = [];
                 
                 let stds_arr = item.item_stds.split(';');
                 let score_arr = [];
-                if(item.score) { item.score.split(',');}
+                if(item.score) { score_arr = item.score.split(',');}
                
                 stds_arr.forEach((title_pro,jj) =>{
                     let hi = {};
