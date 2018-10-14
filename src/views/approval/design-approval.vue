@@ -91,14 +91,14 @@ export default {
             },
             ruleValidate: {
                 name: [
-                    { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+                    { required: true, message: '请输入名称', trigger: 'blur' }
                 ],
                 info: [
-                    { required: true, message: 'Please select', trigger: 'blur' }
+                    { required: true, message: '请输入提示信息', trigger: 'blur' }
                     
                 ],                
                 control: [
-                    { required: true, message: 'Please select', trigger: 'change' }
+                    { required: true, message: '请选择控件', trigger: 'change' }
                 ],
                
             },
