@@ -300,7 +300,7 @@ export default {
     mounted(){
         var _this = this;
         // this.subUserList.push({value: "0",label: "全体"});
-        this.$axios.get("/sub_user_list").then( res =>{
+        this.$axios.get("/first_subuser_list").then( res =>{
             // debugger
             res.data.forEach((item,index)=>{                
                 _this.subUserList.push({value: item.id,label: item.user_name});

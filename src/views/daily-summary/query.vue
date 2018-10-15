@@ -229,10 +229,10 @@ export default {
     },
     mounted(){
         var _this = this;
-        this.subUserList.push({value: "0",label: "全体"});
-        this.$axios.get("/sub_user_list").then( res =>{
+        // this.subUserList.push({value: "0",label: "全体"});
+        this.$axios.get("/all_subuser_me_list").then( res =>{
             res.data.forEach((item,index)=>{                
-                _this.subUserList.push({value: item.id,label: item.username});
+                _this.subUserList.push({value: item.id,label: item.user_name});
             })
         }).catch(error =>{
             console.log(error);
