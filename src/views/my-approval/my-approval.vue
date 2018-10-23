@@ -378,7 +378,7 @@ export default {
                 "submit_user_id":1
             }
             */
-            if(allfilled){
+            // if(allfilled){ //do not judge if the form item all filled
                 if(JSON.stringify(m_hash) == "{}"){
                     m_hash["xxx"]="xxx"; //fuck rails not permit empty hash
                 }
@@ -406,13 +406,13 @@ export default {
                     return;
                 });
 
-            }else{
-                iView.LoadingBar.finish();
-                this.$Message.error("表单数据填写不完整！");
-                return;
-            }
-            console.log(this.formDynamicMain);
-            console.log(this.formDynamicDetail_arr);
+            // }else{
+            //     iView.LoadingBar.finish();
+            //     this.$Message.error("表单数据填写不完整！");
+            //     return;
+            // }
+            // console.log(this.formDynamicMain);
+            // console.log(this.formDynamicDetail_arr);
         },
         to_me_onRowClick (row, index) {
             this.detailTitle = row.title

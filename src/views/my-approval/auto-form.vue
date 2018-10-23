@@ -15,7 +15,7 @@
             :key="index"      
             :label="item.name"
             :prop="'items.' + index + '.en_name_value'"
-            :rules="item.rule">
+            >
         <Row>
             <Input v-if="item.control == '单行输入框'" v-model="item.en_name_value" clearable :placeholder="item.info"></Input>
             <Input v-else-if="item.control == '多行输入框'" v-model="item.en_name_value" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :placeholder="item.info"></Input>
