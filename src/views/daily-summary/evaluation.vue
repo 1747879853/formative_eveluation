@@ -16,7 +16,7 @@
                 </Col>
                 
                 <Col span="3">
-                    <Button type="primary" @click="summaryquery" icon="ios-search">查询</Button>
+                    
                 </Col>
             </Row>
             <br>                         

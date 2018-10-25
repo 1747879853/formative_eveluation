@@ -16,10 +16,10 @@
     <Tabs value="name1" @on-click="changeTab">
         <TabPane label="发起审批" name="name1">
             <Row id="approval-list" v-if="showOrNot">
-                <p>审批分组名称</p>
+                
                 <Row type="flex" justify="start" class="code-row-bg">
                     <Col v-for="(item,index) in approvalList" :key="index"  :data-index="index" span="4">
-                    <Button type="primary" @click="AppFormShow(item)" icon="android-cart">{{item.name}}</Button></Col>                    
+                    <Button type="primary" style="width:90px;" @click="AppFormShow(item)">{{item.name}}</Button></Col>                    
                 </Row>
             </Row>
 

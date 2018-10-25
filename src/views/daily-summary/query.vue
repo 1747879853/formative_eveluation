@@ -5,16 +5,20 @@
                         工作日报查询                  
             </div>
             <br>
-            <Row>
-                <Col span="5">&nbsp;</Col>
-                <Col span="9">查询时间范围:&nbsp;
-                    <DatePicker type="daterange" placement="bottom-end" placeholder="请选择时间范围" format="yyyy-MM-dd" @on-change="timeselect" style="width:200px"></DatePicker>
-                </Col>
-                <Col span="10">&nbsp;查询人员:&nbsp;
+            <Row  type="flex" justify="center">
+                
+                <Col span="7">人员:
                     <Select v-model="userid" clearable placeholder="请选择人员" style="width:200px;">
                         <Option v-for="item in subUserList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                 </Col>
+                <Col span="7">时间范围:
+                    <DatePicker type="daterange" placement="bottom-end" placeholder="请选择时间范围" format="yyyy-MM-dd" @on-change="timeselect" style="width:200px"></DatePicker>
+                </Col>
+                <Col span="3">
+                    <Button type="primary" @click="summaryquery" icon="ios-search">查询</Button>
+                </Col>
+                
             </Row>
             <br>
             <Row :gutter="16">

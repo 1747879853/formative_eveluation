@@ -182,9 +182,9 @@
             fullscreenChange (isFullScreen) {
                 // console.log(isFullScreen);
             },
-            scrollBarResize () {
-                this.$refs.scrollBar.resize();
-            }
+            // scrollBarResize () {
+            //     this.$refs.scrollBar.resize();
+            // }
         },
         watch: {
             '$route' (to) {
