@@ -114,16 +114,16 @@ export const appRouter = [
     //         { path: 'index', title: '权限测试页', name: 'accesstest_index', access: 0, component: () => import('@/views/access/access-test.vue') }
     //     ]
     // },
-    // {
-    //     path: '/international',
-    //     icon: 'earth',
-    //     title: {i18n: 'international'},
-    //     name: 'international',
-    //     component: Main,
-    //     children: [
-    //         { path: 'index', title: {i18n: 'international'}, name: 'international_index', component: () => import('@/views/international/international.vue') }
-    //     ]
-    // },
+    {
+        path: '/international',
+        icon: 'earth',
+        title: {i18n: 'international'},
+        name: 'international',
+        component: Main,
+        children: [
+            { path: 'index', title: {i18n: 'international'}, name: 'international_index', component: () => import('@/views/international/international.vue') }
+        ]
+    },
     // {
     //     path: '/component',
     //     icon: 'social-buffer',
@@ -349,6 +349,73 @@ export const appRouter = [
                 access:'system-manage/menu-manage',
                 parent:'system-manage/index',
                 component: () => import('@/views/system-manage/menu-manage.vue')
+            },
+        ]
+    },
+    {
+        path: '/region-manage',
+        icon: 'settings',
+        name: 'region-manage',
+        title: {i18n: 't_region_manage'},
+        access:'region-manage/index',
+        parent:'',
+        component: Main,
+        children: [
+            {
+                path: 'region',
+                icon: 'compose',
+                name: 'region',
+                title: {i18n: 't_region'},
+                access:'region-manage/region',
+                parent:'region-manage/index',
+                component: () => import('@/views/region-manage/region.vue')
+            },
+            {
+                path: 'region-user',
+                icon: 'pound',
+                name: 'region-user',
+                title: {i18n: 't_region_user'},
+                access:'region-manage/region-user',
+                parent:'region-manage/index',
+                component: () => import('@/views/region-manage/region-user.vue')
+            },
+        ]
+    },
+    {
+        path: '/single-well-manage',
+        icon: 'settings',
+        name: 'single-well-manage',
+        title: '单井维护',
+        access:'single-well-manage/index',
+        parent:'',
+        component: Main,
+        children: [
+            {
+                path: 'well-info',
+                icon: 'compose',
+                name: 'well-info',
+                title: '单井资料',
+                access:'single-well-manage/well-info',
+                parent:'single-well-manage/index',
+                component: () => import('@/views/single-well-manage/well-info.vue')
+            },
+            {
+                path: 'std-wgraph',
+                icon: 'pound',
+                name: 'std-wgraph',
+                title: '标准功图设置',
+                access:'single-well-manage/std-wgraph',
+                parent:'single-well-manage/index',
+                component: () => import('@/views/single-well-manage/std-wgraph.vue')
+            },
+            {
+                path: 'alarm-scope',
+                icon: 'pound',
+                name: 'alarm-scope',
+                title: '报警范围设置',
+                access:'single-well-manage/alarm-scope',
+                parent:'single-well-manage/index',
+                component: () => import('@/views/single-well-manage/alarm-scope.vue')
             },
         ]
     },

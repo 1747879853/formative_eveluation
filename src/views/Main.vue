@@ -31,11 +31,12 @@
                         <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
                     </div>
                 </div>
-                <div class="header-avator-con">
+                <div class="header-avator-con" style="width:350px;">
                     <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
                     <lock-screen></lock-screen>
                     <message-tip v-model="mesCount"></message-tip>
                     <theme-switch></theme-switch>
+                    <language @on-lang-change="handleSwitch" :lang="lang"></language>
                     
                     <div class="user-dropdown-menu-con">
                         <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
@@ -68,6 +69,7 @@
     </div>
 </template>
 <script>
+    import language from './main-components/language.vue';
     import shrinkableMenu from './main-components/shrinkable-menu/shrinkable-menu.vue';
     import tagsPageOpened from './main-components/tags-page-opened.vue';
     import breadcrumbNav from './main-components/breadcrumb-nav.vue';
@@ -77,6 +79,7 @@
     import themeSwitch from './main-components/theme-switch/theme-switch.vue';
     import Cookies from 'js-cookie';
     import util from '@/libs/util.js';
+    import Vue from 'vue';
     import scrollBar from '@/views/my-components/scroll-bar/vue-scroller-bars';
     
     export default {
@@ -88,14 +91,16 @@
             lockScreen,
             messageTip,
             themeSwitch,
-            scrollBar
+            scrollBar,
+            language,
         },
         data () {
             return {
                 shrink: false,
                 userName: '',
                 isFullScreen: false,
-                openedSubmenuArr: this.$store.state.app.openedSubmenuArr
+                openedSubmenuArr: this.$store.state.app.openedSubmenuArr,
+                lang: Vue.config.lang
             };
         },
         computed: {
@@ -114,9 +119,9 @@
             cachePage () {
                 return this.$store.state.app.cachePage;
             },
-            lang () {
-                return this.$store.state.app.lang;
-            },
+            // lang () {
+            //     return Vue.config.lang;
+            // },
             menuTheme () {
                 return this.$store.state.app.menuTheme;
             },
@@ -182,9 +187,25 @@
             fullscreenChange (isFullScreen) {
                 // console.log(isFullScreen);
             },
-            // scrollBarResize () {
-            //     this.$refs.scrollBar.resize();
-            // }
+            scrollBarResize () {
+                this.$refs.scrollBar.resize();
+            },
+            handleSwitch (lang) {
+                this.lang = lang;
+                localStorage.lang = lang;
+                this.$store.commit('switchLang', lang); // 如果你要自己实现多语言切换，那么只需要执行这行代码即可，修改语言类型
+
+                // this.columnsI18n = [
+                //     {
+                //         key: 'name',
+                //         title: this.$t('name')
+                //     },
+                //     {
+                //         key: 'company',
+                //         title: this.$t('company')
+                //     }
+                // ]; // 像iview的table组件这样一次渲染如果数据不更新视图就不更新的组件，如果切换语言需要更新一下数据才能切换组件内的多语言
+            },
         },
         watch: {
             '$route' (to) {
