@@ -14,10 +14,16 @@ export default {
         modalText: '在这里你可以看到iview模态框默认的确定和取消按钮会切换语言',
         poptip: '国际化的气泡提示',
         showPoptipText: '点击显示气泡提示',
+        delConfirmText: '确定要删除吗？',
+        t_action: '操作',
+        t_modify: '修改',
+        t_delete: '删除',
+        t_add: '添加',
+        t_success: '成功！',
+        t_failure: '失败！',
+        t_cancel: '取消！',
 
-        t_region_manage: '区块管理',
-        t_region: '区块',
-        t_region_user: '区块-用户'
+        
     },
     'zh-TW': {
         home: '首頁',
@@ -34,11 +40,17 @@ export default {
         modalText: '在這裡你可以看到iview模態框默認的確定和取消按鈕會切換語言',
         poptip: '國際化的氣泡提示',
         showPoptipText: '點擊顯示氣泡提示',
+        delConfirmText: '确定要删除吗？',
+
+        t_action: '操作',
+        t_modify: '修改',
+        t_delete: '删除',
+        t_add: '添加',
+        t_success: '成功！',
+        t_failure: '失败！',
+        t_cancel: '取消！',
 
 
-        t_region_manage: '区块管理',
-        t_region: '区块',
-        t_region_user: '区块-用户'
     },
     'en-US': {
         home: 'home',
@@ -55,9 +67,15 @@ export default {
         modalText: 'Here you can see the iview modal box by default to the OK and Cancel buttons that will switch the language',
         poptip: 'international poptip',
         showPoptipText: 'Click to show poptip',
+        delConfirmText: 'Confirm delete?',
+        t_action: 'Action',
+        t_modify: 'Modify',
+        t_delete: 'Delete',
+        t_add: 'Add',
+        t_success: 'Success!',
+        t_failure: 'Failure!',
+        t_cancel: 'Cancel!',
 
-        t_region_manage: 'Region Manage',
-        t_region: 'Region',
-        t_region_user: 'Region-User'
+       
     }
 };

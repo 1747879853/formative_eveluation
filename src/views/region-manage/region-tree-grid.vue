@@ -17,7 +17,7 @@
                 @on-cancel="cancel">
                 <table>
                 <tr><td>{{$t('t_region_name')}}</td><td>
-                <Input v-model="f_name" placeholder="请输入区块名" clearable style="width: 300px"></Input></td></tr>
+                <Input v-model="f_name" :placeholder="placeholderText" clearable style="width: 300px"></Input></td></tr>
                 <tr>&nbsp;</tr></table>
             </Modal>
             
@@ -43,8 +43,8 @@
                             <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
                                 <div v-if="column.type === 'action'">
                                     <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal(item, index);">{{$t('t_region_add_sub_region')}}</button>
-                                    <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="show_modal(item, index, 1);">{{$t('t_region_modify')}}</button>
-                                    <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="deleteClick(item, index);">{{$t('t_region_delete')}}</button>
+                                    <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="show_modal(item, index, 1);">{{$t('t_modify')}}</button>
+                                    <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="deleteClick(item, index);">{{$t('t_delete')}}</button>
                                 </div>
                                 <label @click="toggle(index,item)" v-if="!column.type">
                                     <span v-if='snum==iconRow()'>
@@ -88,7 +88,7 @@ export default {
             dataLength: 0, //树形数据长度
             f_modal: false,
             f_modal_action: 0,
-            f_title: '添加区块',
+            f_title: this.$t('t_add'),
             f_name: "",
             f_authority: "",
             f_status: "",
@@ -103,7 +103,10 @@ export default {
     computed: {
         tableWidth() {
             return this.tdsWidth > this.screenWidth && this.screenWidth > 0 ? this.screenWidth + 'px' : '100%'
-        }
+        },
+        placeholderText () {
+            return this.$t('t_region_placeholder_text');
+        },
     },
     watch: {
         screenWidth(val) {
@@ -136,6 +139,7 @@ export default {
         checkGroup(data) {
             this.checkAllGroupChange(data)
         },
+        
     },
     mounted() {
         if (this.items) {
@@ -168,7 +172,7 @@ export default {
         },
         show_modal(item, index, flag){
             if (item==undefined){
-                this.f_title = "添加区块";
+                this.f_title = this.$t('t_add');
                 this.current_id = 0;
                 this.f_modal_action = 1;
                 this.f_name = "";
@@ -177,7 +181,7 @@ export default {
                 this.f_condition = "";
                 this.option = "";
             }else if (flag == undefined){
-                this.f_title = "添加子区块";
+                this.f_title = this.$t('t_add');
                 this.current_id = this.renderId(item);
                 this.f_modal_action = 2;
                 this.f_name = "";
@@ -187,7 +191,7 @@ export default {
                 this.option = "";
             }
             else {
-                this.f_title = "修改子区块";
+                this.f_title = this.$t('t_modify');
                 this.current_id = this.renderId(item);
                 this.f_modal_action = 3;
                 this.f_name = this.renderName(item);
@@ -205,18 +209,12 @@ export default {
             this.current_index = index;
             this.f_modal = true; 
         },
-        ok () {
-            if(this.c_status=='激活'){
-                this.c_status=1;
-            }
+        ok () {            
             switch (this.f_modal_action) {
                 case 1:
-                    this.$axios.post('/authRuleList', {
+                    this.$axios.post('/save_region', {
                         params: {
                             title: this.f_name,
-                            name: this.f_authority,
-                            status: this.f_status,
-                            condition: this.f_condition,
                             parent_id: 0
                         }
                     }).then(function(res) {
@@ -238,22 +236,22 @@ export default {
                         });
                         //debugger
                         this.initItems.push(item);
-                        this.$Message.info('添加成功');
+                        this.$Message.info(this.$t('t_success'));
                     }.bind(this))
                     .catch(function(error) {
-                        console.log(error)
+                        // console.log(error);
+                        this.$Message.info(this.$t('t_failure'));
                     });                    
                     break;
                 case 2:
-                    this.$axios.post('/authRuleList', {
+                    this.$axios.post('/save_subregion', {
                         params: {
                             title: this.f_name,
-                            name: this.f_authority,
-                            status: this.f_status,
-                            condition: this.f_condition,
+                            
                             parent_id: this.current_id,
                         }
                     }).then(function(res) {
+                        debugger
                         let origin_item = res.data;
                         let level = this.current_item.level + 1;
                         let parent = this.current_item;
@@ -278,31 +276,27 @@ export default {
                         if (!parent.expanded){
                             this.toggle(this.current_index, this.current_item);
                         }
-                        this.$Message.info('添加成功');
+                        this.$Message.info(this.$t('t_success'));
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
                     });                    
                     break;
                 case 3:
-                    this.$axios.patch('/authRuleList', {
+                    this.$axios.post('/patch_region', {
                         params: {
                             id: this.current_id,
-                            title: this.f_name,
-                            name: this.f_authority,
-                            status: this.f_status,
-                            condition: this.f_condition,
+                            title: this.f_name 
                         }
                     }).then(function(res) {
                         this.initItems[this.current_index].name = res.data.name;
-                        this.initItems[this.current_index].authority = res.data.authority;
-                        this.initItems[this.current_index].status = res.data.status;
-                        this.initItems[this.current_index].condition = res.data.condition;
-                        this.$Message.info('修改成功');
+                        
+                        this.$Message.info(this.$t('t_success'));
                         // Vue.set(this.items, ret, this.items[ret]);
                     }.bind(this))
                     .catch(function(error) {
-                        console.log(error)
+                        console.log(error);
+                        this.$Message.info(this.$t('t_failure'));
                     });                    
                     break;
                 default:
@@ -310,7 +304,7 @@ export default {
             }
         },
         cancel () {
-            this.$Message.info('取消');
+            this.$Message.info(this.$t('t_cancel'));
         },
         // 返回子节点长度
         ChildrenLength(item) {
@@ -347,22 +341,21 @@ export default {
         },
         deleteClick(item, index) { 
             this.$Modal.confirm({
-                title: '删除区块',
-                content: '<p>确定要删除此区块吗？</p>',
+                title: this.$t('t_delete'),
+                content: '<p>'+this.$t('delConfirmText')+'</p>',
                 onOk: () => {
 
                     this.current_item = item;
                     this.current_index = index;
                     this.current_id = this.renderId(item);
-                    this.$axios.delete('/authRuleList', {
-                        data: {
+                    this.$axios.post('/delete_region', {
                             params: {
                                 id: this.current_id,
                             }
-                        }
+                        
                     }).then(function(res) {
                         this.depthDelete(this.current_index);
-                        this.$Message.info('删除成功');
+                        this.$Message.info(this.$t('t_success'));
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
@@ -370,7 +363,7 @@ export default {
                     
                 },
                 onCancel: () => {
-                    this.$Message.info('取消');
+                    this.$Message.info(this.$t('t_cancel'));
                 }
             });
         },

@@ -11,7 +11,8 @@ import Vue from 'vue';
 import RegionTreeGrid from './region-tree-grid.vue'
 export default {
     name: 'region',
-     data() {
+    props: ['locallang'],
+    data() {
             return {
                 modal2:false,
                 columns: [
@@ -22,16 +23,16 @@ export default {
                     width: '150',
                 }, {
                     // title: '操作',
-                    title: this.$t('t_region_action'),
+                    title: this.$t('t_action'),
                     type: 'action',
                     actions: [
                     {
                         type: 'success',
-                        text: this.$t('t_region_modify'),
+                        text: this.$t('t_modify'),
                         // text: '修改'
                     },{
                         type: 'error',
-                        text: this.$t('t_region_delete'),
+                        text: this.$t('t_delete'),
                         // text: '删除'
                     }],
                     width: '150',
@@ -47,8 +48,37 @@ export default {
          components: {
             RegionTreeGrid
         },
+    watch: {
+        locallang(curVal,oldVal){
+            if(curVal!=oldVal){
+                this.columns= [
+                {
+                    // title: '区块名',
+                    title: this.$t('t_region_name'),
+                    key: 'name',
+                    width: '150',
+                }, {
+                    // title: '操作',
+                    title: this.$t('t_action'),
+                    type: 'action',
+                    actions: [
+                    {
+                        type: 'success',
+                        text: this.$t('t_modify'),
+                        // text: '修改'
+                    },{
+                        type: 'error',
+                        text: this.$t('t_delete'),
+                        // text: '删除'
+                    }],
+                    width: '150',
+                }];
+                
+            }
+        }
+    },
     mounted(){
-        this.$axios.get("/authRuleList").then( res =>{
+        this.$axios.get("/region_list").then( res =>{
             this.data = res.data;
         }).catch(error =>{
             console.log(error);
