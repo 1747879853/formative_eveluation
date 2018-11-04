@@ -554,7 +554,11 @@ export default {
 
         // 返回内容
         renderBody(row, column, index) {
-            return row[column.key]
+            console.log(row[column.key]);
+            if(row[column.key] && row[column.key].i18n)
+                return this.$t(row[column.key].i18n);
+            else
+                return row[column.key];
         },
         renderId(row, index) {
             return row["id"]
