@@ -32,7 +32,6 @@
                                 <label v-else>
                                     {{ renderHeader(column, index) }}
                                     <span class="ivu-table-sort" v-if="column.sortable">
-                                        
                                     </span>
                                 </label>
                             </th>
@@ -621,6 +620,9 @@ export default {
 
         // 返回内容
         renderBody(row, column, index) {
+            if (column.key == 'name') {
+                return row['title']
+            }
             return row[column.key]
         },
         renderId(row, index) {
