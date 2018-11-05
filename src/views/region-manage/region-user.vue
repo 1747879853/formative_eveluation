@@ -1,133 +1,174 @@
-
+<style lang="less">
+    @import 'draggable-list.less';
+</style> 
 <template>
 <div>
     <Row>            
         <Card>
             <div style="text-align:center;font-size:24px;color: #2db7f5;">
-                区块-用户管理
+                {{$t('t_region_user_manage')}}
             </div>                    
         </Card>                      
     </Row>
     <Row>
         <Col span="12">
-            <Card >
+            <Card>
                 <p slot="title" style="font-size:20px;height: 33px;">
                     <Icon type="android-funnel"></Icon>
-                    区块&nbsp;&nbsp;&nbsp;
-                    
+                    {{$t('t_region')}}&nbsp;&nbsp;&nbsp;
                 </p>
-                <div style="overflow-y:auto;height:500px;">
-                <Tree ref="tree" :data="data1" :multiple="multiple" @on-select-change="check111"></Tree>
-                </div>
+                <Tree id="data_regions" :render="renderContent" ref="tree" :data="data_regions"></Tree>
+                <!-- @on-select-change="check111" -->
             </Card>
         </Col>
         <Col span="12">
-            <Card>
-
+            <Card >
                 <p slot="title" style="font-size:20px;height: 33px;">
                     <Icon type="android-funnel"></Icon>
                     用户&nbsp;&nbsp;&nbsp;
-                    <Button type="primary" @click="save()">保存</Button>                   
-                    
+                    <Button type="primary" @click="save()">{{$t('t_save')}}</Button>
                 </p>
                 <div style="overflow-y:auto;height:500px;">
-                    <ul id="editable-new" class="iview-admin-draggable-list">                            
-                        <li v-for="(item, index) in groups_data" :key="index" class="notwrap todolist-item" :data-index="index">
-                        {{ item.title }}<Icon type="close" class="js-remove"/></li>
+                <div style="overflow-y:auto;height:500px;">
+                    <CheckboxGroup v-model="userList">
+                    <ul id="editable-new" class="iview-admin-draggable-list">                      
+                        <li v-for="(item, index) in users_data" :key="index" class="notwrap todolist-item" :data-index="index" @click="click_li(item)">
+                        <Checkbox :label="item.id">{{ item.user_name }}</Checkbox></li>
                     </ul>
+                    </CheckboxGroup>
+                </div>
                 </div>
             </Card>
         </Col>
-        
     </Row>
 </div>
 </template>
 <script>
-
+import Sortable from 'sortablejs';
     export default {
         data () {
             return {
-                multiple: false,
-                data1: [
+                data_regions: [
                 ],
-                groups_data: [              
+                users_data: [              
                 ],
-                name:"",
-                modal:false,
-                select:null,
-                ele:null,
+                region_id:'',
+                userList: [
+                ],
             }
         },
         mounted () { 
-        this.$axios.get("/authGroupList").then( res =>{
-            this.groups_data = res.data.a;
-            this.data1 = res.data.b;
+        let vm = this;
+        this.$axios.get("/region_list").then( res =>{
+            vm.data_regions = res.data;
         }).catch(error =>{
             console.log(error);
         });
-        
-               
+
+        this.$axios.get("/userList").then( res =>{
+            vm.users_data = res.data;
+        }).catch(error =>{
+            console.log(error);
+        });     
 
     },
-    methods:{        
-        showmodal(){
-            this.modal=true;
-            this.name="";
-        },
-        ok () {
-            this.$axios.post('/authGroupList', {
-                            params: {
-                                title:this.name,
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            this.groups_data.push(res.data);
-                            this.$Message.info('添加成功');
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log(error)
-                        });                        
-        },
-        cancel () {
-            this.$Message.info('取消');
-        },
-        save (){
-            if(this.select==null){
-                this.$Message.info('请选中一个区块');
-            }else{
-                let checked_tree = this.$refs.tree.getCheckedNodes();
-                for(var i=0;i<checked_tree.length;i++){
-                    if(checked_tree[i].children.length!=0){
-                        checked_tree.splice(i,1);
-                    }
-                }
-                let tree_id = [];
-                for(let i=0;i<checked_tree.length;i++){
-                    tree_id[i]=checked_tree[i].id;
-                }
-                this.$axios.patch('/authGroupList', {
+    methods:{  
+        renderContent (h, { root, node, data }) {
+            return h('span', {
+                style: {
+                    display: 'inline-block',
+                    width: '100%',
+                },
+                on: {
+                    click: (h) => { 
+                        this.region_id = data.id;
+                        // console.log(this.region_id+" "+data.title);
+                        this.$axios.get('/region_userlist', {
                                 params: {
-                                    group_id:this.groups_data[this.select].id,
-                                    id:tree_id
+                                    id:this.region_id,
                                 }
                             }).then(function(res) {
-                                console.log(res);
-                                this.groups_data[this.select].checked_id = res.data.checked_id;
-                                this.$Message.info('保存成功');
+                                if (res.data.length>0) {
+                                    this.userList = [];
+                                    for(var i = 0;i<res.data.length;i++){
+                                        this.userList.push(res.data[i].user_id)
+                                    }
+                                }else{
+                                    this.userList = [];
+                                }
                             }.bind(this))
                             .catch(function(error) {
                                 console.log(error)
                             });                              
-            } 
+                    }            
+                }
+            }, 
+            [
+                h('Button',[
+                    h('span', data.title)
+                ],),
+            ]
+            );
         },
-        check111(selectedList){
-            if(selectedList[selectedList.length-1].checked==true){
-                selectedList[selectedList.length-1].checked=false;
+        save (){
+            // console.log(this.userList);
+            // console.log(this.region_id);
+            if((typeof this.region_id) == "number"){
+                if(this.userList.length<1){
+                    this.$Message.info('请至少选中一个用户');
+                }else{
+                    this.$axios.post('/region_userlist', {
+                                    params: {
+                                        userList:this.userList,
+                                        region_id:this.region_id
+                                    }
+                                }).then(function(res) {
+                                    if (res.data.length == this.userList.length) {
+                                        this.$Message.info('保存成功');
+                                    }else{
+                                        this.$Message.error('保存失败');
+                                    }
+                                    
+                                }.bind(this))
+                                .catch(function(error) {
+                                    console.log(error)
+                                });                              
+                } 
+            }else{
+                this.$Message.error('请先选择区块！');
             }
-            else{
-                selectedList[selectedList.length-1].checked=true;
-            }            
+        },
+        click_li(item){
+            // debugger
+            if((typeof this.region_id) == "number"){
+                if (this.containV(this.userList,item.id)) {
+                    this.userList.splice(this.returnIndex(this.userList,item.id),1);
+                    // console.log(this.userList);
+                }else{
+                    this.userList.push(item.id);
+                    // console.log(this.userList);
+                }
+            }else{
+                this.$Message.error('请先选择区块！');
+                this.userList = [];
+            }
+        },
+        containV(array,v){
+            for(var i=0;i<array.length;i++){
+                if (array[i] == v) {
+                    return true;
+                } 
+            }
+            return false;
+        },
+        returnIndex(array,v){
+            for(var i=0;i<array.length;i++){
+                if (array[i] == v) {
+                    return i;
+                }
+            }
         }
+
     }
 }
 </script>

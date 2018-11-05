@@ -7,7 +7,6 @@
 
 <script>
 import Vue from 'vue';
-
 import RegionTreeGrid from './region-tree-grid.vue'
 export default {
     name: 'region',
@@ -19,7 +18,7 @@ export default {
                 {
                     // title: '区块名',
                     title: this.$t('t_region_name'),
-                    key: 'name',
+                    key: 'title',
                     width: '150',
                 }, {
                     // title: '操作',
@@ -36,7 +35,8 @@ export default {
                         // text: '删除'
                     }],
                     width: '150',
-                }],
+                }
+                ],
                 data: [
                 ],
                 f_authority:"",
@@ -45,9 +45,9 @@ export default {
                 f_status:"",
             }
         },
-         components: {
-            RegionTreeGrid
-        },
+    components: {
+        RegionTreeGrid
+    },
     watch: {
         locallang(curVal,oldVal){
             if(curVal!=oldVal){
@@ -79,6 +79,7 @@ export default {
     },
     mounted(){
         this.$axios.get("/region_list").then( res =>{
+            // debugger
             this.data = res.data;
         }).catch(error =>{
             console.log(error);

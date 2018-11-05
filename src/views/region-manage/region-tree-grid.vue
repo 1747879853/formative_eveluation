@@ -89,6 +89,7 @@ export default {
             f_modal: false,
             f_modal_action: 0,
             f_title: this.$t('t_add'),
+            //对应数据库title字段
             f_name: "",
             f_authority: "",
             f_status: "",
@@ -194,7 +195,8 @@ export default {
                 this.f_title = this.$t('t_modify');
                 this.current_id = this.renderId(item);
                 this.f_modal_action = 3;
-                this.f_name = this.renderName(item);
+                this.f_name = this.renderTitle(item);
+                // debugger
                 this.f_authority = this.renderAuthority(item);
                 this.f_status = this.renderStatus(item);
                 this.f_condition = this.renderCondition(item);
@@ -247,11 +249,10 @@ export default {
                     this.$axios.post('/save_subregion', {
                         params: {
                             title: this.f_name,
-                            
                             parent_id: this.current_id,
                         }
                     }).then(function(res) {
-                        debugger
+                        // debugger
                         let origin_item = res.data;
                         let level = this.current_item.level + 1;
                         let parent = this.current_item;
@@ -289,8 +290,7 @@ export default {
                             title: this.f_name 
                         }
                     }).then(function(res) {
-                        this.initItems[this.current_index].name = res.data.name;
-                        
+                        this.initItems[this.current_index].title = res.data.title;
                         this.$Message.info(this.$t('t_success'));
                         // Vue.set(this.items, ret, this.items[ret]);
                     }.bind(this))
@@ -475,7 +475,6 @@ export default {
                 item = Object.assign({}, item, {
                     "load": (item.expanded ? true : false)
                 });
-                //debugger
                 this.initItems.push(item);
                 if (item.children && item.expanded) {
                     this.initData(item.children, level + 1, item);
@@ -627,8 +626,8 @@ export default {
         renderId(row, index) {
             return row["id"]
         },
-        renderName(row, index) {
-            return row["name"]
+        renderTitle(row, index) {
+            return row["title"]
         },
         renderAuthority(row, index) {
             return row["authority"]
