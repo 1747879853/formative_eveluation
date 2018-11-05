@@ -18,14 +18,13 @@
                     {{$t('t_region')}}&nbsp;&nbsp;&nbsp;
                 </p>
                 <Tree id="data_regions" :render="renderContent" ref="tree" :data="data_regions"></Tree>
-                <!-- @on-select-change="check111" -->
             </Card>
         </Col>
         <Col span="12">
             <Card >
                 <p slot="title" style="font-size:20px;height: 33px;">
                     <Icon type="android-funnel"></Icon>
-                    用户&nbsp;&nbsp;&nbsp;
+                    {{$t('t_user')}}&nbsp;&nbsp;&nbsp;
                     <Button type="primary" @click="save()">{{$t('t_save')}}</Button>
                 </p>
                 <div style="overflow-y:auto;height:500px;">
@@ -82,7 +81,6 @@ import Sortable from 'sortablejs';
                 on: {
                     click: (h) => { 
                         this.region_id = data.id;
-                        // console.log(this.region_id+" "+data.title);
                         this.$axios.get('/region_userlist', {
                                 params: {
                                     id:this.region_id,
@@ -111,11 +109,9 @@ import Sortable from 'sortablejs';
             );
         },
         save (){
-            // console.log(this.userList);
-            // console.log(this.region_id);
             if((typeof this.region_id) == "number"){
                 if(this.userList.length<1){
-                    this.$Message.info('请至少选中一个用户');
+                    this.$Message.info(this.$t('t_check_atleast_one_user'));
                 }else{
                     this.$axios.post('/region_userlist', {
                                     params: {
@@ -124,9 +120,9 @@ import Sortable from 'sortablejs';
                                     }
                                 }).then(function(res) {
                                     if (res.data.length == this.userList.length) {
-                                        this.$Message.info('保存成功');
+                                        this.$Message.info(this.$t('t_save_successful'));
                                     }else{
-                                        this.$Message.error('保存失败');
+                                        this.$Message.error(this.$t('t_save_failed'));
                                     }
                                     
                                 }.bind(this))
@@ -135,21 +131,18 @@ import Sortable from 'sortablejs';
                                 });                              
                 } 
             }else{
-                this.$Message.error('请先选择区块！');
+                this.$Message.error(this.$t('t_check_region_firstly'));
             }
         },
         click_li(item){
-            // debugger
             if((typeof this.region_id) == "number"){
                 if (this.containV(this.userList,item.id)) {
                     this.userList.splice(this.returnIndex(this.userList,item.id),1);
-                    // console.log(this.userList);
                 }else{
                     this.userList.push(item.id);
-                    // console.log(this.userList);
                 }
             }else{
-                this.$Message.error('请先选择区块！');
+                this.$Message.error(this.$t('t_check_region_firstly'));
                 this.userList = [];
             }
         },

@@ -16,6 +16,7 @@ export default {
         t_save_successful: '保存成功!',
         t_save_failed: '保存失败',
         t_check_region_firstly: '请先选择区块！',
+        t_user: '用户',
 
 
 
@@ -37,6 +38,7 @@ export default {
         t_save_successful: '保存成功!',
         t_save_failed: '保存失败',
         t_check_region_firstly: '请先选择区块！',
+        t_user: '用户',
     },
     'en-US': {
         
@@ -55,6 +57,7 @@ export default {
         t_save_successful: 'Save successful!',
         t_save_failed: 'Save failed!',
         t_check_region_firstly: 'Please select region firstly！',
+        t_user: 'User',
     }
 };
 
