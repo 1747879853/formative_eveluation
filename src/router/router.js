@@ -379,6 +379,15 @@ export const appRouter = [
                 parent:'region-manage/index',
                 component: () => import('@/views/region-manage/region-user.vue')
             },
+            {
+                path: 'region-well-base',
+                icon: 'pound',
+                name: 'region-well-base',
+                title: {i18n: 't_region_well_base'},
+                access:'region-manage/region-well-base',
+                parent:'region-manage/index',
+                component: () => import('@/views/region-manage/region-well-base.vue')
+            },
         ]
     },
     {

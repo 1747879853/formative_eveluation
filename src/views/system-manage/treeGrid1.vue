@@ -210,8 +210,9 @@ export default {
                       }                  
                     }
                 }         
-            }            
+            }          
             find(this.bdata,this.f_name);
+
             if(x==0){
                 this.$axios.post('/authRuleList', {
                         params: {
@@ -564,6 +565,10 @@ export default {
             return row["id"]
         },
         renderTitle(row, index) {
+            // debugger
+            if((typeof row.title) == "object"){
+                return this.$t(row.title.i18n);
+            }
             return row["title"]
         },
         renderAccess(row, index) {

@@ -18,6 +18,8 @@ export default {
         t_check_region_firstly: '请先选择区块！',
         t_user: '用户',
 
+        t_region_well_base: '区块-油井',
+
 
 
 
@@ -39,6 +41,8 @@ export default {
         t_save_failed: '保存失败',
         t_check_region_firstly: '请先选择区块！',
         t_user: '用户',
+
+        t_region_well_base: '区块-油井'
     },
     'en-US': {
         
@@ -58,6 +62,8 @@ export default {
         t_save_failed: 'Save failed!',
         t_check_region_firstly: 'Please select region firstly！',
         t_user: 'User',
+
+        t_region_well_base: 'Region-Well'
     }
 };
 

@@ -119,7 +119,7 @@ import Sortable from 'sortablejs';
                                         region_id:this.region_id
                                     }
                                 }).then(function(res) {
-                                    if (res.data.length == this.userList.length) {
+                                    if (res.data == this.userList.length) {
                                         this.$Message.info(this.$t('t_save_successful'));
                                     }else{
                                         this.$Message.error(this.$t('t_save_failed'));
