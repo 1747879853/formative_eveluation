@@ -111,7 +111,7 @@ import Sortable from 'sortablejs';
         save (){
             if((typeof this.region_id) == "number"){
                 if(this.wellList.length<1){
-                    this.$Message.info(this.$t('t_check_atleast_one_user'));
+                    this.$Message.info(this.$t('t_check_atleast_one_well'));
                 }else{
                     this.$axios.post('/region_wellBases', {
                                     params: {

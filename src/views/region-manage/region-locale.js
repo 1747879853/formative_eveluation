@@ -19,6 +19,7 @@ export default {
         t_user: '用户',
 
         t_region_well_base: '区块-油井',
+        t_check_atleast_one_well: '请至少选中一个油井',
 
 
 
@@ -42,7 +43,8 @@ export default {
         t_check_region_firstly: '请先选择区块！',
         t_user: '用户',
 
-        t_region_well_base: '区块-油井'
+        t_region_well_base: '区块-油井',
+        t_check_atleast_one_well: '请至少选中一个油井',
     },
     'en-US': {
         
@@ -63,7 +65,8 @@ export default {
         t_check_region_firstly: 'Please select region firstly！',
         t_user: 'User',
 
-        t_region_well_base: 'Region-Well'
+        t_region_well_base: 'Region-Well',
+        t_check_atleast_one_well: 'Please select at least one well!',
     }
 };
 
