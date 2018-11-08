@@ -53,18 +53,17 @@ service.interceptors.response.use(function (response) {
     switch (error.response.status) {
         //router跳转不了，还未解决。
         case 401:
+            alert('登录信息已过期，请重新登录！');
+            store.commit('logout', null);
+            store.commit('clearOpenedSubmenu');
+            store.commit('clearAllTags');
             store.commit('del_token');
             store.commit('del_auth_rules');
-            alert('登录信息已过期，请重新登录！');
-            routers.push({
-                name: 'login'
-            });
+            window.location.href="#/login";
             break;
         case 403:
             alert('您的权限不足！');
-            routers.push({
-                name: 'error-403'
-            });
+            window.location.href="#/home";
             break;
         case 500:
             alert('操作失败，服务器发生了错误！');
