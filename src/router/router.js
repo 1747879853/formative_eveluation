@@ -78,7 +78,7 @@ export const otherRouter = {
         { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/production-manage/component/order-info.vue') }, // 用于展示动态路由
         { path: 'work-shop-order-info/:work_shop_order_id', title: '工单详情', name: 'work-shop-order-info', component: () => import('@/views/production-manage/component/work-shop-order-info.vue') }, // 用于展示动态路由
         { path: 'material-requisition/:work_shop_team_order_id', title: '物料清单', name: 'material-requisition', component: () => import('@/views/production-manage/component/material-requisition.vue') }, // 用于展示动态路由
-      
+
         { path: 'material-requisition-detail/:material_requisition_id', title: '生产领料单', name: 'material-requisition-detail', component: () => import('@/views/production-manage/component/material-requisition-detail.vue') }, // 用于展示动态路由
 
         { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
@@ -114,16 +114,16 @@ export const appRouter = [
     //         { path: 'index', title: '权限测试页', name: 'accesstest_index', access: 0, component: () => import('@/views/access/access-test.vue') }
     //     ]
     // },
-    {
-        path: '/international',
-        icon: 'earth',
-        title: {i18n: 'international'},
-        name: 'international',
-        component: Main,
-        children: [
-            { path: 'index', title: {i18n: 'international'}, name: 'international_index', component: () => import('@/views/international/international.vue') }
-        ]
-    },
+    // {
+    //     path: '/international',
+    //     icon: 'earth',
+    //     title: {i18n: 'international'},
+    //     name: 'international',
+    //     component: Main,
+    //     children: [
+    //         { path: 'index', title: {i18n: 'international'}, name: 'international_index', component: () => import('@/views/international/international.vue') }
+    //     ]
+    // },
     // {
     //     path: '/component',
     //     icon: 'social-buffer',
@@ -246,55 +246,55 @@ export const appRouter = [
     //         { path: 'argument-page', title: '带参页面', name: 'argument-page', icon: 'android-send', component: () => import('@/views/advanced-router/argument-page.vue') }
     //     ]
     // },
-    {
-        path: '/production-manage',
-        icon: 'ios-infinite',
-        name: 'production-manage',
-        title: '生产管理',
-        access:'production-manage/index',
-        component: Main,
-        children: [
-            { path: 'order-manage', title: '订单', access:'production-manage/order-manage', name: 'order-manage', icon: 'link', component: () => import('@/views/production-manage/order-manage.vue') },
-            { path: 'order-workshop', title: '组拼车间', access:'production-manage/order-workshop', name: 'order-workshop', icon: 'link', component: () => import('@/views/production-manage/order-workshop.vue') },           
-            // { path: 'tree-order-workshop', title: '下料车间', access:'production-manage/tree-order-workshop', name: 'tree-order-workshop', icon: 'link', component: () => import('@/views/production-manage/tree-order-workshop.vue') },           
-            { path: 'painting', title: '喷漆车间', access:'production-manage/painting', name: 'painting', icon: 'link', component: () => import('@/views/production-manage/painting.vue') },           
-            { path: 'tree-order-workshop1', title: '下料车间', access:'production-manage/tree-order-workshop1', name: 'tree-order-workshop1', icon: 'link', component: () => import('@/views/production-manage/tree-order-workshop1.vue') },           
-            // // { path: 'order-workshop-xialiao', title: '下料车间', access:'production-manage/order-workshop-xialiao', name: 'order-workshop-xialiao', icon: 'link', component: () => import('@/views/production-manage/order-workshop-xialiao.vue') },           
-            
-            { path: 'order-team', title: '班组', access:'production-manage/order-team', name: 'order-team', icon: 'link', component: () => import('@/views/production-manage/order-team.vue') },
-            { path: 'quality-checking', title: '质检', access:'production-manage/quality-checking', name: 'quality-checking', icon: 'link', component: () => import('@/views/production-manage/quality-checking.vue') },
-            { path: 'allot-process', title: '分配与进度', access:'production-manage/allot-process', name: 'allot-process', icon: 'link', component: () => import('@/views/production-manage/allot-process.vue') },
-   
-            // { path: 'requisition-list', title: '领料单', name: 'requisition-list', icon: 'link', component: () => import('@/views/production-manage/requisition-list.vue') },
+    // {
+    //     path: '/production-manage',
+    //     icon: 'ios-infinite',
+    //     name: 'production-manage',
+    //     title: '生产管理',
+    //     access:'production-manage/index',
+    //     component: Main,
+    //     children: [
+    //         { path: 'order-manage', title: '订单', access:'production-manage/order-manage', name: 'order-manage', icon: 'link', component: () => import('@/views/production-manage/order-manage.vue') },
+    //         { path: 'order-workshop', title: '组拼车间', access:'production-manage/order-workshop', name: 'order-workshop', icon: 'link', component: () => import('@/views/production-manage/order-workshop.vue') },
+    //         // { path: 'tree-order-workshop', title: '下料车间', access:'production-manage/tree-order-workshop', name: 'tree-order-workshop', icon: 'link', component: () => import('@/views/production-manage/tree-order-workshop.vue') },
+    //         { path: 'painting', title: '喷漆车间', access:'production-manage/painting', name: 'painting', icon: 'link', component: () => import('@/views/production-manage/painting.vue') },
+    //         { path: 'tree-order-workshop1', title: '下料车间', access:'production-manage/tree-order-workshop1', name: 'tree-order-workshop1', icon: 'link', component: () => import('@/views/production-manage/tree-order-workshop1.vue') },
+    //         // // { path: 'order-workshop-xialiao', title: '下料车间', access:'production-manage/order-workshop-xialiao', name: 'order-workshop-xialiao', icon: 'link', component: () => import('@/views/production-manage/order-workshop-xialiao.vue') },
+    //
+    //         { path: 'order-team', title: '班组', access:'production-manage/order-team', name: 'order-team', icon: 'link', component: () => import('@/views/production-manage/order-team.vue') },
+    //         { path: 'quality-checking', title: '质检', access:'production-manage/quality-checking', name: 'quality-checking', icon: 'link', component: () => import('@/views/production-manage/quality-checking.vue') },
+    //         { path: 'allot-process', title: '分配与进度', access:'production-manage/allot-process', name: 'allot-process', icon: 'link', component: () => import('@/views/production-manage/allot-process.vue') },
+    //
+    //         // { path: 'requisition-list', title: '领料单', name: 'requisition-list', icon: 'link', component: () => import('@/views/production-manage/requisition-list.vue') },
+    //
+    //
+    //         // { path: 'argument-page', title: '带参页面', name: 'argument-page', icon: 'android-send', component: () => import('@/views/production-manage/argument-page.vue') }
+    //     ]
+    // },
+    // {
+    //     path: '/approval',
+    //     icon: 'key',
+    //     name: 'approval',
+    //     title: '审批管理',
+    //     access:'approval/index',
+    //     component: Main,
+    //     children: [
+    //         { path: 'index', title: '审批管理', access:'approval/index', name: 'approval_index', component: () => import('@/views/approval/approval.vue') }
+    //     ]
+    // },
+    //
+    // {
+    //     path: '/my-approval',
+    //     icon: 'key',
+    //     name: 'myapproval',
+    //     title: '审批',
+    //     access:'my-approval/index',
+    //     component: Main,
+    //     children: [
+    //         { path: 'index', title: '审批', access:'my-approval/index', name: 'my_approval', component: () => import('@/views/my-approval/my-approval.vue') }
+    //     ]
+    // } ,
 
-            
-            // { path: 'argument-page', title: '带参页面', name: 'argument-page', icon: 'android-send', component: () => import('@/views/production-manage/argument-page.vue') }
-        ]
-    },
-    {
-        path: '/approval',
-        icon: 'key',
-        name: 'approval',
-        title: '审批管理',
-        access:'approval/index',
-        component: Main,
-        children: [
-            { path: 'index', title: '审批管理', access:'approval/index', name: 'approval_index', component: () => import('@/views/approval/approval.vue') }
-        ]
-    },  
-
-    {
-        path: '/my-approval',
-        icon: 'key',
-        name: 'myapproval',
-        title: '审批',
-        access:'my-approval/index',
-        component: Main,
-        children: [
-            { path: 'index', title: '审批', access:'my-approval/index', name: 'my_approval', component: () => import('@/views/my-approval/my-approval.vue') }
-        ]
-    } , 
-    
     // {
     //     path: '/error-page',
     //     icon: 'android-sad',
@@ -428,58 +428,58 @@ export const appRouter = [
             },
         ]
     },
-    {
-        path: '/daily-summary',
-        icon: 'settings',
-        name: 'daily-summary',
-        title: '日清日结',
-        access:'daily-summary/index',
-        component: Main,
-        children: [
-            
-            {
-                path: 'daily-work',
-                icon: 'compose',
-                name: 'daily-work',
-                title: '工作日报',
-                access:'daily-summary/daily-work',
-                component: () => import('@/views/daily-summary/daily-work.vue')
-            },
-            {
-                path: 'query',
-                icon: 'pound',
-                name: 'query',
-                title: '工作日报查询',
-                access:'daily-summary/query',
-                component: () => import('@/views/daily-summary/query.vue')
-            },
-            {
-                path: 'evaluation',
-                icon: 'pound',
-                name: 'evaluation',
-                title: '工作日报评价',
-                access:'daily-summary/evaluation',
-                component: () => import('@/views/daily-summary/evaluation.vue')
-            },
-            {
-                path: 'job_item_content',
-                icon: 'settings',
-                name: 'job_item_content',
-                title: '工作项-工作内容',
-                access:'daily-summary/job_item_content',
-                component: () => import('@/views/daily-summary/job_item_content.vue')
-            },
-            {
-                path: 'cost',
-                icon: 'compose',
-                name: 'cost',
-                title: '花费科目',
-                access:'daily-summary/cost',
-                component: () => import('@/views/daily-summary/cost.vue')
-            },
-        ]
-    },
-    
+    // {
+    //     path: '/daily-summary',
+    //     icon: 'settings',
+    //     name: 'daily-summary',
+    //     title: '日清日结',
+    //     access:'daily-summary/index',
+    //     component: Main,
+    //     children: [
+    //
+    //         {
+    //             path: 'daily-work',
+    //             icon: 'compose',
+    //             name: 'daily-work',
+    //             title: '工作日报',
+    //             access:'daily-summary/daily-work',
+    //             component: () => import('@/views/daily-summary/daily-work.vue')
+    //         },
+    //         {
+    //             path: 'query',
+    //             icon: 'pound',
+    //             name: 'query',
+    //             title: '工作日报查询',
+    //             access:'daily-summary/query',
+    //             component: () => import('@/views/daily-summary/query.vue')
+    //         },
+    //         {
+    //             path: 'evaluation',
+    //             icon: 'pound',
+    //             name: 'evaluation',
+    //             title: '工作日报评价',
+    //             access:'daily-summary/evaluation',
+    //             component: () => import('@/views/daily-summary/evaluation.vue')
+    //         },
+    //         {
+    //             path: 'job_item_content',
+    //             icon: 'settings',
+    //             name: 'job_item_content',
+    //             title: '工作项-工作内容',
+    //             access:'daily-summary/job_item_content',
+    //             component: () => import('@/views/daily-summary/job_item_content.vue')
+    //         },
+    //         {
+    //             path: 'cost',
+    //             icon: 'compose',
+    //             name: 'cost',
+    //             title: '花费科目',
+    //             access:'daily-summary/cost',
+    //             component: () => import('@/views/daily-summary/cost.vue')
+    //         },
+    //     ]
+    // },
+
     {
         path: '/users-manage',
         icon: 'settings',
@@ -522,42 +522,42 @@ export const appRouter = [
             },
         ]
     },
-    {
-        path: '/employee-information',
-        icon: 'settings',
-        name: 'employee-name',
-        title: '员工信息',
-        access:'employee-information/index',
-        component: Main,
-        children: [
-              {
-                path: 'attendance-record',
-                icon: 'compose',
-                name: 'attendance-record',
-                title: '考勤记录',
-                access:'employee-information/attendance-record',
-                component: () => import('@/views/employee-information/attendance-record.vue')
-            },
-        ]
-    },
-     {
-        path: '/vehicle-manage',
-        icon: 'settings',
-        name: 'vehicle-manage',
-        title: '车辆管理',
-        access:'vehicle-manage/index',
-        component: Main,
-        children: [
-              {
-                path: 'vehicle-comeandgo-identify',
-                icon: 'compose',
-                name: 'vehicle-comeandgo-identify',
-                title: '车辆进出识别',
-                access:'vehicle-manage/vehicle-comeandgo-identify',
-                component: () => import('@/views/vehicle-manage/vehicle-comeandgo-identify.vue')
-            },
-        ]
-    },
+    // {
+    //     path: '/employee-information',
+    //     icon: 'settings',
+    //     name: 'employee-name',
+    //     title: '员工信息',
+    //     access:'employee-information/index',
+    //     component: Main,
+    //     children: [
+    //           {
+    //             path: 'attendance-record',
+    //             icon: 'compose',
+    //             name: 'attendance-record',
+    //             title: '考勤记录',
+    //             access:'employee-information/attendance-record',
+    //             component: () => import('@/views/employee-information/attendance-record.vue')
+    //         },
+    //     ]
+    // },
+    //  {
+    //     path: '/vehicle-manage',
+    //     icon: 'settings',
+    //     name: 'vehicle-manage',
+    //     title: '车辆管理',
+    //     access:'vehicle-manage/index',
+    //     component: Main,
+    //     children: [
+    //           {
+    //             path: 'vehicle-comeandgo-identify',
+    //             icon: 'compose',
+    //             name: 'vehicle-comeandgo-identify',
+    //             title: '车辆进出识别',
+    //             access:'vehicle-manage/vehicle-comeandgo-identify',
+    //             component: () => import('@/views/vehicle-manage/vehicle-comeandgo-identify.vue')
+    //         },
+    //     ]
+    // },
     // {
     //     path: '/error-/page',
     //     icon: 'android-sad',
@@ -582,5 +582,5 @@ export const routers = [
     page500,
     page403,
     page404
-    
+
 ];
