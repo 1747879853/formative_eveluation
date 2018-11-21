@@ -5,7 +5,7 @@ import router from '../router/router';
 import store from '../store/index';
 
 const ajaxUrl = env === 'development'
-    ? 'http://10.10.33.86:3000/api/v1'
+    ? 'http://127.0.0.1:3000/api/v1'
     : env === 'production'
         ? 'http://114.118.17.4:8080/api/v1'
         : '';
