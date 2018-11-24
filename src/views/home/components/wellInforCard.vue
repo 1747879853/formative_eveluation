@@ -4,7 +4,7 @@
 
 <template>
     <Card :padding="0">
-        <Row class="height-100" type="flex" align="middle" justify="center">
+        <Row class="height-100" type="flex" align="middle" justify="center" :style="{backgroundColor: color, color: 'white'}">
             <Icon type="ios-eye" size="50"></Icon>
         </Row>
         <Row  align="middle" justify="center" class="height-100">
