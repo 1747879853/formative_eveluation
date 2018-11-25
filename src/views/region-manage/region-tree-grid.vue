@@ -213,74 +213,82 @@ export default {
         ok () {            
             switch (this.f_modal_action) {
                 case 1:
-                    this.$axios.post('/save_region', {
-                        params: {
-                            title: this.f_name,
-                            parent_id: 0
-                        }
-                    }).then(function(res) {
-                        let item = res.data;
-                        let level = 1;
-                        let parent = null;
-                        let spaceHtml = "";
-                        for (var i = 1; i < level; i++) {
-                            spaceHtml += "<i class='ms-tree-space'></i>"
-                        }
-                        item = Object.assign({}, item, {
-                            "parent": parent,
-                            "level": level,
-                            "spaceHtml": spaceHtml,
-                            "expanded": false,
-                            "isShow": false,
-                            "isChecked": false,
-                            "load": false
-                        });
-                        //debugger
-                        this.initItems.push(item);
-                        this.$Message.info(this.$t('t_success'));
-                    }.bind(this))
-                    .catch(function(error) {
-                        // console.log(error);
-                        this.$Message.info(this.$t('t_failure'));
-                    });                    
-                    break;
+                    if (this.f_name.length>0) {
+                        this.$axios.post('/save_region', {
+                            params: {
+                                title: this.f_name,
+                                parent_id: 0
+                            }
+                        }).then(function(res) {
+                            let item = res.data;
+                            let level = 1;
+                            let parent = null;
+                            let spaceHtml = "";
+                            for (var i = 1; i < level; i++) {
+                                spaceHtml += "<i class='ms-tree-space'></i>"
+                            }
+                            item = Object.assign({}, item, {
+                                "parent": parent,
+                                "level": level,
+                                "spaceHtml": spaceHtml,
+                                "expanded": false,
+                                "isShow": false,
+                                "isChecked": false,
+                                "load": false
+                            });
+                            //debugger
+                            this.initItems.push(item);
+                            this.$Message.info(this.$t('t_success'));
+                        }.bind(this))
+                        .catch(function(error) {
+                            // console.log(error);
+                            this.$Message.info(this.$t('t_failure'));
+                        });                      
+                    }else{
+                        this.$Message.warning(this.$t('t_region_placeholder_text'));
+                    }
+                  break;
                 case 2:
-                    this.$axios.post('/save_subregion', {
-                        params: {
-                            title: this.f_name,
-                            parent_id: this.current_id,
-                        }
-                    }).then(function(res) {
-                        // debugger
-                        let origin_item = res.data;
-                        let level = this.current_item.level + 1;
-                        let parent = this.current_item;
-                        let spaceHtml = "";
-                        for (var i = 1; i < level; i++) {
-                            spaceHtml += "<i class='ms-tree-space'></i>"
-                        }
-                        let item = Object.assign({}, origin_item, {
-                            "parent": parent,
-                            "level": level,
-                            "spaceHtml": spaceHtml,
-                            "expanded": false,
-                            "isShow": true,
-                            "isChecked": false,
-                            "load": false
+                    if (this.f_name.length>0) {
+                        this.$axios.post('/save_subregion', {
+                            params: {
+                                title: this.f_name,
+                                parent_id: this.current_id,
+                            }
+                        }).then(function(res) {
+                            debugger
+                            let origin_item = res.data;
+                            let level = this.current_item.level + 1;
+                            let parent = this.current_item;
+                            let spaceHtml = "";
+                            for (var i = 1; i < level; i++) {
+                                spaceHtml += "<i class='ms-tree-space'></i>"
+                            }
+                            let item = Object.assign({}, origin_item, {
+                                "parent": parent,
+                                "level": level,
+                                "spaceHtml": spaceHtml,
+                                "expanded": false,
+                                "isShow": true,
+                                "isChecked": false,
+                                "load": false
+                            });
+                            parent.children.push(origin_item);
+                            if (parent.load){
+                                let len = this.ChildrenLength(parent);
+                                this.initItems.splice((this.current_index + len), 0, item);
+                            }
+                            if (!parent.expanded){
+                                this.toggle(this.current_index, this.current_item);
+                            }
+                            this.$Message.info(this.$t('t_success'));
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
                         });
-                        parent.children.push(origin_item);
-                        if (parent.load){
-                            let len = this.ChildrenLength(parent);
-                            this.initItems.splice((this.current_index + len), 0, item);
-                        }
-                        if (!parent.expanded){
-                            this.toggle(this.current_index, this.current_item);
-                        }
-                        this.$Message.info(this.$t('t_success'));
-                    }.bind(this))
-                    .catch(function(error) {
-                        console.log(error)
-                    });                    
+                    }else{
+                        this.$Message.warning(this.$t('t_region_placeholder_text'));
+                    }                        
                     break;
                 case 3:
                     this.$axios.post('/patch_region', {
