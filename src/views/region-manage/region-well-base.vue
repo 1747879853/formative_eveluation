@@ -29,9 +29,9 @@
                 </p>
                 <div style="overflow-y:auto;height:500px;">
                 <div style="overflow-y:auto;height:500px;">
-                    <CheckboxGroup v-model="wellList">
+                    <CheckboxGroup v-model="wellList" v-show="isleave">
                     <ul id="editable-new" class="iview-admin-draggable-list">                      
-                        <li v-for="(item, index) in well_data" :key="index" class="notwrap todolist-item" :data-index="index" @click="click_li(item)">
+                        <li v-for="(item, index) in well_data" :key="item.well_id" class="notwrap todolist-item" :data-index="index" @click="click_li(item)">
                         <Checkbox :label="item.well_id">{{ item.well_name }}</Checkbox></li>
                     </ul>
                     </CheckboxGroup>
@@ -54,6 +54,8 @@ import Sortable from 'sortablejs';
                 region_id:'',
                 wellList: [
                 ],
+                tempWellList:[],
+                isleave:true,
             }
         },
         mounted () { 
@@ -62,13 +64,7 @@ import Sortable from 'sortablejs';
             vm.data_regions = res.data;
         }).catch(error =>{
             console.log(error);
-        });
-
-        this.$axios.get("/wellList").then( res =>{
-            vm.well_data = res.data;
-        }).catch(error =>{
-            console.log(error);
-        });     
+        });   
 
     },
     methods:{  
@@ -81,23 +77,34 @@ import Sortable from 'sortablejs';
                 on: {
                     click: (h) => { 
                         this.region_id = data.id;
-                        this.$axios.get('/region_wellBases', {
-                                params: {
-                                    id:this.region_id,
-                                }
-                            }).then(function(res) {
-                                if (res.data.length>0) {
-                                    this.wellList = [];
-                                    for(var i = 0;i<res.data.length;i++){
-                                        this.wellList.push(res.data[i].well_id);
+                        if (data.children.length < 1) {
+                            this.$axios.get('/region_wellBases', {
+                                    params: {
+                                        id:this.region_id,
                                     }
-                                }else{
-                                    this.wellList = [];
-                                }
-                            }.bind(this))
-                            .catch(function(error) {
-                                console.log(error)
-                            });                              
+                                }).then(function(res) {
+                                    if (res.data.well_data.length>0) {
+                                        this.well_data = res.data.well_data;
+                                    }else{
+                                        this.well_data = [];
+                                    }
+                                    if (res.data.well_list.length>0) {
+                                        this.wellList = [];
+                                        for(var i = 0;i<res.data.well_list.length;i++){
+                                            this.wellList.push(res.data.well_list[i].well_id);
+                                        }
+                                    }else{
+                                        this.wellList = [];
+                                    }
+                                    this.$nextTick();
+                                }.bind(this))
+                                .catch(function(error) {
+                                    console.log(error)
+                                });
+                        this.isleave = true;
+                        }else{
+                            this.isleave = false;
+                        }                            
                     }            
                 }
             }, 

@@ -40,11 +40,11 @@ export default {
         },
         startStatus(){
             if (this.isStart == 1) {
-                return "当日停机";
+                return this.$t('t_halt ');
             }else if(this.isStart == -1){
-                return "长停";
+                return this.$t('t_shutdown ');
             }
-            return "正在运行";  
+            return this.$t('t_running ');  
         }
     },
 };

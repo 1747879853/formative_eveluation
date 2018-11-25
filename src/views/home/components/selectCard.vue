@@ -1,28 +1,28 @@
 <template>
     <div style="border-bottom: 1px dotted #e8e8e8;padding: 5px 5px 5px 5px;">
       <div style="height: 5px;"></div>
-      <h3>请选择{{ type }}：</h3>
+      <h3>{{ this.$t('t_please') }} {{ type }}：</h3>
       <div >
         <div v-show="isBox">
             <CheckboxGroup v-model="selected_groups">
               <Checkbox style="width: 100px;" label="all">
-                <span>所有</span>
+                <span>{{ this.$t('t_all') }}</span>
               </Checkbox>
               <Checkbox style="width: 100px;flex-warp: wrap;" v-for="item in groups_show" :label="item" :key="item">
               </Checkbox>
+              <Button type="primary" size="small" style="position:absolute;right:18%;" @click="sureClick">{{ this.$t('t_sure') }}</Button>
+              <Button type="primary" size="small" style="position:absolute;right:10%;" @click="recover()">{{ this.$t('t_cancel') }}</Button>
             </CheckboxGroup>
-            <Button type="primary" style="position:absolute;right:18%;" @click="sureClick">确定</Button>
-            <Button type="primary" style="position:absolute;right:10%;" @click="recover()">取消</Button>
         </div>
         <div v-show="!isBox">
-            <Button size="small" type="text" style="flex-warp: wrap;" @click="getItem('all')">所有</Button>
+            <Button size="small" type="text" style="flex-warp: wrap;" @click="getItem('all')">{{ this.$t('t_all') }}</Button>
             <Button size="small" type="text" style="flex-warp: wrap;" v-for="item in groups_show" :key="item" @click="getItem(item)">{{ item }}</Button>
-            <span v-show="isMore||show_more" style="color: #ff9900;right:60px;position:absolute;cursor:pointer;" @click="expend_click()">
-                展示更多
+            <span v-show="isMore||show_more" style="color: #ff9900;right:100px;position:absolute;cursor:pointer;" @click="expend_click()">
+                {{ this.$t('t_expendMore') }}
                 <Icon type="chevron-down" v-show="icon_show_more"></Icon>
                 <Icon type="chevron-up" v-show="!icon_show_more"></Icon>
             </span>
-            <span style="color: #2d8cf0;right:15px;position:absolute;cursor:pointer;" @click="isCheckbox()">多选</span>
+            <span style="color: #2d8cf0;right:15px;position:absolute;cursor:pointer;" @click="isCheckbox()">{{ this.$t('t_checkbox') }}</span>
         </div>
       </div>
     </div>

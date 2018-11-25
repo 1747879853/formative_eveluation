@@ -6,19 +6,18 @@
     <Card :style="height">
       <div style="padding: 5px 5px 5px 5px;">
         <div style="height: 5px;"></div>
-        <select-card @selectedGroup="statusSelectedGroup" @selected="statusSelected" type="开停机状态" :groups="status" ></select-card>
+        <select-card @selectedGroup="statusSelectedGroup" @selected="statusSelected" :type="this.$t('t_status')" :groups="status" ></select-card>
       </div>
-      <div style="border-bottom: 1px dotted #e8e8e8;padding: 5px 5px 5px 5px;">
+      <div style="padding: 5px 5px 5px 5px;">
         <div style="height: 5px;"></div>
-        <h3>请选择区块：</h3>
-        <cascaderMulti style="width: 300px" v-model="end_code" :data="end_codes" trigger="hover" placeholder="区块"></cascaderMulti>
+        <my-tree-select :type="this.$t('t_region')" :regiondata="regiondata" @selectedGroup="region_select_click"></my-tree-select>
       </div>
       <div :style="style" v-show="showMore">
-        <select-card @selectedGroup="sensorTypeSelectedGroup" @selected="sensorTypeSelected" type="传感器类型" :groups="sensor_type_data"></select-card>
-        <select-card @selectedGroup="wellTypeSelectedGroup" @selected="wellTypeSelected" type="油井类型" :groups="well_type_data"></select-card>
+        <select-card @selectedGroup="sensorTypeSelectedGroup" @selected="sensorTypeSelected" :type="this.$t('t_sensorType')" :groups="sensor_type_data"></select-card>
+        <select-card @selectedGroup="wellTypeSelectedGroup" @selected="wellTypeSelected" :type="this.$t('t_wellType')" :groups="well_type_data"></select-card>
         <div style="padding: 5px 5px 5px 5px;">
-          <Input v-model="well_name_v" placeholder="请输入井名..." style="width: 150px"></Input>
-          <Button type="primary" @click="well_name_click">确定</Button>
+          <Input v-model="well_name_v" :placeholder="this.$t('t_pleaseIWellName')" style="width: 150px"></Input>
+          <Button type="primary" @click="well_name_click">{{ this.$t('t_sure') }}</Button>
         </div>
       </div> 
       <br>
@@ -27,44 +26,51 @@
           <Icon type="ios-arrow-up" v-show="showMore"></Icon>
       </div>
     </Card>
-    <div style="height: 5px;"></div>
-    <div style="height: 35px;">
-      <Button style="float:left;">
-        <span>开停状态</span>
-        <Icon type="chevron-down" v-show="!showIsStart"></Icon>
-        <Icon type="chevron-up" v-show="showIsStart"></Icon>
-      </Button>
-      <Button style="float:left;">
-        <span>油井类型</span>
-        <Icon type="chevron-down" v-show="!showWellType"></Icon>
-        <Icon type="chevron-up" v-show="showWellType"></Icon>
-      </Button>
-      <Button style="float:left;">
-        <span>产液量</span>
-        <Icon type="chevron-down" v-show="!showFP"></Icon>
-        <Icon type="chevron-up" v-show="showFP"></Icon>
-      </Button>
-    </div>
-    <Row :gutter="5">
-        <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}" v-for="item in wellinfor" :key=item.well_id>
-            <infor-card
-                :wellName=item.well_name
-                :isStart=item.isStart
-                :sensor=item.sensor
-                :flulidProduction=item.flulidProduction
-            ></infor-card>
-        </Col>
-    </Row>
+    <Card>
+      <div style="height: 5px;"></div>
+        <div style="height: 35px;">
+          <Button style="float:left;">
+            <span>{{ this.$t('t_status') }}</span>
+            <Icon type="chevron-down" v-show="!showIsStart"></Icon>
+            <Icon type="chevron-up" v-show="showIsStart"></Icon>
+          </Button>
+          <Button style="float:left;">
+            <span>{{ this.$t('t_wellType') }}</span>
+            <Icon type="chevron-down" v-show="!showWellType"></Icon>
+            <Icon type="chevron-up" v-show="showWellType"></Icon>
+          </Button>
+          <Button style="float:left;">
+            <span>{{ this.$t('t_liquidYield ') }}</span>
+            <Icon type="chevron-down" v-show="!showFP"></Icon>
+            <Icon type="chevron-up" v-show="showFP"></Icon>
+          </Button>
+        </div>
+        <Row :gutter="5">
+            <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}" v-for="item in wellinfor" :key=item.well_id>
+                <infor-card
+                    :wellName=item.well_name
+                    :isStart=item.isStart
+                    :sensor=item.sensor
+                    :flulidProduction=item.flulidProduction
+                ></infor-card>
+            </Col>
+        </Row>   
+    </Card>
+    <Card style="height: 50px">
+      <Page :total="40" size="small" show-elevator show-sizer style="float: right;" />
+    </Card>
   </div>
 </template>
 <script>
-import inforCard from "./components/wellInforCard.vue"
+import inforCard from "./components/wellInforCard.vue";
 import selectCard from "./components/selectCard.vue";
+import myTreeSelect from "./components/myTreeSelect.vue";
     export default {
       name: "home",
       components: {
         inforCard,
         selectCard,
+        myTreeSelect,
       },
       data () {
           return {
@@ -75,31 +81,50 @@ import selectCard from "./components/selectCard.vue";
             showWellType: false,
             showFP: false,
             isStart_Group: [],
-            end_code: [],
+            region_groups: [],
             well_name_v: '',
-            end_codes: [
+            regiondata: [
               {
-                value: 1000,
-                label: "区块",
-                multiple: true,
+                id: 1,
+                label: "区块1",
                 children: [{
-                  label: "区块",
-                  value: 1100,
-                  children: [],
-                  multiple: true //可忽略项，当为true时该项为多选
+                  label: "区块12",
+                  id: 12,
                 },{
-                  label: "区块",
-                  value: 1100,
-                  children: [],
-                  multiple: true //可忽略项，当为true时该项为多选
+                  label: "区块13",
+                  id: 13,
+                }],
+              },
+              {
+                id: 2,
+                label: "区块2",
+                children: [{
+                  label: "区块21",
+                  id: 21,
+                },{
+                  label: "区块22",
+                  id: 22,
                 },
                 {
-                  label: "区块",
-                  value: 1100,
-                  children: [],
-                  multiple: true //可忽略项，当为true时该项为多选
+                  label: "区块23",
+                  id: 23,
+                }],
+              },
+              {
+                id: 3,
+                label: "区块3",
+                children: [{
+                  label: "区块31",
+                  id: 31,
+                },{
+                  label: "区块32",
+                  id: 32,
+                },
+                {
+                  label: "区块33",
+                  id: 33,
                 }]
-              }
+              },
             ],
             status: ["开机状态","停机状态","当日停机状态"],
             sensor_type_Group: [],
@@ -118,6 +143,9 @@ import selectCard from "./components/selectCard.vue";
           }
       },
       methods: {
+        region_select_click(data){
+          console.log(data);
+        },
         well_name_click(){
           console.log(this.well_name_v);
         },
@@ -172,4 +200,6 @@ import selectCard from "./components/selectCard.vue";
       },
     }
 </script>
+
+
 
