@@ -13,6 +13,7 @@ export default {
 		t_halt: '当日停机',
 		t_long_shutdown: '长停',
 		t_running: '正在运行',
+		t_unkonw: '未知',
 
 
     },
@@ -30,6 +31,7 @@ export default {
 		t_halt: '当日停机',
 		t_long_shutdown: '长停',
 		t_running: '正在运行',
+		t_unkonw: '未知',
 
 
     },
@@ -47,6 +49,7 @@ export default {
 		t_halt: 'Halt',
 		t_long_shutdown: 'LongShutdown',
 		t_running: 'Running',
+		t_unkonw: 'UNKONW',
 		
 
 

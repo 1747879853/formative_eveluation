@@ -3,12 +3,13 @@
         <h3>{{ this.$t('t_please') }} {{ type }}：</h3>
         <div>
             <Row>
-                <Col span="12">
-                    <treeselect v-model="region_groups" :multiple="true" :options="regiondata" style="width: 300px;"/>
+                <Col span="24">
+                    <treeselect v-model="region_groups" :multiple="true" :options="regiondatas" style="width: 300px;" :placeholder="this.$t('t_please')" @input="select">
+                    </treeselect>
                 </Col>
-                <Col span="12">
+                <!-- <Col span="12">
                     <Button type="primary" size="small" style="right:15px;position:absolute;cursor:pointer;" @click="sureClick">{{ this.$t('t_sure') }}</Button>
-                </Col>
+                </Col> -->
             </Row>
         </div>
     </div>
@@ -29,13 +30,43 @@ export default {
         regiondata: Array,
     },
     methods: {
-        sureClick(){
+        select(node, instanceId){
             this.$emit('selectedGroup',this.region_groups);
         },
+        addLabel(item){
+            item.label = item.title;
+        },
+        //递归写法，去掉没有孩子的item.children
+        cicle(item){
+            if (typeof(item.length) != "undefined") {
+                for(let i=0;i<item.length;i++){
+                    if (item[i].children.length != 0) {
+                        this.cicle(item[i].children);
+                        this.addLabel(item[i]);
+                    }else{
+                        delete item[i]["children"];
+                        this.addLabel(item[i]);
+                    }
+                }
+                return item;
+            }
+        },
+
     },
     data() {
         return {
             region_groups:[],
+        }
+    },
+    computed:{
+        //这里有一个问题，当父区块下只有一个区块时，选择后，value是父区块,
+        //问题解决，当选择父区块时，返回旗下所有子区块数据
+        regiondatas(){
+            if (this.regiondata.length>0) {
+                return this.cicle(this.regiondata);
+            }else{
+                return [];
+            }
         }
     },
 };

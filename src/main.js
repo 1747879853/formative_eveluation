@@ -13,11 +13,14 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import BaiduMap from 'vue-baidu-map'
 // import cascaderMulti from "cascader-multi";
+// import Autocomplete from 'v-autocomplete'
+// import 'v-autocomplete/dist/v-autocomplete.css'
 
 //// 生产环境中注释掉以下语句
 import '../mock/index.js';
 
 // Vue.use(cascaderMulti)
+// Vue.use(Autocomplete)
 Vue.use(VueI18n);
 Vue.use(iView);
 Vue.use(ElementUI);

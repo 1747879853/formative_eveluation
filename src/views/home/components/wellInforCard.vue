@@ -12,7 +12,6 @@
             <p class="infor-intro-text">{{ startStatus }}</p>
             <p class="infor-intro-text">{{ sensor }}</p>
             <p class="infor-intro-text">{{ flulidProduction }}</p>
-            <p class="infor-intro-text">{{ startStatus }}</p> 
         </Row>
     </Card>
 </template>
@@ -23,26 +22,38 @@ export default {
     props: {
         well_id: String,
         wellName: String,
-        //开停机状态 -1 0 1
+        //开停机状态 -2 -1 0 1 
         isStart: Number,
         // sensor
-        sensor: Array,
+        sensor: String,
         flulidProduction: Number,
     },
+    watch: {
+        groups: {  
+      　　　handler(newValue, oldValue) {   
+                
+      　　　},  
+      　　　deep: true  
+      　}  
+      },
     computed: {
         color(){
             if (this.isStart == 1) {
-                return "yellow";
+                return "#f90";
             }else if(this.isStart == -1){
-                return "red";
+                return "#ed4014";
+            }else if(this.isStart == -2){
+                return '#663300';
             }
-            return "green";
+            return "#2d8cf0";
         },
         startStatus(){
             if (this.isStart == 1) {
                 return this.$t('t_halt ');
             }else if(this.isStart == -1){
-                return this.$t('t_shutdown ');
+                return this.$t('t_long_shutdown ');
+            }else if (this.isStart == -2) {
+                return this.$t('t_unkonw');
             }
             return this.$t('t_running ');  
         }

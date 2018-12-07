@@ -256,7 +256,7 @@ export default {
                                 parent_id: this.current_id,
                             }
                         }).then(function(res) {
-                            debugger
+                            // debugger
                             let origin_item = res.data;
                             let level = this.current_item.level + 1;
                             let parent = this.current_item;

@@ -21,7 +21,7 @@ export default {
         t_add: '添加',
         t_success: '成功！',
         t_failure: '失败！',
-        t_cancel: '取消！',
+        t_cancel: '取消',
 
         
     },
@@ -48,7 +48,7 @@ export default {
         t_add: '添加',
         t_success: '成功！',
         t_failure: '失败！',
-        t_cancel: '取消！',
+        t_cancel: '取消',
 
 
     },
@@ -74,7 +74,7 @@ export default {
         t_add: 'Add',
         t_success: 'Success!',
         t_failure: 'Failure!',
-        t_cancel: 'Cancel!',
+        t_cancel: 'Cancel',
 
        
     }
