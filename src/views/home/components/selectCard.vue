@@ -69,7 +69,7 @@ export default {
             this.$emit('selected',item);
         },
         sureClick(){
-            this.$emit('selectedGroup',this.selected_groups);
+            this.$emit('selectedGroup',this.selected_groups,this.groups_show);
             if (this.isBox) {
                 if (this.isMore) {
                     this.show_more=true;
@@ -85,7 +85,9 @@ export default {
                 }
                 this.groups_show=this.groups.slice(0,9);
                 this.isBox=false;  
-                this.selected_groups=[];              
+                this.selected_groups=[];
+                // debugger
+                this.$emit('cancle',this.type);
             }
         },
         isCheckbox(){

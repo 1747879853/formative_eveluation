@@ -35,7 +35,6 @@
     "simplemde": "^1.11.2",
     "sortablejs": "^1.7.0",
     "tinymce": "^4.7.4",
-    "v-autocomplete": "^1.8.2",
     "vue": "^2.5.13",
     "vue-baidu-map": "^0.21.11",
     "vue-router": "^3.0.1",

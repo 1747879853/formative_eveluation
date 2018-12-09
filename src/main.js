@@ -8,10 +8,10 @@ import '@/locale';
 import 'iview/dist/styles/iview.css';
 import VueI18n from 'vue-i18n';
 import util from './libs/util';
-import axios from './libs/ajax'; 
+import axios from './libs/ajax';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import BaiduMap from 'vue-baidu-map'
+import BaiduMap from 'vue-baidu-map';
 // import cascaderMulti from "cascader-multi";
 // import Autocomplete from 'v-autocomplete'
 // import 'v-autocomplete/dist/v-autocomplete.css'
