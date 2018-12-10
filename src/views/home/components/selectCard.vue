@@ -1,7 +1,7 @@
 <template>
     <div style="border-bottom: 1px dotted #e8e8e8;padding: 5px 5px 5px 5px;">
       <div style="height: 5px;"></div>
-      <h3>{{ this.$t('t_please') }} {{ type }}：</h3>
+      <!--<h3>{{ this.$t('t_please') }} {{ type }}：</h3>-->
       <div >
         <div v-show="isBox">
             <CheckboxGroup v-model="selected_groups" v-if="sensorTypeShow">
@@ -33,6 +33,11 @@
             </CheckboxGroup>
         </div>
         <div v-show="!isBox">
+            <Button size="small" type="text" style="flex-warp: wrap;position:absolute;left:1%;">{{ type }}：</Button>
+            <Button size="small" type="text" style="flex-warp: wrap;"></Button>
+            <Button size="small" type="text" style="flex-warp: wrap;"></Button>
+            <Button size="small" type="text" style="flex-warp: wrap;"></Button>
+            <Button size="small" type="text" style="flex-warp: wrap;"></Button>
             <Button size="small" type="text" style="flex-warp: wrap;" @click="getItem('all')">{{ this.$t('t_all') }}</Button>
             <Button v-if="sensorTypeShow" size="small" type="text" style="flex-warp: wrap;" v-for="item in groups_show" :key="item.id" @click="getItem(item)">{{ item.name }}</Button>
             <Button v-if="wellShow" size="small" type="text" style="flex-warp: wrap;" v-for="item in groups_show" :key="item.id" @click="getItem(item)">{{ item.name }}</Button>

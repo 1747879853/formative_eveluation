@@ -1,16 +1,15 @@
 <template>
     <div style="border-bottom: 1px dotted #e8e8e8;padding: 5px 5px 5px 5px;">
-        <h3>{{ this.$t('t_please') }} {{ type }}：</h3>
+        <!--<h3>{{ this.$t('t_please') }} {{ type }}：</h3>-->
         <div>
-            <Row>
-                <Col span="24">
-                    <treeselect v-model="region_groups" :multiple="true" :options="regiondatas" style="width: 300px;" :placeholder="this.$t('t_please')" @input="select">
-                    </treeselect>
-                </Col>
-                <!-- <Col span="12">
-                    <Button type="primary" size="small" style="right:15px;position:absolute;cursor:pointer;" @click="sureClick">{{ this.$t('t_sure') }}</Button>
-                </Col> -->
-            </Row>
+            <!--<div style="float:left;width:7%;border:1px;">{{ type }}：</div>-->
+            <Button size="small" type="text" style="float:left;width:6%;border:1px;">{{ type }}：</Button>
+            <div style="float:left;width:25%;border:1px;">
+                <treeselect v-model="region_groups" :multiple="true" :options="regiondatas" :max-height="500" style="width: 150px;" :placeholder="this.$t('t_please')" @input="select">
+                </treeselect>
+            </div>
+            <br/>
+            <br/>
         </div>
     </div>
 </template>

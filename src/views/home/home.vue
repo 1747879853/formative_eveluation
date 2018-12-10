@@ -4,25 +4,32 @@
 <template>
   <div>
     <Card :style="height">
-      <div style="padding: 5px 5px 5px 5px;">
-        <div style="height: 5px;"></div>
+      <div >
+        <!--<div style="height: 5px;"></div>-->
         <select-card @cancle="cancle" @selectedGroup="statusSelectedGroup" @selected="statusSelected" :type="this.$t('t_status')" :groups="status" ></select-card>
-      </div>
-      <div style="padding: 5px 5px 5px 5px;">
-        <div style="height: 5px;"></div>
-        <my-tree-select :type="this.$t('t_region')" :regiondata="regiondata" @selectedGroup="selectTree"></my-tree-select>
       </div>
       <div :style="style" v-show="showMore">
         <select-card @cancle="cancle" @selectedGroup="sensorTypeSelectedGroup" @selected="sensorTypeSelected" :type="this.$t('t_sensorType')" :groups="sensor_type_data"></select-card>
         <select-card @cancle="cancle" @selectedGroup="wellTypeSelectedGroup" @selected="wellTypeSelected" :type="this.$t('t_wellType')" :groups="well_type_data"></select-card>
         <div style="padding: 5px 5px 5px 5px;">
-          <Select v-model="well_name" filterable style="max-width: 200px" @on-change="well_name_click" :clearable="true">
+          <my-tree-select :type="this.$t('t_region')" :regiondata="regiondata" @selectedGroup="selectTree"></my-tree-select>
+        </div>
+        <div style="padding: 5px 5px 5px 5px;">
+          <Button size="small" type="text" style="float:left;width:6%;border:1px;">{{ this.$t("t_well_name")}}:</Button>
+          <Button size="small" type="text" style="flex-warp: wrap;"></Button>
+          <Button size="small" type="text" style="flex-warp: wrap;"></Button>
+          <Button size="small" type="text" style="flex-warp: wrap;"></Button>
+          <Button size="small" type="text" style="flex-warp: wrap;"></Button>
+          <Select v-model="well_name" filterable style="float:left;width:25%;border:1px;" @on-change="well_name_click" :clearable="true">
             <Option v-for="item in well_name_data" :value="item.well_id" :key="item.well_id">{{ item.well_name }}</Option>
           </Select>
         </div>
       </div> 
       <br>
       <div class="example-code-more" @click="click">
+        <p v-show="!showMore" style="font-size: 12px;color: #9ea7b4;">
+          选择更多
+        </p>
           <Icon type="ios-arrow-down" v-show="!showMore"></Icon>
           <Icon type="ios-arrow-up" v-show="showMore"></Icon>
       </div>
@@ -92,7 +99,7 @@ export default {
         return {
             isExpand: true,
             showMore: true,
-            u_height: 170,
+            u_height: 100,
             showIsStart: false,
             showWellType: false,
             showFP: false,
@@ -254,7 +261,8 @@ export default {
                             descOrasc: this.descOrasc
                         }
                     }).then(res => {
-                        // debugger
+                        debugger
+                        this.wellinfor = [];
                         this.wellinfor = res.data.wells;
                         this.total = res.data.length;
                         console.log(this.total);
@@ -291,9 +299,10 @@ export default {
         },
         change_size (item) {
             // 每次修改之后页码回到第一页
+          debugger
             this.page_size = item;
 
-            if (this.status_select_status) {
+            // if (this.status_select_status) {
                 //   if (this.current_page == 1) {
                 //     this.get_wells_select(1);
                 //   }
@@ -302,7 +311,7 @@ export default {
                 //     this.get_wells_select(0);
                 //   }
                 this.get_wells_select(1);
-            }
+            // }
         },
         // 区块选择
         selectTree (data) {

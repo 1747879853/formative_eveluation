@@ -2,7 +2,7 @@ export default {
     'zh-CN': {
         t_status: '开停机状态',
         t_sensorType: '传感器类型',
-        t_wellType: '油井类型',
+        t_wellType: ' 油井类型',
         t_pleaseIWellName: '请输入井名...',
         t_sure: '确定',
         t_liquidYield: '产液量',
@@ -13,13 +13,14 @@ export default {
         t_halt: '当日停机',
         t_long_shutdown: '长停',
         t_running: '正在运行',
-        t_unkonw: '未知'
+        t_unkonw: '未知',
+        t_well_name: '井名'
 
     },
     'zh-TW': {
         t_status: '开停机状态',
         t_sensorType: '传感器类型',
-        t_wellType: '油井类型',
+        t_wellType: ' 油井类型',
         t_pleaseIWellName: '请输入井名...',
         t_sure: '确定',
         t_liquidYield: '产液量',
@@ -30,7 +31,8 @@ export default {
         t_halt: '当日停机',
         t_long_shutdown: '长停',
         t_running: '正在运行',
-        t_unkonw: '未知'
+        t_unkonw: '未知',
+        t_well_name: '井名'
 
     },
     'en-US': {
@@ -47,7 +49,8 @@ export default {
         t_halt: 'Halt',
         t_long_shutdown: 'LongShutdown',
         t_running: 'Running',
-        t_unkonw: 'UNKONW'
+        t_unkonw: 'UNKONW',
+        t_well_name: '井名'
 
     }
 };
