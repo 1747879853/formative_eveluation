@@ -34,8 +34,8 @@ Vue.prototype.$axios = axios;
 
 new Vue({
     el: '#app',
-    router: router,
-    store: store,
+    router: router,  //==> router
+    store: store,   //==> store
     render: h => h(App),
     data: {
         currentPageName: ''

@@ -16,7 +16,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, '../dist/dist')
     },
-    module: {
+    module: { //这个节点用来处理所有第三方模块加载器
         rules: [
             {
                 test: /\.vue$/,
@@ -82,6 +82,7 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.vue'],
         alias: {
+            //修改vue被导入时候包的路径
             'vue': 'vue/dist/vue.esm.js',
             '@': resolve('../src'),
         }
