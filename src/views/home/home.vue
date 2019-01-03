@@ -155,11 +155,6 @@ export default {
         }).catch(error => {
             console.log(error);
         });
-        console.log(this.isStatusBox!=''||this.isSensorBox!=''||this.isTypeBox!=''||this.isName!='');
-        console.log(this.isStatusBox!='');
-        console.log(this.isSensorBox!='');
-        console.log(this.isTypeBox!='');
-        console.log(this.isName!='');
     },
     methods: {
         cancle (type) {
@@ -222,18 +217,10 @@ export default {
         },
         initPage_1 () {
             // 使用=>可以不用绑定this
-            this.$axios.get('/sensor_type_list').then(res => {
-                this.sensor_type_data = res.data;
-            }).catch(error => {
-                console.log(error);
-            });
-            this.$axios.get('/well_type_list').then(res => {
-                this.well_type_data = res.data;
-            }).catch(error => {
-                console.log(error);
-            });
-            this.$axios.get('/region_list').then(res => {
-                this.regiondata = res.data;
+            this.$axios.get('/sensor_well_region_list').then(res => {
+                this.sensor_type_data = res.data.datatypes;
+                this.well_type_data = res.data.welltypes;
+                this.regiondata = res.data.regions;
             }).catch(error => {
                 console.log(error);
             });
@@ -261,7 +248,7 @@ export default {
                             descOrasc: this.descOrasc
                         }
                     }).then(res => {
-                        debugger
+                        // debugger
                         this.wellinfor = [];
                         this.wellinfor = res.data.wells;
                         this.total = res.data.length;

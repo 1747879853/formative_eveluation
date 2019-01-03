@@ -3,7 +3,7 @@
 </style>
 
 <template>
-    <Card :padding="0">
+    <Card :padding="0" style="height: 120px">
         <Row class="height-100" type="flex" align="middle" justify="center" :style="{backgroundColor: color, color: 'white'}">
             <Icon type="ios-eye" size="50"></Icon>
         </Row>
