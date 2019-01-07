@@ -36,19 +36,19 @@ export default {
 
     },
     'en-US': {
-        t_status: 'On / off state',
+        t_status: 'Well operating state',
         t_sensorType: 'Sensor status',
         t_wellType: 'Oil well type',
         t_pleaseIWellName: 'Please input the name of the well....',
         t_sure: 'sure',
-        t_liquidYield: 'Liquid yield',
+        t_liquidYield: 'Liquid production volume',
         t_please: 'Please chose',
         t_all: 'all',
         t_expendMore: 'more',
         t_checkbox: 'checknox',
-        t_halt: 'Halt',
-        t_long_shutdown: 'LongShutdown',
-        t_running: 'Running',
+        t_halt: 'Off(one day)',
+        t_long_shutdown: 'Off(long-term)',
+        t_running: 'On',
         t_unkonw: 'UNKONW',
         t_well_name: '井名'
 
