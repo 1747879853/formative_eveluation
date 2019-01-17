@@ -17,7 +17,7 @@ const devUrl = env === 'development'
         : '';
 
 const service = axios.create({
-    baseURL: ajaxUrl,
+    // baseURL: ajaxUrl,
     withCredentials: true,
     timeout: 5000
 });

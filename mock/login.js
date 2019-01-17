@@ -142,5 +142,9 @@ export default [
     
     path: '/user_list',
     data: data4
+},
+{
+    path: '/user_token',
+    data: data3
 }
 ]
