@@ -7,13 +7,13 @@
     <div v-if="course==''">
         <p style="height:25px">请选择课程:</p>
         <div v-for="(item, index) in courseList" :key="index" style="padding:10px">
-            <Button @click="selectCourse(item)" class="ivu-btn ivu-btn-primary ivu-btn-big">{{item}}</Button>
+            <Button @click="selectCourse(item.id)" class="ivu-btn ivu-btn-primary ivu-btn-big">{{item.name}}</Button>
         </div>
     </div>
     <div v-if="course!=''&&class1==''">
         <p style="height:25px">请选择班级:</p>
         <div v-for="(item, index) in classList" :key="index" style="padding:10px">
-            <Button @click="selectClass(item)" class="ivu-btn ivu-btn-primary ivu-btn-big">{{item}}</Button>
+            <Button @click="selectClass(item.id)" class="ivu-btn ivu-btn-primary ivu-btn-big">{{item.name}}</Button>
         </div>
     </div>
     <div v-if="course!=''&&class1!=''">
@@ -27,11 +27,9 @@ export default {
   name: "user",
   data() {
     return {
-      courseList:['英语1','英语2','英语3'],
-      classList:['1班','2班','3班'],
-      studentList:[{id:'1',name:'学生1',evaluation1:'1',evaluation2:'1',evaluation3:'1'},
-                   {id:'2',name:'学生2',evaluation1:'2',evaluation2:'2',evaluation3:'2'},
-                   {id:'3',name:'学生3',evaluation1:'3',evaluation2:'3',evaluation3:'3'}],
+      courseList:[],
+      classList:[],
+      studentList:[],
       course:'',
       class1:'',
       student:'',
@@ -118,36 +116,38 @@ export default {
   computed: {
   },
   mounted() {
-      this.$axios.get("/courseList",{
+      this.$axios.post("/courseList",{
         params: {
           teacherid:1,
         }
       }).then(res => {
         this.courseList = res.data;
+        console.log(res.data)
       })
       .catch(error => {
         console.log(error);
       });
   },
   methods:{
-      selectCourse(item){
-        this.course=item;
-        this.$axios.get("/classList",{
+      selectCourse(id){
+        this.course=id;
+        this.$axios.post("/classList",{
           params: {
-            courseid:this.course,
+            courseid:id,
           }  
         }).then(res => {
           this.classList = res.data;
+          console.log(res.data)
         })
         .catch(error => {
           console.log(error);
         });
       },
-      selectClass(item){
-        this.class1=item;
-        this.$axios.get("/studentList",{
+      selectClass(id){
+        this.class1=id;
+        this.$axios.post("/studentList",{
           params: {
-            classid:this.class1,
+            classid:id,
           }
         }).then(res => {
           this.studentList = res.data;

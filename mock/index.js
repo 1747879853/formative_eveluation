@@ -18,8 +18,10 @@ import costList from './costList'
 import workList from './workList'
 import vehicleList from './vehicleList'
 import courseList from './courseList'
+import classList from './classList'
+import studentList from './studentList'
 
-let data = [].concat(authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,userList,costList,workList,orgaLeader,attendanceList,vehicleList,courseList)
+let data = [].concat(authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,userList,costList,workList,orgaLeader,attendanceList,vehicleList,courseList,classList,studentList)
 
 
 
