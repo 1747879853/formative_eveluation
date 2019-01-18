@@ -25,9 +25,9 @@ const service = axios.create({
 // Alter defaults after instance has been created
 
 service.interceptors.request.use(function (config) {
-    if (store.state.token) {
-        config.headers.common['Authorization'] = store.state.token;
-    }
+    // if (store.state.token) {
+    //     config.headers.common['Authorization'] = store.state.token;
+    // }
 
     // Do something before request is sent
 

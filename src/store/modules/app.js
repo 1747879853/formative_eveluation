@@ -87,7 +87,13 @@ const app = {
                     }
                 }
             });
-            state.menuList = menuList;
+            //无后端情况下获取所有左侧菜单
+            // state.menuList = menuList;            
+            if(state.menuList.length==0){
+                myAppRouter.forEach((item, index) => {
+                    state.menuList.push(item);               
+                })
+            }          
         },
         changeMenuTheme (state, theme) {
             state.menuTheme = theme;
