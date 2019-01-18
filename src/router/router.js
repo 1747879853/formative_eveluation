@@ -522,6 +522,17 @@ export const appRouter = [
             },
         ]
     },
+    {
+        path: '/input_class_grade',
+        icon: 'key',
+        name: 'input_class_grade',
+        title: '课堂成绩录入',
+        access:'input_class_grade/index',
+        component: Main,
+        children: [
+            { path: 'index', title: '课堂成绩录入', access:'input_class_grade/index', name: 'input_class_grade_index', component: () => import('@/views/input_class_grade/input_class_grade.vue') }
+        ]
+    },
     // {
     //     path: '/employee-information',
     //     icon: 'settings',
