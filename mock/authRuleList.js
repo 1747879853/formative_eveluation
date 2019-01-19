@@ -7,57 +7,19 @@ let list = function (options) {
     let rtype = options.type.toLowerCase(); // 获取请求类型
     switch (rtype) {
         case 'get':
-            arr = [
-                {
-                    id: '1',
-                    authority: 'Admin/Index/index',
-                    name: '后台首页',
-                    condition: '111',
-                    status: '激活',
-                    children: [
-                        {
-                            id: '2',
-                            authority: 'Admin/Index/welcome',
-                            name: '欢迎页面',
-                            condition: '222',
-                            status: '激活',
-                            children: [{
-                                id: '5',
-                                authority: 'Admin/Index/welcome',
-                                name: '欢迎页面',
-                                condition: '222',
-                                status: '激活',
-                                children: []
-                            }]
-                        },
-                        {
-                            id: '6',
-                            authority: 'Admin/Index/welcome',
-                            name: '欢迎页面',
-                            condition: '222',
-                            status: '激活',
-                            children: []
-                        }
-                    ]
-                },
-                {
-                    id: '3',
-                    authority: 'Manufacturing/Index/index',
-                    name: '生产首页',
-                    condition: '333',
-                    status: '激活',
-                    children: [
-                        {
-                            id: '4',
-                            authority: 'Manufacturing/Index/bom',
-                            name: '物料清单',
-                            condition: '444',
-                            status: '激活',
-                            children: []
-                        }
-                    ]
-                }
-            ];
+            arr = [{"id":59,"title":"后台首页","name":"后台首页","authority":"Admin/index","condition":null,"status":"激活","expand":true,"checked":false,"children":[]},
+{"id":67,"title":"系统管理","name":"系统管理","authority":"system-manage/index","condition":null,"status":"激活","expand":true,"checked":false,
+    "children":[{"id":68,"title":"权限管理","name":"权限管理","authority":"system-manage/authority","condition":null,"status":"激活","expand":true,"checked":false,"children":[]},
+        {"id":69,"title":"权限组管理","name":"权限组管理","authority":"system-manage/authority-groups","condition":null,"status":"激活","expand":true,"checked":false,"children":[]},
+        {"id":70,"title":"用户权限分配","name":"用户权限分配","authority":"system-manage/user-authority-groups","condition":null,"status":"激活","expand":true,"checked":false,"children":[]},
+        {"id":71,"title":"菜单管理","name":"菜单管理","authority":"system-manage/menu-manage","condition":null,"status":"激活","expand":true,"checked":false,"children":[]}]
+},
+{"id":75,"title":"用户管理","name":"用户管理","authority":"users-manage/index","condition":null,"status":"激活","expand":true,"checked":false,
+    "children":[{"id":76,"title":"用户","name":"用户","authority":"users-manage/user","condition":null,"status":"激活","expand":true,"checked":false,"children":[]},
+        {"id":77,"title":"组织管理","name":"组织管理","authority":"users-manage/organization","condition":null,"status":"激活","expand":true,"checked":false,"children":[]},
+        ]
+},{"id":1,"title":"课堂成绩录入","name":"课堂成绩录入","authority":"input_class_grade/index","condition":null,"status":"激活","expand":true,"checked":false,"children":[]}
+];
             break;
         case 'post':// 添加新权限
             id = maxid;

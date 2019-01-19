@@ -55,8 +55,10 @@ export default {
             TreeGrid
         },
     mounted(){
+        console.log('****************************************');
         this.$axios.get("/authRuleList").then( res =>{
             this.data = res.data;
+            console.log(this.data);
         }).catch(error =>{
             console.log(error);
         })

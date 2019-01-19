@@ -352,82 +352,82 @@ export const appRouter = [
             },
         ]
     },
-    {
-        path: '/region-manage',
-        icon: 'settings',
-        name: 'region-manage',
-        title: {i18n: 't_region_manage'},
-        access:'region-manage/index',
-        parent:'',
-        component: Main,
-        children: [
-            {
-                path: 'region',
-                icon: 'compose',
-                name: 'region',
-                title: {i18n: 't_region'},
-                access:'region-manage/region',
-                parent:'region-manage/index',
-                component: () => import('@/views/region-manage/region.vue')
-            },
-            {
-                path: 'region-user',
-                icon: 'pound',
-                name: 'region-user',
-                title: {i18n: 't_region_user'},
-                access:'region-manage/region-user',
-                parent:'region-manage/index',
-                component: () => import('@/views/region-manage/region-user.vue')
-            },
-            {
-                path: 'region-well-base',
-                icon: 'pound',
-                name: 'region-well-base',
-                title: {i18n: 't_region_well_base'},
-                access:'region-manage/region-well-base',
-                parent:'region-manage/index',
-                component: () => import('@/views/region-manage/region-well-base.vue')
-            },
-        ]
-    },
-    {
-        path: '/single-well-manage',
-        icon: 'settings',
-        name: 'single-well-manage',
-        title: '单井维护',
-        access:'single-well-manage/index',
-        parent:'',
-        component: Main,
-        children: [
-            {
-                path: 'well-info',
-                icon: 'compose',
-                name: 'well-info',
-                title: '单井资料',
-                access:'single-well-manage/well-info',
-                parent:'single-well-manage/index',
-                component: () => import('@/views/single-well-manage/well-info.vue')
-            },
-            {
-                path: 'std-wgraph',
-                icon: 'pound',
-                name: 'std-wgraph',
-                title: '标准功图设置',
-                access:'single-well-manage/std-wgraph',
-                parent:'single-well-manage/index',
-                component: () => import('@/views/single-well-manage/std-wgraph.vue')
-            },
-            {
-                path: 'alarm-scope',
-                icon: 'pound',
-                name: 'alarm-scope',
-                title: '报警范围设置',
-                access:'single-well-manage/alarm-scope',
-                parent:'single-well-manage/index',
-                component: () => import('@/views/single-well-manage/alarm-scope.vue')
-            },
-        ]
-    },
+    // {
+    //     path: '/region-manage',
+    //     icon: 'settings',
+    //     name: 'region-manage',
+    //     title: {i18n: 't_region_manage'},
+    //     access:'region-manage/index',
+    //     parent:'',
+    //     component: Main,
+    //     children: [
+    //         {
+    //             path: 'region',
+    //             icon: 'compose',
+    //             name: 'region',
+    //             title: {i18n: 't_region'},
+    //             access:'region-manage/region',
+    //             parent:'region-manage/index',
+    //             component: () => import('@/views/region-manage/region.vue')
+    //         },
+    //         {
+    //             path: 'region-user',
+    //             icon: 'pound',
+    //             name: 'region-user',
+    //             title: {i18n: 't_region_user'},
+    //             access:'region-manage/region-user',
+    //             parent:'region-manage/index',
+    //             component: () => import('@/views/region-manage/region-user.vue')
+    //         },
+    //         {
+    //             path: 'region-well-base',
+    //             icon: 'pound',
+    //             name: 'region-well-base',
+    //             title: {i18n: 't_region_well_base'},
+    //             access:'region-manage/region-well-base',
+    //             parent:'region-manage/index',
+    //             component: () => import('@/views/region-manage/region-well-base.vue')
+    //         },
+    //     ]
+    // },
+    // {
+    //     path: '/single-well-manage',
+    //     icon: 'settings',
+    //     name: 'single-well-manage',
+    //     title: '单井维护',
+    //     access:'single-well-manage/index',
+    //     parent:'',
+    //     component: Main,
+    //     children: [
+    //         {
+    //             path: 'well-info',
+    //             icon: 'compose',
+    //             name: 'well-info',
+    //             title: '单井资料',
+    //             access:'single-well-manage/well-info',
+    //             parent:'single-well-manage/index',
+    //             component: () => import('@/views/single-well-manage/well-info.vue')
+    //         },
+    //         {
+    //             path: 'std-wgraph',
+    //             icon: 'pound',
+    //             name: 'std-wgraph',
+    //             title: '标准功图设置',
+    //             access:'single-well-manage/std-wgraph',
+    //             parent:'single-well-manage/index',
+    //             component: () => import('@/views/single-well-manage/std-wgraph.vue')
+    //         },
+    //         {
+    //             path: 'alarm-scope',
+    //             icon: 'pound',
+    //             name: 'alarm-scope',
+    //             title: '报警范围设置',
+    //             access:'single-well-manage/alarm-scope',
+    //             parent:'single-well-manage/index',
+    //             component: () => import('@/views/single-well-manage/alarm-scope.vue')
+    //         },
+    //     ]
+    // },
     // {
     //     path: '/daily-summary',
     //     icon: 'settings',
@@ -504,22 +504,22 @@ export const appRouter = [
                 access:'users-manage/organization',
                 component: () => import('@/views/users-manage/organization.vue')
             },
-            {
-                path: 'workshop-maintenance',
-                icon: 'compose',
-                name: 'workshop-maintenance',
-                title: '车间维护',
-                access:'users-manage/workshop-maintenance',
-                component: () => import('@/views/users-manage/workshop-maintenance.vue')
-            },
-            {
-                path: 'workteam-maintenance',
-                icon: 'compose',
-                name: 'workteam-maintenance',
-                title: '班组维护',
-                access:'users-manage/workteam-maintenance',
-                component: () => import('@/views/users-manage/workteam-maintenance.vue')
-            },
+            // {
+            //     path: 'workshop-maintenance',
+            //     icon: 'compose',
+            //     name: 'workshop-maintenance',
+            //     title: '车间维护',
+            //     access:'users-manage/workshop-maintenance',
+            //     component: () => import('@/views/users-manage/workshop-maintenance.vue')
+            // },
+            // {
+            //     path: 'workteam-maintenance',
+            //     icon: 'compose',
+            //     name: 'workteam-maintenance',
+            //     title: '班组维护',
+            //     access:'users-manage/workteam-maintenance',
+            //     component: () => import('@/views/users-manage/workteam-maintenance.vue')
+            // },
         ]
     },
     {
