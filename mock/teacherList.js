@@ -5,12 +5,13 @@ let params;
 let list = function (options) {
     /* 模拟删除数据的方式 */
     let rtype = options.type.toLowerCase(); // 获取请求类型
-    // debugger
     switch (rtype) {
         case 'get':
-            arr=[{"id":28,"name":"xuesheng1","user_tel":15166666666,"user_name":"xuesheng1","checked_id":[6],"status":"在职","operation":"edit,delete",classname:'1班'},
-{"id":29,"name":"xuesheng2","user_tel":15166666666,"user_name":"xuesheng2","checked_id":[1],"status":"在职","operation":"edit,delete",classname:'2班'},
-{"id":30,"name":"xuesheng3","user_tel":15166666666,"user_name":"xuesheng3","checked_id":[4],"status":"在职","operation":"edit,delete",classname:'3班'},]
+            arr = [{"id":31,"name":"laoshi1","user_tel":15166666666,"user_name":"laoshi1","checked_id":[4],"status":"在职","operation":"edit,delete"},
+{"id":32,"name":"laoshi2","user_tel":15166666666,"user_name":"laoshi2","checked_id":[4],"status":"在职","operation":"edit,delete"},
+{"id":33,"name":"laoshi3","user_tel":15166666666,"user_name":"laoshi3","checked_id":[4],"status":"在职","operation":"edit,delete"},
+{"id":34,"name":"admin","user_tel":15166666666,"user_name":"admin","checked_id":[5],"status":"在职","operation":"edit,delete"},
+{"id":35,"name":"dev","user_tel":15166666666,"user_name":"dev","checked_id":[5],"status":"在职","operation":"edit,delete"},]
             break;
         case 'post':
             id = maxid;
@@ -21,7 +22,6 @@ let list = function (options) {
                 name: params.email,
                 user_name: params.username,
                 user_tel: params.tel,
-                classname: params.class,
                 status: '在职'
             };
             break;
@@ -31,7 +31,6 @@ let list = function (options) {
                 id: params.id,
                 name: params.email,
                 user_name: params.username,
-                classname: params.class,
                 user_tel: params.tel,
             };
             break;
@@ -49,6 +48,6 @@ let list = function (options) {
 };
 
 export default {
-    path: '/studentList',
+    path: '/teacherList',
     data: list
-};
+}

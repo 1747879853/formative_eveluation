@@ -483,18 +483,26 @@ export const appRouter = [
     {
         path: '/users-manage',
         icon: 'settings',
-        name: 'users-name',
+        name: 'users-manage',
         title: '用户管理',
         access:'users-manage/index',
         component: Main,
         children: [
               {
-                path: 'user',
+                path: 'teacher',
                 icon: 'compose',
-                name: 'user',
-                title: '用户',
-                access:'users-manage/user',
-                component: () => import('@/views/users-manage/user.vue')
+                name: 'teacher',
+                title: '教师信息管理',
+                access:'users-manage/teacher',
+                component: () => import('@/views/users-manage/teacher.vue')
+            },
+            {
+                path: 'student',
+                icon: 'compose',
+                name: 'student',
+                title: '学生信息管理',
+                access:'users-manage/student',
+                component: () => import('@/views/users-manage/student.vue')
             },
             {
                 path: 'organization',
@@ -531,6 +539,75 @@ export const appRouter = [
         component: Main,
         children: [
             { path: 'index', title: '课堂成绩录入', access:'input_class_grade/index', name: 'input_class_grade_index', component: () => import('@/views/input_class_grade/input_class_grade.vue') }
+        ]
+    },
+    {
+        path: '/student_grade',
+        icon: 'key',
+        name: 'student_grade',
+        title: '学生成绩查看',
+        access:'student_grade/index',
+        component: Main,
+        children: [
+            { path: 'index', title: '学生成绩查看', access:'student_grade/index', name: 'student_grade_index', component: () => import('@/views/student_grade/student_grade.vue') }
+        ]
+    },
+    {
+        path: '/resource-manage',
+        icon: 'settings',
+        name: 'resource-manage',
+        title: '教学资源管理',
+        access:'resource-manage/index',
+        component: Main,
+        children: [
+              {
+                path: 'class',
+                icon: 'compose',
+                name: 'class',
+                title: '班级管理',
+                access:'resource-manage/class',
+                component: () => import('@/views/resource-manage/class.vue')
+            },
+            {
+                path: 'course',
+                icon: 'compose',
+                name: 'course',
+                title: '课程管理',
+                access:'resource-manage/course',
+                component: () => import('@/views/resource-manage/course.vue')
+            },
+            {
+                path: 'evaluation',
+                icon: 'compose',
+                name: 'evaluation',
+                title: '评价指标管理',
+                access:'resource-manage/evaluation',
+                component: () => import('@/views/resource-manage/evaluation.vue')
+            },
+            {
+                path: 'class-course',
+                icon: 'compose',
+                name: 'class-course',
+                title: '班级课程分配',
+                access:'resource-manage/class-course',
+                component: () => import('@/views/resource-manage/class-course-allocation.vue')
+            },
+            {
+                path: 'course-evaluation',
+                icon: 'compose',
+                name: 'course-evaluation',
+                title: '课程评价指标分配',
+                access:'resource-manage/course-evaluation',
+                component: () => import('@/views/resource-manage/course-evaluation-allocation.vue')
+            },
+            {
+                path: 'teacher-course',
+                icon: 'compose',
+                name: 'teacher-course',
+                title: '教师课程分配',
+                access:'resource-manage/teacher-course',
+                component: () => import('@/views/resource-manage/teacher-course-allocation.vue')
+            },
         ]
     },
     // {

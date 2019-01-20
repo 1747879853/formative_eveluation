@@ -6,35 +6,39 @@
 <Card>
     <p slot="title" style="height:25px">
         <Icon type="ios-list"></Icon>
-        用户列表&nbsp;&nbsp;&nbsp;
-        <Button @click="show_modal1()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加用户</Button>
+        学生列表&nbsp;&nbsp;&nbsp;
+        <Button @click="show_modal1()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加学生</Button>
         <div> 
             <Modal
             v-model="modal1"
-            title="添加用户"
+            title="添加学生"
             @on-ok="ok"
             @on-cancel="cancel">
             <table>
-            <tr><td>用户名</td><td>
-            <Input v-model="name" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>学生名</td><td>
+            <Input v-model="name" placeholder="请输入学生名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>姓名</td><td>
             <Input v-model="user_name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
             <Input v-model="user_tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>班级</td><td>
+            <Input v-model="classname" placeholder="请输入班级" clearable style="width: 300px"></Input></td></tr>
             </table>
             </Modal>
             <Modal
             v-model="modal2"
-            title="修改用户信息"
+            title="修改学生信息"
             @on-ok="ok2"
             @on-cancel="cancel2">
             <table>
-            <tr><td>用户名</td><td>
-            <Input v-model="name" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>学生名</td><td>
+            <Input v-model="name" placeholder="请输入学生名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>姓名</td><td>
             <Input v-model="user_name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
             <Input v-model="user_tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>班级</td><td>
+            <Input v-model="classname" placeholder="请输入班级" clearable style="width: 300px"></Input></td></tr>
             </table>
             </Modal>
         </div>
@@ -54,6 +58,7 @@ export default {
       name:'',
       user_name:'',
       user_tel:'',
+      classname:'',
       status:'',
       userColumns: [
         {
@@ -62,7 +67,7 @@ export default {
           width: 60
         },
         {
-          title: "用户名",
+          title: "学生名",
           key: "name",
           align: "center"
         },
@@ -74,6 +79,10 @@ export default {
         {
           title: "手机",
           key: "user_tel"
+        },
+        {
+          title: "班级",
+          key: "classname"
         },
         {
           title: "状态",
@@ -99,7 +108,7 @@ export default {
                                         this.show_modal2(params.index);
                                     }
                                 }
-                            }, '编辑用户'),  
+                            }, '编辑学生'),  
                             h('Button', {
                                 props: {
                                     type: 'error',
@@ -110,13 +119,13 @@ export default {
                                         this.deleteClick(params.index);
                                       }
                                 }
-                            }, '删除用户')
+                            }, '删除学生')
                         ]);
                     }
                 }
         
      ],
-      userData: []
+      userData: [],
     };
   },
   computed: {
@@ -126,7 +135,7 @@ export default {
   },
   mounted() {
     this.$axios
-      .get("/userList")
+      .get("/studentList")
       .then(res => {
         this.userData = res.data;
       })
@@ -141,19 +150,21 @@ export default {
                 this.name="";
                 this.user_name="";
                 this.user_tel="";
+                this.classname="";
                 this.status="";
     },
     ok () 
     {
-                this.$axios.post('/userList', {
+                this.$axios.post('/studentList', {
                             params: {
                                 email: this.name,
                                 username: this.user_name,
                                 tel: this.user_tel,
+                                class: this.classname,
                                 status: 1,
                             }
                         }).then(function(res) {
-                            console.log(res);
+                            console.log(res.data);
                             this.userData.push(res.data);
                             this.$Message.info('添加成功');
                         }.bind(this))
@@ -168,15 +179,17 @@ export default {
                 this.id = this.userData[index].id;
                 this.name=this.userData[index].name;
                 this.user_name=this.userData[index].user_name;
+                this.classname=this.userData[index].classname;
                 this.user_tel=this.userData[index].user_tel;
     },
     ok2 () 
     {
-                this.$axios.patch('/userList', {
+                this.$axios.patch('/studentList', {
                             params: {
                                 id: this.id,
                                 email: this.name,
                                 username: this.user_name,
+                                class: this.classname,
                                 tel: this.user_tel,
                             }
                         }).then(function(res) {
@@ -186,6 +199,7 @@ export default {
                               if (this.userData[i].id == id){
                                 this.userData[i].name = res.data.name;
                                 this.userData[i].user_name = res.data.user_name;
+                                this.userData[i].classname = res.data.classname;
                                 this.userData[i].user_tel = res.data.user_tel;
                                 break;
                               }
@@ -203,10 +217,10 @@ export default {
     {
        this.id = this.userData[index].id;
        this.$Modal.confirm({
-                    title: '删除用户',
-                    content: '<p>确定要删除此用户吗？</p>',
+                    title: '删除学生',
+                    content: '<p>确定要删除此学生吗？</p>',
                     onOk: () => {
-                        this.$axios.delete('/userList', {
+                        this.$axios.delete('/studentList', {
                             data: {
                                 params: {
                                     id: this.id,

@@ -2,85 +2,9 @@
     @import './components/styles/demo.less';
 </style>
 <template>
-  <div>
-    <Card :style="height">
-      <div >
-        <!--<div style="height: 5px;"></div>-->
-        <select-card @cancle="cancle" @selectedGroup="statusSelectedGroup" @selected="statusSelected" :type="this.$t('t_status')" :groups="status" ></select-card>
-      </div>
-      <div :style="style" v-show="showMore">
-        <select-card @cancle="cancle" @selectedGroup="sensorTypeSelectedGroup" @selected="sensorTypeSelected" :type="this.$t('t_sensorType')" :groups="sensor_type_data"></select-card>
-        <select-card @cancle="cancle" @selectedGroup="wellTypeSelectedGroup" @selected="wellTypeSelected" :type="this.$t('t_wellType')" :groups="well_type_data"></select-card>
-        <div style="padding: 5px 5px 5px 5px;">
-          <my-tree-select :type="this.$t('t_region')" :regiondata="regiondata" @selectedGroup="selectTree"></my-tree-select>
-        </div>
-        <div style="padding: 5px 5px 5px 5px;">
-          <Button size="small" type="text" style="float:left;width:6%;border:1px;">{{ this.$t("t_well_name")}}:</Button>
-          <Button size="small" type="text" style="flex-warp: wrap;"></Button>
-          <Button size="small" type="text" style="flex-warp: wrap;"></Button>
-          <Button size="small" type="text" style="flex-warp: wrap;"></Button>
-          <Button size="small" type="text" style="flex-warp: wrap;"></Button>
-          <Select v-model="well_name" filterable style="float:left;width:25%;border:1px;" @on-change="well_name_click" :clearable="true">
-            <Option v-for="item in well_name_data" :value="item.well_id" :key="item.well_id">{{ item.well_name }}</Option>
-          </Select>
-        </div>
-      </div> 
-      <br>
-      <div class="example-code-more" @click="click">
-        <p v-show="!showMore" style="font-size: 12px;color: #9ea7b4;">
-          选择更多
-        </p>
-          <Icon type="ios-arrow-down" v-show="!showMore"></Icon>
-          <Icon type="ios-arrow-up" v-show="showMore"></Icon>
-      </div>
-    </Card>
-    <Card v-if="this.isStatusBox!=''||this.isSensorBox!=''||this.isTypeBox!=''||this.isName!=''">
-      <div>
-        <my-tag
-                :isStatusBox="this.isStatusBox"
-                :statusData="this.statusData"
-                :isSensorBox= "this.isSensorBox"
-                :sensorData= "this.sensorData"
-                :isTypeBox= "this.isTypeBox"
-                :typeData= "this.typeData"
-                :isName= "this.isName"
-                :nameData= "this.nameData"></my-tag>
-      </div>
-    </Card>
-    <Card>
-      <div style="height: 5px;"></div>
-        <div style="height: 35px;">
-          <Button style="float:left;" @click="status_order_click">
-            <span>{{ this.$t('t_status') }}</span>
-            <Icon type="chevron-down" v-show="!showIsStart"></Icon>
-            <Icon type="chevron-up" v-show="showIsStart"></Icon>
-          </Button>
-          <Button style="float:left;" @click="wellType_order_click">
-            <span>{{ this.$t('t_wellType') }}</span>
-            <Icon type="chevron-down" v-show="!showWellType"></Icon>
-            <Icon type="chevron-up" v-show="showWellType"></Icon>
-          </Button>
-          <Button style="float:left;" @click="liquidYield_order_click">
-            <span>{{ this.$t('t_liquidYield ') }}</span>
-            <Icon type="chevron-down" v-show="!showFP"></Icon>
-            <Icon type="chevron-up" v-show="showFP"></Icon>
-          </Button>
-        </div>
-        <Row :gutter="5">
-            <Col :xs="24" :sm="12" :md="6" :style="{marginBottom: '10px'}" v-for="item in wellinfor" :key=item.well_id>
-                <infor-card
-                    :wellName=item.well_name
-                    :isStart=item.isStart
-                    :sensor=item.sensor
-                    :flulidProduction=item.flulidProduction
-                ></infor-card>
-            </Col>
-        </Row>   
-    </Card>
-    <Card style="height: 50px">
-      <Page ref="pages" :total="total" :page-size="page_size" size="small" @on-change="change_page" @on-page-size-change="change_size" show-elevator show-sizer style="float: right;" />
-    </Card>
-  </div>
+<Card>
+    <p style="text-align: center;font-size: 50px;">欢迎来到学生课堂成绩管理系统</p>
+</Card>
 </template>
 <script>
 import inforCard from './components/wellInforCard.vue';

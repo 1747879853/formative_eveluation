@@ -27,10 +27,10 @@ let list = function (options) {
             params = JSON.parse(options.body).params;
             arr = {
                 id: id,
-                authority: params.authority,
-                name: params.name,
+                authority: params.name,
+                name: params.title,
                 condition: params.condition,
-                status: params.status,
+                status: params.status== 1 ? '激活':'停用',
                 children: []
             };
             break;
@@ -38,10 +38,10 @@ let list = function (options) {
             params = JSON.parse(options.body).params;
             arr = {
                 id: params.id,
-                authority: params.authority,
-                name: params.name,
+                authority: params.name,
+                name: params.title,
                 condition: params.condition,
-                status: params.status,
+                status: params.status== 1 ? '激活':'停用',
             };
             break;
         case 'delete':// 删除权限

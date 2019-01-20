@@ -120,6 +120,7 @@ export default {
    mounted(){
         this.$axios.get("/organization").then( res =>{
             this.data = res.data;
+            console.log(res.data)
         }).catch(error =>{
             console.log(error);
         });

@@ -11,7 +11,7 @@ import groupList from './groupList'
 import getToken from './getToken'
 import order from './orderList'
 import approval from './approval'
-import userList from './userList'
+import teacherList from './teacherList'
 import organization from './organization'
 import orgaLeader from './orgaLeader'
 import costList from './costList'
@@ -20,8 +20,14 @@ import vehicleList from './vehicleList'
 import courseList from './courseList'
 import classList from './classList'
 import studentList from './studentList'
+import studentgradeList from './studentgradeList'
+import evaluationList from './evaluationList'
+import classcourseList from './classcourseList'
+import courseevalList from './courseevalList'
+import inputclassgrade from './inputclassgrade'
+import teachercourseList from './teachercourseList'
 
-let data = [].concat(authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,userList,costList,workList,orgaLeader,attendanceList,vehicleList,courseList,classList,studentList)
+let data = [].concat(authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,teacherList,costList,workList,orgaLeader,attendanceList,vehicleList,courseList,classList,studentList,studentgradeList,evaluationList,classcourseList,courseevalList,inputclassgrade,teachercourseList)
 
 
 

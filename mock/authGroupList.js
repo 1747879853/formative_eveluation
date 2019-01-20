@@ -22,23 +22,28 @@ let list = function (options) {
    /*模拟删除数据的方式*/
    let rtype = options.type.toLowerCase(); //获取请求类型
    switch (rtype) {
-     case 'get':    
+     case 'get': 
+        return {'a':data1,'b':arr};   
        break;
      case 'patch': 
         let i=parseInt(JSON.parse(options.body).params.group_id);
         var newarr;
-        arr[i].checked_id=JSON.parse(options.body).params.id;
-        newarr=arr[i];     
+        for(var j=0;j<data1.length;j++){
+            if(data1[j].id==i)
+                break;
+        }
+        data1[j].checked_id=JSON.parse(options.body).params.id;
+        newarr=data1[j];     
        break;
      case 'post'://添加新权限组
-       var newid=5;     
+       var newid=10;     
        var newarr = 
         {
             id : newid,
-            name : JSON.parse(options.body).params.name, 
+            title : JSON.parse(options.body).params.title, 
             checked_id : []             
         };
-        arr.push(newarr);
+        data1.push(newarr);
         newid=newid+1;
        break;
      case 'delete':
@@ -46,7 +51,7 @@ let list = function (options) {
         break;
      default:
    }
-   return {'a':data1,'b':arr};//返回这个数组,也就是返回处理后的假数据
+   return newarr;//返回这个数组,也就是返回处理后的假数据
  }
 export default {
     path: '/authGroupList',

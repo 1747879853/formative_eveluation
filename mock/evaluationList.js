@@ -2,15 +2,18 @@ let arr;
 var id = 0;
 var maxid = 10;
 let params;
+let evaluationList=[{id:1,name:'评价指标1',type:'input',status:1},
+                    {id:2,name:'评价指标2',type:'input',status:1},
+                    {id:3,name:'评价指标3',type:'option',status:1},
+                    {id:4,name:'评价指标4',type:'input',status:1},
+                    {id:5,name:'评价指标5',type:'option',status:1}];
 let list = function (options) {
     /* 模拟删除数据的方式 */
     let rtype = options.type.toLowerCase(); // 获取请求类型
     // debugger
     switch (rtype) {
         case 'get':
-            arr=[{"id":28,"name":"xuesheng1","user_tel":15166666666,"user_name":"xuesheng1","checked_id":[6],"status":"在职","operation":"edit,delete",classname:'1班'},
-{"id":29,"name":"xuesheng2","user_tel":15166666666,"user_name":"xuesheng2","checked_id":[1],"status":"在职","operation":"edit,delete",classname:'2班'},
-{"id":30,"name":"xuesheng3","user_tel":15166666666,"user_name":"xuesheng3","checked_id":[4],"status":"在职","operation":"edit,delete",classname:'3班'},]
+            arr=evaluationList;
             break;
         case 'post':
             id = maxid;
@@ -18,28 +21,24 @@ let list = function (options) {
             params = JSON.parse(options.body).params;
             arr = {
                 id: id,
-                name: params.email,
-                user_name: params.username,
-                user_tel: params.tel,
-                classname: params.class,
-                status: '在职'
+                name: params.name,
+                type: params.type,
+                status: 1
             };
             break;
         case 'patch':
             params = JSON.parse(options.body).params;
             arr = {
                 id: params.id,
-                name: params.email,
-                user_name: params.username,
-                classname: params.class,
-                user_tel: params.tel,
+                name: params.name,
+                type: params.type,
             };
             break;
         case 'delete':
             params = JSON.parse(options.body).params;
             arr = {
                 id: params.id,
-                status:'离职'
+                status:0
             };
             break;
         default:
@@ -49,6 +48,6 @@ let list = function (options) {
 };
 
 export default {
-    path: '/studentList',
+    path: '/evaluationList',
     data: list
 };

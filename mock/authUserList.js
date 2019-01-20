@@ -33,7 +33,8 @@ let list = function (options) {
    /*模拟删除数据的方式*/
    let rtype = options.type.toLowerCase(); //获取请求类型
    switch (rtype) {
-     case 'get':    
+     case 'get':   
+        return {'a':data1,'b':arr}; 
        break;
      case 'post'://添加新用户
        var newid=5;     
@@ -52,13 +53,17 @@ let list = function (options) {
      case 'patch': //修改data1中的checked_id
         let i=parseInt(JSON.parse(options.body).params.user_id);
         var newarr;
-        arr[i].checked_id=JSON.parse(options.body).params.id;
-        newarr=arr[i];
+        for(var j=0;j<data1.length;j++){
+            if(data1[j].id==i)
+                break;
+        }
+        data1[j].checked_id=JSON.parse(options.body).params.id;
+        newarr=data1[j];
         break;
      default:
    }
 
-   return {'a':data1,'b':arr};//返回这个数组,也就是返回处理后的假数据
+   return newarr;//返回这个数组,也就是返回处理后的假数据
 
  }
 export default {

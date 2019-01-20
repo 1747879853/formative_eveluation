@@ -116,11 +116,7 @@ export default {
   computed: {
   },
   mounted() {
-      this.$axios.post("/courseList",{
-        params: {
-          teacherid:1,
-        }
-      }).then(res => {
+      this.$axios.get("/courseList").then(res => {
         this.courseList = res.data;
         console.log(res.data)
       })
@@ -131,11 +127,7 @@ export default {
   methods:{
       selectCourse(id){
         this.course=id;
-        this.$axios.post("/classList",{
-          params: {
-            courseid:id,
-          }  
-        }).then(res => {
+        this.$axios.get("/classList").then(res => {
           this.classList = res.data;
           console.log(res.data)
         })
@@ -145,16 +137,17 @@ export default {
       },
       selectClass(id){
         this.class1=id;
-        this.$axios.post("/studentList",{
-          params: {
-            classid:id,
-          }
-        }).then(res => {
-          this.studentList = res.data;
+        this.$axios.get("/inputclassgrade").then(res => {
+          // this.studentList = res.data;
         })
         .catch(error => {
           console.log(error);
         });
+
+
+        this.studentList =[{id:'13',name:'学生13',evaluation1:'1',evaluation2:'1',evaluation3:'1'},
+                   {id:'14',name:'学生14',evaluation1:'2',evaluation2:'2',evaluation3:'2'},
+                   {id:'15',name:'学生15',evaluation1:'3',evaluation2:'3',evaluation3:'3'}]
       }     
   }
 };
