@@ -25,6 +25,7 @@
     "cropperjs": "^1.2.2",
     "echarts": "^3.8.5",
     "element-ui": "^2.4.4",
+    "file-saver": "^2.0.0",
     "html2canvas": "^0.5.0-beta4",
     "inmap": "^2.1.3",
     "iview": "^2.8.0",
@@ -40,7 +41,7 @@
     "vue-router": "^3.0.1",
     "vue-virtual-scroller": "^0.10.6",
     "vuex": "^3.0.1",
-    "xlsx": "^0.11.17"
+    "xlsx": "^0.11.19"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",
@@ -73,6 +74,7 @@
     "html-webpack-plugin": "^2.28.0",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
+    "script-loader": "^0.7.2",
     "semver": "^5.4.1",
     "style-loader": "^0.19.1",
     "unsupported": "^1.1.0",

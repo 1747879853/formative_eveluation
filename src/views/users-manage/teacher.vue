@@ -62,12 +62,12 @@ export default {
           width: 60
         },
         {
-          title: "教师名",
+          title: "姓名",
           key: "name",
           align: "center"
         },
         {
-          title: "姓名",
+          title: "用户名",
           key: "user_name",
           align: "center"
         },

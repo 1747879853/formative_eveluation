@@ -4,10 +4,11 @@
 
 <template>    
 <Card>
-    <p slot="title" style="height:25px">
+    <p slot="title" style="height:30px">
         <Icon type="ios-list"></Icon>
         学生列表&nbsp;&nbsp;&nbsp;
         <Button @click="show_modal1()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加学生</Button>
+        <input id="upload" style="float:right" type="file" @change="importfxx(this)"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
         <div> 
             <Modal
             v-model="modal1"
@@ -15,10 +16,10 @@
             @on-ok="ok"
             @on-cancel="cancel">
             <table>
-            <tr><td>学生名</td><td>
-            <Input v-model="name" placeholder="请输入学生名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>姓名</td><td>
-            <Input v-model="user_name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>用户名</td><td>
+            <Input v-model="user_name" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
             <Input v-model="user_tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
             <tr><td>班级</td><td>
@@ -31,10 +32,10 @@
             @on-ok="ok2"
             @on-cancel="cancel2">
             <table>
-            <tr><td>学生名</td><td>
-            <Input v-model="name" placeholder="请输入学生名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>姓名</td><td>
-            <Input v-model="user_name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>用户名</td><td>
+            <Input v-model="user_name" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
             <Input v-model="user_tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
             <tr><td>班级</td><td>
@@ -67,12 +68,12 @@ export default {
           width: 60
         },
         {
-          title: "学生名",
+          title: "姓名",
           key: "name",
           align: "center"
         },
         {
-          title: "姓名",
+          title: "用户名",
           key: "user_name",
           align: "center"
         },
@@ -156,16 +157,15 @@ export default {
     ok () 
     {
                 this.$axios.post('/studentList', {
-                            params: {
-                                email: this.name,
-                                username: this.user_name,
-                                tel: this.user_tel,
-                                class: this.classname,
-                                status: 1,
-                            }
+                            params: [{
+                                name: this.name,
+                                user_name: this.user_name,
+                                user_tel: this.user_tel,
+                                classname: this.classname,
+                            }]
                         }).then(function(res) {
                             console.log(res.data);
-                            this.userData.push(res.data);
+                            this.userData=this.userData.concat(res.data);
                             this.$Message.info('添加成功');
                         }.bind(this))
                         .catch(function(error) {
@@ -187,10 +187,10 @@ export default {
                 this.$axios.patch('/studentList', {
                             params: {
                                 id: this.id,
-                                email: this.name,
-                                username: this.user_name,
-                                class: this.classname,
-                                tel: this.user_tel,
+                                name: this.name,
+                                user_name: this.user_name,
+                                classname: this.classname,
+                                user_tel: this.user_tel,
                             }
                         }).then(function(res) {
                             console.log(res);
@@ -241,21 +241,79 @@ export default {
     },
   
     userBody(row, column, index) {
-            return row[column.key]
-        },
-        userName(row, index) {
-            return row["name"]
-        },
-        user_Name(row, index) {
-            return row["user_name"]
-        },
-        userTel(row, index) {
-            return row["user_tel"]
-        },
-        userStatus(row, index) {
-            return row["status"]
-        },
-           
+        return row[column.key]
+    },
+    userName(row, index) {
+        return row["name"]
+    },
+    user_Name(row, index) {
+        return row["user_name"]
+    },
+    userTel(row, index) {
+        return row["user_tel"]
+    },
+    userStatus(row, index) {
+        return row["status"]
+    },
+    
+    importfxx(obj) {
+        let _this = this;
+        let inputDOM = this.$refs.inputer;
+        // 通过DOM取文件数据
+        this.file = event.currentTarget.files[0];
+        var rABS = false; //是否将文件读取为二进制字符串
+        var f = this.file;
+        var reader = new FileReader();
+        FileReader.prototype.readAsBinaryString = function(f) {
+            var binary = "";
+            var rABS = false; //是否将文件读取为二进制字符串
+            var pt = this;
+            var wb; //读取完成的数据
+            var outdata;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var bytes = new Uint8Array(reader.result);
+                var length = bytes.byteLength;
+                for(var i = 0; i < length; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                var XLSX = require('xlsx');
+                if(rABS) {
+                    wb = XLSX.read(btoa(fixdata(binary)), { //手动转化
+                    type: 'base64'
+                });    
+                } else {
+                    wb = XLSX.read(binary, {
+                        type: 'binary'
+                    });
+                }
+                outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);//outdata就是你想要的东西
+                _this.postexcal(outdata);
+            }
+            reader.readAsArrayBuffer(f);
+        }
+        if(rABS) {
+            reader.readAsArrayBuffer(f);
+        } else {
+            reader.readAsBinaryString(f);
+        }
+    },
+    postexcal(data){
+        this.$axios.post('/studentList', {
+            params: data
+        }).then(function(res) {
+            console.log(res.data);
+            this.userData=this.userData.concat(res.data);
+            this.$Message.info('导入excal成功');
+        }.bind(this))
+        .catch(function(error) {
+            console.log(error)
+        });
+    },
+
+
+
+
   }
 };
 </script>

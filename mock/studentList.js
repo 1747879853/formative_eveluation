@@ -1,6 +1,6 @@
 let arr;
 var id = 0;
-var maxid = 10;
+var maxid = 100;
 let params;
 let list = function (options) {
     /* 模拟删除数据的方式 */
@@ -16,23 +16,33 @@ let list = function (options) {
             id = maxid;
             maxid = maxid + 1;
             params = JSON.parse(options.body).params;
-            arr = {
-                id: id,
-                name: params.email,
-                user_name: params.username,
-                user_tel: params.tel,
-                classname: params.class,
-                status: '在职'
-            };
+            arr = [];
+            var aaa={
+                        id: '',
+                        name: '',
+                        user_name: '',
+                        user_tel: '',
+                        classname: '',
+                        status: '在职'
+                    }
+            for(let m=0;m<params.length;m++){
+                let aa=JSON.parse(JSON.stringify(aaa));
+                aa.id=id+m;
+                aa.name=params[m].name;
+                aa.user_name=params[m].user_name;
+                aa.user_tel=params[m].user_tel;
+                aa.classname=params[m].classname;
+                arr.push(aa);
+            }
             break;
         case 'patch':
             params = JSON.parse(options.body).params;
             arr = {
                 id: params.id,
-                name: params.email,
-                user_name: params.username,
-                classname: params.class,
-                user_tel: params.tel,
+                name: params.name,
+                user_name: params.user_name,
+                classname: params.classname,
+                user_tel: params.user_tel,
             };
             break;
         case 'delete':
