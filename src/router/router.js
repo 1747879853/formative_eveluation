@@ -608,6 +608,14 @@ export const appRouter = [
                 access:'resource-manage/teacher-course',
                 component: () => import('@/views/resource-manage/teacher-course-allocation.vue')
             },
+            {
+                path: 'teacher-class-course',
+                icon: 'compose',
+                name: 'teacher-class-course',
+                title: '教师班级课程管理',
+                access:'resource-manage/teacher-class-course',
+                component: () => import('@/views/resource-manage/teacher-class-course.vue')
+            },
         ]
     },
     // {
