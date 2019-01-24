@@ -41,6 +41,7 @@ export default {
       id: 0,
       name:'',
       status:'',
+      startyear:'',
       userColumns: [
         {
           type: "index",
@@ -57,11 +58,18 @@ export default {
           key: "name",
           align: "center"
         },
+
+
         {
           title: "状态",
           key: "status",
           align: "center",
         },
+          {
+              title: "入学年份",
+              key: "startyear",
+              align: "center"
+          },
         {
                   title: "操作",
                   key: "action",

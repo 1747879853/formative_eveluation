@@ -2,7 +2,7 @@ let arr;
 var id = 0;
 var maxid = 10;
 let params;
-let classList=[{id:1,name:'1班',status:'在校'},{id:2,name:'2班',status:'在校'},{id:3,name:'3班',status:'在校'},{id:4,name:'4班',status:'在校'},{id:5,name:'5班',status:'在校'}];
+let classList=[{id:1,name:'1班',status:'在校',startyear:'2016'},{id:2,name:'2班',status:'在校',startyear:'2016'},{id:3,name:'3班',status:'在校',startyear:'2016'},{id:4,name:'4班',status:'在校',startyear:'2016'},{id:5,name:'5班',status:'在校',startyear:'2016'}];
 let classList1=[{id:1,name:'1班',status:'在校'},{id:2,name:'2班',status:'在校'},{id:3,name:'3班',status:'在校'}];
 let classList2=[{id:2,name:'2班',status:'在校'},{id:3,name:'3班',status:'在校'},{id:4,name:'4班',status:'在校'}];
 let classList3=[{id:3,name:'3班',status:'在校'},{id:4,name:'4班',status:'在校'},{id:5,name:'5班',status:'在校'}];
