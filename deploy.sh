@@ -1,1 +1,1 @@
-scp -r dist/* passenger@114.118.17.4:/var/www/oil_well_monitoring_system_vue/
+scp -r dist/* root@47.100.174.14:/var/www/formative_evaluation_vue/

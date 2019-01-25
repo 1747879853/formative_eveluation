@@ -26,8 +26,9 @@ import classcourseList from './classcourseList'
 import courseevalList from './courseevalList'
 import inputclassgrade from './inputclassgrade'
 import teachercourseList from './teachercourseList'
+import teacherclasscourse from './teacherclasscourse'
 
-let data = [].concat(authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,teacherList,costList,workList,orgaLeader,attendanceList,vehicleList,courseList,classList,studentList,studentgradeList,evaluationList,classcourseList,courseevalList,inputclassgrade,teachercourseList)
+let data = [].concat(authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,teacherList,costList,workList,orgaLeader,attendanceList,vehicleList,courseList,classList,studentList,studentgradeList,evaluationList,classcourseList,courseevalList,inputclassgrade,teachercourseList,teacherclasscourse)
 
 
 
