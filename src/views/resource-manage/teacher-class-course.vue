@@ -7,7 +7,15 @@
         <Card>
             <div style="text-align:center;font-size:24px;color: #2db7f5;">
                 教师班级课程管理
-            </div>                    
+            </div>  当前学年：
+            <Select v-model="option" @on-change="selected()" ref="element1" style="width:200px">
+                <Option value="1">2016下半年</Option>
+                <Option value="2">2017上半年</Option>
+                <Option value="3">2017下半年</Option>
+                <Option value="4">2018上半年</Option>
+                <Option value="5">2018下半年</Option>
+                <Option value="6">2019上半年</Option>
+            </Select>                  
         </Card>                      
     </Row>
     <Row>
@@ -68,7 +76,8 @@ import Sortable from 'sortablejs';
                 course_list:[],
                 modal:false,
                 select:null,
-                mid_data:[]
+                mid_data:[],
+                option:'6',
             }
         },
         mounted () { 
@@ -141,7 +150,9 @@ import Sortable from 'sortablejs';
         });        
 
     },
-    methods:{        
+    methods:{       
+        selected() {
+        }, 
         showmodal(){
             this.modal=true;
             this.u_name="";
