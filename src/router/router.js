@@ -573,7 +573,7 @@ export const appRouter = [
                 icon: 'compose',
                 name: 'class-student',
                 title: '班级-学生管理',
-                access:'resource-manage/class',
+                access:'resource-manage/class-student',
                 component: () => import('@/views/resource-manage/class-student-manage.vue')
             },
             {

@@ -7,13 +7,13 @@ import store from '../store/index';
 const ajaxUrl = env === 'development'
     ? 'http://127.0.0.1:3000/api/v1'
     : env === 'production'
-        ? 'http://114.118.17.4:38080/api/v1'
+        ? 'http://47.100.174.14:9999/api/v1'
         : '';
 
 const devUrl = env === 'development'
     ? 'http://127.0.0.1:3000/api/v1'
     : env === 'production'
-        ? 'http://114.118.17.4:38080/api/v1'
+        ? 'http://47.100.174.14:9999/api/v1'
         : '';
 
 const service = axios.create({
@@ -25,17 +25,17 @@ const service = axios.create({
 // Alter defaults after instance has been created
 
 service.interceptors.request.use(function (config) {
-    // if (store.state.token) {
-    //     config.headers.common['Authorization'] = store.state.token;
-    // }
+    if (store.state.token) {
+        config.headers.common['Authorization'] = store.state.token;
+    }
 
     // Do something before request is sent
 
-    // if (config.url.match(/\/vehicleList|attendanceList|userpass|work_teams|work_shops|work_team_task_list|boms_approvals|work_shop_order_list|orders|authRuleList|authUserList|authGroupList|users|userList|approval_admin_list|approval_list|approval_list_inuse|approval_field_list|approval_field_edit|approval_create|approval_save|approval_to_me|approval_to_me_done|approval_from_me|approval_info|approval_pass|approval_reject|approval_admin_start|approval_admin_stop|procedure_nodes|procedure_create|user_group_list|costList|workList|xialiao|zupin|order_details|images|template/)) {
+    if (config.url.match(/\/user_token|authRuleList|authGroupList|authUserList/)) {
 
-    //     config.baseURL = devUrl;
-    //     // config.baseURL = '';
-    // }
+        config.baseURL = devUrl;
+        // config.baseURL = '';
+    }
     return config;
 }, function (error) {
     // Do something with request error
