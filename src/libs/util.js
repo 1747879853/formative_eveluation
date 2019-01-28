@@ -7,7 +7,7 @@ let util = {
 
 };
 util.title = function (title) {
-    title = title || '智慧秘书-瑞鸿';
+    title = title || '教学形成性评价系统';
     window.document.title = title;
 };
 

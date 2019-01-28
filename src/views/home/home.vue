@@ -3,7 +3,7 @@
 </style>
 <template>
 <Card>
-    <p style="text-align: center;font-size: 50px;">欢迎来到学生课堂成绩管理系统</p>
+    <p style="text-align: center;font-size: 50px;">欢迎来到教学形成性评价系统</p>
 </Card>
 </template>
 <script>

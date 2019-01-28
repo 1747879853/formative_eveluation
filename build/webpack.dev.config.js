@@ -34,7 +34,7 @@ module.exports = merge(webpackBaseConfig, {
         new HtmlWebpackPlugin({  //创建一个在内存中生成HTML页面的插件
             //                  并且把打包好的js插入到html文件中
             // title: 'iView admin v' + package.version,
-            title: '智慧秘书-瑞鸿',
+            title: '教学形成性评价系统',
             filename: '../index.html',
             inject: false
         }),
