@@ -8,7 +8,7 @@ import login from './login'
 import echarts from './echarts'
 import table from './table'
 import groupList from './groupList'
-import getToken from './getToken'
+import user_token from './getToken'
 import order from './orderList'
 import approval from './approval'
 import teacherList from './teacherList'
@@ -29,7 +29,7 @@ import teachercourseList from './teachercourseList'
 import teacherclasscourse from './teacherclasscourse'
 import classStu from './classStu'
 
-let data = [].concat(classStu,authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, getToken,order,approval,organization,teacherList,costList,workList,orgaLeader,attendanceList,vehicleList,courseList,classList,studentList,studentgradeList,evaluationList,classcourseList,courseevalList,inputclassgrade,teachercourseList,teacherclasscourse)
+let data = [].concat(classStu,authUserList,authRuleList,authGroupList, navlist, login, echarts, table, groupList, user_token,order,approval,organization,teacherList,costList,workList,orgaLeader,attendanceList,vehicleList,courseList,classList,studentList,studentgradeList,evaluationList,classcourseList,courseevalList,inputclassgrade,teachercourseList,teacherclasscourse)
 
 
 
