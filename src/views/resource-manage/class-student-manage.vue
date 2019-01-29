@@ -95,7 +95,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.delstu()(params.index);
+                                            this.delstu(params.index);
                                         }
                                     }
                                 }, '删除学生')
@@ -171,18 +171,18 @@
                 this.modal1 = true;
                 this.id = this.userData[index].id;
                 this.name = this.userData[index].name; // 这应该是获取了班级名称
-                alert(this.name);
+                //alert(this.name);
             },
             delstu (index) { // 显示删除学生的窗口
                 this.modal2 = true;
                 this.name = '';
                 this.status = '';
-                // this.id = this.userData[index].id;
-                alert(this.id);// 全局获取到班级id，失败了，加上上面的一句就加载不出来
+                this.id = this.userData[index].id;
+                //alert(this.id);// 全局获取到班级可以了
                 this.$axios
                     .get('/classStu', {// 根据班级id获取学生列表
                         params: {
-                            id: index
+                            id: index// 没写mock，带参数获取不到东西
                         }
                     })
                     .then(res => {
