@@ -70,15 +70,15 @@ export default {
     mounted () {
         this.initPage_1();
         this.get_wells_select(1);
-        this.$axios.get('/well_names').then(res => {
-            this.well_name_data = res.data;
-            for (var i = this.well_name_data.length - 1; i >= 0; i--) {
-                this.well_name_data[i]['value'] = this.well_name_data[i]['well_id'];
-                this.well_name_data[i]['label'] = this.well_name_data[i]['well_name'];
-            }
-        }).catch(error => {
-            console.log(error);
-        });
+        // this.$axios.get('/well_names').then(res => {
+        //     this.well_name_data = res.data;
+        //     for (var i = this.well_name_data.length - 1; i >= 0; i--) {
+        //         this.well_name_data[i]['value'] = this.well_name_data[i]['well_id'];
+        //         this.well_name_data[i]['label'] = this.well_name_data[i]['well_name'];
+        //     }
+        // }).catch(error => {
+        //     console.log(error);
+        // });
     },
     methods: {
         cancle (type) {
@@ -141,59 +141,59 @@ export default {
         },
         initPage_1 () {
             // 使用=>可以不用绑定this
-            this.$axios.get('/sensor_well_region_list').then(res => {
-                this.sensor_type_data = res.data.datatypes;
-                this.well_type_data = res.data.welltypes;
-                this.regiondata = res.data.regions;
-            }).catch(error => {
-                console.log(error);
-            });
+            // this.$axios.get('/sensor_well_region_list').then(res => {
+            //     this.sensor_type_data = res.data.datatypes;
+            //     this.well_type_data = res.data.welltypes;
+            //     this.regiondata = res.data.regions;
+            // }).catch(error => {
+            //     console.log(error);
+            // });
         },
         // 1
         get_wells_select (value) {
             switch (value) {
                 case 1:
                     // debugger
-                    this.$axios.get('/well_list_select', {
-                        params: {
-                            current_page: this.current_page,
-                            page_size: this.page_size,
-                            status: this.selectStation['status'],
-                            is_status_box: this.is_status_box,
-                            regions: this.selectStation['regions'],
-                            is_region: this.is_region,
-                            is_sensor_type_box: this.is_sensor_type_box,
-                            sensor_types: this.selectStation['sensor_types'],
-                            is_well_type_box: this.is_well_type_box,
-                            well_types: this.selectStation['well_types'],
-                            is_well_name: this.is_well_name,
-                            well_name: this.well_name,
-                            case_station: this.case_station,
-                            descOrasc: this.descOrasc
-                        }
-                    }).then(res => {
-                        // debugger
-                        this.wellinfor = [];
-                        this.wellinfor = res.data.wells;
-                        this.total = res.data.length;
-                        console.log(this.total);
-                    }).catch(error => {
-                        console.log(error);
-                    });
+                    // this.$axios.get('/well_list_select', {
+                    //     params: {
+                    //         current_page: this.current_page,
+                    //         page_size: this.page_size,
+                    //         status: this.selectStation['status'],
+                    //         is_status_box: this.is_status_box,
+                    //         regions: this.selectStation['regions'],
+                    //         is_region: this.is_region,
+                    //         is_sensor_type_box: this.is_sensor_type_box,
+                    //         sensor_types: this.selectStation['sensor_types'],
+                    //         is_well_type_box: this.is_well_type_box,
+                    //         well_types: this.selectStation['well_types'],
+                    //         is_well_name: this.is_well_name,
+                    //         well_name: this.well_name,
+                    //         case_station: this.case_station,
+                    //         descOrasc: this.descOrasc
+                    //     }
+                    // }).then(res => {
+                    //     // debugger
+                    //     this.wellinfor = [];
+                    //     this.wellinfor = res.data.wells;
+                    //     this.total = res.data.length;
+                    //     console.log(this.total);
+                    // }).catch(error => {
+                    //     console.log(error);
+                    // });
                     break;
                 default:
-                    this.$axios.get('/well_list_select', {
-                        params: {
-                            current_page: this.current_page,
-                            page_size: this.page_size
-                        }
-                    }).then(res => {
-                        this.wellinfor = res.data.wells;
-                        this.total = res.data.length;
-                        console.log(this.total);
-                    }).catch(error => {
-                        console.log(error);
-                    });
+                    // this.$axios.get('/well_list_select', {
+                    //     params: {
+                    //         current_page: this.current_page,
+                    //         page_size: this.page_size
+                    //     }
+                    // }).then(res => {
+                    //     this.wellinfor = res.data.wells;
+                    //     this.total = res.data.length;
+                    //     console.log(this.total);
+                    // }).catch(error => {
+                    //     console.log(error);
+                    // });
                     break;
             }
         },

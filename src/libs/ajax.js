@@ -31,7 +31,7 @@ service.interceptors.request.use(function (config) {
 
     // Do something before request is sent
 
-    if (config.url.match(/\/user_token|authRuleList|authGroupList|authUserList/)) {
+    if (config.url.match(/\/user_token|authRuleList|authGroupList|authUserList|userpass|teacherList/)) {
 
         config.baseURL = devUrl;
         // config.baseURL = '';

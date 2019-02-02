@@ -15,12 +15,14 @@
             @on-ok="ok"
             @on-cancel="cancel">
             <table>
-            <tr><td>教师名</td><td>
-            <Input v-model="name" placeholder="请输入教师名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>职工号</td><td>
+            <Input v-model="tno" placeholder="请输入职工号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>姓名</td><td>
-            <Input v-model="user_name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>用户名</td><td>
+            <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
-            <Input v-model="user_tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
             </table>
             </Modal>
             <Modal
@@ -29,12 +31,14 @@
             @on-ok="ok2"
             @on-cancel="cancel2">
             <table>
-            <tr><td>教师名</td><td>
-            <Input v-model="name" placeholder="请输入教师名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>职工号</td><td>
+            <Input v-model="tno" placeholder="请输入职工号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>姓名</td><td>
-            <Input v-model="user_name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>用户名</td><td>
+            <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
-            <Input v-model="user_tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
             </table>
             </Modal>
         </div>
@@ -45,15 +49,16 @@
 
 <script>
 export default {
-  name: "user",
+  name: "teacher",
   data() {
     return {
       modal1:false,
       modal2:false,
       id: 0,
       name:'',
-      user_name:'',
-      user_tel:'',
+      tno:'',
+      email:'',
+      tel:'',
       status:'',
       userColumns: [
         {
@@ -62,18 +67,23 @@ export default {
           width: 60
         },
         {
+          title: "职工号",
+          key: "tno",
+          align: "center"
+        },
+        {
           title: "姓名",
           key: "name",
           align: "center"
         },
         {
           title: "用户名",
-          key: "user_name",
+          key: "email",
           align: "center"
         },
         {
           title: "手机",
-          key: "user_tel"
+          key: "tel"
         },
         {
           title: "状态",
@@ -139,17 +149,19 @@ export default {
     {
                 this.modal1=true;
                 this.name="";
-                this.user_name="";
-                this.user_tel="";
+                this.tno="";
+                this.email="";
+                this.tel="";
                 this.status="";
     },
     ok () 
     {
                 this.$axios.post('/teacherList', {
                             params: {
-                                email: this.name,
-                                username: this.user_name,
-                                tel: this.user_tel,
+                                name: this.name,
+                                tno: this.tno,
+                                email: this.email,
+                                tel: this.tel,
                                 status: 1,
                             }
                         }).then(function(res) {
@@ -167,17 +179,20 @@ export default {
                 this.modal2=true;
                 this.id = this.userData[index].id;
                 this.name=this.userData[index].name;
-                this.user_name=this.userData[index].user_name;
-                this.user_tel=this.userData[index].user_tel;
+                this.tno=this.userData[index].tno;
+                this.email=this.userData[index].email;
+                this.tel=this.userData[index].tel;
     },
     ok2 () 
     {
                 this.$axios.patch('/teacherList', {
                             params: {
                                 id: this.id,
-                                email: this.name,
-                                username: this.user_name,
-                                tel: this.user_tel,
+                                name: this.name,
+                                tno: this.tno,
+                                email: this.email,
+                                tel: this.tel,
+                                status: 1,
                             }
                         }).then(function(res) {
                             console.log(res);
@@ -185,8 +200,9 @@ export default {
                             for(let i = 0; i < this.userData.length; i++){
                               if (this.userData[i].id == id){
                                 this.userData[i].name = res.data.name;
-                                this.userData[i].user_name = res.data.user_name;
-                                this.userData[i].user_tel = res.data.user_tel;
+                                this.userData[i].tno = res.data.tno;
+                                this.userData[i].email = res.data.email;
+                                this.userData[i].tel = res.data.tel;
                                 break;
                               }
                             }
@@ -225,22 +241,6 @@ export default {
                        },
            onCancel: () => { this.$Message.info('取消'); }});
     },
-  
-    userBody(row, column, index) {
-            return row[column.key]
-        },
-        userName(row, index) {
-            return row["name"]
-        },
-        user_Name(row, index) {
-            return row["user_name"]
-        },
-        userTel(row, index) {
-            return row["user_tel"]
-        },
-        userStatus(row, index) {
-            return row["status"]
-        },
            
   }
 };
