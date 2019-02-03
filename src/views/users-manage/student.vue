@@ -16,14 +16,19 @@
             @on-ok="ok"
             @on-cancel="cancel">
             <table>
+            <tr><td>学号</td><td>
+            <Input v-model="sno" placeholder="请输入学号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>姓名</td><td>
             <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>用户名</td><td>
-            <Input v-model="user_name" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
-            <Input v-model="user_tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
             <tr><td>班级</td><td>
-            <Input v-model="classname" placeholder="请输入班级" clearable style="width: 300px"></Input></td></tr>
+            <Select v-model="class_room_id" placeholder="请选择班级">
+                <Option v-for="(item,index) in classData" :value="item.id" :key="index">{{ item.name }}</Option>
+            </Select>
+            </td></tr>
             </table>
             </Modal>
             <Modal
@@ -32,14 +37,19 @@
             @on-ok="ok2"
             @on-cancel="cancel2">
             <table>
+            <tr><td>学号</td><td>
+            <Input v-model="sno" placeholder="请输入学号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>姓名</td><td>
             <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>用户名</td><td>
-            <Input v-model="user_name" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
-            <Input v-model="user_tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
             <tr><td>班级</td><td>
-            <Input v-model="classname" placeholder="请输入班级" clearable style="width: 300px"></Input></td></tr>
+            <Select v-model="class_room_id" placeholder="请选择班级">
+                <Option v-for="(item,index) in classData" :value="item.id" :key="index">{{ item.name }}</Option>
+            </Select>
+            </td></tr>
             </table>
             </Modal>
         </div>
@@ -57,9 +67,10 @@ export default {
       modal2:false,
       id: 0,
       name:'',
-      user_name:'',
-      user_tel:'',
-      classname:'',
+      email:'',
+      tel:'',
+      sno:'',
+      class_room_id:'',
       status:'',
       userColumns: [
         {
@@ -68,18 +79,23 @@ export default {
           width: 60
         },
         {
+          title: "学号",
+          key: "sno",
+          align: "center"
+        },
+        {
           title: "姓名",
           key: "name",
           align: "center"
         },
         {
           title: "用户名",
-          key: "user_name",
+          key: "email",
           align: "center"
         },
         {
           title: "手机",
-          key: "user_tel"
+          key: "tel"
         },
         {
           title: "班级",
@@ -127,6 +143,7 @@ export default {
         
      ],
       userData: [],
+      classData:[],
     };
   },
   computed: {
@@ -136,9 +153,9 @@ export default {
   },
   mounted() {
     this.$axios
-      .get("/studentList")
-      .then(res => {
-        this.userData = res.data;
+      .get("/studentList").then(res => {
+        this.userData = res.data.a;
+        this.classData = res.data.b;
       })
       .catch(error => {
         console.log(error);
@@ -149,20 +166,21 @@ export default {
     {
                 this.modal1=true;
                 this.name="";
-                this.user_name="";
-                this.user_tel="";
-                this.classname="";
-                this.status="";
+                this.email="";
+                this.tel="";
+                this.sno="";
+                this.class_room_id="";
     },
     ok () 
     {
                 this.$axios.post('/studentList', {
-                            params: [{
+                            params: {
                                 name: this.name,
-                                user_name: this.user_name,
-                                user_tel: this.user_tel,
-                                classname: this.classname,
-                            }]
+                                email: this.email,
+                                tel: this.tel,
+                                sno: this.sno,
+                                class_room_id: this.class_room_id,
+                            }
                         }).then(function(res) {
                             console.log(res.data);
                             this.userData=this.userData.concat(res.data);
@@ -176,11 +194,12 @@ export default {
     show_modal2(index)
     {
                 this.modal2=true;
-                this.id = this.userData[index].id;
+                this.id=this.userData[index].id;
                 this.name=this.userData[index].name;
-                this.user_name=this.userData[index].user_name;
-                this.classname=this.userData[index].classname;
-                this.user_tel=this.userData[index].user_tel;
+                this.email=this.userData[index].email;
+                this.sno=this.userData[index].sno;
+                this.tel=this.userData[index].tel;
+                this.class_room_id=this.userData[index].class_room_id;
     },
     ok2 () 
     {
@@ -188,19 +207,22 @@ export default {
                             params: {
                                 id: this.id,
                                 name: this.name,
-                                user_name: this.user_name,
-                                classname: this.classname,
-                                user_tel: this.user_tel,
+                                email: this.email,
+                                sno: this.sno,
+                                tel: this.tel,
+                                class_room_id: this.class_room_id,
                             }
                         }).then(function(res) {
                             console.log(res);
-                            let id = res.data.id;
+                            let id = res.data[0].id;
                             for(let i = 0; i < this.userData.length; i++){
                               if (this.userData[i].id == id){
-                                this.userData[i].name = res.data.name;
-                                this.userData[i].user_name = res.data.user_name;
-                                this.userData[i].classname = res.data.classname;
-                                this.userData[i].user_tel = res.data.user_tel;
+                                this.userData[i].name = res.data[0].name;
+                                this.userData[i].email = res.data[0].email;
+                                this.userData[i].sno = res.data[0].sno;
+                                this.userData[i].tel = res.data[0].tel;
+                                this.userData[i].class_room_id = res.data[0].class_room_id;
+                                this.userData[i].classname = res.data[0].classname;
                                 break;
                               }
                             }
@@ -238,24 +260,7 @@ export default {
                         
                        },
            onCancel: () => { this.$Message.info('取消'); }});
-    },
-  
-    userBody(row, column, index) {
-        return row[column.key]
-    },
-    userName(row, index) {
-        return row["name"]
-    },
-    user_Name(row, index) {
-        return row["user_name"]
-    },
-    userTel(row, index) {
-        return row["user_tel"]
-    },
-    userStatus(row, index) {
-        return row["status"]
-    },
-    
+    },    
     importfxx(obj) {
         let _this = this;
         let inputDOM = this.$refs.inputer;
@@ -299,11 +304,11 @@ export default {
         }
     },
     postexcal(data){
-        this.$axios.post('/studentList', {
+        this.$axios.post('/manystudent', {
             params: data
         }).then(function(res) {
             console.log(res.data);
-            this.userData=this.userData.concat(res.data);
+            this.userData=res.data;
             this.$Message.info('导入excal成功');
         }.bind(this))
         .catch(function(error) {
