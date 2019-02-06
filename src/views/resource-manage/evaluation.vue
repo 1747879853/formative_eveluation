@@ -11,10 +11,12 @@
             @on-ok="ok"
             @on-cancel="cancel">
             <table>
+            <tr><td>评价指标号</td><td>
+            <Input v-model="eno" placeholder="请输入评价指标号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>评价指标名</td><td>
             <Input v-model="name" placeholder="请输入评价指标名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>评价指标类型</td><td>
-            <Input v-model="type" placeholder="请输入评价指标类型" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="types" placeholder="请输入评价指标类型" clearable style="width: 300px"></Input></td></tr>
             </table>
             </Modal>
             <Modal
@@ -23,10 +25,12 @@
             @on-ok="ok2"
             @on-cancel="cancel2">
             <table>
+            <tr><td>评价指标号</td><td>
+            <Input v-model="eno" placeholder="请输入评价指标号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>评价指标名</td><td>
             <Input v-model="name" placeholder="请输入评价指标名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>评价指标类型</td><td>
-            <Input v-model="type" placeholder="请输入评价指标类型" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="types" placeholder="请输入评价指标类型" clearable style="width: 300px"></Input></td></tr>
             </table>
             </Modal>
         </div>
@@ -44,7 +48,8 @@ export default {
       modal2:false,
       id: 0,
       name:'',
-      type:'',
+      eno:'',
+      types:'',
       status:'',
       userColumns: [
         {
@@ -54,7 +59,7 @@ export default {
         },
         {
           title: "评价指标号",
-          key: "id",
+          key: "eno",
           align: "center"
         },
         {
@@ -64,7 +69,7 @@ export default {
         },
         {
           title: "类型",
-          key: "type",
+          key: "types",
           align: "center",
         },
         {
@@ -127,7 +132,8 @@ export default {
     {
                 this.modal1=true;
                 this.name="";
-                this.type="";
+                this.eno="";
+                this.types="";
                 this.status="";
     },
     ok () 
@@ -135,7 +141,8 @@ export default {
                 this.$axios.post('/evaluationList', {
                             params: {
                                 name: this.name,
-                                type: this.type,
+                                eno: this.eno,
+                                types: this.types,
                                 status: 1,
                             }
                         }).then(function(res) {
@@ -153,7 +160,8 @@ export default {
                 this.modal2=true;
                 this.id = this.userData[index].id;
                 this.name=this.userData[index].name;
-                this.type=this.userData[index].type;
+                this.eno=this.userData[index].eno;
+                this.types=this.userData[index].types;
     },
     ok2 () 
     {
@@ -161,7 +169,8 @@ export default {
                             params: {
                                 id: this.id,
                                 name: this.name,
-                                type: this.type,
+                                eno: this.eno,
+                                types: this.types,
                             }
                         }).then(function(res) {
                             console.log(res);
@@ -169,7 +178,8 @@ export default {
                             for(let i = 0; i < this.userData.length; i++){
                               if (this.userData[i].id == id){
                                 this.userData[i].name = res.data.name;
-                                this.userData[i].type = res.data.type;
+                                this.userData[i].types = res.data.types;
+                                this.userData[i].eno = res.data.eno;
                                 break;
                               }
                             }
@@ -207,24 +217,7 @@ export default {
                         
                        },
            onCancel: () => { this.$Message.info('取消'); }});
-    },
-  
-    userBody(row, column, index) {
-            return row[column.key]
-        },
-        userName(row, index) {
-            return row["name"]
-        },
-        user_Name(row, index) {
-            return row["user_name"]
-        },
-        userTel(row, index) {
-            return row["user_tel"]
-        },
-        userStatus(row, index) {
-            return row["status"]
-        },
-           
+    },           
   }
 };
 </script>

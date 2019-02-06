@@ -11,8 +11,12 @@
             @on-ok="ok"
             @on-cancel="cancel">
             <table>
+            <tr><td>班级号</td><td>
+            <Input v-model="clno" placeholder="请输入班级号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>班级名</td><td>
             <Input v-model="name" placeholder="请输入班级名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>入学年份</td><td>
+            <Input v-model="year" placeholder="请输入入学年份" clearable style="width: 300px"></Input></td></tr>
             </table>
             </Modal>
             <Modal
@@ -21,8 +25,12 @@
             @on-ok="ok2"
             @on-cancel="cancel2">
             <table>
+            <tr><td>班级号</td><td>
+            <Input v-model="clno" placeholder="请输入班级号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>班级名</td><td>
             <Input v-model="name" placeholder="请输入班级名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>入学年份</td><td>
+            <Input v-model="year" placeholder="请输入入学年份" clearable style="width: 300px"></Input></td></tr>
             </table>
             </Modal>
         </div>
@@ -33,15 +41,16 @@
 
 <script>
 export default {
-  name: "user",
+  name: "class",
   data() {
     return {
       modal1:false,
       modal2:false,
       id: 0,
       name:'',
+      clno:'',
       status:'',
-      startyear:'',
+      year:'',
       userColumns: [
         {
           type: "index",
@@ -50,7 +59,7 @@ export default {
         },
         {
           title: "班级号",
-          key: "id",
+          key: "clno",
           align: "center"
         },
         {
@@ -58,18 +67,16 @@ export default {
           key: "name",
           align: "center"
         },
-
-
+        {
+          title: "入学年份",
+          key: "year",
+          align: "center"
+        },
         {
           title: "状态",
           key: "status",
           align: "center",
-        },
-          {
-              title: "入学年份",
-              key: "startyear",
-              align: "center"
-          },
+        },          
         {
                   title: "操作",
                   key: "action",
@@ -115,8 +122,7 @@ export default {
     }
   },
   mounted() {
-    this.$axios
-      .get("/classList")
+    this.$axios.get("/classroomList")
       .then(res => {
         this.userData = res.data;
       })
@@ -127,15 +133,19 @@ export default {
   methods:{
     show_modal1()
     {
-                this.modal1=true;
-                this.name="";
-                this.status="";
+        this.modal1=true;
+        this.name="";
+        this.clno="";
+        this.status="";
+        this.year="";
     },
     ok () 
     {
-                this.$axios.post('/classList', {
+                this.$axios.post('/classroomList', {
                             params: {
                                 name: this.name,
+                                clno: this.clno,
+                                year: this.year,
                                 status: 1,
                             }
                         }).then(function(res) {
@@ -153,13 +163,17 @@ export default {
                 this.modal2=true;
                 this.id = this.userData[index].id;
                 this.name=this.userData[index].name;
+                this.clno=this.userData[index].clno;
+                this.year=this.userData[index].year;
     },
     ok2 () 
     {
-                this.$axios.patch('/classList', {
+                this.$axios.patch('/classroomList', {
                             params: {
                                 id: this.id,
                                 name: this.name,
+                                clno: this.clno,
+                                year: this.year,
                             }
                         }).then(function(res) {
                             console.log(res);
@@ -167,6 +181,8 @@ export default {
                             for(let i = 0; i < this.userData.length; i++){
                               if (this.userData[i].id == id){
                                 this.userData[i].name = res.data.name;
+                                this.userData[i].clno = res.data.clno;
+                                this.userData[i].year = res.data.year;
                                 break;
                               }
                             }
@@ -186,7 +202,7 @@ export default {
                     title: '删除班级',
                     content: '<p>确定要删除此班级吗？</p>',
                     onOk: () => {
-                        this.$axios.delete('/classList', {
+                        this.$axios.delete('/classroomList', {
                             data: {
                                 params: {
                                     id: this.id,
@@ -204,24 +220,7 @@ export default {
                         
                        },
            onCancel: () => { this.$Message.info('取消'); }});
-    },
-  
-    userBody(row, column, index) {
-            return row[column.key]
-        },
-        userName(row, index) {
-            return row["name"]
-        },
-        user_Name(row, index) {
-            return row["user_name"]
-        },
-        userTel(row, index) {
-            return row["user_tel"]
-        },
-        userStatus(row, index) {
-            return row["status"]
-        },
-           
+    },           
   }
 };
 </script>

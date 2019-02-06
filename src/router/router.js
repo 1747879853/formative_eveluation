@@ -504,14 +504,14 @@ export const appRouter = [
                 access:'users-manage/student',
                 component: () => import('@/views/users-manage/student.vue')
             },
-            {
-                path: 'organization',
-                icon: 'compose',
-                name: 'organization',
-                title: '组织管理',
-                access:'users-manage/organization',
-                component: () => import('@/views/users-manage/organization.vue')
-            },
+            // {
+            //     path: 'organization',
+            //     icon: 'compose',
+            //     name: 'organization',
+            //     title: '组织管理',
+            //     access:'users-manage/organization',
+            //     component: () => import('@/views/users-manage/organization.vue')
+            // },
             // {
             //     path: 'workshop-maintenance',
             //     icon: 'compose',

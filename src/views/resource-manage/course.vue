@@ -11,6 +11,8 @@
             @on-ok="ok"
             @on-cancel="cancel">
             <table>
+            <tr><td>课程号</td><td>
+            <Input v-model="cno" placeholder="请输入课程号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>课程名</td><td>
             <Input v-model="name" placeholder="请输入课程名" clearable style="width: 300px"></Input></td></tr>
             </table>
@@ -21,6 +23,8 @@
             @on-ok="ok2"
             @on-cancel="cancel2">
             <table>
+            <tr><td>课程号</td><td>
+            <Input v-model="cno" placeholder="请输入课程号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>课程名</td><td>
             <Input v-model="name" placeholder="请输入课程名" clearable style="width: 300px"></Input></td></tr>
             </table>
@@ -40,6 +44,7 @@ export default {
       modal2:false,
       id: 0,
       name:'',
+      cno:'',
       status:'',
       userColumns: [
         {
@@ -49,7 +54,7 @@ export default {
         },
         {
           title: "课程号",
-          key: "id",
+          key: "cno",
           align: "center"
         },
         {
@@ -107,9 +112,7 @@ export default {
     }
   },
   mounted() {
-    this.$axios
-      .get("/courseList")
-      .then(res => {
+    this.$axios.get("/courseList").then(res => {
         this.userData = res.data;
       })
       .catch(error => {
@@ -121,6 +124,7 @@ export default {
     {
                 this.modal1=true;
                 this.name="";
+                this.cno="";
                 this.status="";
     },
     ok () 
@@ -128,6 +132,7 @@ export default {
                 this.$axios.post('/courseList', {
                             params: {
                                 name: this.name,
+                                cno: this.cno,
                                 status: 1,
                             }
                         }).then(function(res) {
@@ -144,6 +149,7 @@ export default {
     {
                 this.modal2=true;
                 this.id = this.userData[index].id;
+                this.cno = this.userData[index].cno;
                 this.name=this.userData[index].name;
     },
     ok2 () 
@@ -151,6 +157,7 @@ export default {
                 this.$axios.patch('/courseList', {
                             params: {
                                 id: this.id,
+                                cno: this.cno,
                                 name: this.name,
                             }
                         }).then(function(res) {
@@ -159,6 +166,7 @@ export default {
                             for(let i = 0; i < this.userData.length; i++){
                               if (this.userData[i].id == id){
                                 this.userData[i].name = res.data.name;
+                                this.userData[i].cno = res.data.cno;
                                 break;
                               }
                             }
@@ -196,24 +204,7 @@ export default {
                         
                        },
            onCancel: () => { this.$Message.info('取消'); }});
-    },
-  
-    userBody(row, column, index) {
-            return row[column.key]
-        },
-        userName(row, index) {
-            return row["name"]
-        },
-        user_Name(row, index) {
-            return row["user_name"]
-        },
-        userTel(row, index) {
-            return row["user_tel"]
-        },
-        userStatus(row, index) {
-            return row["status"]
-        },
-           
+    },           
   }
 };
 </script>

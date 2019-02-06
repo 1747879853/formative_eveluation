@@ -60,7 +60,7 @@
 
 <script>
 export default {
-  name: "user",
+  name: "student",
   data() {
     return {
       modal1:false,
