@@ -112,8 +112,8 @@ import Sortable from 'sortablejs';
                 }
                 this.$axios.patch('/teachercourseList', {
                             params: {
-                                user_id:this.users_data[this.select].id,
-                                id:tree_id,
+                                id:this.users_data[this.select].id,
+                                checked_id:tree_id,
                             }
                         }).then(function(res) {
                             console.log(res);

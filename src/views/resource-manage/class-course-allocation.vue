@@ -55,8 +55,8 @@ import Sortable from 'sortablejs';
         },
         mounted () { 
         this.$axios.get("/classcourseList").then( res =>{
-        this.users_data = res.data.a;
-        this.data1 = res.data.b;
+            this.users_data = res.data.a;
+            this.data1 = res.data.b;
         }).catch(error =>{
             console.log(error);
         });
@@ -112,8 +112,8 @@ import Sortable from 'sortablejs';
                 }
                 this.$axios.patch('/classcourseList', {
                             params: {
-                                user_id:this.users_data[this.select].id,
-                                id:tree_id,
+                                id:this.users_data[this.select].id,
+                                checked_id:tree_id,
                             }
                         }).then(function(res) {
                             console.log(res);

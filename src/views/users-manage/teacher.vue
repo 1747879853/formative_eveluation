@@ -21,6 +21,8 @@
             <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>用户名</td><td>
             <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>入职年份</td><td>
+            <Input v-model="year" placeholder="请输入入职年份" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
             <Input v-model="tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
             </table>
@@ -37,6 +39,8 @@
             <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>用户名</td><td>
             <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>入职年份</td><td>
+            <Input v-model="year" placeholder="请输入入职年份" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
             <Input v-model="tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
             </table>
@@ -58,6 +62,7 @@ export default {
       name:'',
       tno:'',
       email:'',
+      year:'',
       tel:'',
       status:'',
       userColumns: [
@@ -79,6 +84,11 @@ export default {
         {
           title: "用户名",
           key: "email",
+          align: "center"
+        },
+        {
+          title: "入职年份",
+          key: "year",
           align: "center"
         },
         {
@@ -151,6 +161,7 @@ export default {
                 this.name="";
                 this.tno="";
                 this.email="";
+                this.year="";
                 this.tel="";
                 this.status="";
     },
@@ -161,6 +172,7 @@ export default {
                                 name: this.name,
                                 tno: this.tno,
                                 email: this.email,
+                                year: this.year,
                                 tel: this.tel,
                                 status: 1,
                             }
@@ -181,6 +193,7 @@ export default {
                 this.name=this.userData[index].name;
                 this.tno=this.userData[index].tno;
                 this.email=this.userData[index].email;
+                this.year=this.userData[index].year;
                 this.tel=this.userData[index].tel;
     },
     ok2 () 
@@ -191,6 +204,7 @@ export default {
                                 name: this.name,
                                 tno: this.tno,
                                 email: this.email,
+                                year: this.year,
                                 tel: this.tel,
                                 status: 1,
                             }
@@ -202,6 +216,7 @@ export default {
                                 this.userData[i].name = res.data.name;
                                 this.userData[i].tno = res.data.tno;
                                 this.userData[i].email = res.data.email;
+                                this.userData[i].year = res.data.year;
                                 this.userData[i].tel = res.data.tel;
                                 break;
                               }

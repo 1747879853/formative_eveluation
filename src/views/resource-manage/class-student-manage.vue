@@ -8,7 +8,7 @@
 
             <Modal
                     v-model="modal1"
-                    title="添加学生信息"
+                    :title="'添加'+name+'学生'"
                     @on-ok="addclassstu"
                     @on-cancel="cancel2">
                 <table>
@@ -20,7 +20,7 @@
                     v-model="modal2"
                     width="65%"
                     :mask-closable="false"
-                    title="删除该班学生"
+                    :title="'删除'+name+'学生'"
                     @on-ok="ok"
                     @on-cancel="cancel">
                 <Table :columns="classstuColumns" :data="classstuData" style="width: 100%;"></Table>
@@ -41,7 +41,6 @@
                 id: 0,
                 name: '',
                 status: '',
-                startyear: '',
                 userColumns: [
                     {
                         type: 'index',
@@ -50,22 +49,22 @@
                     },
                     {
                         title: '班级号',
-                        key: 'id',
+                        key: 'clno',
                         align: 'center'
                     },
                     {
                         title: '班级名',
                         key: 'name',
                         align: 'center'
+                    },                    
+                    {
+                        title: '入学年份',
+                        key: 'year',
+                        align: 'center'
                     },
                     {
                         title: '状态',
                         key: 'status',
-                        align: 'center'
-                    },
-                    {
-                        title: '入学年份',
-                        key: 'startyear',
                         align: 'center'
                     },
                     {
@@ -98,7 +97,7 @@
                                             this.delstu(params.index);
                                         }
                                     }
-                                }, '删除学生')
+                                }, '查看学生')
                             ]);
                         }
                     }
@@ -118,12 +117,12 @@
                     },
                     {
                         title: '学号',
-                        key: 'id',
+                        key: 'sno',
                         align: 'center'
                     },
                     {
                         title: '入学年份',
-                        key: 'startyear',
+                        key: 'year',
                         align: 'center'
                     },
                     {
@@ -139,7 +138,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.delclassstu()(params.index);
+                                            this.delclassstu(params.index);
                                         }
                                     }
                                 }, '删除')
@@ -148,7 +147,8 @@
                     }
 
                 ],
-                classstuData: []
+                classstuData: [],
+                stuid: '',
             };
         },
         computed: {
@@ -157,9 +157,7 @@
             }
         },
         mounted () {
-            this.$axios
-                .get('/classList')
-                .then(res => {
+            this.$axios.get('/classroomList').then(res => {
                     this.userData = res.data;
                 })
                 .catch(error => {
@@ -174,15 +172,15 @@
                 //alert(this.name);
             },
             delstu (index) { // 显示删除学生的窗口
+                this.classstuData = [];
                 this.modal2 = true;
-                this.name = '';
+                this.name = this.userData[index].name;
                 this.status = '';
                 this.id = this.userData[index].id;
-                //alert(this.id);// 全局获取到班级可以了
-                this.$axios
-                    .get('/classStu', {// 根据班级id获取学生列表
+                // alert(this.id);// 全局获取到班级可以了
+                this.$axios.post('/classStu', {// 根据班级id获取学生列表
                         params: {
-                            id: index// 没写mock，带参数获取不到东西
+                            id: this.id// 没写mock，带参数获取不到东西
                         }
                     })
                     .then(res => {
@@ -193,21 +191,13 @@
                     });
             },
             addclassstu () {
-                this.$axios.post('/AddClassStu', { // 添加学生窗口的确定按钮
+                this.$axios.patch('/classStu', { // 添加学生窗口的确定按钮
                     params: {
                         id: this.id, // 班级的id
                         stuid: this.stuid// 学号，怎么获取这个input的输入？现在是不是已经获取了
                     }
                 }).then(function (res) {
-                    // console.log(res);
-                    // let id = res.data.id;
-                    // for (let i = 0; i < this.userData.length; i++) {
-                    //     if (this.userData[i].id == id) {
-                    //         this.userData[i].name = res.data.name;
-                    //         break;
-                    //     }
-                    // }
-                    this.$Message.info('修改成功');
+                    this.$Message.info('添加成功');
                 }.bind(this))
                     .catch(function (error) {
                         console.log(error);
@@ -218,14 +208,15 @@
                     title: '移除学生',
                     content: '<p>从班级中移除此学生吗?</p>',
                     onOk: () => {
-                        this.$axios.post('/DelClassStu', {
-                            params: {
-                                stuid: this.classstuData[index].id, // 获取这一行的学号
-                                classid: this.id // 全局的班级id，刚才没获取成功
+                        this.$axios.delete('/classStu', {
+                            data: {
+                                params: {
+                                    stuid: this.classstuData[index].id, 
+                                    id: this.id 
+                                }
                             }
                         }).then(function (res) {
-                            console.log(res.data);
-                            this.userData.push(res.data);
+                            this.classstuData = res.data;
                             this.$Message.info('移除成功');
                         }.bind(this))
                             .catch(function (error) {

@@ -22,6 +22,8 @@
             <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>用户名</td><td>
             <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>入学年份</td><td>
+            <Input v-model="year" placeholder="请输入入学年份" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
             <Input v-model="tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
             <tr><td>班级</td><td>
@@ -43,6 +45,8 @@
             <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>用户名</td><td>
             <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>入学年份</td><td>
+            <Input v-model="year" placeholder="请输入入学年份" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
             <Input v-model="tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
             <tr><td>班级</td><td>
@@ -70,6 +74,7 @@ export default {
       email:'',
       tel:'',
       sno:'',
+      year:'',
       class_room_id:'',
       status:'',
       userColumns: [
@@ -92,6 +97,10 @@ export default {
           title: "用户名",
           key: "email",
           align: "center"
+        },
+        {
+          title: "入学年份",
+          key: "year"
         },
         {
           title: "手机",
@@ -167,6 +176,7 @@ export default {
                 this.modal1=true;
                 this.name="";
                 this.email="";
+                this.year="";
                 this.tel="";
                 this.sno="";
                 this.class_room_id="";
@@ -177,6 +187,7 @@ export default {
                             params: {
                                 name: this.name,
                                 email: this.email,
+                                year: this.year,
                                 tel: this.tel,
                                 sno: this.sno,
                                 class_room_id: this.class_room_id,
@@ -197,6 +208,7 @@ export default {
                 this.id=this.userData[index].id;
                 this.name=this.userData[index].name;
                 this.email=this.userData[index].email;
+                this.year=this.userData[index].year;
                 this.sno=this.userData[index].sno;
                 this.tel=this.userData[index].tel;
                 this.class_room_id=this.userData[index].class_room_id;
@@ -208,6 +220,7 @@ export default {
                                 id: this.id,
                                 name: this.name,
                                 email: this.email,
+                                year: this.year,
                                 sno: this.sno,
                                 tel: this.tel,
                                 class_room_id: this.class_room_id,
@@ -219,6 +232,7 @@ export default {
                               if (this.userData[i].id == id){
                                 this.userData[i].name = res.data[0].name;
                                 this.userData[i].email = res.data[0].email;
+                                this.userData[i].year = res.data[0].year;
                                 this.userData[i].sno = res.data[0].sno;
                                 this.userData[i].tel = res.data[0].tel;
                                 this.userData[i].class_room_id = res.data[0].class_room_id;
