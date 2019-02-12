@@ -592,14 +592,14 @@ export const appRouter = [
                 access:'resource-manage/evaluation',
                 component: () => import('@/views/resource-manage/evaluation.vue')
             },
-            {
-                path: 'class-course',
-                icon: 'compose',
-                name: 'class-course',
-                title: '班级课程分配',
-                access:'resource-manage/class-course',
-                component: () => import('@/views/resource-manage/class-course-allocation.vue')
-            },
+            // {
+            //     path: 'class-course',
+            //     icon: 'compose',
+            //     name: 'class-course',
+            //     title: '班级课程分配',
+            //     access:'resource-manage/class-course',
+            //     component: () => import('@/views/resource-manage/class-course-allocation.vue')
+            // },
             {
                 path: 'course-evaluation',
                 icon: 'compose',
@@ -608,14 +608,14 @@ export const appRouter = [
                 access:'resource-manage/course-evaluation',
                 component: () => import('@/views/resource-manage/course-evaluation-allocation.vue')
             },
-            {
-                path: 'teacher-course',
-                icon: 'compose',
-                name: 'teacher-course',
-                title: '教师课程分配',
-                access:'resource-manage/teacher-course',
-                component: () => import('@/views/resource-manage/teacher-course-allocation.vue')
-            },
+            // {
+            //     path: 'teacher-course',
+            //     icon: 'compose',
+            //     name: 'teacher-course',
+            //     title: '教师课程分配',
+            //     access:'resource-manage/teacher-course',
+            //     component: () => import('@/views/resource-manage/teacher-course-allocation.vue')
+            // },
             {
                 path: 'teacher-class-course',
                 icon: 'compose',

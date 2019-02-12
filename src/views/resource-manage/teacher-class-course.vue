@@ -7,14 +7,9 @@
         <Card>
             <div style="text-align:center;font-size:24px;color: #2db7f5;">
                 教师班级课程管理
-            </div>  当前学年：
+            </div>  当前学期：
             <Select v-model="option" @on-change="selected()" ref="element1" style="width:200px">
-                <Option value="1">2016下半年</Option>
-                <Option value="2">2017上半年</Option>
-                <Option value="3">2017下半年</Option>
-                <Option value="4">2018上半年</Option>
-                <Option value="5">2018下半年</Option>
-                <Option value="6">2019上半年</Option>
+                <Option v-for="(item, index) in term" :key="index" :value="item">{{item}}</Option>
             </Select>                  
         </Card>                      
     </Row>
@@ -77,17 +72,18 @@ import Sortable from 'sortablejs';
                 modal:false,
                 select:null,
                 mid_data:[],
-                option:'6',
+                option:'',
+                term:[],
             }
         },
         mounted () { 
-        this.$axios.get("/teacherclasscourse").then( res =>{
-        this.users_data = res.data.a;
-        this.data1 = res.data.b;
-        this.data2 = res.data.c;
+        this.$axios.get("/termList").then( res =>{
+            this.term = res.data;
+            this.termList();
         }).catch(error =>{
             console.log(error);
-        });
+        });       
+
         let editable = document.getElementById('editable-new');
         let vm = this;
         var editableList = Sortable.create(editable, {            
@@ -151,7 +147,58 @@ import Sortable from 'sortablejs';
 
     },
     methods:{       
+        termList(){
+            let last = new Date();
+            last = parseInt(last.getFullYear())+1;
+            let termlast = parseInt(this.term[this.term.length-1].substring(0,4));
+            // console.log(first)
+            let m = last - termlast;
+            for(let i = 1;i<=m;i++){
+                if(this.term[this.term.length-1].indexOf('春季学期')!=-1){
+                    this.term.push(termlast+"秋季学期");                    
+                }
+                this.term.push(termlast+1+"春季学期");
+                this.term.push(termlast+1+"秋季学期");
+            }
+            let month = new Date();
+            month = parseInt(month.getMonth()+1);
+            if(month>8){
+                this.option=last-1+"秋季学期";
+            }else{
+                this.option=last-1+"春季学期";
+            } 
+
+
+            this.$axios.post("/tccList", {
+                params: {
+                    term:this.option,
+                }
+            }).then( res =>{
+                this.users_data = res.data.a;
+                this.data1 = res.data.b;
+                this.data2 = res.data.c;
+            }).catch(error =>{
+                console.log(error);
+            });
+
+
+        },
         selected() {
+            this.users_data=[];
+            this.data1=[];
+            this.data2=[];
+            this.course_list=[];
+            this.$axios.post("/tccList", {
+                params: {
+                    term:this.option,
+                }
+            }).then( res =>{
+                this.users_data = res.data.a;
+                this.data1 = res.data.b;
+                this.data2 = res.data.c;                
+            }).catch(error =>{
+                console.log(error);
+            });
         }, 
         showmodal(){
             this.modal=true;
@@ -168,7 +215,7 @@ import Sortable from 'sortablejs';
                 for(let i=0;i<checked_tree.length;i++){
                     tree_id.push(checked_tree[i].id);
                 }
-                console.log(tree_id)
+                // console.log(tree_id)
                 for(let i=0;i<checked_tree.length;i++){
                     let n=JSON.parse(JSON.stringify(m));
                     n.class_id=checked_tree[i].id;
@@ -186,9 +233,10 @@ import Sortable from 'sortablejs';
                     checked_course.push(n);
                 }
                 // console.log(this.users_data[this.select].id)
-                this.$axios.patch('/teacherclasscourse', {
+                this.$axios.patch('/tccList', {
                     params: {
-                        user_id:this.users_data[this.select].id,
+                        term: this.option,
+                        id:this.users_data[this.select].id,
                         checked_course:checked_course,
                         checked_class_id:tree_id
                     }

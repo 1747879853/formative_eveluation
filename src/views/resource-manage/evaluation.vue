@@ -16,7 +16,12 @@
             <tr><td>评价指标名</td><td>
             <Input v-model="name" placeholder="请输入评价指标名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>评价指标类型</td><td>
-            <Input v-model="types" placeholder="请输入评价指标类型" clearable style="width: 300px"></Input></td></tr>
+            <Select v-model="types" ref="element1" style="width:200px">
+                <Option value="input">input</Option>
+                <Option value="option">option</Option>
+            </Select></td></tr>
+            <tr><td>描述</td><td>
+            <Input v-model="description" placeholder="请输入评价指标描述" clearable style="width: 300px"></Input></td></tr>
             </table>
             </Modal>
             <Modal
@@ -30,7 +35,12 @@
             <tr><td>评价指标名</td><td>
             <Input v-model="name" placeholder="请输入评价指标名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>评价指标类型</td><td>
-            <Input v-model="types" placeholder="请输入评价指标类型" clearable style="width: 300px"></Input></td></tr>
+            <Select v-model="types" ref="element1" style="width:200px">
+                <Option value="input">input</Option>
+                <Option value="option">option</Option>
+            </Select></td></tr>
+            <tr><td>描述</td><td>
+            <Input v-model="description" placeholder="请输入评价指标描述" clearable style="width: 300px"></Input></td></tr>
             </table>
             </Modal>
         </div>
@@ -51,6 +61,7 @@ export default {
       eno:'',
       types:'',
       status:'',
+      description:'',
       userColumns: [
         {
           type: "index",
@@ -70,6 +81,11 @@ export default {
         {
           title: "类型",
           key: "types",
+          align: "center",
+        },
+        {
+          title: "描述",
+          key: "description",
           align: "center",
         },
         {
@@ -117,9 +133,7 @@ export default {
     }
   },
   mounted() {
-    this.$axios
-      .get("/evaluationList")
-      .then(res => {
+    this.$axios.get("/evaluationList").then(res => {
         this.userData = res.data;
         console.log(res.data);
       })
@@ -135,24 +149,26 @@ export default {
                 this.eno="";
                 this.types="";
                 this.status="";
+                this.description="";
     },
     ok () 
     {
                 this.$axios.post('/evaluationList', {
-                            params: {
-                                name: this.name,
-                                eno: this.eno,
-                                types: this.types,
-                                status: 1,
-                            }
-                        }).then(function(res) {
-                            console.log(res.data);
-                            this.userData.push(res.data);
-                            this.$Message.info('添加成功');
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
+                    params: {
+                        name: this.name,
+                        eno: this.eno,
+                        types: this.types,
+                        description: this.description,
+                        status: 1,
+                    }
+                }).then(function(res) {
+                    console.log(res.data);
+                    this.userData.push(res.data);
+                    this.$Message.info('添加成功');
+                }.bind(this))
+                .catch(function(error) {
+                    console.log(error)
+                });
                         
           },
     show_modal2(index)
@@ -162,6 +178,7 @@ export default {
                 this.name=this.userData[index].name;
                 this.eno=this.userData[index].eno;
                 this.types=this.userData[index].types;
+                this.description=this.userData[index].description;
     },
     ok2 () 
     {
@@ -171,6 +188,7 @@ export default {
                                 name: this.name,
                                 eno: this.eno,
                                 types: this.types,
+                                description: this.description,
                             }
                         }).then(function(res) {
                             console.log(res);
@@ -180,6 +198,7 @@ export default {
                                 this.userData[i].name = res.data.name;
                                 this.userData[i].types = res.data.types;
                                 this.userData[i].eno = res.data.eno;
+                                this.userData[i].description = res.data.description;
                                 break;
                               }
                             }

@@ -1,14 +1,20 @@
 <template>
     <div id="main" class="app-main">
-        <router-view></router-view>
+        <router-view v-if="isRouterAlive"></router-view>
     </div>
 </template>
 
 <script>
     export default {
+        provide(){
+            return{
+                reload: this.reload
+            }
+        },
         data () {
             return {
-                theme: this.$store.state.app.themeColor
+                theme: this.$store.state.app.themeColor,
+                isRouterAlive: true,
             };
         },
         mounted () {
@@ -18,7 +24,12 @@
 
         },
         methods: {
-
+            reload(){
+                this.isRouterAlive = false
+                this.$nextTick(function(){
+                    this.isRouterAlive = true
+                })
+            }
         }
     };
 </script>
