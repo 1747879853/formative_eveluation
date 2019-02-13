@@ -116,39 +116,39 @@ export default {
           align: "center",
         },
         {
-                  title: "操作",
-                  key: "action",
-                  align: "center",
-                  render: (h, params) => {
-                        return h('div', [
-                            h('Button', {
-                                props: {
-                                    type: 'primary',
-                                    size: 'small'
-                                },
-                                style: {
-                                    marginRight: '5px'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.show_modal2(params.index);
-                                    }
-                                }
-                            }, '编辑学生'),  
-                            h('Button', {
-                                props: {
-                                    type: 'error',
-                                    size: 'small'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.deleteClick(params.index);
-                                      }
-                                }
-                            }, '删除学生')
-                        ]);
-                    }
-                }
+          title: "操作",
+          key: "action",
+          align: "center",
+          render: (h, params) => {
+                return h('div', [
+                    h('Button', {
+                        props: {
+                            type: 'primary',
+                            size: 'small'
+                        },
+                        style: {
+                            marginRight: '5px'
+                        },
+                        on: {
+                            click: () => {
+                                this.show_modal2(params.index);
+                            }
+                        }
+                    }, '编辑学生'),  
+                    h('Button', {
+                        props: {
+                            type: 'error',
+                            size: 'small'
+                        },
+                        on: {
+                            click: () => {
+                                this.deleteClick(params.index);
+                              }
+                        }
+                    }, '删除学生')
+                ]);
+            }
+        }
         
      ],
       userData: [],
@@ -216,35 +216,35 @@ export default {
     ok2 () 
     {
                 this.$axios.patch('/studentList', {
-                            params: {
-                                id: this.id,
-                                name: this.name,
-                                email: this.email,
-                                year: this.year,
-                                sno: this.sno,
-                                tel: this.tel,
-                                class_room_id: this.class_room_id,
-                            }
-                        }).then(function(res) {
-                            console.log(res);
-                            let id = res.data[0].id;
-                            for(let i = 0; i < this.userData.length; i++){
-                              if (this.userData[i].id == id){
-                                this.userData[i].name = res.data[0].name;
-                                this.userData[i].email = res.data[0].email;
-                                this.userData[i].year = res.data[0].year;
-                                this.userData[i].sno = res.data[0].sno;
-                                this.userData[i].tel = res.data[0].tel;
-                                this.userData[i].class_room_id = res.data[0].class_room_id;
-                                this.userData[i].classname = res.data[0].classname;
-                                break;
-                              }
-                            }
-                            this.$Message.info('修改成功');
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
+                    params: {
+                        id: this.id,
+                        name: this.name,
+                        email: this.email,
+                        year: this.year,
+                        sno: this.sno,
+                        tel: this.tel,
+                        class_room_id: this.class_room_id,
+                    }
+                }).then(function(res) {
+                    console.log(res);
+                    let id = res.data[0].id;
+                    for(let i = 0; i < this.userData.length; i++){
+                      if (this.userData[i].id == id){
+                        this.userData[i].name = res.data[0].name;
+                        this.userData[i].email = res.data[0].email;
+                        this.userData[i].year = res.data[0].year;
+                        this.userData[i].sno = res.data[0].sno;
+                        this.userData[i].tel = res.data[0].tel;
+                        this.userData[i].class_room_id = res.data[0].class_room_id;
+                        this.userData[i].classname = res.data[0].classname;
+                        break;
+                      }
+                    }
+                    this.$Message.info('修改成功');
+                }.bind(this))
+                .catch(function(error) {
+                    console.log(error)
+                });
                         
     },
     cancel2 () 
