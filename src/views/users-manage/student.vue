@@ -8,7 +8,9 @@
         <Icon type="ios-list"></Icon>
         学生列表&nbsp;&nbsp;&nbsp;
         <Button @click="show_modal1()" class="ivu-btn ivu-btn-primary ivu-btn-small">添加学生</Button>
-        <input id="upload" style="float:right" type="file" @change="importfxx(this)"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+        <span style="margin-left: 25%;font-size: 25px;">{{message}}</span>
+        <Button @click="imports()" style="float:right;" class="ivu-btn ivu-btn-primary ivu-btn-middle">导入</Button>
+        <input id="upload" style="float:right;" type="file" @change="importfxx(this)"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />        
         <div> 
             <Modal
             v-model="modal1"
@@ -153,6 +155,8 @@ export default {
      ],
       userData: [],
       classData:[],
+      outdata:[],
+      message:'',
     };
   },
   computed: {
@@ -307,7 +311,7 @@ export default {
                     });
                 }
                 outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);//outdata就是你想要的东西
-                _this.postexcal(outdata);
+                _this.outdata=outdata;
             }
             reader.readAsArrayBuffer(f);
         }
@@ -323,16 +327,23 @@ export default {
         }).then(function(res) {
             console.log(res.data);
             this.userData=res.data;
+            this.message='';
+            this.outdata=[];
             this.$Message.info('导入excal成功');
         }.bind(this))
         .catch(function(error) {
+            this.message='文件导入失败,请重试!';
             console.log(error)
         });
     },
-
-
-
-
+    imports(){
+        if(this.outdata.length>0){
+            this.message='正在导入文件,请稍后......';
+            this.postexcal(this.outdata);
+        }else{
+            this.$Message.info('请先选择一个excal文件!');
+        }        
+    },
   }
 };
 </script>
