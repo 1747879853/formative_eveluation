@@ -70,22 +70,31 @@ import Sortable from 'sortablejs';
                 let list= document.getElementById("editable-new").getElementsByTagName("li");
                 for (let i = 0; i < list.length; i++) {
                     if(list[i] == el){
-                        evt.item.setAttribute("style","border-color: #87b4ee;");
-                        var ch_id = vm.users_data[parseInt(el.getAttribute('data-index'))].checked_id;
-                        for(let i=0;i<vm.data1.length;i++){
-                            if(ch_id.length!=0){
-                                for(let j=0;j<ch_id.length;j++){
-                                    if(vm.data1[i].id==ch_id[j]){
-                                        vm.data1[i].checked=true;
-                                        break;
+                        evt.item.setAttribute("style","border-color: #87b4ee;"); 
+                        let ch_id = vm.users_data[parseInt(el.getAttribute('data-index'))].checked_id;
+                        function edit(arr){  
+                          depthTraversal1(arr); 
+                          return arr; 
+                        }   
+                        function depthTraversal1(arr){  
+                            if (arr!=null){  
+                                for(let i=0;i<arr.length;i++){
+                                    if(ch_id.length!=0){
+                                    for(let j=0;j<ch_id.length;j++){
+                                        if(arr[i].id==ch_id[j]){
+                                            arr[i].checked=true;
+                                            break;
+                                        }
+                                        else{arr[i].checked=false;}
                                     }
-                                    else{vm.data1[i].checked=false;
+                                    }else{
+                                        arr[i].checked=false;
                                     }
+                                  depthTraversal1(arr[i].children);
                                 }
-                            }else{
-                                vm.data1[i].checked=false;
-                            }
-                        } 
+                            }         
+                        }
+                        vm.data1=edit(vm.data1);
                     }else{
                         list[i].removeAttribute("style");
                     }                    
@@ -106,6 +115,11 @@ import Sortable from 'sortablejs';
                 this.$Message.info('请选中一个课程');
             }else{
                 let checked_tree = this.$refs.tree.getCheckedNodes();
+                for(var i=0;i<checked_tree.length;i++){
+                    if(checked_tree[i].children.length!=0){
+                        checked_tree.splice(i,1);
+                    }
+                }
                 let tree_id = [];
                 for(let i=0;i<checked_tree.length;i++){
                     tree_id[i]=checked_tree[i].id;

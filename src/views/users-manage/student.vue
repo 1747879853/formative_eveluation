@@ -188,22 +188,22 @@ export default {
     ok () 
     {
                 this.$axios.post('/studentList', {
-                            params: {
-                                name: this.name,
-                                email: this.email,
-                                year: this.year,
-                                tel: this.tel,
-                                sno: this.sno,
-                                class_room_id: this.class_room_id,
-                            }
-                        }).then(function(res) {
-                            console.log(res.data);
-                            this.userData=this.userData.concat(res.data);
-                            this.$Message.info('添加成功');
-                        }.bind(this))
-                        .catch(function(error) {
-                            console.log(error)
-                        });
+                    params: {
+                        name: this.name,
+                        email: this.email,
+                        year: this.year,
+                        tel: this.tel,
+                        sno: this.sno,
+                        class_room_id: this.class_room_id,
+                    }
+                }).then(function(res) {
+                    console.log(res.data);
+                    this.userData=this.userData.concat(res.data);
+                    this.$Message.info('添加成功');
+                }.bind(this))
+                .catch(function(error) {
+                    console.log(error)
+                });
                         
           },
     show_modal2(index)

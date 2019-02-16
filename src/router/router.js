@@ -584,13 +584,21 @@ export const appRouter = [
                 access:'resource-manage/course',
                 component: () => import('@/views/resource-manage/course.vue')
             },
+            // {
+            //     path: 'evaluation1',
+            //     icon: 'compose',
+            //     name: 'evaluation1',
+            //     title: '评价指标',
+            //     access:'resource-manage/evaluation',
+            //     component: () => import('@/views/resource-manage/evaluation.vue')
+            // },
             {
                 path: 'evaluation',
                 icon: 'compose',
                 name: 'evaluation',
                 title: '评价指标管理',
                 access:'resource-manage/evaluation',
-                component: () => import('@/views/resource-manage/evaluation.vue')
+                component: () => import('@/views/resource-manage/evaluation-manage.vue')
             },
             // {
             //     path: 'class-course',
