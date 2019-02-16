@@ -496,14 +496,14 @@ export const appRouter = [
                 access:'users-manage/teacher',
                 component: () => import('@/views/users-manage/teacher.vue')
             },
-            {
-                path: 'student',
-                icon: 'compose',
-                name: 'student',
-                title: '学生信息管理',
-                access:'users-manage/student',
-                component: () => import('@/views/users-manage/student.vue')
-            },
+            // {
+            //     path: 'student',
+            //     icon: 'compose',
+            //     name: 'student',
+            //     title: '学生信息管理',
+            //     access:'users-manage/student',
+            //     component: () => import('@/views/users-manage/student.vue')
+            // },
             // {
             //     path: 'organization',
             //     icon: 'compose',
