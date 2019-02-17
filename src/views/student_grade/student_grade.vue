@@ -4,12 +4,20 @@
         <Icon type="ios-list"></Icon>
         学生成绩查看&nbsp;&nbsp;&nbsp;
     </p>
-    <p style="font-size:20px;padding:10px">
-        {{stu.class_name}}&nbsp;&nbsp;&nbsp;{{stu.stu_name}}你好，你的成绩如下：&nbsp;&nbsp;&nbsp;
+    <p style="font-size:20px;padding:10px" v-if="class_name!=null">
+        {{class_name}}&nbsp;&nbsp;&nbsp;{{name}}你好，你的成绩如下：&nbsp;&nbsp;&nbsp;
     </p>
-    <div v-for="(item, index) in Columns" :key="index" style="padding:20px">
-        <Table :columns="item" :data="data[index]" style="width: 100%;"></Table>
-    </div>                         
+    <p style="font-size:20px;padding:10px" v-if="class_name==null">
+        {{name}}老师你好，此处只允许学生查看成绩。&nbsp;&nbsp;&nbsp;
+    </p>
+    <div v-for="(items, index) in Columns" :key="index" style="padding:20px">
+      <p style="font-size:20px;padding:10px">
+        {{term[index].term}}:&nbsp;&nbsp;&nbsp;
+      </p>
+      <div v-for="(item, index1) in items" :key="index1" style="padding:20px">
+          <Table :columns="item" :data="data[index][index1]" style="width: 100%;"></Table>
+      </div> 
+    </div>                        
 </Card>
 </template>
 
@@ -18,42 +26,53 @@ export default {
   name: "user",
   data() {
     return {
-      stu:[],
+      table_list:[],
       tab_msg:[],
       Columns: [],
       data:[],
+      name:'',
+      class_name:'',
+      term:[],
     };
   },
   computed: {
   },
   mounted() {
       this.$axios.get("/studentgradeList").then(res => {
-        this.stu = res.data.a;
-        this.tab_msg=this.stu.table_msg;
-        var tab_class_name={
+        this.name = res.data.a;
+        this.class_name = res.data.b;
+        this.table_list = res.data.c;
+        this.term = res.data.d;
+        this.data = res.data.e;
+        for(let k = 0;k<this.table_list.length;k++){
+          this.tab_msg=this.table_list[k];
+          var tab_class_name={
               title: "课程名",
               key: "coursename",
               align: "center"
             };
-        var tab_eval_name={
+          var tab_eval_name={
               title: "",
-              key: "grade1",
+              key: "",
               align: "center",
             };
-        for(let i=0;i<this.tab_msg.length;i++){
+          var column = [];
+          for(let i=0;i<this.tab_msg.length;i++){
             var tab=[];
             let m = JSON.parse(JSON.stringify(tab_class_name));
             tab.push(m);
             for(let j=0;j<this.tab_msg[i].eval.length;j++){
               let n = JSON.parse(JSON.stringify(tab_eval_name));
               n.title=this.tab_msg[i].eval[j].evalname;
-              n.key="grade"+(j+1);
+              n.key=this.tab_msg[i].eval[j].eno;
               tab.push(n);
-            }
-            this.Columns.push(tab);
+            }            
+            column.push(tab);
+          }
+          this.Columns.push(column)
         }
-        console.log(this.Columns);
-        this.data=res.data.b;
+        
+  
       })
       .catch(error => {
         console.log(error);

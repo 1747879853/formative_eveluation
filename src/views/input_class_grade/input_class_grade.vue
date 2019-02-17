@@ -1,9 +1,12 @@
 <template>    
 <Card>
-    <p slot="title" style="height:25px">
+    <p slot="title" style="height:32px">
         <Icon type="ios-list"></Icon>
         课堂成绩录入&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        当前学期: &nbsp;&nbsp;{{term}}
+        当前学期：
+            <Select v-model="option" @on-change="selected()" ref="element1" style="width:200px">
+                <Option v-for="(item, index) in term" :key="index" :value="item">{{item}}</Option>
+            </Select>
     </p>
     <div v-if="course==''">
         <p style="font-size:18px">请选择课程:</p>
@@ -56,7 +59,8 @@ export default {
           align: "center"
         },                       
       ],
-      term:'',
+      option:'',
+      term:[],
       m:[],
       data:[],
     };
@@ -64,23 +68,87 @@ export default {
   computed: {
   },
   mounted() {
-
-      this.$axios.get("/tcourseList").then(res => {
-        this.courseList = res.data.a;
-        this.term = res.data.b;
-        // console.log(res.data)
-      })
-      .catch(error => {
-        console.log(error);
-      });
+      this.$axios.get("/termList").then( res =>{
+            this.term = res.data;
+            this.termList();
+        }).catch(error =>{
+            console.log(error);
+        });
   },
   methods:{
+      termList(){
+          let last = new Date();
+          last = parseInt(last.getFullYear())+1;
+          let termlast = parseInt(this.term[this.term.length-1].substring(0,4));
+          // console.log(first)
+          let m = last - termlast;
+          for(let i = 1;i<=m;i++){
+              if(this.term[this.term.length-1].indexOf('春季学期')!=-1){
+                  this.term.push(termlast+"秋季学期");                    
+              }
+              this.term.push(termlast+1+"春季学期");
+              this.term.push(termlast+1+"秋季学期");
+          }
+          let month = new Date();
+          month = parseInt(month.getMonth()+1);
+          if(month>8){
+              this.option=last-1+"秋季学期";
+          }else{
+              this.option=last-1+"春季学期";
+          } 
+
+          this.$axios.post("/tcourseList", {
+              params: {
+                  term:this.option,
+              }
+          }).then(res => {
+            this.courseList = res.data;
+            // this.term = res.data.b;
+            // console.log(res.data)
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      },
+      selected() {
+          this.Columns=[
+            {
+              title: "学号",
+              key: "sno",
+              width: 110
+            },
+            {
+              title: "姓名",
+              key: "name",
+              align: "center"
+            },                       
+          ];
+          this.course_id='';
+          this.classList=[];
+          this.data = [];
+          this.studentList = [];
+          this.course='';
+          this.class1='';
+          this.$axios.post("/tcourseList", {
+              params: {
+                  term:this.option,
+              }
+          }).then(res => {
+            this.courseList = res.data;
+            // this.term = res.data.b;
+            // console.log(res.data)
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }, 
       selectCourse(item){
         this.course=item.name;
         this.course_id=item.id;
         this.$axios.post("/tclassList",{
           params:{
-            id: this.course_id
+            id: this.course_id,
+            term:this.option,
           }
         }).then(res => {
           this.classList = res.data;
@@ -98,6 +166,7 @@ export default {
           params:{
             course_id:this.course_id,
             class_id:item.id,
+            term:this.option,
           }
         }).then(res => {
           this.data = res.data.a;
@@ -113,9 +182,9 @@ export default {
                           let _this = this;
                           return h('div', [
                               h('Input', {
-                                  style: {
-                                      width: '200px'
-                                  },
+                                  // style: {
+                                  //     width: '200px'
+                                  // },
                                   props:{
                                        value:params.row[params.column.key],
                                        autosize: true
@@ -149,7 +218,7 @@ export default {
                         title: this.data[i].name,
                         key: this.data[i].eno,
                         align: "center",
-                        width: 140,
+                        // width: 140,
                         render: (h, params) => {
                           let _this = this;
                           let a=[];

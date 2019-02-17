@@ -2,13 +2,6 @@
 <div>
     <Row>            
         <Card>
-            <div style="text-align:center;font-size:24px;color: #2db7f5;">
-                评价指标管理
-            </div>              
-        </Card>                      
-    </Row>
-    <Row>            
-        <Card>
             <p slot="title" style="font-size:20px;height: 33px;">
                 <Icon type="android-funnel"></Icon>
                 评价指标列表&nbsp;&nbsp;&nbsp;
@@ -88,7 +81,8 @@ export default {
             default: function() {
                 return [];
             }
-        }
+        },
+        terms: String,
     },
     data() {
         return {
@@ -233,7 +227,7 @@ export default {
                             description: this.f_description,
                             status: 1,
                             parent_id: 0,
-                            weight:1.0
+                            term: this.terms,
                         }
                     }).then(function(res) {
                         let item = res.data;
@@ -269,7 +263,7 @@ export default {
                             description: this.f_description,
                             status: 1,
                             parent_id: this.current_id,
-                            weight:1.0
+                            term: this.terms,
                         }
                     }).then(function(res) {
                         let origin_item = res.data;
@@ -376,7 +370,7 @@ export default {
                         data: {
                             params: {
                                 id: this.current_id,
-                                status: 0
+                                status: 0,
                             }
                         }
                     }).then(function(res) {
