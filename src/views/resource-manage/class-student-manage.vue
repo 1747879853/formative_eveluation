@@ -390,7 +390,10 @@
             },
             postexcal(data){
                 this.$axios.post('/manystudent', {
-                    params: data
+                    params: {
+                        data:data,
+                        class_room_id: this.id
+                    }
                 }).then(function(res) {
                     // console.log(res.data);
                     this.message='';
