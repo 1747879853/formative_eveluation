@@ -213,7 +213,12 @@ export default {
                       }
                 },);
             }else if(this.data[i].types=='option'){
-              let arr = this.data[i].description.split('@');
+              let array = this.data[i].description.split('@');
+              let arr = [];
+              for(let n=0;n<array.length;n++){
+                let a = array[n].split('-');
+                arr.push(a[0]);
+              }
                 this.Columns.push({
                         title: this.data[i].name,
                         key: this.data[i].eno,
