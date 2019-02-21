@@ -612,7 +612,7 @@ export const appRouter = [
                 path: 'course-evaluation',
                 icon: 'compose',
                 name: 'course-evaluation',
-                title: '课程评价指标分配',
+                title: '课程评价指标权重分配',
                 access:'resource-manage/course-evaluation',
                 component: () => import('@/views/resource-manage/course-evaluation-allocation.vue')
             },

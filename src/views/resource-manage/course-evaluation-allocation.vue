@@ -6,7 +6,7 @@
     <Row>            
         <Card>
             <div style="text-align:center;font-size:24px;color: #2db7f5;">
-                课程评价指标分配
+                课程评价指标权重分配
             </div>   当前学期：
             <Select v-model="option" @on-change="selected()" ref="element1" style="width:200px">
                 <Option v-for="(item, index) in term" :key="index" :value="item">{{item}}</Option>
