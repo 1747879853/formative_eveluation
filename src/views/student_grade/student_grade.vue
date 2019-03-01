@@ -12,11 +12,14 @@
     </p>
     <div v-for="(items, index) in Columns" :key="index" style="padding:20px">
       <p style="font-size:20px;padding:10px">
-        {{term[index].term}}:&nbsp;&nbsp;&nbsp;
+        {{term[index].name}}:&nbsp;&nbsp;&nbsp;
       </p>
-      <div v-for="(item, index1) in items" :key="index1" style="padding:20px">
+      <div v-if="items.length!=0" v-for="(item, index1) in items" :key="index1" style="padding:20px">
           <Table :columns="item" :data="data[index][index1]" style="width: 100%;"></Table>
-      </div> 
+      </div>
+      <p style="font-size:15px;padding:10px;margin-left:40px" v-if="items.length==0">
+          请等待老师提交成绩。&nbsp;&nbsp;&nbsp;
+      </p> 
     </div>                        
 </Card>
 </template>
@@ -64,14 +67,14 @@ export default {
             for(let j=0;j<this.tab_msg[i].eval.length;j++){
               let n = JSON.parse(JSON.stringify(tab_eval_name));
               n.title=this.tab_msg[i].eval[j].evalname;
-              n.key=this.tab_msg[i].eval[j].eno;
+              n.key='e'+this.tab_msg[i].eval[j].id;
               tab.push(n);
             }            
             column.push(tab);
           }
           this.Columns.push(column)
         }
-        
+        // console.log(this.Columns)
   
       })
       .catch(error => {

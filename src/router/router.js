@@ -632,6 +632,14 @@ export const appRouter = [
                 access:'resource-manage/teacher-class-course',
                 component: () => import('@/views/resource-manage/teacher-class-course.vue')
             },
+            {
+                path: 'term',
+                icon: 'compose',
+                name: 'term-manage',
+                title: '学期管理',
+                access:'resource-manage/term-manage',
+                component: () => import('@/views/resource-manage/term-manage.vue')
+            },
         ]
     },
     // {

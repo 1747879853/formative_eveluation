@@ -7,10 +7,7 @@
         <Card>
             <div style="text-align:center;font-size:24px;color: #2db7f5;">
                 课程评价指标权重分配
-            </div>   当前学期：
-            <Select v-model="option" @on-change="selected()" ref="element1" style="width:200px">
-                <Option v-for="(item, index) in term" :key="index" :value="item">{{item}}</Option>
-            </Select>                 
+            </div>                
         </Card>                      
     </Row>
     <Row>
@@ -70,9 +67,10 @@ import Sortable from 'sortablejs';
             }
         },
         mounted () { 
-        this.$axios.get("/get_termList_e").then( res =>{
-            this.term = res.data;
-            this.termList();
+        this.$axios.get("/courseevalList").then( res =>{
+            this.users_data = res.data.a;
+            this.data2 = res.data.b;
+            this.weight = res.data.c;
         }).catch(error =>{
             console.log(error);
         });
@@ -237,58 +235,7 @@ import Sortable from 'sortablejs';
         });        
 
     },
-    methods:{  
-        termList(){
-            let last = new Date();
-            last = parseInt(last.getFullYear())+1;
-            let termlast = parseInt(this.term[this.term.length-1].substring(0,4));
-            // console.log(first)
-            let m = last - termlast;
-            for(let i = 1;i<=m;i++){
-                if(this.term[this.term.length-1].indexOf('春季学期')!=-1){
-                    this.term.push(termlast+"秋季学期");                    
-                }
-                this.term.push(termlast+1+"春季学期");
-                this.term.push(termlast+1+"秋季学期");
-            }
-            let month = new Date();
-            month = parseInt(month.getMonth()+1);
-            if(month>8){
-                this.option=last-1+"秋季学期";
-            }else{
-                this.option=last-1+"春季学期";
-            } 
-
-
-            this.$axios.post("/courseevalList", {
-                params: {
-                    term:this.option,
-                }
-            }).then( res =>{
-                this.users_data = res.data.a;
-                this.data2 = res.data.b;
-                this.weight = res.data.c;
-            }).catch(error =>{
-                console.log(error);
-            });
-
-
-        },
-        selected() {
-            this.users_data=[];
-            this.data1=[];
-            this.$axios.post("/courseevalList", {
-                params: {
-                    term:this.option,
-                }
-            }).then( res =>{
-                this.users_data = res.data.a;
-                this.data2 = res.data.b;
-                this.weight = res.data.c;
-            }).catch(error =>{
-                console.log(error);
-            });
-        },       
+    methods:{       
         showmodal(){
             this.modal=true;
             this.u_name="";
@@ -355,6 +302,35 @@ import Sortable from 'sortablejs';
                     }         
                 }
                 this.check=edit(JSON.parse(JSON.stringify(this.data1)),this.c_weight,this.check);
+                // console.log(this.c_weight)
+                // let c_w = JSON.parse(JSON.stringify(this.c_weight))
+                for (var i = 0; i < this.c_weight.length; i++) {
+                    if(tree_id.indexOf(this.c_weight[i].id)<0){
+                        let x = true;
+                        for (var j = 0; j < this.data1.length; j++) {
+                            if(this.data1[j].id==this.c_weight[i].id){
+                                let v = true;
+                                for (var k = 0; k < this.data1[j].children.length; k++) {
+                                    if(this.data1[j].children[k].checked==true){
+                                        v=false;
+                                        break;
+                                    }
+                                }
+                                if(v){
+                                    this.c_weight.splice(i,1);
+                                    i--;
+                                }
+                                x=false;
+                                break;
+                            }
+                        }
+                        if(x){
+                            this.c_weight.splice(i,1);
+                            i--;
+                        }
+                    }
+                }
+                console.log(this.c_weight)
                 if(this.check.length==0){
                     this.$axios.patch('/courseevalList', {
                         params: {
@@ -384,7 +360,7 @@ import Sortable from 'sortablejs';
                 ch_id.push(checkedList[i].id);
             }
             let vm = this;
-            vm.c_weight=[];
+            // vm.c_weight=[];
             function edit(arr){  
               depthTraversal1(arr); 
               return arr; 
@@ -430,7 +406,7 @@ import Sortable from 'sortablejs';
                                                     }
                                                 }
                                             }
-                                            // console.log(_this.c_weight)
+                                            console.log(_this.c_weight)
                                         },                                  
                                       }
                                     })
@@ -482,10 +458,10 @@ import Sortable from 'sortablejs';
                                                 })
                                           ]);
                                       }
-                                vm.c_weight.push({
-                                  id: arr[i].id,
-                                  weight:vm.weight[xx].weight,
-                                })
+                                // vm.c_weight.push({
+                                //   id: arr[i].id,
+                                //   weight:vm.weight[xx].weight,
+                                // })
                                 break;
                             }
                         }                                   

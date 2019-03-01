@@ -12,9 +12,6 @@
                     @on-ok="ok"
                     @on-cancel="cancel">
                     <table>
-                    <tr><td>评价指标号</td><td>
-                    <Input v-model="f_eno" placeholder="请输入评价指标号" clearable style="width: 300px"></Input></td></tr>
-                    <tr>&nbsp;</tr>
                     <tr><td>评价指标名</td><td>
                     <Input v-model="f_name" placeholder="请输入评价指标名" clearable style="width: 300px"></Input></td></tr>
                     <tr>&nbsp;</tr>
@@ -22,6 +19,7 @@
                     <Select v-model="f_types" ref="element1" style="width:200px">
                         <Option value="input">input</Option>
                         <Option value="option">option</Option>
+                        <Option value="homework">homework</Option>
                     </Select></td></tr>
                     <tr>&nbsp;</tr><tr><td>描述</td><td>
                     <Input v-model="f_description" placeholder="请输入评价指标描述" clearable style="width: 300px"></Input></td></tr>
@@ -46,12 +44,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
+                        <tr v-for="(item,index) in initItems" :key="item.id" v-if="item.status!='2'" v-show="show(item)" :class="{'child-tr':item.parent}">
                             <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
                                 <div v-if="column.type === 'action'">
-                                    <button class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal(item, index);">添加子评价指标</button>
-                                    <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="show_modal(item, index, 1);">修改</button>
-                                    <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="deleteClick(item, index);">删除</button>
+                                    <button v-if="item.status=='激活'&&item.parent_id==0" class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal(item, index);">添加子评价指标</button>
+                                    <button v-if="item.status=='激活'" class="ivu-btn ivu-btn-success ivu-btn-small" @click="show_modal(item, index, 1);">修改</button>
+                                    <button v-if="item.status=='激活'&&item.parent_id==0" class="ivu-btn ivu-btn-error ivu-btn-small" @click="deleteClick(item, index);">停用</button>
                                 </div>
                                 <label @click="toggle(index,item)" v-if="!column.type">
                                     <span v-if='snum==iconRow()'>
@@ -82,7 +80,6 @@ export default {
                 return [];
             }
         },
-        terms: String,
     },
     data() {
         return {
@@ -98,7 +95,6 @@ export default {
             f_modal_action: 0,
             f_title: '添加评价指标',
             f_name: "",
-            f_eno:'',
             f_types:'',
             f_description:'',
             f_authority: "",
@@ -183,7 +179,6 @@ export default {
                 this.current_id = 0;
                 this.f_modal_action = 1;
                 this.f_name = "";
-                this.f_eno = "";
                 this.f_description = "";
                 this.f_types = "";
             }else if (flag == undefined){
@@ -191,7 +186,6 @@ export default {
                 this.current_id = this.renderId(item);
                 this.f_modal_action = 2;
                 this.f_name = "";
-                this.f_eno = "";
                 this.f_description = "";
                 this.f_types = "";
             }
@@ -205,7 +199,6 @@ export default {
                 this.current_id = this.renderId(item);
                 this.f_modal_action = 3;
                 this.f_name = this.renderName(item);
-                this.f_eno = this.renderEno(item);
                 this.f_description = this.renderDescription(item);
                 this.f_types = this.renderTypes(item);
             }
@@ -222,12 +215,12 @@ export default {
                     this.$axios.post('/evaluationList', {
                         params: {
                             name: this.f_name,
-                            eno: this.f_eno,
+                            // eno: this.f_eno,
                             types: this.f_types,
                             description: this.f_description,
                             status: 1,
                             parent_id: 0,
-                            term: this.terms,
+                            // term: this.terms,
                         }
                     }).then(function(res) {
                         let item = res.data;
@@ -258,60 +251,116 @@ export default {
                     this.$axios.post('/evaluationList', {
                         params: {
                             name: this.f_name,
-                            eno: this.f_eno,
+                            // eno: this.f_eno,
                             types: this.f_types,
                             description: this.f_description,
                             status: 1,
                             parent_id: this.current_id,
-                            term: this.terms,
+                            // term: this.terms,
                         }
                     }).then(function(res) {
-                        let origin_item = res.data;
-                        let level = this.current_item.level + 1;
-                        let parent = this.current_item;
+                        // let origin_item = res.data;
+                        // let level = this.current_item.level + 1;
+                        // let parent = this.current_item;
+                        // let spaceHtml = "";
+                        // for (var i = 1; i < level; i++) {
+                        //     spaceHtml += "<i class='ms-tree-space'></i>"
+                        // }
+                        // let item = Object.assign({}, origin_item, {
+                        //     "parent": parent,
+                        //     "level": level,
+                        //     "spaceHtml": spaceHtml,
+                        //     "expanded": false,
+                        //     "isShow": true,
+                        //     "isChecked": false,
+                        //     "load": false
+                        // });
+                        // parent.children.push(origin_item);
+                        // if (parent.load){
+                        //     let len = this.ChildrenLength(parent);
+                        //     this.initItems.splice((this.current_index + len), 0, item);
+                        // }
+                        // if (!parent.expanded){
+                        //     this.toggle(this.current_index, this.current_item);
+                        // }
+                        // this.$Message.info('添加成功');
+                        this.initItems[this.current_index].status = '2';
+                        let c = this.initItems[this.current_index].children;
+                        for (var i =  0; i <c.length; i++) {
+                            c[i].status = '2';
+                        }
+                        let item = res.data;
+                        let level = 1;
+                        let parent = null;
                         let spaceHtml = "";
                         for (var i = 1; i < level; i++) {
                             spaceHtml += "<i class='ms-tree-space'></i>"
                         }
-                        let item = Object.assign({}, origin_item, {
+                        item = Object.assign({}, item, {
                             "parent": parent,
                             "level": level,
                             "spaceHtml": spaceHtml,
                             "expanded": false,
-                            "isShow": true,
+                            "isShow": false,
                             "isChecked": false,
                             "load": false
                         });
-                        parent.children.push(origin_item);
-                        if (parent.load){
-                            let len = this.ChildrenLength(parent);
-                            this.initItems.splice((this.current_index + len), 0, item);
-                        }
-                        if (!parent.expanded){
-                            this.toggle(this.current_index, this.current_item);
-                        }
+                        //debugger
+                        this.initItems.push(item);
                         this.$Message.info('添加成功');
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
-                    });                    
+                    });                  
                     break;
                 case 3:
                     this.$axios.patch('/evaluationList', {
                         params: {
                             id: this.current_id,
                             name: this.f_name,
-                            eno: this.f_eno,
+                            // eno: this.f_eno,
                             types: this.f_types,
                             description: this.f_description,
                         }
                     }).then(function(res) {
-                        this.initItems[this.current_index].name = res.data.name;
-                        this.initItems[this.current_index].eno = res.data.eno;
-                        this.initItems[this.current_index].types = res.data.types;
-                        this.initItems[this.current_index].description = res.data.description;
-                        this.$Message.info('修改成功');
-                        // Vue.set(this.items, ret, this.items[ret]);
+                        if(this.initItems[this.current_index].parent_id==0){
+                            this.initItems[this.current_index].status = '2';
+                            let c = this.initItems[this.current_index].children;
+                            for (var i =  0; i <c.length; i++) {
+                                c[i].status = '2';
+                            }
+                        }else{
+                            this.initItems[this.current_index].status = '2';
+                            for (var i = 0; i < this.initItems.length; i++) {
+                                if(this.initItems[i].id==this.initItems[this.current_index].parent_id){
+                                    this.initItems[i].status='2';
+                                    let c = this.initItems[i].children;
+                                    for (var j =  0; j <c.length; j++) {
+                                        c[j].status = '2';
+                                    }
+                                    break;
+                                }
+                            }
+                        }                        
+                        let item = res.data;
+                        let level = 1;
+                        let parent = null;
+                        let spaceHtml = "";
+                        for (var i = 1; i < level; i++) {
+                            spaceHtml += "<i class='ms-tree-space'></i>"
+                        }
+                        item = Object.assign({}, item, {
+                            "parent": parent,
+                            "level": level,
+                            "spaceHtml": spaceHtml,
+                            "expanded": false,
+                            "isShow": false,
+                            "isChecked": false,
+                            "load": false
+                        });
+                        //debugger
+                        this.initItems.push(item);
+                        this.$Message.info('添加成功');
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
@@ -359,8 +408,8 @@ export default {
         },
         deleteClick(item, index) { 
             this.$Modal.confirm({
-                title: '删除评价指标',
-                content: '<p>确定要删除此评价指标吗？</p>',
+                title: '停用评价指标',
+                content: '<p>确定要停用此评价指标吗？</p>',
                 onOk: () => {
 
                     this.current_item = item;
@@ -374,8 +423,12 @@ export default {
                             }
                         }
                     }).then(function(res) {
-                        this.depthDelete(this.current_index);
-                        this.$Message.info('删除成功');
+                        this.initItems[this.current_index].status = '停用';
+                        let c = this.initItems[this.current_index].children;
+                        for (var i =  0; i <c.length; i++) {
+                            c[i].status = '停用';
+                        }
+                        this.$Message.info('停用成功');
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
@@ -650,9 +703,9 @@ export default {
         renderName(row, index) {
             return row["name"]
         },
-        renderEno(row, index) {
-            return row["eno"]
-        },
+        // renderEno(row, index) {
+        //     return row["eno"]
+        // },
         renderTypes(row, index) {
             return row["types"]
         },

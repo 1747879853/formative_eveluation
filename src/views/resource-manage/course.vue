@@ -1,5 +1,5 @@
 <template>    
-<Card>
+<Card style="height:auto">
     <p slot="title" style="height:25px">
         <Icon type="ios-list"></Icon>
         课程列表&nbsp;&nbsp;&nbsp;
