@@ -532,13 +532,28 @@ export const appRouter = [
     },
     {
         path: '/input_class_grade',
-        icon: 'key',
+        icon: 'settings',
         name: 'input_class_grade',
         title: '课堂成绩录入',
         access:'input_class_grade/index',
         component: Main,
         children: [
-            { path: 'index', title: '课堂成绩录入', access:'input_class_grade/index', name: 'input_class_grade_index', component: () => import('@/views/input_class_grade/input_class_grade.vue') }
+            { 
+                path: 'input_student_grade', 
+                title: '学生成绩录入',
+                icon: 'compose',
+                access:'input_class_grade/input_student_grade', 
+                name: 'input_student_grade', 
+                component: () => import('@/views/input_class_grade/input_class_grade.vue') 
+            },
+            // { 
+            //     path: 'assign_homework', 
+            //     title: '课程作业布置',
+            //     icon: 'compose',
+            //     access:'input_class_grade/assign_homework', 
+            //     name: 'assign_homework', 
+            //     component: () => import('@/views/input_class_grade/assign_homework.vue') 
+            // },
         ]
     },
     {

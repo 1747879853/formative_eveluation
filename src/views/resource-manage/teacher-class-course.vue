@@ -78,7 +78,9 @@ import Sortable from 'sortablejs';
         },
         mounted () { 
         this.$axios.get("/termList").then( res =>{
-            this.term = res.data;
+            this.term = res.data.a;
+            this.option = res.data.b;
+            this.selected();
         }).catch(error =>{
             console.log(error);
         });       

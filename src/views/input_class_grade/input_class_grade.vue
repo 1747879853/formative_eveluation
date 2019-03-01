@@ -69,7 +69,9 @@ export default {
   },
   mounted() {
       this.$axios.get("/termList").then( res =>{
-            this.term = res.data;
+            this.term = res.data.a;
+            this.option = res.data.b;
+            this.selected();
         }).catch(error =>{
             console.log(error);
         });
@@ -126,94 +128,135 @@ export default {
 
           if(this.edit=='editable'){
               for(let i =0;i<this.data.length;i++){
-                if(this.data[i].types=='input'){
-                    this.Columns.push({
-                            title: this.data[i].name,
-                            key: 'e'+this.data[i].id,
-                            align: "center",
-                            render: (h, params) => {
-                              let _this = this;
-                              return h('div', [
-                                  h('Input', {
-                                      // style: {
-                                      //     width: '200px'
-                                      // },
-                                      props:{
-                                           value:params.row[params.column.key],
-                                           autosize: true
-                                      },
-                                      on:{
-                                        input:function(e){
-                                            let x = 0;
-                                            for(let k=0;k<_this.m.length;k++){
-                                                if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
-                                                  _this.m[k].grade=e;
-                                                  x=1;
-                                                }
-                                            }
-                                            if(x==0){
-                                              _this.m.push({
-                                                      id: _this.data[i].id,
-                                                      // eno: _this.data[i].eno,
-                                                      stu:params.row.id,
-                                                      grade:e,
-                                                    })
-                                            }
-                                        },                                  
-                                      }
-                                      })
-                              ]);
-                          }
-                    },);
-                }else if(this.data[i].types=='option'){
-                  let array = this.data[i].description.split('@');
-                  let arr = [];
-                  for(let n=0;n<array.length;n++){
-                    let a = array[n].split('-');
-                    arr.push(a[0]);
-                  }
-                    this.Columns.push({
-                            title: this.data[i].name,
-                            key: 'e'+this.data[i].id,
-                            align: "center",
-                            // width: 140,
-                            render: (h, params) => {
-                              let _this = this;
-                              let a=[];
-                              for(let j = 0;j<arr.length;j++){
-                                  a.push(h('Option', {
-                                      props: {
-                                          value:arr[j],
-                                      },
-                                      }))
-                              }
-                              return h('Select', {
-                                        props: {
-                                          value: '',
-                                          placeholder: params.row[params.column.key]==''?'请选择':params.row[params.column.key]
+                if(this.data[i].children.length==0){
+                    if(this.data[i].types=='input'){
+                      this.Columns.push({
+                              title: this.data[i].name,
+                              key: 'e'+this.data[i].id,
+                              align: "center",
+                              render: (h, params) => {
+                                let _this = this;
+                                return h('div', [
+                                    h('Input', {
+                                        // style: {
+                                        //     width: '200px'
+                                        // },
+                                        props:{
+                                             value:params.row[params.column.key],
+                                             autosize: true
                                         },
-                                        on: {
-                                          input:(e) => {
-                                            let x = 0;
-                                            for(let k=0;k<_this.m.length;k++){
-                                                if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
-                                                  _this.m[k].grade=e;
-                                                  x=1;
-                                                }
-                                            }
-                                            if(x==0){
-                                              _this.m.push({
-                                                      id: _this.data[i].id,
-                                                      // eno: _this.data[i].eno,
-                                                      stu:params.row.id,
-                                                      grade:e,
-                                                    })
-                                            }
-                                          },
+                                        on:{
+                                          input:function(e){
+                                              let x = 0;
+                                              for(let k=0;k<_this.m.length;k++){
+                                                  if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
+                                                    _this.m[k].grade=e;
+                                                    x=1;
+                                                  }
+                                              }
+                                              if(x==0){
+                                                _this.m.push({
+                                                        id: _this.data[i].id,
+                                                        // eno: _this.data[i].eno,
+                                                        stu:params.row.id,
+                                                        grade:e,
+                                                      })
+                                              }
+                                          },                                  
                                         }
-                                      },a);
-                          }
-                    },);
+                                        })
+                                ]);
+                            }
+                      },);
+                    }else if(this.data[i].types=='option'){
+                      let array = this.data[i].description.split('@');
+                      let arr = [];
+                      for(let n=0;n<array.length;n++){
+                        let a = array[n].split('-');
+                        arr.push(a[0]);
+                      }
+                        this.Columns.push({
+                                title: this.data[i].name,
+                                key: 'e'+this.data[i].id,
+                                align: "center",
+                                // width: 140,
+                                render: (h, params) => {
+                                  let _this = this;
+                                  let a=[];
+                                  for(let j = 0;j<arr.length;j++){
+                                      a.push(h('Option', {
+                                          props: {
+                                              value:arr[j],
+                                          },
+                                          }))
+                                  }
+                                  return h('Select', {
+                                            props: {
+                                              value: '',
+                                              placeholder: params.row[params.column.key]==''?'请选择':params.row[params.column.key]
+                                            },
+                                            on: {
+                                              input:(e) => {
+                                                let x = 0;
+                                                for(let k=0;k<_this.m.length;k++){
+                                                    if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
+                                                      _this.m[k].grade=e;
+                                                      x=1;
+                                                    }
+                                                }
+                                                if(x==0){
+                                                  _this.m.push({
+                                                          id: _this.data[i].id,
+                                                          // eno: _this.data[i].eno,
+                                                          stu:params.row.id,
+                                                          grade:e,
+                                                        })
+                                                }
+                                              },
+                                            }
+                                          },a);
+                              }
+                        },);
+                    }else if(this.data[i].types=='homework'){
+                      this.Columns.push({
+                              title: this.data[i].name,
+                              key: 'e'+this.data[i].id,
+                              align: "center",
+                              render: (h, params) => {
+                                let _this = this;
+                                return h('div', [
+                                    h('Input', {
+                                        // style: {
+                                        //     width: '200px'
+                                        // },
+                                        props:{
+                                             value:params.row[params.column.key],
+                                             autosize: true
+                                        },
+                                        on:{
+                                          input:function(e){
+                                              let x = 0;
+                                              for(let k=0;k<_this.m.length;k++){
+                                                  if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
+                                                    _this.m[k].grade=e;
+                                                    x=1;
+                                                  }
+                                              }
+                                              if(x==0){
+                                                _this.m.push({
+                                                        id: _this.data[i].id,
+                                                        // eno: _this.data[i].eno,
+                                                        stu:params.row.id,
+                                                        grade:e,
+                                                      })
+                                              }
+                                          },                                  
+                                        }
+                                        })
+                                ]);
+                            }
+                      },);
+                    }
                 }
               }
           }else if(this.edit=='uneditable'){
