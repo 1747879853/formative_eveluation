@@ -118,7 +118,7 @@ export default {
   mounted() {
     this.$axios.get("/termList")
       .then(res => {
-        this.userData = res.data;
+        this.userData = res.data.a;
       })
       .catch(error => {
         console.log(error);
