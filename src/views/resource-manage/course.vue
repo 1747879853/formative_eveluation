@@ -9,7 +9,7 @@
             v-model="modal1"
             title="添加课程"
             @on-ok="ok"
-            @on-cancel="cancel">
+            @on-cancel="cancel2">
             <table>
             <tr><td>课程号</td><td>
             <Input v-model="cno" placeholder="请输入课程号" clearable style="width: 300px"></Input></td></tr>
