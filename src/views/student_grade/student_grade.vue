@@ -2,10 +2,10 @@
 <Card>
     <p slot="title" style="height:25px">
         <Icon type="ios-list"></Icon>
-        学生成绩查看&nbsp;&nbsp;&nbsp;
+        查看成绩&nbsp;&nbsp;&nbsp;
     </p>
     <p style="font-size:20px;padding:10px" v-if="class_name!=null">
-        {{class_name}}&nbsp;&nbsp;&nbsp;{{name}}你好，你的成绩如下：&nbsp;&nbsp;&nbsp;
+        {{class_name}}&nbsp;&nbsp;&nbsp;{{name}}&nbsp;你好，你的成绩如下：&nbsp;&nbsp;&nbsp;
     </p>
     <p style="font-size:20px;padding:10px" v-if="class_name==null">
         {{name}}老师你好，此处只允许学生查看成绩。&nbsp;&nbsp;&nbsp;
