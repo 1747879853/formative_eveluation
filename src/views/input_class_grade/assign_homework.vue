@@ -7,9 +7,6 @@
             <Select v-model="option" @on-change="selected()" ref="element1" style="width:200px">
                 <Option v-for="(item, index) in term" :key="index" :value="item.id">{{item.name}}</Option>
             </Select>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        图例：<Button class="ivu-btn ivu-btn-primary ivu-btn-big">未布置的作业</Button>
-                <Button class="ivu-btn ivu-btn-success ivu-btn-big">已布置的作业</Button>
     </p>
     <div>
         <p style="font-size:18px">请选择并布置作业:</p>
@@ -26,8 +23,13 @@
                 </div>                
             </div> -->            
         </div>
+        <Col style="width:28%;float:right;margin-top: -128px;">
+          图例：
+          <div><Button shape="circle" class="ivu-btn ivu-btn-primary ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;未布置的作业</div>&nbsp;
+          <div><Button shape="circle" class="ivu-btn ivu-btn-success ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;已布置的作业</div>
+        </Col>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <div v-if="course!=''&&eva!=''">
+        <Card v-if="course!=''&&eva!=''">
             <p style="font-size:18px">当前已选择课程&nbsp;{{course.name}}&nbsp;的&nbsp;{{eva.name}}:</p> 
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
             <table style="width:50%">
@@ -46,7 +48,7 @@
               <tr><td><Button v-if="eva.assign==0" @click="save(0)" class="ivu-btn ivu-btn-primary ivu-btn-big">发布作业</Button></td></tr>
               <tr><td><Button v-if="eva.assign==1" @click="save(1)" class="ivu-btn ivu-btn-success ivu-btn-big">修改作业</Button></td></tr>
             </table>      
-        </div>
+        </Card>
         
     </div>                        
 </Card>
