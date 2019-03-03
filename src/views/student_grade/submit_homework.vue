@@ -7,10 +7,7 @@
             <Select v-model="option" @on-change="selected()" ref="element1" style="width:200px">
                 <Option v-for="(item, index) in term" :key="index" :value="item.id">{{item.name}}</Option>
             </Select>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        图例：<Button class="ivu-btn ivu-btn-primary ivu-btn-big">作业提交未开始或可提交的作业</Button>
-                <Button class="ivu-btn ivu-btn-success ivu-btn-big">已提交的作业</Button>
-                <Button class="ivu-btn ivu-btn-error ivu-btn-big">已超时的作业</Button></span>
+        </span>
     </p>
     <p style="font-size:20px;padding:10px" v-if="classes!=null">
         {{classes.name}}&nbsp;&nbsp;&nbsp;{{user.name}}你好！&nbsp;&nbsp;&nbsp;你的作业情况如下：
@@ -27,8 +24,14 @@
         </div>
         <span v-if="item.homework.length==0">&nbsp;&nbsp;&nbsp;等待老师提交作业</span>            
     </div> 
+    <Col style="width:28%;float:right;margin-top: -188px;">
+      图例：
+      <div><Button shape="circle" class="ivu-btn ivu-btn-primary ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;可提交的作业</div>&nbsp;
+      <div><Button shape="circle" class="ivu-btn ivu-btn-success ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;已提交的作业</div>&nbsp;
+      <div><Button shape="circle" class="ivu-btn ivu-btn-error ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;已超时的作业</div>
+    </Col>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <div v-if="course!=''&&eva!=''">
+    <Card v-if="course!=''&&eva!=''">
         <p style="font-size:18px">当前已选择课程&nbsp;{{course.name}}&nbsp;的&nbsp;{{eva.name}}:</p> 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         <table style="">
@@ -45,7 +48,7 @@
         <div style="padding:10px" v-if="eva.done==1"><Button @click="save(0)" class="ivu-btn ivu-btn-primary ivu-btn-big">提交作业</Button></div>
         <div style="padding:10px" v-if="eva.done==2"><Button @click="save(1)" class="ivu-btn ivu-btn-success ivu-btn-big">修改作业</Button></div>
         <div style="font-size:18px;padding:10px" v-if="eva.done==3"><span>该作业已经超时，无法提交！</span></div>    
-    </div>                       
+    </Card>                       
 </Card>
 </template>
 

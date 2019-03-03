@@ -7,16 +7,13 @@
             <Select v-model="option" @on-change="selected()" ref="element1" style="width:200px">
                 <Option v-for="(item, index) in term" :key="index" :value="item.id">{{item.name}}</Option>
             </Select>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        
-        图例：<Button class="ivu-btn ivu-btn-primary ivu-btn-big">未提交的</Button>
-                <Button class="ivu-btn ivu-btn-success ivu-btn-big">已提交的</Button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <Button v-if="course!=''&&edit!='uneditable'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-big">暂存</Button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-big">提交</Button>
         
     </p>
-    <div>
+    <div style="width:70%">
         <p style="font-size:18px">请选择课程:</p>
         <div v-for="(item, index) in classcourseList" :key="index" style="padding:10px;">
             {{item.name}}:
@@ -27,14 +24,19 @@
             <!-- <Button @click="selectCourse(item)" class="ivu-btn ivu-btn-primary ivu-btn-big">{{item.name}}</Button> -->
         </div>
     </div>
-    <div v-if="course!=''">
+    <Col style="width:28%;float:right;margin-top: -128px;">
+      图例：
+      <div><Button shape="circle" class="ivu-btn ivu-btn-primary ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;未提交成绩的课程</div>&nbsp;
+      <div><Button shape="circle" class="ivu-btn ivu-btn-success ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;已提交成绩的课程</div>
+    </Col>
+    <Card v-if="course!=''">
         <p style="font-size:18px">当前已选择班级:&nbsp;&nbsp;{{class1}}</p>
         <p style="font-size:18px">当前已选择课程:&nbsp;&nbsp;{{course}}</p>        
         <div style="padding:10px">
           <!-- <Button @click="backcourse()" class="ivu-btn ivu-btn-primary ivu-btn-big">返回选择课程</Button> -->
         </div>
         <Table :columns="Columns" :data="studentList" style="width: 100%;"></Table>
-    </div> 
+    </Card> 
     <Modal
       v-model="modal"
       title="查看学生作业"
@@ -506,6 +508,29 @@ export default {
         });
       },
       refresh(){
+        // for (var i = 0; i < this.classcourseList.length; i++) {
+        //   if (this.classcourseList[i].id==this.class_id) {
+        //     for (var j = 0; j < this.classcourseList[i].length; j++) {
+        //       if (this.classcourseList[i][j].id==this.course_id) {
+        //         this.classcourseList[i][j].status=2;
+        //         break;
+        //       }
+        //     }
+        //     break;
+        //   }
+        // }
+        this.$axios.post("/tclassList", {
+            params: {
+                term:this.option,
+            }
+        }).then(res => {
+          this.classcourseList = res.data;
+          // this.term = res.data.b;
+          console.log(res.data)
+        })
+        .catch(error => {
+          console.log(error);
+        });
         this.m=[];
         this.Columns=[
             {
