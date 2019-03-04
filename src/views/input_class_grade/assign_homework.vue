@@ -1,5 +1,5 @@
 <template>    
-<Card>
+<Card style="min-height: 200px;">
     <p slot="title" style="height:32px">
         <Icon type="ios-list"></Icon>
         课程作业布置&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -8,7 +8,7 @@
                 <Option v-for="(item, index) in term" :key="index" :value="item.id">{{item.name}}</Option>
             </Select>
     </p>
-    <div>
+      <div style="width:70%;display:inline-block">
         <p style="font-size:18px">请选择并布置作业:</p>
         <div v-for="(item, index) in data" :key="index" style="padding:10px">
             {{item.name}}:
@@ -23,7 +23,8 @@
                 </div>                
             </div> -->            
         </div>
-        <Col style="width:28%;float:right;margin-top: -128px;">
+      </div>
+        <Col style="width:28%;float:right;display:inline">
           图例：
           <div><Button shape="circle" class="ivu-btn ivu-btn-primary ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;未布置的作业</div>&nbsp;
           <div><Button shape="circle" class="ivu-btn ivu-btn-success ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;已布置的作业</div>
@@ -48,9 +49,7 @@
               <tr><td><Button v-if="eva.assign==0" @click="save(0)" class="ivu-btn ivu-btn-primary ivu-btn-big">发布作业</Button></td></tr>
               <tr><td><Button v-if="eva.assign==1" @click="save(1)" class="ivu-btn ivu-btn-success ivu-btn-big">修改作业</Button></td></tr>
             </table>      
-        </Card>
-        
-    </div>                        
+        </Card>                        
 </Card>
 </template>
 

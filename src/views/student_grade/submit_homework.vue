@@ -1,5 +1,5 @@
 <template>    
-<Card>
+<Card style="min-height: 260px;">
     <p slot="title" style="height:32px">
         <Icon type="ios-list"></Icon>
         我的作业&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -9,22 +9,24 @@
             </Select>
         </span>
     </p>
-    <p style="font-size:20px;padding:10px" v-if="classes!=null">
-        {{classes.name}}&nbsp;&nbsp;&nbsp;{{user.name}}你好！&nbsp;&nbsp;&nbsp;你的作业情况如下：
-    </p>
-    <p style="font-size:20px;padding:10px" v-if="classes==null">
-        {{user.name}}&nbsp;老师你好，此处只允许学生查看作业。&nbsp;&nbsp;&nbsp;
-    </p>
-    <div v-for="(item, index) in data" :key="index" style="padding:10px">
-        {{item.name}}:
-        <div v-for="(hw, index1) in item.homework" :key="index1" style="padding:10px;width:100px;display:inline">
-            <Button v-if="hw.done==0||hw.done==1" @click="selecthomework(item,hw)" class="ivu-btn ivu-btn-primary ivu-btn-big">{{hw.name}}</Button>
-            <Button v-if="hw.done==2" @click="selecthomework(item,hw)" class="ivu-btn ivu-btn-success ivu-btn-big">{{hw.name}}</Button>
-            <Button v-if="hw.done==3" @click="selecthomework(item,hw)" class="ivu-btn ivu-btn-error ivu-btn-big">{{hw.name}}</Button>
-        </div>
-        <span v-if="item.homework.length==0">&nbsp;&nbsp;&nbsp;等待老师提交作业</span>            
+    <div style="width:70%;display:inline-block">
+      <p style="font-size:20px;padding:10px" v-if="classes!=null">
+          {{classes.name}}&nbsp;&nbsp;&nbsp;{{user.name}}你好！&nbsp;&nbsp;&nbsp;你的作业情况如下：
+      </p>
+      <p style="font-size:20px;padding:10px" v-if="classes==null">
+          {{user.name}}&nbsp;老师你好，此处只允许学生查看作业。&nbsp;&nbsp;&nbsp;
+      </p>
+      <div v-for="(item, index) in data" :key="index" style="padding:10px">
+          {{item.name}}:
+          <div v-for="(hw, index1) in item.homework" :key="index1" style="padding:10px;width:100px;display:inline">
+              <Button v-if="hw.done==0||hw.done==1" @click="selecthomework(item,hw)" class="ivu-btn ivu-btn-primary ivu-btn-big">{{hw.name}}</Button>
+              <Button v-if="hw.done==2" @click="selecthomework(item,hw)" class="ivu-btn ivu-btn-success ivu-btn-big">{{hw.name}}</Button>
+              <Button v-if="hw.done==3" @click="selecthomework(item,hw)" class="ivu-btn ivu-btn-error ivu-btn-big">{{hw.name}}</Button>
+          </div>
+          <span v-if="item.homework.length==0">&nbsp;&nbsp;&nbsp;等待老师提交作业</span>            
+      </div>
     </div> 
-    <Col style="width:28%;float:right;margin-top: -188px;">
+    <Col style="width:28%;float:right;display:inline">
       图例：
       <div><Button shape="circle" class="ivu-btn ivu-btn-primary ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;可提交的作业</div>&nbsp;
       <div><Button shape="circle" class="ivu-btn ivu-btn-success ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;已提交的作业</div>&nbsp;
@@ -101,7 +103,7 @@ export default {
           this.user = res.data.a;
           this.classes = res.data.b;
           this.data = res.data.c;
-          console.log(this.data)
+          // console.log(this.data)
         })
         .catch(error => {
           console.log(error);

@@ -1,19 +1,14 @@
 <template>    
-<Card>
+<Card style="min-height: 200px;">
     <p slot="title" style="height:32px">
         <Icon type="ios-list"></Icon>
         学生成绩录入&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         当前学期：
-            <Select v-model="option" @on-change="selected()" ref="element1" style="width:200px">
-                <Option v-for="(item, index) in term" :key="index" :value="item.id">{{item.name}}</Option>
-            </Select>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <Button v-if="course!=''&&edit!='uneditable'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-big">暂存</Button>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-big">提交</Button>
-        
+        <Select v-model="option" @on-change="selected()" ref="element1" style="width:200px">
+            <Option v-for="(item, index) in term" :key="index" :value="item.id">{{item.name}}</Option>
+        </Select>        
     </p>
-    <div style="width:70%">
+    <div style="width:70%;display:inline-block">
         <p style="font-size:18px">请选择课程:</p>
         <div v-for="(item, index) in classcourseList" :key="index" style="padding:10px;">
             {{item.name}}:
@@ -24,14 +19,21 @@
             <!-- <Button @click="selectCourse(item)" class="ivu-btn ivu-btn-primary ivu-btn-big">{{item.name}}</Button> -->
         </div>
     </div>
-    <Col style="width:28%;float:right;margin-top: -128px;">
+    <Col style="width:28%;float:right;display:inline">
       图例：
       <div><Button shape="circle" class="ivu-btn ivu-btn-primary ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;未提交成绩的课程</div>&nbsp;
       <div><Button shape="circle" class="ivu-btn ivu-btn-success ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;已提交成绩的课程</div>
     </Col>
     <Card v-if="course!=''">
-        <p style="font-size:18px">当前已选择班级:&nbsp;&nbsp;{{class1}}</p>
-        <p style="font-size:18px">当前已选择课程:&nbsp;&nbsp;{{course}}</p>        
+        <div style="width:24%;display:inline-block;">
+          <p style="font-size:18px">当前已选择班级:&nbsp;&nbsp;{{class1}}</p>
+          <p style="font-size:18px">当前已选择课程:&nbsp;&nbsp;{{course}}</p>
+        </div>
+        <div style="width:74%;display:inline-block;float:right;">
+        <Button v-if="course!=''&&edit!='uneditable'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-big">暂存</Button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-big">提交</Button>
+        </div>        
         <div style="padding:10px">
           <!-- <Button @click="backcourse()" class="ivu-btn ivu-btn-primary ivu-btn-big">返回选择课程</Button> -->
         </div>
