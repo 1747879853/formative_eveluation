@@ -9,7 +9,7 @@
                 教师班级课程管理
             </div>  当前学期：
             <Select v-model="option" @on-change="selected()" ref="element1" style="width:200px">
-                <Option v-for="(item, index) in term" :key="index" :value="item">{{item}}</Option>
+                <Option v-for="(item, index) in term" :key="index" :value="item.id">{{item.name}}</Option>
             </Select>                  
         </Card>                      
     </Row>
@@ -78,8 +78,9 @@ import Sortable from 'sortablejs';
         },
         mounted () { 
         this.$axios.get("/termList").then( res =>{
-            this.term = res.data;
-            this.termList();
+            this.term = res.data.a;
+            this.option = res.data.b;
+            this.selected();
         }).catch(error =>{
             console.log(error);
         });       
@@ -147,42 +148,6 @@ import Sortable from 'sortablejs';
 
     },
     methods:{       
-        termList(){
-            let last = new Date();
-            last = parseInt(last.getFullYear())+1;
-            let termlast = parseInt(this.term[this.term.length-1].substring(0,4));
-            // console.log(first)
-            let m = last - termlast;
-            for(let i = 1;i<=m;i++){
-                if(this.term[this.term.length-1].indexOf('春季学期')!=-1){
-                    this.term.push(termlast+"秋季学期");                    
-                }
-                this.term.push(termlast+1+"春季学期");
-                this.term.push(termlast+1+"秋季学期");
-            }
-            let month = new Date();
-            month = parseInt(month.getMonth()+1);
-            if(month>8){
-                this.option=last-1+"秋季学期";
-            }else{
-                this.option=last-1+"春季学期";
-            } 
-
-
-            this.$axios.post("/tccList", {
-                params: {
-                    term:this.option,
-                }
-            }).then( res =>{
-                this.users_data = res.data.a;
-                this.data1 = res.data.b;
-                this.data2 = res.data.c;
-            }).catch(error =>{
-                console.log(error);
-            });
-
-
-        },
         selected() {
             this.users_data=[];
             this.data1=[];

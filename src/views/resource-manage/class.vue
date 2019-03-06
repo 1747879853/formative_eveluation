@@ -9,7 +9,7 @@
             v-model="modal1"
             title="添加班级"
             @on-ok="ok"
-            @on-cancel="cancel">
+            @on-cancel="cancel2">
             <table>
             <tr><td>班级号</td><td>
             <Input v-model="clno" placeholder="请输入班级号" clearable style="width: 300px"></Input></td></tr>
