@@ -632,6 +632,14 @@ export const appRouter = [
                 access:'resource-manage/teacher-class-course',
                 component: () => import('@/views/resource-manage/teacher-class-course.vue')
             },
+            {
+                path: 'upload-student-template',
+                icon: 'compose',
+                name: 'upload-student-template',
+                title: '学生信息模板上传',
+                access:'resource-manage/upload-student-template',
+                component: () => import('@/views/resource-manage/upload-student-template.vue')
+            },
         ]
     },
     // {
