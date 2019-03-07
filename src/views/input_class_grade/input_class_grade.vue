@@ -36,7 +36,7 @@
         <div style="padding:10px">
           <!-- <Button @click="backcourse()" class="ivu-btn ivu-btn-primary ivu-btn-big">返回选择课程</Button> -->
         </div>
-        <Table :columns="Columns" :data="studentList" style="width: 100%;"></Table>
+        <Table :columns="Columns" :data="studentList" border height="500"></Table>
     </Card> 
     <Modal
       v-model="modal"
@@ -155,15 +155,19 @@ export default {
         this.m=[];
         this.Columns=[
             {
-              title: "学号",
-              key: "sno",
-              width: 110
-            },
-            {
               title: "姓名",
               key: "name",
-              align: "center"
-            },                       
+              align: "center",
+              width: 110,
+              fixed: 'left',
+              
+            }, 
+            {
+              title: "学号",
+              key: "sno",
+              width: 110,
+              
+            },                      
           ];
         localStorage.setItem('class',JSON.stringify(classes));
         localStorage.setItem('course',JSON.stringify(course));
@@ -190,6 +194,7 @@ export default {
                               title: this.data[i].name,
                               key: 'e'+this.data[i].id,
                               align: "center",
+                              width: 110,
                               render: (h, params) => {
                                 let _this = this;
                                 return h('div', [
@@ -235,7 +240,7 @@ export default {
                                 title: this.data[i].name,
                                 key: 'e'+this.data[i].id,
                                 align: "center",
-                                // width: 140,
+                                width: 110,
                                 render: (h, params) => {
                                   let _this = this;
                                   let a=[];
