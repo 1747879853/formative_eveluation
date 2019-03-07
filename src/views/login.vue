@@ -120,6 +120,7 @@ export default {
     },
     mounted () {
         this.form.userName = Cookies.get('user');
+        this.form.password = Cookies.get('password');
         if (this._isMobile()) {
             this.pad = true;
         } else {

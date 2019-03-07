@@ -9,11 +9,11 @@ import {routers, otherRouter, appRouter} from './router';
 Vue.use(VueRouter);
 
 
-if (sessionStorage.getItem('token')) {
-store.commit('set_token', sessionStorage.getItem('token'))
+if (localStorage.getItem('token')) {
+store.commit('set_token', localStorage.getItem('token'))
 }
-if (sessionStorage.getItem('auth_rules')) {
-store.commit('set_auth_rules', sessionStorage.getItem('auth_rules'))
+if (localStorage.getItem('auth_rules')) {
+store.commit('set_auth_rules', localStorage.getItem('auth_rules'))
 }
 // 路由配置
 const RouterConfig = {
