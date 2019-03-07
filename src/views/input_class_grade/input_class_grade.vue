@@ -36,7 +36,7 @@
         <div style="padding:10px">
           <!-- <Button @click="backcourse()" class="ivu-btn ivu-btn-primary ivu-btn-big">返回选择课程</Button> -->
         </div>
-        <Table :columns="Columns" :data="studentList" border height="500"></Table>
+        <Table :columns="Columns" :data="studentList" border height="500" style="width: 100%;"></Table>
     </Card> 
     <Modal
       v-model="modal"
