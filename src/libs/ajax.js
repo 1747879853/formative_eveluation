@@ -1,7 +1,7 @@
 
 import env from '../../build/env';
 import axios from 'axios';
-import router from '../router/router';
+import {router} from '../router/index';
 import store from '../store/index';
 
 const ajaxUrl = env === 'development'
@@ -54,16 +54,17 @@ service.interceptors.response.use(function (response) {
         //router跳转不了，还未解决。
         case 401:
             alert('登录信息已过期，请重新登录！');
-            store.commit('logout', null);
-            store.commit('clearOpenedSubmenu');
-            store.commit('clearAllTags');
-            store.commit('del_token');
-            store.commit('del_auth_rules');
-            window.location.href="#/login";
+            router.push({
+                replace: true,
+                name: 'login'
+            });
             break;
         case 403:
             alert('您的权限不足！');
-            window.location.href="#/home";
+            router.push({
+                replace: true,
+                name: 'error-403'
+            });
             break;
         case 500:
             alert('操作失败，服务器发生了错误！');
