@@ -188,7 +188,7 @@
                 // console.log(isFullScreen);
             },
             scrollBarResize () {
-                this.$refs.scrollBar.resize();
+                this.$refs.scrollBar.resize1();
             },
             handleSwitch (lang) {
                 this.lang = lang;

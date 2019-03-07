@@ -152,7 +152,7 @@ export default {
         }
     },
     methods: {
-        resize () {
+        resize1 () {
             this.$nextTick(() => {
                 let wraperRect = this.$refs.wraper.getBoundingClientRect();
                 let contentRect = this.$refs.content.getBoundingClientRect();
@@ -240,7 +240,7 @@ export default {
         }
     },
     mounted () {
-        this.resize();
+        this.resize1();
     }
 };
 </script>
