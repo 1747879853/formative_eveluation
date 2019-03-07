@@ -26,8 +26,7 @@
     </Col>
     <Card v-if="course!=''">
         <div style="width:24%;display:inline-block;">
-          <p style="font-size:18px">当前已选择班级:&nbsp;&nbsp;{{class1}}</p>
-          <p style="font-size:18px">当前已选择课程:&nbsp;&nbsp;{{course}}</p>
+          <p style="font-size:18px">班级&nbsp;/&nbsp;课程：&nbsp;&nbsp;{{class1}}&nbsp;/&nbsp;{{course}}</p>
         </div>
         <div style="width:74%;display:inline-block;float:right;">
         <Button v-if="course!=''&&edit!='uneditable'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-big">暂存</Button>
