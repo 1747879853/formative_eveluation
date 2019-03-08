@@ -1,43 +1,50 @@
-<template>    
-<Card style="min-height: 200px;">
+<template>  
+<div>  
+<Card >
     <p slot="title" style="height:32px">
         <Icon type="ios-list"></Icon>
-        学生成绩录入&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        当前学期：
+        选择学期：
         <Select v-model="option" @on-change="selected()" ref="element1" style="width:200px">
             <Option v-for="(item, index) in term" :key="index" :value="item.id">{{item.name}}</Option>
         </Select>        
     </p>
-    <div style="width:70%;display:inline-block">
-        <p style="font-size:18px">请选择课程:</p>
-        <div v-for="(item, index) in classcourseList" :key="index" style="padding:10px;">
-            {{item.name}}:
-            <div v-for="(course, index1) in item.course" :key="index1" style="padding:10px;width:100px;display:inline">
-                <Button v-if="course.status!=2" @click="selectCourse(item,course)" class="ivu-btn ivu-btn-primary ivu-btn-big">{{course.name}}</Button>
-                <Button v-if="course.status==2" @click="selectCourse(item,course)" class="ivu-btn ivu-btn-success ivu-btn-big">{{course.name}}</Button>
-            </div>
-            <!-- <Button @click="selectCourse(item)" class="ivu-btn ivu-btn-primary ivu-btn-big">{{item.name}}</Button> -->
-        </div>
-    </div>
-    <Col style="width:28%;float:right;display:inline">
-      图例：
-      <div><Button shape="circle" class="ivu-btn ivu-btn-primary ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;未提交成绩的课程</div>&nbsp;
-      <div><Button shape="circle" class="ivu-btn ivu-btn-success ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;已提交成绩的课程</div>
-    </Col>
-    <Card v-if="course!=''">
-        <div style="width:24%;display:inline-block;">
-          <p style="font-size:18px">班级&nbsp;/&nbsp;课程：&nbsp;&nbsp;{{class1}}&nbsp;/&nbsp;{{course}}</p>
-        </div>
-        <div style="width:74%;display:inline-block;float:right;">
-        <Button v-if="course!=''&&edit!='uneditable'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-big">暂存</Button>
+    <Row>
+      <Col span="14">
+          <div v-for="(item, index) in classcourseList" :key="index" style="padding:5px;">
+              {{item.name}}:
+              <div v-for="(course, index1) in item.course" :key="index1" style="padding:5px;width:100px;display:inline">
+                  <Button v-if="course.status!=2" @click="selectCourse(item,course)" class="ivu-btn ivu-btn-primary ivu-btn-small">{{course.name}}</Button>
+                  <Button v-if="course.status==2" @click="selectCourse(item,course)" class="ivu-btn ivu-btn-success ivu-btn-small">{{course.name}}</Button>
+              </div>
+          </div>
+      </Col>
+      <Col span="10">
+        <Row>
+          <Col span="4"> 图例： </Col>
+          <Col span="20">
+            <Button shape="circle" type="ivu-btn ivu-btn-primary ivu-btn-small">&nbsp;</Button>&nbsp;&nbsp;&nbsp;未提交成绩的课程
+            <br>
+            <Button shape="circle" class="ivu-btn ivu-btn-success ivu-btn-small">&nbsp;</Button>&nbsp;&nbsp;&nbsp;已提交成绩的课程
+          </Col>
+        </Row>
+      </Col>
+    </Row>
+
+    <hr />
+    <Row style="margin-top: 10px;">
+        <Col span="10"><Icon type="ios-film-outline"></Icon>
+            班级&nbsp;/&nbsp;课程：&nbsp;&nbsp;{{class1}}&nbsp;/&nbsp;{{course}}
+        </Col>
+        <Col span="14">
+            <Button v-if="course!=''&&edit!='uneditable'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-small ">暂存</Button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-big">提交</Button>
-        </div>        
-        <div style="padding:10px">
-          <!-- <Button @click="backcourse()" class="ivu-btn ivu-btn-primary ivu-btn-big">返回选择课程</Button> -->
-        </div>
+            <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-small">提交</Button></Col>
+    </Row>
+    <Row>  
+        
         <Table :columns="Columns" :data="studentList" border height="500" style="width: 100%;"></Table>
-    </Card> 
+    </Row>
+  </Card> 
     <Modal
       v-model="modal"
       title="查看学生作业"
@@ -50,7 +57,7 @@
       <div v-html='homework.content' style="background-color:cornsilk;padding:10px"></div>
     </Modal>
     <!-- <Editor id="tinymce" v-model="content" disabled :init="editorInit"></Editor> -->
-</Card>
+</div>
 </template>
 
 <script>
@@ -74,7 +81,7 @@ export default {
         {
           title: "学号",
           key: "sno",
-          width: 110
+          width: 120
         },
         {
           title: "姓名",
@@ -194,7 +201,7 @@ export default {
                               title: this.data[i].name,
                               key: 'e'+this.data[i].id,
                               align: "center",
-                              width: 110,
+                              width: 80,
                               render: (h, params) => {
                                 let _this = this;
                                 return h('div', [
@@ -240,7 +247,7 @@ export default {
                                 title: this.data[i].name,
                                 key: 'e'+this.data[i].id,
                                 align: "center",
-                                width: 110,
+                                width: 120,
                                 render: (h, params) => {
                                   let _this = this;
                                   let a=[];
@@ -283,12 +290,13 @@ export default {
                               title: this.data[i].name,
                               key: 'e'+this.data[i].id,
                               align: "center",
+                              width: 150,
                               render: (h, params) => {
                                 let _this = this;
                                 return h('div', [
                                     h('Input', {
                                         style: {
-                                            width: '30%'
+                                            width: '60%'
                                         },
                                         props:{
                                              value:params.row[params.column.key],
