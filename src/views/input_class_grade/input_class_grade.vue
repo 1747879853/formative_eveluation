@@ -196,7 +196,7 @@ export default {
           if(this.edit=='editable'){
               for(let i =0;i<this.data.length;i++){
                 if(this.data[i].children.length==0){
-                    if(this.data[i].types=='input'){
+                    if(this.data[i].types=='score'){
                       this.Columns.push({
                               title: this.data[i].name,
                               key: 'e'+this.data[i].id,
@@ -236,7 +236,7 @@ export default {
                                 ]);
                             }
                       },);
-                    }else if(this.data[i].types=='option'){
+                    }else if(this.data[i].types=='grade'){
                       let array = this.data[i].description.split('@');
                       let arr = [];
                       for(let n=0;n<array.length;n++){
@@ -285,7 +285,7 @@ export default {
                                           },a);
                               }
                         },);
-                    }else if(this.data[i].types=='homework'){
+                    }else if(this.data[i].types=='text-score'){
                       this.Columns.push({
                               title: this.data[i].name,
                               key: 'e'+this.data[i].id,
@@ -344,7 +344,7 @@ export default {
               }
           }else if(this.edit=='uneditable'){
             for(let i =0;i<this.data.length;i++){
-              if(this.data[i].types=='input'){
+              if(this.data[i].types=='score'){
                   this.Columns.push({
                           title: this.data[i].name,
                           key: 'e'+this.data[i].id,
@@ -384,7 +384,7 @@ export default {
                             ]);
                         }
                   },);
-              }else if(this.data[i].types=='option'){
+              }else if(this.data[i].types=='grade'){
                 let array = this.data[i].description.split('@');
                 let arr = [];
                 for(let n=0;n<array.length;n++){
@@ -434,7 +434,7 @@ export default {
                                     },a);
                         }
                   },);
-              }else if(this.data[i].types=='homework'){
+              }else if(this.data[i].types=='text-score'){
                       this.Columns.push({
                               title: this.data[i].name,
                               key: 'e'+this.data[i].id,
@@ -572,7 +572,7 @@ export default {
           if(this.edit=='editable'){
               for(let i =0;i<this.data.length;i++){
                 if(this.data[i].children.length==0){
-                    if(this.data[i].types=='input'){
+                    if(this.data[i].types=='score'){
                       this.Columns.push({
                               title: this.data[i].name,
                               key: 'e'+this.data[i].id,
@@ -611,7 +611,7 @@ export default {
                                 ]);
                             }
                       },);
-                    }else if(this.data[i].types=='option'){
+                    }else if(this.data[i].types=='grade'){
                       let array = this.data[i].description.split('@');
                       let arr = [];
                       for(let n=0;n<array.length;n++){
@@ -660,7 +660,7 @@ export default {
                                           },a);
                               }
                         },);
-                    }else if(this.data[i].types=='homework'){
+                    }else if(this.data[i].types=='text-score'){
                       this.Columns.push({
                               title: this.data[i].name,
                               key: 'e'+this.data[i].id,
@@ -718,7 +718,7 @@ export default {
               }
           }else if(this.edit=='uneditable'){
             for(let i =0;i<this.data.length;i++){
-              if(this.data[i].types=='input'){
+              if(this.data[i].types=='score'){
                   this.Columns.push({
                           title: this.data[i].name,
                           key: 'e'+this.data[i].id,
@@ -758,7 +758,7 @@ export default {
                             ]);
                         }
                   },);
-              }else if(this.data[i].types=='option'){
+              }else if(this.data[i].types=='grade'){
                 let array = this.data[i].description.split('@');
                 let arr = [];
                 for(let n=0;n<array.length;n++){
@@ -808,7 +808,7 @@ export default {
                                     },a);
                         }
                   },);
-              }else if(this.data[i].types=='homework'){
+              }else if(this.data[i].types=='text-score'){
                       this.Columns.push({
                               title: this.data[i].name,
                               key: 'e'+this.data[i].id,

@@ -34,6 +34,11 @@ export default {
                       align: "center",
                     },
                     {
+                      title: "分类",
+                      key: "in_class",
+                      align: "center",
+                    },
+                    {
                       title: "描述",
                       key: "description",
                       align: "center",
