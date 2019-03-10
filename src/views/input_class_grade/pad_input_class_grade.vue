@@ -1,5 +1,5 @@
 <template>  
-<div>  
+<div style="overflow:scroll;width:100%">  
 <Row>            
     <Card>
         <div style="text-align:center;font-size:24px;color: #2db7f5;">
@@ -284,7 +284,8 @@ export default {
                                   return h('Select', {
                                             props: {
                                               value: '',
-                                              placeholder: params.row[params.column.key]==''?'请选择':params.row[params.column.key]
+                                              placeholder: params.row[params.column.key]==''?'请选择':params.row[params.column.key],
+                                              placement: 'bottom'
                                             },
                                             on: {
                                               input:(e) => {
@@ -659,7 +660,8 @@ export default {
                                   return h('Select', {
                                             props: {
                                               value: '',
-                                              placeholder: params.row[params.column.key]==''?'请选择':params.row[params.column.key]
+                                              placeholder: params.row[params.column.key]==''?'请选择':params.row[params.column.key],
+                                              placement: 'bottom'
                                             },
                                             on: {
                                               input:(e) => {
@@ -967,7 +969,7 @@ export default {
                     }
                   }
                   console.log(this.studentList);
-                  this.$Message.info('提交成功');
+                  this.$Message.info('暂存成功');
               }.bind(this))
               .catch(function(error) {
                   console.log(error)

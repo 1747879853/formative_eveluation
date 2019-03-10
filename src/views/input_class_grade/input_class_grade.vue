@@ -937,7 +937,7 @@ export default {
                     }
                   }
                   console.log(this.studentList);
-                  this.$Message.info('提交成功');
+                  this.$Message.info('暂存成功');
               }.bind(this))
               .catch(function(error) {
                   console.log(error)
