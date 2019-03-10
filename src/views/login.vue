@@ -92,13 +92,13 @@ export default {
                             Cookies.set('password', this.form.password);
                             this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
                             Cookies.set('access', 0);
-                            if (this.pad) {
-                                this.$router.replace('/pad_input_class_grade');
-                            } else {
+                            // if (this.pad) {
+                            //     this.$router.replace('/input_class_grade/pad_input_class_grade');
+                            // } else {
                                 this.$router.push({
                                     name: 'home_index'
                                 });
-                            }
+                            // }
                         } else {
                             // this.$router.replace('/login');
                         }
