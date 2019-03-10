@@ -15,6 +15,9 @@
             <Input v-model="cno" placeholder="请输入课程号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>课程名</td><td>
             <Input v-model="name" placeholder="请输入课程名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>课程简述</td><td>
+            <Input v-model="brief" type="textarea" :rows="9" placeholder="请输入课程简述" clearable style="width: 300px"></Input></td></tr>
+
             </table>
             </Modal>
             <Modal
@@ -27,6 +30,8 @@
             <Input v-model="cno" placeholder="请输入课程号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>课程名</td><td>
             <Input v-model="name" placeholder="请输入课程名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>课程简述</td><td>
+            <Input v-model="brief" type="textarea" :rows="9" placeholder="请输入课程简述" clearable style="width: 300px"></Input></td></tr>
             </table>
             </Modal>
         </div>
@@ -45,6 +50,7 @@ export default {
       id: 0,
       name:'',
       cno:'',
+      brief: '',
       status:'',
       userColumns: [
         {
@@ -62,6 +68,55 @@ export default {
           key: "name",
           align: "center"
         },
+        {
+          title: "课程简述",
+          key: "brief",
+          align: "center"
+        },
+        {
+          title: "课程大纲",
+          key: "outline",
+          align: "center",
+          render: (h,params) => {
+            return h('div'),[
+              h('a',{
+                domProps:{
+                  href: 'http://127.0.0.1:3000/course_outline/' + params.row.outline_name,
+                }
+              },params.row.outline_name),
+              h('Upload',{
+                props:{
+                  action: "//127.0.0.1:3000/api/v1/upload_course_outline?id=" + params.row.id,
+                  format: ['doc', 'docx'],
+                  'on-format-error': this.handleFormatError,
+                  'on-success': this.handleSuccess,
+                  'on-error': this.handleError,
+                  headers: this.headers,
+                  // 'before-upload': this.handleBeforeUpload,
+                  // 'default-file-list'： [params.outline_name],
+                  'show-upload-list': false,
+                  // on-remove="handleRemove"
+                  name: 'file'
+
+                }
+              },[
+              h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small'
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                               
+                            }, '上传大纲'), 
+
+
+              ]),
+            ]
+          }
+        },
+
         {
           title: "状态",
           key: "status",
@@ -104,6 +159,9 @@ export default {
         
      ],
       userData: [],
+      headers: {
+                'Authorization' : this.$store.state.token
+            },
     };
   },
   computed: {
@@ -120,11 +178,71 @@ export default {
       });
   },
   methods:{
+    handleSuccess (res, file) {
+      if(res.status){
+        this.$Notice.success({
+            title: '文件上传成功',
+            desc: '文件 ' + file.name + ' 上传成功。'
+        });
+        this.$axios.get("/courseList").then(res => {
+          this.userData = res.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      }else{
+        // debugger
+        this.$Notice.warning({
+            title: '文件重名',
+            desc: '文件 ' + file.name + ' 和其他课程大纲文件重名。'
+        });
+
+      }
+        
+
+    },
+    handleError (res, file) {
+        this.$Notice.error({
+            title: '文件上传失败',
+            desc: '文件 ' + file.name + ' 上传失败。'
+        });
+    },
+    handleFormatError (file) {
+        this.$Notice.warning({
+            title: '文件格式不正确',
+            desc: '文件 ' + file.name + ' 格式不正确，请选择word文件。'
+        });
+    },
+    handleBeforeUpload (file) {
+        // this.$Notice.warning({
+        //     title: '文件准备上传',
+        //     desc: '文件 ' + file.name + ' 准备上传。'
+        // });
+        // const check = this.$refs.upload.fileList.length <= 0;
+        // // console.log(this.$refs.upload.fileList.length);
+        // // console.log(this.uploadList.length);
+        // // console.log(check);
+        // if (!check) {
+        //     this.$Notice.warning({
+        //         title: '上传新模板前，请先删除旧模板！'
+        //     });
+        // }
+        let check = false;
+        this.$Modal.confirm({
+                    title: '课程',
+                    content: '<p>确定要删除此课程吗？</p>',
+                    onOk: () => {
+                        check = true;                        
+                       },
+           onCancel: () => { check =false; }});
+        return check;
+    },
     show_modal1()
     {
                 this.modal1=true;
                 this.name="";
                 this.cno="";
+                this.brief="";
                 this.status="";
     },
     ok () 
@@ -133,10 +251,11 @@ export default {
                             params: {
                                 name: this.name,
                                 cno: this.cno,
+                                brief: this.brief,
                                 status: 1,
                             }
                         }).then(function(res) {
-                            console.log(res.data);
+                            // console.log(res.data);
                             this.userData.push(res.data);
                             this.$Message.info('添加成功');
                         }.bind(this))
@@ -151,6 +270,7 @@ export default {
                 this.id = this.userData[index].id;
                 this.cno = this.userData[index].cno;
                 this.name=this.userData[index].name;
+                this.brief=this.userData[index].brief;
     },
     ok2 () 
     {
@@ -159,14 +279,16 @@ export default {
                                 id: this.id,
                                 cno: this.cno,
                                 name: this.name,
+                                brief: this.brief,
                             }
                         }).then(function(res) {
-                            console.log(res);
+                            // console.log(res);
                             let id = res.data.id;
                             for(let i = 0; i < this.userData.length; i++){
                               if (this.userData[i].id == id){
                                 this.userData[i].name = res.data.name;
                                 this.userData[i].cno = res.data.cno;
+                                this.userData[i].brief = res.data.brief
                                 break;
                               }
                             }
@@ -194,7 +316,7 @@ export default {
                                 }
                             }
                         }).then(function(res) {
-                            console.log(res);
+                            // console.log(res);
                             this.userData.splice(index,1);
                             this.$Message.info('删除成功');
                         }.bind(this))
