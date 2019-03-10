@@ -42,7 +42,7 @@
     </Row>
     <Row>  
         
-        <Table :columns="Columns" :data="studentList" border height="500" style="width: 100%;"></Table>
+        <Table  :columns="Columns" :data="studentList" border height="500" style="width: 100%;"></Table>
     </Row>
   </Card> 
     <Modal
