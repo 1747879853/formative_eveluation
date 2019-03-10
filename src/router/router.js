@@ -28,6 +28,15 @@ export const padteam = {
    component: () => import('@/views/production-manage/pad-order-team.vue')
 };
 
+// export const padicg = {
+//     path: '/pad_input_class_grade',
+//     name: 'pad_input_class_grade',
+//     meta: {
+//         title: '学生成绩录入'
+//     },
+//    component: () => import('@/views/input_class_grade/pad_input_class_grade.vue')
+// };
+
 export const padmaterial = {
     path: '/padmaterial',
     name: 'padmaterial',
@@ -554,6 +563,14 @@ export const appRouter = [
                 name: 'assign_homework', 
                 component: () => import('@/views/input_class_grade/assign_homework.vue') 
             },
+            {
+                path: 'pad_input_class_grade',                
+                title: '平板-学生成绩录入',
+                icon: 'compose',
+                access:'input_class_grade/input_student_grade',
+                name: 'pad_input_class_grade',
+               component: () => import('@/views/input_class_grade/pad_input_class_grade.vue')
+            }
         ]
     },
     {
@@ -736,6 +753,7 @@ export const routers = [
     preview,
     locking,
     padteam,
+    // padicg,
     padmaterial,
     ...appRouter,
     page500,

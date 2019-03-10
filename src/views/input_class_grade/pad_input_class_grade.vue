@@ -1,5 +1,12 @@
 <template>  
-<div>  
+<div style="overflow:scroll;width:100%">  
+<Row>            
+    <Card>
+        <div style="text-align:center;font-size:24px;color: #2db7f5;">
+            学生成绩录入
+        </div>              
+    </Card>                      
+</Row>
 <Card >
     <p slot="title" style="height:32px">
         <Icon type="ios-list"></Icon>
@@ -41,10 +48,26 @@
             <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-small">提交</Button></Col>
     </Row>
     <Row>  
-        
-        <Table  :columns="Columns" :data="studentList" border height="500" style="width: 100%;"></Table>
+        <Col v-for="(item,index) in studentList" :key="index" span="4">
+          <Card style="height:100px;margin:5px 5px">
+            <img src="../../images/my.png" style="padding:5px;width:25%;float:left;margin-left:-5px">
+            <table style="font-family:consolas;font-size:10px;width:70%;float:right;" @click="selectstu(item)">
+                <tr><td style="float:left">姓名:</td><td style="float:right">{{item.name}}</td></tr>
+                <tr><td style="float:left">学号:</td><td style="float:right">{{item.sno}}</td></tr>
+            </table>
+          </Card>
+        </Col>
+        <!-- <Table :columns="Columns" :data="studentList" border height="500" style="width: 100%;"></Table> -->
     </Row>
   </Card> 
+    <Modal
+      v-model="modal1"
+      :title="'学生'+student[0].name"
+      width="90%"
+      :mask-closable="false"
+      >
+      <Table :columns="Columns" :data="student" border height="105" style="width: 100%;"></Table>
+    </Modal>
     <Modal
       v-model="modal"
       title="查看学生作业"
@@ -55,8 +78,7 @@
       <!-- <Editor id="tinymce" v-model="content" disabled :init="editorInit"></Editor> -->
       作业内容：
       <div v-html='homework.content' style="background-color:cornsilk;padding:10px"></div>
-    </Modal>
-    <!-- <Editor id="tinymce" v-model="content" disabled :init="editorInit"></Editor> -->
+    </Modal>    
 </div>
 </template>
 
@@ -76,7 +98,7 @@ export default {
       course_id:'',
       class_id:'',
       class1:'',
-      student:'',
+      student:[{name:''}],
       Columns: [
         {
           title: "学号",
@@ -95,6 +117,7 @@ export default {
       data:[],
       edit:'',
       modal:false,
+      modal1:false,
       homework:{
         title:'',
         finish_time:'',
@@ -261,7 +284,8 @@ export default {
                                   return h('Select', {
                                             props: {
                                               value: '',
-                                              placeholder: params.row[params.column.key]==''?'请选择':params.row[params.column.key]
+                                              placeholder: params.row[params.column.key]==''?'请选择':params.row[params.column.key],
+                                              placement: 'bottom'
                                             },
                                             on: {
                                               input:(e) => {
@@ -636,7 +660,8 @@ export default {
                                   return h('Select', {
                                             props: {
                                               value: '',
-                                              placeholder: params.row[params.column.key]==''?'请选择':params.row[params.column.key]
+                                              placeholder: params.row[params.column.key]==''?'请选择':params.row[params.column.key],
+                                              placement: 'bottom'
                                             },
                                             on: {
                                               input:(e) => {
@@ -894,6 +919,13 @@ export default {
         .catch(error => {
           console.log(error);
         });
+      },
+      selectstu(item){
+        this.modal1=true;
+        var list = [];
+        list.push(item);
+        this.student=list;
+        console.log(this.student)
       },
       show_modal2(p){
         this.modal=true;
