@@ -17,9 +17,15 @@
                     <tr>&nbsp;</tr>
                     <tr><td>评价指标类型</td><td>                    
                     <Select v-model="f_types" ref="element1" style="width:200px">
-                        <Option value="input">input</Option>
-                        <Option value="option">option</Option>
-                        <Option value="homework">homework</Option>
+                        <Option value="score">score</Option>
+                        <Option value="grade">grade</Option>
+                        <Option value="text-score">text-score</Option>
+                    </Select></td></tr>
+                    <tr>&nbsp;</tr>
+                    <tr><td>评价指标分类</td><td>                    
+                    <Select v-model="f_in_class" ref="element1" style="width:200px">
+                        <Option value="1">课内指标</Option>
+                        <Option value="0">课外指标</Option>
                     </Select></td></tr>
                     <tr>&nbsp;</tr><tr><td>描述</td><td>
                     <Input v-model="f_description" placeholder="请输入评价指标描述" clearable style="width: 300px"></Input></td></tr>
@@ -96,6 +102,7 @@ export default {
             f_title: '添加评价指标',
             f_name: "",
             f_types:'',
+            f_in_class:'',
             f_description:'',
             f_authority: "",
             f_status: "",
@@ -180,6 +187,7 @@ export default {
                 this.f_modal_action = 1;
                 this.f_name = "";
                 this.f_description = "";
+                this.f_in_class = "";
                 this.f_types = "";
             }else if (flag == undefined){
                 this.f_title = "添加子评价指标";
@@ -187,6 +195,7 @@ export default {
                 this.f_modal_action = 2;
                 this.f_name = "";
                 this.f_description = "";
+                this.f_in_class = "";
                 this.f_types = "";
             }
             else {
@@ -200,6 +209,7 @@ export default {
                 this.f_modal_action = 3;
                 this.f_name = this.renderName(item);
                 this.f_description = this.renderDescription(item);
+                this.f_in_class = this.renderInClass(item);
                 this.f_types = this.renderTypes(item);
             }
             this.current_item = item;
@@ -218,6 +228,7 @@ export default {
                             // eno: this.f_eno,
                             types: this.f_types,
                             description: this.f_description,
+                            in_class: this.f_in_class,
                             status: 1,
                             parent_id: 0,
                             // term: this.terms,
@@ -254,6 +265,7 @@ export default {
                             // eno: this.f_eno,
                             types: this.f_types,
                             description: this.f_description,
+                            in_class: this.f_in_class,
                             status: 1,
                             parent_id: this.current_id,
                             // term: this.terms,
@@ -321,6 +333,7 @@ export default {
                             // eno: this.f_eno,
                             types: this.f_types,
                             description: this.f_description,
+                            in_class: this.f_in_class,
                         }
                     }).then(function(res) {
                         if(this.initItems[this.current_index].parent_id==0){
@@ -360,7 +373,7 @@ export default {
                         });
                         //debugger
                         this.initItems.push(item);
-                        this.$Message.info('添加成功');
+                        this.$Message.info('修改成功');
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
@@ -708,6 +721,13 @@ export default {
         // },
         renderTypes(row, index) {
             return row["types"]
+        },
+        renderInClass(row, index){
+            if (row["in_class"]=='课内指标') {
+                return '1'
+            } else if(row["in_class"]=='课外指标'){
+                return '0'
+            }
         },
         renderDescription(row, index) {
             return row["description"]
