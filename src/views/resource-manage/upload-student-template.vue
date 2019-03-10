@@ -33,7 +33,6 @@
                                 
                             </Upload>
                             </Col>
-                            <Divider type="vertical" />
                             <Col span="4" class="padding-left-10">
                             <Button @click="handleUpload">开始上传</Button>
                             </Col>
@@ -129,6 +128,12 @@ export default {
               })
               return false
             }
+            if (this.uploadList.length > 0) {
+                this.$Notice.warning({
+                    title: '文件已选择！'
+                });
+                return false;
+            }
             const check = this.defaultList.length <= 0;
             if (!check) {
                 this.$Notice.warning({
@@ -171,6 +176,7 @@ export default {
             // const fileList = this.$refs.upload.fileList;
             // this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
             this.defaultList = [];
+            this.uploadList = [];
             // console.log(file.name);
             
             this.$axios.post("/delete_student_template", {
