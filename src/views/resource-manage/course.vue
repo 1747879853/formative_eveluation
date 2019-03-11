@@ -83,7 +83,8 @@ export default {
             return h('div'),[
               h('a',{
                 domProps:{
-                  href: 'http://127.0.0.1:3000/course_outline/' + params.row.outline_name,
+                  href: 'http://47.100.174.14:9999/course_outline/' + params.row.outline_name,
+                  download: 'download',
                 }
               },params.row.outline_name),
               h('Upload',{

@@ -37,7 +37,9 @@
                             <Button @click="handleUpload">开始上传</Button>
                             </Col>
                         </Row>
-                        
+                        <!-- <Row>
+                            <a href="http://47.100.174.14:9999/_attachment/2018年11月提交的2015级毕业论文题目模板-叶永凯.xlsx" >download</a>
+                        </Row> -->
                     </div>
                 </Card>
             </Col>
