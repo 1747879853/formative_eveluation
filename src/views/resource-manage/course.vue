@@ -36,7 +36,7 @@
             </Modal>
         </div>
     </p>                    
-    <Table :columns="userColumns" :data="userData" style="width: 100%;"></Table>                    
+    <Table :columns="userColumns" :data="userData" border style="width: 100%;"></Table>                    
 </Card>
 </template>
 
@@ -45,6 +45,7 @@ export default {
   name: "user",
   data() {
     return {
+      uploadList: [],
       modal1:false,
       modal2:false,
       id: 0,
@@ -77,6 +78,7 @@ export default {
           title: "课程大纲",
           key: "outline",
           align: "center",
+          width: 250,
           render: (h,params) => {
             return h('div'),[
               h('a',{
@@ -87,12 +89,12 @@ export default {
               h('Upload',{
                 props:{
                   action: "//127.0.0.1:3000/api/v1/upload_course_outline?id=" + params.row.id,
-                  format: ['doc', 'docx'],
-                  'on-format-error': this.handleFormatError,
-                  'on-success': this.handleSuccess,
-                  'on-error': this.handleError,
-                  headers: this.headers,
-                  // 'before-upload': this.handleBeforeUpload,
+                  // format: ['doc', 'docx'],
+                  // 'on-format-error': this.handleFormatError,
+                  // 'on-success': this.handleSuccess,
+                  // 'on-error': this.handleError,
+                  // headers: this.headers,
+                  'before-upload': this.handleBeforeUpload,
                   // 'default-file-list'： [params.outline_name],
                   'show-upload-list': false,
                   // on-remove="handleRemove"
@@ -102,17 +104,33 @@ export default {
               },[
               h('Button', {
                                 props: {
-                                    type: 'primary',
-                                    size: 'small'
+                                    type: 'ghost',
+                                    size: 'small',
+                                    icon: "ios-cloud-upload-outline"
                                 },
                                 style: {
                                     marginRight: '5px'
                                 },
                                
-                            }, '上传大纲'), 
+                            }, '选择文件'), 
 
 
               ]),
+              h('Button', {
+                                props: {
+                                    type: 'primary',
+                                    size: 'small',
+                                },
+                                style: {
+                                    marginRight: '5px'
+                                },
+                                on: {
+                                    click: () => {
+                                        this.handleUpload(params.row.id);
+                                    }
+                                }
+                               
+                            }, '上传'),
             ]
           }
         },
@@ -178,6 +196,58 @@ export default {
       });
   },
   methods:{
+    handleUpload (courseId) {
+        if(this.uploadList.length ==0){
+            this.$Notice.warning({
+                title: '请先选择需要上传的文件'
+            });
+            return
+        }
+        let params = new FormData()
+        // 将uploadList中的文件添加到FormData中
+        this.uploadList.forEach(file => params.append('file', file));
+        params.append('Authorization', this.$store.state.token);
+        params.append('course_id', courseId);
+        let config = {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+
+        this.$axios.post('upload_course_outline', params, config)
+            .then(resp => {
+                if(resp.data.status){
+                  this.$Notice.success({
+                      title: '文件上传成功',
+                      desc: '文件 ' + resp.data.file_name + ' 上传成功。'
+                  });
+
+                  this.uploadList = [];
+                  this.$axios.get("/courseList").then(res => {
+                    this.userData = res.data;
+                    this.userData.splice(0,0);
+                  })
+                  .catch(error => {
+                    console.log(error);
+                  });
+
+                }else{
+                  // debugger
+                  this.$Notice.warning({
+                      title: '文件重名',
+                      desc: '文件 ' + resp.data.file_name + ' 和其他课程大纲文件重名。'
+                  });
+
+                }
+            })
+            .catch(err => {
+                // store.dispatch('onAddERR', '服务器内部错误，请稍后再试')
+                this.$Notice.error({
+                    title: '文件上传失败',
+                    desc: '服务器内部错误，请稍后再试'
+                });
+            })
+    },
     handleSuccess (res, file) {
       if(res.status){
         this.$Notice.success({
@@ -186,6 +256,7 @@ export default {
         });
         this.$axios.get("/courseList").then(res => {
           this.userData = res.data;
+          this.userData.splice(0,0);
         })
         .catch(error => {
           console.log(error);
@@ -196,10 +267,7 @@ export default {
             title: '文件重名',
             desc: '文件 ' + file.name + ' 和其他课程大纲文件重名。'
         });
-
       }
-        
-
     },
     handleError (res, file) {
         this.$Notice.error({
@@ -214,28 +282,43 @@ export default {
         });
     },
     handleBeforeUpload (file) {
-        // this.$Notice.warning({
-        //     title: '文件准备上传',
-        //     desc: '文件 ' + file.name + ' 准备上传。'
-        // });
-        // const check = this.$refs.upload.fileList.length <= 0;
-        // // console.log(this.$refs.upload.fileList.length);
-        // // console.log(this.uploadList.length);
-        // // console.log(check);
+        if (!/(doc|docx|xls|xlsx)$/.test(file.name)) {
+          this.$Notice.warning({
+            title: '文件格式不正确',
+            desc: '文件 ' + file.name + ' 格式不正确，请选择word或excel文件。'
+            // desc: `文件 ${file.name} 格式不正确，请选择excel文件`
+          })
+          return false
+        }
+        // if (this.uploadList.length > 0) {
+        //     this.$Notice.warning({
+        //         title: '文件已选择！'
+        //     });
+        //     return false;
+        // }
+        // const check = this.defaultList.length <= 0;
         // if (!check) {
         //     this.$Notice.warning({
         //         title: '上传新模板前，请先删除旧模板！'
         //     });
+        //     return false;
         // }
-        let check = false;
-        this.$Modal.confirm({
-                    title: '课程',
-                    content: '<p>确定要删除此课程吗？</p>',
-                    onOk: () => {
-                        check = true;                        
-                       },
-           onCancel: () => { check =false; }});
-        return check;
+
+        // 创建一个 FileReader 对象
+        let reader = new FileReader()
+        // readAsDataURL 方法用于读取指定 Blob 或 File 的内容
+        // 读取文件作为 URL (base64编码)可访问地址
+        reader.readAsDataURL(file)
+        const _this = this
+        reader.onload = function (e) {
+            file.url = reader.result
+            // 添加到用于手动上传的列表uploadList中并展示（即预览功能实现）
+            _this.uploadList.push(file);
+            // _this.$refs.upload.fileList.push(file);
+            // _this.defaultList.push({name: file.name});
+        }
+        // 取消自动上传的触发，手动上传
+        return false 
     },
     show_modal1()
     {
