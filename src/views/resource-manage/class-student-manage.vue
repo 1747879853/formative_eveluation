@@ -17,7 +17,7 @@
                     <a v-if="stu_template_url!='#'" style="font-weight: 600px;" :href="stu_template_url" download>下载模板</a>
                     <span v-if="stu_template_url=='#'" style="color:red;">{{stu_template_url_info}}</span>
                 </Row>
-                <Row style="padding-top: 10px;>
+                <Row style="padding-top: 10px;">
                     <Upload action="" :before-upload="handleBeforeUpload" accept=".xls, .xlsx">
                       <Button icon="ios-cloud-upload-outline" :loading="uploadLoading" @click="handleUploadFile">上传文件</Button>
                     </Upload>
@@ -331,6 +331,7 @@ import excel from '@/libs/excel'
                 this.uploadLoading = false
                 // this.tableLoading = false
                 // this.showRemoveFile = true
+                //这里将来应该增加判断header和results是否和模板文件中的一致？？？？？？？？？
                 this.outdata = results;
                 this.postexcal(this.outdata);
               }
