@@ -19,8 +19,8 @@
             <Input v-model="tno" placeholder="请输入职工号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>姓名</td><td>
             <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
-            <tr><td>用户名</td><td>
-            <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>邮箱</td><td>
+            <Input v-model="email" placeholder="请输入email" clearable style="width: 300px"></Input></td></tr>
             <tr><td>入职年份</td><td>
             <Input v-model="year" placeholder="请输入入职年份" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
@@ -37,8 +37,8 @@
             <Input v-model="tno" placeholder="请输入职工号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>姓名</td><td>
             <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
-            <tr><td>用户名</td><td>
-            <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>邮箱</td><td>
+            <Input v-model="email" placeholder="请输入email" clearable style="width: 300px"></Input></td></tr>
             <tr><td>入职年份</td><td>
             <Input v-model="year" placeholder="请输入入职年份" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
@@ -82,7 +82,7 @@ export default {
           align: "center"
         },
         {
-          title: "用户名",
+          title: "邮箱",
           key: "email",
           align: "center"
         },

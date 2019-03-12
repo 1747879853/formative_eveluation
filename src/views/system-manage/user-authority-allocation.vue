@@ -54,9 +54,9 @@ import Sortable from 'sortablejs';
             }
         },
         mounted () { 
-        this.$axios.get("/authUserList").then( res =>{
-        this.users_data = res.data.a;
-        this.data1 = res.data.b;
+            this.$axios.get("/authUserList").then( res =>{
+            this.users_data = res.data.a;
+            this.data1 = res.data.b;
         }).catch(error =>{
             console.log(error);
         });

@@ -2,7 +2,7 @@
     @import '../../styles/common.less';
     @import '../my-components/file-upload/upload.less';
 </style>
-
+<!-- action="//47.100.174.14:9999/api/v1/upload_student_template" -->
 <template>
     <div>
         <Row>

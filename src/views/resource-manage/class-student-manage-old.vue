@@ -12,34 +12,11 @@
                     :mask-closable="false"
                     @on-ok="addclassstu"
                     @on-cancel="cancel2">
-                <span style="font-size:13px;font-weight: 600;">批量导入学生信息，请先“下载模板”，填写学生信息，然后选择“上传文件”</span>
-                <Row>
-                    <a v-if="stu_template_url!='#'" style="font-weight: 600px;" :href="stu_template_url" download>下载模板</a>
-                    <span v-if="stu_template_url=='#'" style="color:red;">{{stu_template_url_info}}</span>
-                </Row>
-                <Row style="padding-top: 10px;>
-                    <Upload action="" :before-upload="handleBeforeUpload" accept=".xls, .xlsx">
-                      <Button icon="ios-cloud-upload-outline" :loading="uploadLoading" @click="handleUploadFile">上传文件</Button>
-                    </Upload>
-                </Row>
-                <Row><span style="color: red;">{{message}}</span></Row>
-                <Row>
-                    <transition name="fade">
-                      <Progress v-if="showProgress" :percent="progressPercent" :stroke-width="2">
-                        <div v-if="progressPercent == 100">
-                          <Icon type="ios-checkmark-circle"></Icon>
-                          <!-- <span>文件读取成功</span> -->
-                        </div>
-                      </Progress>
-                    </transition>
-                </Row>
-
-                <Row style="padding-top: 10px;font-size:13px;font-weight: 600;">添加单个学生请填写下面信息，点击“确定”</Row>
+                <span style="font-size: 25px;">{{message}}</span>
                 <table style="padding:5px">
-                    <!-- <tr style="padding:5px"><td>批量导入</td><td>
+                    <tr style="padding:5px"><td>批量导入</td><td>
                     <input id="upload" style="float:right;" type="file" @change="importfxx(this)"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-                    </td><td><Button @click="imports()" style="float:right;" class="ivu-btn ivu-btn-primary ivu-btn-middle">导入</Button></td></tr> -->
-
+                    </td><td><Button @click="imports()" style="float:right;" class="ivu-btn ivu-btn-primary ivu-btn-middle">导入</Button></td></tr>
                     <tr><td>学号:</td><td>
                     <Input v-model="sno" placeholder="请输入学号" clearable style="width: 300px"></Input></td></tr>
                     <tr><td>姓名:</td><td>
@@ -84,20 +61,10 @@
 </template>
 
 <script>
-import excel from '@/libs/excel'
     export default {
         name: 'user',
         data () {
             return {
-                stu_template_url: '#',
-                stu_template_url_info: '学生信息模板不存在，请联系管理员添加！',
-                uploadLoading: false,
-                progressPercent: 0,
-                showProgress: false,
-                showRemoveFile: false,
-                file: null,
-
-
                 modal1: false,
                 modal2: false,
                 modal3:false,
@@ -247,7 +214,7 @@ import excel from '@/libs/excel'
                 tel:'',
                 stuid:'',
                 outdata:[],
-                message:'',
+                message:'若添加单个学生,请输入信息后点确定按钮',
             };
         },
         computed: {
@@ -257,86 +224,14 @@ import excel from '@/libs/excel'
         },
         mounted () {
             this.$axios.get('/classroomList').then(res => {
-                this.userData = res.data;
-            })
-            .catch(error => {
-                console.log(error);
-            });
-
-            this.$axios.get('get_student_template_url').then(res => {
-                if(res.data.code="0000"){
-                    this.stu_template_url = res.data.stu_template_url;
-                }else{
-                    this.stu_template_url = '#'
-                    
-                }
-            })
-            .catch(error => {                
-                console.log(error);
-            });
+                    this.userData = res.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         },
         methods: {
-            // d_templ(){
-            //     if(this.stu_template_url=='#'){
-            //         this.$Message.info('学生信息模板不存在，请联系管理员添加！');
-            //         return false;
-            //     }
-            //     return true;
-            // },
-            initUpload () {
-              this.file = null
-              this.showProgress = false
-              this.loadingProgress = 0
-              // this.tableData = []
-              // this.tableTitle = []
-            },
-            handleUploadFile () {
-              this.initUpload()
-            },
-            handleBeforeUpload (file) {
-              const fileExt = file.name.split('.').pop().toLocaleLowerCase()
-              if (fileExt === 'xlsx' || fileExt === 'xls') {
-                this.readFile(file)
-                this.file = file
-              } else {
-                this.$Notice.warning({
-                  title: '文件类型错误',
-                  desc: '文件：' + file.name + '不是EXCEL文件，请选择后缀为.xlsx或者.xls的EXCEL文件。'
-                })
-              }
-              return false
-            },
-            // 读取文件
-            readFile (file) {
-              const reader = new FileReader()
-              reader.readAsArrayBuffer(file)
-              reader.onloadstart = e => {
-                this.uploadLoading = true
-                this.tableLoading = true
-                this.showProgress = true
-              }
-              reader.onprogress = e => {
-                this.progressPercent = Math.round(e.loaded / e.total * 100)
-              }
-              reader.onerror = e => {
-                this.$Message.error('文件读取出错')
-              }
-              reader.onload = e => {
-                // this.$Message.info('文件读取成功')
-                const data = e.target.result
-                const { header, results } = excel.read(data, 'array')
-                const tableTitle = header.map(item => { return { title: item, key: item } })
-                // this.tableData = results
-                // this.tableTitle = tableTitle
-                this.uploadLoading = false
-                // this.tableLoading = false
-                // this.showRemoveFile = true
-                this.outdata = results;
-                this.postexcal(this.outdata);
-              }
-            },
             addstu (index) { // 显示增加学生的窗口
-                this.message = '';
                 this.modal1 = true;
                 this.id = this.userData[index].id;
                 this.name = this.userData[index].name; // 这应该是获取了班级名称
@@ -494,7 +389,6 @@ import excel from '@/libs/excel'
                 }
             },
             postexcal(data){
-                let _this = this;
                 this.$axios.post('/manystudent', {
                     params: {
                         data:data,
@@ -502,24 +396,14 @@ import excel from '@/libs/excel'
                     }
                 }).then(function(res) {
                     // console.log(res.data);
-                    if(res.data.code == "0000"){
-                        this.message=res.data.msg;
-                        this.outdata=[];
-                        this.modal1=false;
-                        // this.$Message.info(res.data.msg);
-                    }else{
-                        this.message=res.data.msg;
-                        this.outdata=[];
-                        // this.modal1=false;
-                        // this.$Message.info(res.data.msg);
-                    }
-
+                    this.message='';
+                    this.outdata=[];
+                    this.modal1=false;
+                    this.$Message.info('导入excal成功');
                 }.bind(this))
                 .catch(function(error) {
-                    // debugger
-                    // _this.message='服务器错误，文件导入失败,请稍后重试!';
-                    // console.log(error)
-                    this.$Message.error('服务器错误，文件导入失败,请稍后重试!');
+                    this.message='文件导入失败,请重试!';
+                    console.log(error)
                 });
             },
             imports(){
@@ -527,7 +411,7 @@ import excel from '@/libs/excel'
                     this.message='正在导入文件,请稍后......';
                     this.postexcal(this.outdata);
                 }else{
-                    this.$Message.info('请先选择一个excel文件!');
+                    this.$Message.info('请先选择一个excal文件!');
                 }        
             },
         }
