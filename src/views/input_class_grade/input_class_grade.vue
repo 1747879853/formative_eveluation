@@ -31,18 +31,20 @@
     </Row>
 
     <hr />
-    <Row style="margin-top: 10px;">
-        <Col span="10"><Icon type="ios-film-outline"></Icon>
-            班级&nbsp;/&nbsp;课程：&nbsp;&nbsp;{{class1}}&nbsp;/&nbsp;{{course}}
-        </Col>
-        <Col span="14">
-            <Button v-if="course!=''&&edit!='uneditable'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-small ">暂存</Button>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-small">提交</Button></Col>
-    </Row>
-    <Row>  
-        
-        <Table  :columns="Columns" :data="studentList" border height="500" style="width: 100%;"></Table>
+    <Row v-if="studentList.length > 0">
+      <Row style="margin-top: 10px;">
+          <Col span="10"><Icon type="ios-film-outline"></Icon>
+              班级&nbsp;/&nbsp;课程：&nbsp;&nbsp;{{class1}}&nbsp;/&nbsp;{{course}}
+          </Col>
+          <Col span="14">
+              <Button v-if="course!=''&&edit!='uneditable'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-small ">暂存</Button>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-small">提交</Button></Col>
+      </Row>
+      <Row>  
+          
+          <Table  :columns="Columns" :data="studentList" border height="500" style="width: 100%;"></Table>
+      </Row>
     </Row>
   </Card> 
     <Modal

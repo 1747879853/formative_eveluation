@@ -13,7 +13,7 @@
             v-model="modal1"
             title="添加教师"
             @on-ok="ok"
-            @on-cancel="cancel">
+            @on-cancel="cancel2">
             <table>
             <tr><td>职工号</td><td>
             <Input v-model="tno" placeholder="请输入职工号" clearable style="width: 300px"></Input></td></tr>
