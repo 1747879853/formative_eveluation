@@ -41,10 +41,22 @@
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-small">提交</Button></Col>
       </Row>
-      <Row>  
-          
+      <Row v-if="u_agent == 'pc' ">  
           <Table  :columns="Columns" :data="studentList" border height="500" style="width: 100%;"></Table>
       </Row>
+
+      <Row v-if="u_agent == 'mobile' ">  
+        <Col v-for="(item,index) in studentList" :key="index" span="4">
+          <Card style="height:100px;margin:5px 5px">
+            <img src="../../images/my.png" style="padding:5px;width:25%;float:left;margin-left:-5px">
+            <table style="font-family:consolas;font-size:10px;width:70%;float:right;" @click="selectstu(item)">
+                <tr><td style="float:left">姓名:</td><td style="float:right">{{item.name}}</td></tr>
+                <tr><td style="float:left">学号:</td><td style="float:right">{{item.sno}}</td></tr>
+            </table>
+          </Card>
+        </Col>
+      </Row>
+      
     </Row>
   </Card> 
     <Modal
@@ -66,11 +78,13 @@
 import tinymce from 'tinymce/tinymce'
 import 'tinymce/themes/modern/theme'
 import Editor from '@tinymce/tinymce-vue'
+import Cookies from 'js-cookie';
 export default {
   name: "user",
   data() {
     return {
       // content:'a11111',
+      u_agent: 'pc',
       classcourseList:[],
       classList:[],
       studentList:[],
@@ -111,7 +125,8 @@ export default {
   components: {
     Editor:Editor
   },
-  mounted() {      
+  mounted() { 
+      this.u_agent = Cookies.get('user_agent');   
       tinymce.init({})
       this.$axios.get("/termList").then( res =>{
             this.term = res.data.a;

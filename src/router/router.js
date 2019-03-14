@@ -554,13 +554,8 @@ export const appRouter = [
                 icon: 'compose',
                 access:'input_class_grade/input_student_grade', 
                 name: 'input_student_grade', 
-                component: () => {
-                    if(Cookies.get('user_agent')=='pc'){
-                        return import('@/views/input_class_grade/input_class_grade.vue');
-                    }else{
-                        return import('@/views/input_class_grade/pad_input_class_grade.vue');
-                    }
-                }
+                component: () => import('@/views/input_class_grade/input_class_grade.vue')
+                
             },
             { 
                 path: 'assign_homework', 
