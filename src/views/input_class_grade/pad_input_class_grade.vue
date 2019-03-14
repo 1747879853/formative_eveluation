@@ -29,7 +29,7 @@
         <Row>
           <Col span="4"> 图例： </Col>
           <Col span="20">
-            <Button shape="circle" type="ivu-btn ivu-btn-primary ivu-btn-small">&nbsp;</Button>&nbsp;&nbsp;&nbsp;未提交成绩的课程
+            <Button shape="circle" class="ivu-btn ivu-btn-primary ivu-btn-small">&nbsp;</Button>&nbsp;&nbsp;&nbsp;未提交成绩的课程
             <br>
             <Button shape="circle" class="ivu-btn ivu-btn-success ivu-btn-small">&nbsp;</Button>&nbsp;&nbsp;&nbsp;已提交成绩的课程
           </Col>

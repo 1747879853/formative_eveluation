@@ -156,8 +156,8 @@
                     this.$store.commit('logout', this);
                     this.$store.commit('clearOpenedSubmenu');
                     this.$store.commit('clearAllTags');
-                    this.$store.commit('del_token');
-                    this.$store.commit('del_auth_rules');
+                    // this.$store.commit('del_token');
+                    // this.$store.commit('del_auth_rules');
                     this.$router.push({
                         name: 'login'
                     });
@@ -228,9 +228,12 @@
         },
         mounted () {
             if (navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)!=null) {
+                Cookies.set('user_agent', 'mobile');
                 this.shrink=true;
             } else {
+                Cookies.set('userid', 6);
                 this.shrink=false;
+                Cookies.set('user_agent', 'pc');
             }
             this.init();
             window.addEventListener('resize', this.scrollBarResize);

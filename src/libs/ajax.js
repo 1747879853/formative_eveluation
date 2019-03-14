@@ -51,7 +51,6 @@ service.interceptors.response.use(function (response) {
     // debugger
     // Do something with response error
     switch (error.response.status) {
-        //router跳转不了，还未解决。
         case 401:
             alert('登录信息已过期，请重新登录！');
             router.push({

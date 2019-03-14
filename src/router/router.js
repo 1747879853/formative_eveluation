@@ -1,5 +1,6 @@
 import Main from '@/views/Main.vue';
-
+import Cookies from 'js-cookie';
+// console.log(Cookies.get('user_agent'));
 // 不作为Main组件的子页面展示的页面单独写，如下
 export const loginRouter = {
     path: '/login',
@@ -553,7 +554,13 @@ export const appRouter = [
                 icon: 'compose',
                 access:'input_class_grade/input_student_grade', 
                 name: 'input_student_grade', 
-                component: () => import('@/views/input_class_grade/input_class_grade.vue') 
+                component: () => {
+                    if(Cookies.get('user_agent')=='pc'){
+                        return import('@/views/input_class_grade/input_class_grade.vue');
+                    }else{
+                        return import('@/views/input_class_grade/pad_input_class_grade.vue');
+                    }
+                }
             },
             { 
                 path: 'assign_homework', 
@@ -563,14 +570,14 @@ export const appRouter = [
                 name: 'assign_homework', 
                 component: () => import('@/views/input_class_grade/assign_homework.vue') 
             },
-            {
-                path: 'pad_input_class_grade',                
-                title: '平板-学生成绩录入',
-                icon: 'compose',
-                access:'input_class_grade/input_student_grade',
-                name: 'pad_input_class_grade',
-               component: () => import('@/views/input_class_grade/pad_input_class_grade.vue')
-            }
+            // {
+            //     path: 'pad_input_class_grade',                
+            //     title: '平板-学生成绩录入',
+            //     icon: 'compose',
+            //     access:'input_class_grade/input_student_grade',
+            //     name: 'pad_input_class_grade',
+            //    component: () => import('@/views/input_class_grade/pad_input_class_grade.vue')
+            // }
         ]
     },
     {

@@ -124,7 +124,7 @@ export default {
             console.log(error);
         });
   },
-  destroyed: function (){
+  beforeDestroy: function (){
     this.save(3);
   },
   methods:{
