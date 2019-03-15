@@ -37,12 +37,14 @@
         <p style="font-size:18px">当前已选择课程&nbsp;{{course.name}}&nbsp;的&nbsp;{{eva.name}}:</p> 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         <table style="">
-          <tr><td style="width:60px">作业名称:</td><td>{{homework.name}}</td><td style="width:60px">作业要求:</td><td>{{homework.demand}}</td></tr>
+          <tr><td style="width:60px">作业名称:</td><td>{{homework.name}}</td></tr>
           <tr>&nbsp;</tr>
           <!-- <tr></tr>
           <tr>&nbsp;</tr> -->
           <tr><td style="width:60px">开始时间:</td><td>{{homework.start_time.substring(0,10)}}</td><td style="width:60px">截止时间:</td><td>{{homework.end_time.substring(0,10)}}</td></tr>
-          <tr>&nbsp;</tr>          
+          <tr>&nbsp;</tr>  
+          <tr><td style="width:60px">作业要求:</td><td><div v-html='homework.demand' style="background-color:cornsilk;padding:10px"></div></td></tr>
+          <tr>&nbsp;</tr>        
         </table> 
         <Editor v-if="eva.done==1||eva.done==2" id="tinymce" v-model="content" :init="editorInit"></Editor>
         <Editor v-if="eva.done==0||eva.done==3" id="tinymce" v-model="content" disabled :init="editorInit"></Editor>

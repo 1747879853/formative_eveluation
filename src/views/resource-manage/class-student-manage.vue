@@ -184,7 +184,7 @@ import excel from '@/libs/excel'
                         align: 'center'
                     },    
                     {
-                        title: "用户名",
+                        title: "邮箱",
                         key: "email",
                         align: "center"
                     },                

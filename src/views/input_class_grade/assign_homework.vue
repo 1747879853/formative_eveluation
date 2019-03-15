@@ -36,9 +36,9 @@
             <table style="width:50%">
               <tr><td>作业名称:</td><td>
               <Input v-model="homework.name" placeholder="请输入作业名称" clearable style="width: 300px"></Input></td></tr>
-              <tr>&nbsp;</tr>
+              <!-- <tr>&nbsp;</tr>
               <tr><td>作业要求:</td><td>                    
-              <Input v-model="homework.demand" placeholder="请输入作业要求" clearable style="width: 300px"></Input></td></tr>
+              <Input v-model="homework.demand" placeholder="请输入作业要求" clearable style="width: 300px"></Input></td></tr> -->
               <tr>&nbsp;</tr>
               <tr><td>开始时间:</td><td>
               <DatePicker v-model="homework.start_time" type="date" placeholder="请选择开始时间" style="width: 300px"></DatePicker></td></tr>
@@ -46,14 +46,23 @@
               <tr><td>截止时间:</td><td>
               <DatePicker v-model="homework.end_time" type="date" placeholder="请选择截止时间" style="width: 300px"></DatePicker></td></tr>
               <tr>&nbsp;</tr>
+              <tr><td>作业要求:</td><td>                    
+              <Editor id="tinymce" v-model="homework.demand" :init="editorInit"></Editor></td></tr>
+              <tr>&nbsp;</tr>
               <tr><td><Button v-if="eva.assign==0" @click="save(0)" class="ivu-btn ivu-btn-primary ivu-btn-big">发布作业</Button></td></tr>
-              <tr><td><Button v-if="eva.assign==1" @click="save(1)" class="ivu-btn ivu-btn-success ivu-btn-big">修改作业</Button></td></tr>
-            </table>      
+              <tr><td><Button v-if="eva.assign==1&&start_time" @click="save(1)" class="ivu-btn ivu-btn-success ivu-btn-big">修改作业</Button></td></tr>              
+            </table>
+            <!-- <Editor id="tinymce" v-model="content" :init="editorInit"></Editor> -->
+            <p v-if="eva.assign==1&&!start_time">该作业已到开始时间，无法修改。</p>
         </Card>                        
 </Card>
 </template>
 
 <script>
+import tinymce from 'tinymce/tinymce'
+import 'tinymce/themes/modern/theme'
+import Editor from '@tinymce/tinymce-vue'
+import 'tinymce-imageupload'
 export default {
   name: "user",
   data() {
@@ -69,11 +78,23 @@ export default {
         start_time:'',
         end_time:'',
       },
+      start_time:'',
+      editorInit: {
+        height: 300,
+        plugins:"imageupload",
+        toolbar: "undo redo | imageupload | bold italic | alignleft aligncenter alignright alignjustify",
+        autosave_interval:true,
+        image_advtab:true,
+        imageupload_url: '//localhost:3000',  //此处写一个后端api来接收图片
+
+      },
     };
   },
-  computed: {
+  components: {
+    Editor:Editor
   },
   mounted() {
+      tinymce.init({})
       this.$axios.get("/termList").then( res =>{
           this.term = res.data.a;
           this.option = res.data.b;
@@ -113,6 +134,7 @@ export default {
           start_time:'',
           end_time:'',
         };
+        this.start_time='';
         if (eva.assign==1) {
           this.$axios.post('/tea_homework', {
               params: {
@@ -122,8 +144,8 @@ export default {
                   homework: 'get'
               }
           }).then(function(res) {              
-              this.homework=res.data[0];
-              // console.log(this.homework)
+              this.homework=res.data.a;
+              this.start_time=res.data.b;
           }.bind(this))
           .catch(function(error) {
               console.log(error)
@@ -140,7 +162,8 @@ export default {
                       homework: this.homework
                   }
               }).then(function(res) {              
-                  this.homework=res.data;
+                  this.homework=res.data.a;
+                  this.start_time=res.data.b;
                   this.$Message.info('发布成功');
                   this.eva.assign=1;
               }.bind(this))
@@ -156,7 +179,8 @@ export default {
                       homework: this.homework
                   }
               }).then(function(res) {              
-                  this.homework=res.data[0];
+                  this.homework=res.data.a;
+                  this.start_time=res.data.b;
                   this.$Message.info('修改成功');
               }.bind(this))
               .catch(function(error) {

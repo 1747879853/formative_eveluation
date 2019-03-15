@@ -78,6 +78,7 @@
     "script-loader": "^0.7.2",
     "semver": "^5.4.1",
     "style-loader": "^0.19.1",
+    "tinymce-imageupload": "^1.0.5",
     "unsupported": "^1.1.0",
     "url-loader": "^0.6.2",
     "vue-hot-reload-api": "^2.2.4",
