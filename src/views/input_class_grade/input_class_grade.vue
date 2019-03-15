@@ -46,19 +46,38 @@
       </Row>
 
       <Row v-if="u_agent == 'mobile' ">  
-        <Col v-for="(item,index) in studentList" :key="index" span="4">
-          <Card style="height:100px;margin:5px 5px">
-            <img src="../../images/my.png" style="padding:5px;width:25%;float:left;margin-left:-5px">
-            <table style="font-family:consolas;font-size:10px;width:70%;float:right;" @click="selectstu(item)">
+        <Col v-for="(item,index) in studentList" :key="index" :xs="8" :sm="6" :md="6" :lg="3">
+          <div  @click="selectstu(item)">
+          <Card style="margin:5px 5px;">
+            <p slot="title" >
+                <!-- <Icon type="ios-film-outline"></Icon> -->
+                <Avatar icon="ios-person" size="small" style="color: blue;"/>
+                {{item.name}}&nbsp;/&nbsp;{{item.sno}}
+            </p>
+            <!-- <img src="../../images/my.png" style="padding:5px;width:25%;float:left;margin-left:-5px"> -->
+            <!-- <table style="font-family:consolas;font-size:10px;width:70%;float:right;" @click="selectstu(item)">
                 <tr><td style="float:left">姓名:</td><td style="float:right">{{item.name}}</td></tr>
                 <tr><td style="float:left">学号:</td><td style="float:right">{{item.sno}}</td></tr>
-            </table>
+            </table> -->
+            <p>11111</p>
+            <p>22222</p>
           </Card>
+          </div>
         </Col>
       </Row>
-      
+
     </Row>
   </Card> 
+
+    <Modal
+      v-model="modal1"
+      :title="'学生'+student[0].name"
+      width="90%"
+      :mask-closable="false"
+      >
+      <Table :columns="Columns" :data="student" border height="105" style="width: 100%;"></Table>
+    </Modal>
+
     <Modal
       v-model="modal"
       title="查看学生作业"
@@ -92,7 +111,7 @@ export default {
       course_id:'',
       class_id:'',
       class1:'',
-      student:'',
+      student:[{name:''}],
       Columns: [
         {
           title: "学号",
@@ -111,6 +130,7 @@ export default {
       data:[],
       edit:'',
       modal:false,
+      modal1: false,
       homework:{
         title:'',
         finish_time:'',
@@ -911,6 +931,13 @@ export default {
         .catch(error => {
           console.log(error);
         });
+      },
+      selectstu(item){
+        this.modal1=true;
+        var list = [];
+        list.push(item);
+        this.student=list;
+        console.log(this.student)
       },
       show_modal2(p){
         this.modal=true;
