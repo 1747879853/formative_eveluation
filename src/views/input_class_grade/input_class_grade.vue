@@ -37,7 +37,7 @@
               班级&nbsp;/&nbsp;课程：&nbsp;&nbsp;{{class1}}&nbsp;/&nbsp;{{course}}
           </Col>
           <Col span="14">
-              <Button v-if="course!=''&&edit!='uneditable'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-small ">暂存</Button>
+              <Button v-if="course!=''&&edit!='uneditable'&&u_agent == 'pc'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-small ">暂存</Button>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-small">提交</Button></Col>
       </Row>
@@ -72,10 +72,39 @@
     <Modal
       v-model="modal1"
       :title="'学生'+student[0].name"
-      width="90%"
+      width="50%"
       :mask-closable="false"
       >
-      <Table :columns="Columns" :data="student" border height="105" style="width: 100%;"></Table>
+        <table v-if="edit!='uneditable'" style="padding:10px;font-family:consolas;font-size:20px;width:100%;">
+            <tr style="height:35px"><td style="float:left">学号:</td><td style="float:right">{{student[0].sno}}</td></tr>
+            <tr style="height:35px"><td style="float:left">姓名:</td><td style="float:right">{{student[0].name}}</td></tr>
+            <tr style="height:35px" v-for="(items,indexs) in data"><td style="float:left">{{items.name}}:</td>
+            <td style="float:right">
+            <Input v-if="items.types=='score'" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
+            <Select v-if="items.types=='grade'" :placeholder="student[0]['e'+items.id]==''?'请选择':student[0]['e'+items.id]" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])">
+              <Option v-for="(op,i) in items.description.split('@')" :key="op" :value="op.split('-')[0]"></Option>
+            </Select>
+            <Input v-if="items.types=='text-score'" style="width:60px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
+            <Button v-if="items.types=='text-score'" type="primary" size="small" @click="show_modal22(items,student[0])">查看</Button>
+            </td></tr>
+            <tr>&nbsp;&nbsp;&nbsp;</tr>
+            <tr style="height:35px"><td style="float:left">操作:</td><td style="float:right">
+            <Button type="primary" size="middle" @click="save(1)">暂存</Button></td></tr>
+        </table>
+        <table v-if="edit=='uneditable'" style="padding:10px;font-family:consolas;font-size:20px;width:100%;">
+            <tr style="height:35px"><td style="float:left">学号:</td><td style="float:right">{{student[0].sno}}</td></tr>
+            <tr style="height:35px"><td style="float:left">姓名:</td><td style="float:right">{{student[0].name}}</td></tr>
+            <tr style="height:35px" v-for="(items,indexs) in data"><td style="float:left">{{items.name}}:</td>
+            <td style="float:right">
+            <Input v-if="items.types=='score'" disabled style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
+            <Select v-if="items.types=='grade'" disabled :placeholder="student[0]['e'+items.id]==''?'请选择':student[0]['e'+items.id]" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])">
+              <Option v-for="(op,i) in items.description.split('@')" :key="op" :value="op.split('-')[0]"></Option>
+            </Select>
+            <Input v-if="items.types=='text-score'" disabled style="width:60px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
+            <Button v-if="items.types=='text-score'" type="primary" size="small" @click="show_modal22(items,student[0])">查看</Button>
+            </td></tr>
+        </table>
+        <div slot="footer"></div>
     </Modal>
 
     <Modal
@@ -961,6 +990,28 @@ export default {
         });
 
       },
+      show_modal22(eva,stu){
+        this.modal=true;
+        // console.log(p)
+        this.homework.title=eva.title;        
+        this.homework.stu_name=stu.name;
+        this.$axios.get('/stu_homework_by_id', {
+            params: {
+                courses_id: this.course_id,
+                term: this.option,
+                eval: eva.id,
+                stu_id: stu.id,
+            }
+        }).then(function(res) {   
+            this.homework.finish_time=res.data.finish_time;
+            this.homework.content=res.data.content;           
+            // console.log(res.data);
+        }.bind(this))
+        .catch(function(error) {
+            console.log(error)
+        });
+
+      },
       save(mm){
           if(mm==1){
               this.$axios.patch('/inputclassgrade', {
@@ -981,6 +1032,7 @@ export default {
                     }
                   }
                   console.log(this.studentList);
+                  this.modal1=false;
                   this.$Message.info('暂存成功');
               }.bind(this))
               .catch(function(error) {
@@ -1044,7 +1096,25 @@ export default {
                   console.log(error)
               });
           }
-      }      
+      },
+      change(eva,stu){
+          let x = 0;
+          for(let k=0;k<this.m.length;k++){
+              if(this.m[k].id==eva.id&&this.m[k].stu==stu.id){
+                this.m[k].grade=stu['e'+eva.id];
+                x=1;
+              }
+          }
+          if(x==0){
+            this.m.push({
+              id: eva.id,
+              // eno: eva.eno,
+              stu: stu.id,
+              grade:stu['e'+eva.id],
+            })
+          }
+          // console.log(this.m);
+      },      
   }
 };
 </script>
