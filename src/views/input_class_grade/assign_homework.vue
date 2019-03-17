@@ -85,8 +85,14 @@ export default {
         toolbar: "undo redo | imageupload | bold italic | alignleft aligncenter alignright alignjustify",
         autosave_interval:true,
         image_advtab:true,
-        imageupload_url: '//localhost:3000',  //此处写一个后端api来接收图片
-
+        imageupload_url: '//127.0.0.1:3000/api/v1/save_hw_img',  //此处写一个后端api来接收图片
+        token: this.$store.state.token,
+        imageupload_converCb: (res) => {
+          return {
+            error: res.data.error,
+            pathList: res.data.pathList
+          }
+        }
       },
     };
   },
