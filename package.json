@@ -36,12 +36,12 @@
     "rasterizehtml": "^1.2.4",
     "simplemde": "^1.11.2",
     "sortablejs": "^1.7.0",
-    "tinymce": "^4.7.4",
     "vue": "^2.5.13",
     "vue-baidu-map": "^0.21.11",
     "vue-router": "^3.0.1",
     "vue-virtual-scroller": "^0.10.6",
     "vuex": "^3.0.1",
+    "wangeditor": "^3.1.1",
     "xlsx": "^0.11.19"
   },
   "devDependencies": {
@@ -78,7 +78,6 @@
     "script-loader": "^0.7.2",
     "semver": "^5.4.1",
     "style-loader": "^0.19.1",
-    "tinymce-imageupload": "^1.0.5",
     "unsupported": "^1.1.0",
     "url-loader": "^0.6.2",
     "vue-hot-reload-api": "^2.2.4",

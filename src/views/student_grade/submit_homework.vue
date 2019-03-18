@@ -46,8 +46,8 @@
           <tr><td style="width:60px">作业要求:</td><td><div v-html='homework.demand' style="background-color:cornsilk;padding:10px"></div></td></tr>
           <tr>&nbsp;</tr>        
         </table> 
-        <Editor v-if="eva.done==1||eva.done==2" id="tinymce" v-model="content" :init="editorInit"></Editor>
-        <Editor v-if="eva.done==0||eva.done==3" id="tinymce" v-model="content" disabled :init="editorInit"></Editor>
+        <wangeditor v-if="eva.done==1||eva.done==2" v-bind:content="content" v-bind:disabled="true" :catchData="catchData"></wangeditor>
+        <wangeditor v-if="eva.done==0||eva.done==3" v-bind:content="content" v-bind:disabled="false" :catchData="catchData"></wangeditor>
         <div style="font-size:18px;padding:10px" v-if="eva.done==0"><span>该作业还未到可提交的时间！</span></div>
         <div style="padding:10px" v-if="eva.done==1"><Button @click="save(0)" class="ivu-btn ivu-btn-primary ivu-btn-big">提交作业</Button></div>
         <div style="padding:10px" v-if="eva.done==2"><Button @click="save(1)" class="ivu-btn ivu-btn-success ivu-btn-big">修改作业</Button></div>
@@ -57,9 +57,7 @@
 </template>
 
 <script>
-import tinymce from 'tinymce/tinymce'
-import 'tinymce/themes/modern/theme'
-import Editor from '@tinymce/tinymce-vue'
+import wangeditor from './wangeditor'
 export default {
   name: "user",
   data() {
@@ -73,17 +71,12 @@ export default {
       course:'',
       homework:'',
       content:'',
-      editorInit: {
-        height: 300
-      }
-
     };
   },
   components: {
-    Editor:Editor
+    wangeditor
   },
   mounted() {
-    tinymce.init({})
     this.$axios.get("/termList").then( res =>{
         this.term = res.data.a;
         this.option = res.data.b;
@@ -93,6 +86,9 @@ export default {
     });
   },
   methods:{    
+    catchData(value){
+      this.content=value;      //在这里接受子组件传过来的参数，赋值给data里的参数
+    },
     selected() {
         this.homework='';
         this.eva='';

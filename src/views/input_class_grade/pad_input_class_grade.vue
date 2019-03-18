@@ -75,7 +75,6 @@
       <table>            
       <tr><td>作业名称:</td><td>{{homework.title}}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>完成时间:</td><td>{{homework.finish_time.substring(0,10)}}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>学生姓名:</td><td>{{homework.stu_name}}</td></tr>
       </table>
-      <!-- <Editor id="tinymce" v-model="content" disabled :init="editorInit"></Editor> -->
       作业内容：
       <div v-html='homework.content' style="background-color:cornsilk;padding:10px"></div>
     </Modal>    
@@ -83,9 +82,6 @@
 </template>
 
 <script>
-import tinymce from 'tinymce/tinymce'
-import 'tinymce/themes/modern/theme'
-import Editor from '@tinymce/tinymce-vue'
 export default {
   name: "user",
   data() {
@@ -124,16 +120,11 @@ export default {
         stu_name:'',
         content:'',
       },
-      editorInit: {
-        height: 300
-      }
     };
   },
   components: {
-    Editor:Editor
   },
   mounted() {      
-      tinymce.init({})
       this.$axios.get("/termList").then( res =>{
             this.term = res.data.a;
             this.option = res.data.b;

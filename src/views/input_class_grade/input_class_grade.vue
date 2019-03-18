@@ -114,18 +114,13 @@
       <table>            
       <tr><td>作业名称:</td><td>{{homework.title}}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>完成时间:</td><td>{{homework.finish_time.substring(0,10)}}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>学生姓名:</td><td>{{homework.stu_name}}</td></tr>
       </table>
-      <!-- <Editor id="tinymce" v-model="content" disabled :init="editorInit"></Editor> -->
       作业内容：
       <div v-html='homework.content' style="background-color:cornsilk;padding:10px"></div>
     </Modal>
-    <!-- <Editor id="tinymce" v-model="content" disabled :init="editorInit"></Editor> -->
 </div>
 </template>
 
 <script>
-import tinymce from 'tinymce/tinymce'
-import 'tinymce/themes/modern/theme'
-import Editor from '@tinymce/tinymce-vue'
 import Cookies from 'js-cookie';
 export default {
   name: "user",
@@ -166,17 +161,12 @@ export default {
         stu_name:'',
         content:'',
       },
-      editorInit: {
-        height: 300
-      }
     };
   },
   components: {
-    Editor:Editor
   },
   mounted() { 
       this.u_agent = Cookies.get('user_agent');   
-      tinymce.init({})
       this.$axios.get("/termList").then( res =>{
             this.term = res.data.a;
             this.option = res.data.b;

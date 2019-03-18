@@ -41,13 +41,13 @@
               <Input v-model="homework.demand" placeholder="请输入作业要求" clearable style="width: 300px"></Input></td></tr> -->
               <tr>&nbsp;</tr>
               <tr><td>开始时间:</td><td>
-              <DatePicker v-model="homework.start_time" type="date" placeholder="请选择开始时间" style="width: 300px"></DatePicker></td></tr>
+              <DatePicker v-model="homework.start_time" placement="right-end" type="date" placeholder="请选择开始时间" style="width: 300px"></DatePicker></td></tr>
               <tr>&nbsp;</tr>
               <tr><td>截止时间:</td><td>
-              <DatePicker v-model="homework.end_time" type="date" placeholder="请选择截止时间" style="width: 300px"></DatePicker></td></tr>
+              <DatePicker v-model="homework.end_time" placement="right-end" type="date" placeholder="请选择截止时间" style="width: 300px"></DatePicker></td></tr>
               <tr>&nbsp;</tr>
               <tr><td>作业要求:</td><td>                    
-              <Editor id="tinymce" v-model="homework.demand" :init="editorInit"></Editor></td></tr>
+              <wangeditor v-bind:content="homework.demand" v-bind:disabled="true" :catchData="catchData"></wangeditor></td></tr>
               <tr>&nbsp;</tr>
               <tr><td><Button v-if="eva.assign==0" @click="save(0)" class="ivu-btn ivu-btn-primary ivu-btn-big">发布作业</Button></td></tr>
               <tr><td><Button v-if="eva.assign==1&&start_time" @click="save(1)" class="ivu-btn ivu-btn-success ivu-btn-big">修改作业</Button></td></tr>              
@@ -59,10 +59,7 @@
 </template>
 
 <script>
-import tinymce from 'tinymce/tinymce'
-import 'tinymce/themes/modern/theme'
-import Editor from '@tinymce/tinymce-vue'
-import 'tinymce-imageupload'
+import wangeditor from './wangeditor'
 export default {
   name: "user",
   data() {
@@ -79,28 +76,12 @@ export default {
         end_time:'',
       },
       start_time:'',
-      editorInit: {
-        height: 300,
-        plugins:"imageupload",
-        toolbar: "undo redo | imageupload | bold italic | alignleft aligncenter alignright alignjustify",
-        autosave_interval:true,
-        image_advtab:true,
-        imageupload_url: '//127.0.0.1:9999/api/v1/save_hw_img',  //此处写一个后端api来接收图片
-        token: this.$store.state.token,
-        imageupload_converCb: (res) => {
-          return {
-            error: res.data.error,
-            pathList: res.data.pathList
-          }
-        }
-      },
     };
   },
   components: {
-    Editor:Editor
+    wangeditor
   },
   mounted() {
-      tinymce.init({})
       this.$axios.get("/termList").then( res =>{
           this.term = res.data.a;
           this.option = res.data.b;
@@ -110,6 +91,9 @@ export default {
       });
   },
   methods:{
+    catchData(value){
+      this.homework.demand=value;      //在这里接受子组件传过来的参数，赋值给data里的参数
+    },
       selected() {
         this.homework={
           name:'',
