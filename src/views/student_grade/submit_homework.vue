@@ -33,21 +33,23 @@
       <div><Button shape="circle" class="ivu-btn ivu-btn-error ivu-btn-big">&nbsp;</Button>&nbsp;&nbsp;&nbsp;已超时的作业</div>
     </Col>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <Card v-if="course!=''&&eva!=''">
-        <p style="font-size:18px">当前已选择课程&nbsp;{{course.name}}&nbsp;的&nbsp;{{eva.name}}:</p> 
+    <Card >
+        <p v-if="course!=''&&eva!=''" style="font-size:18px">当前已选择课程&nbsp;{{course.name}}&nbsp;的&nbsp;{{eva.name}}:</p> 
+        <p v-else="course!=''&&eva!=''" style="font-size:18px">请选择一份作业</p>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         <table style="">
           <tr><td style="width:60px">作业名称:</td><td>{{homework.name}}</td></tr>
           <tr>&nbsp;</tr>
           <!-- <tr></tr>
           <tr>&nbsp;</tr> -->
-          <tr><td style="width:60px">开始时间:</td><td>{{homework.start_time.substring(0,10)}}</td><td style="width:60px">截止时间:</td><td>{{homework.end_time.substring(0,10)}}</td></tr>
+          <tr><td style="width:60px">开始时间:</td><td v-if="course!=''&&eva!=''">{{homework.start_time.substring(0,10)}}</td><td style="width:60px">截止时间:</td><td v-if="course!=''&&eva!=''">{{homework.end_time.substring(0,10)}}</td></tr>
           <tr>&nbsp;</tr>  
           <tr><td style="width:60px">作业要求:</td><td><div v-html='homework.demand' style="background-color:cornsilk;padding:10px"></div></td></tr>
           <tr>&nbsp;</tr>        
         </table> 
-        <wangeditor v-if="eva.done==1||eva.done==2" v-bind:content="content" v-bind:disabled="true" :catchData="catchData"></wangeditor>
-        <wangeditor v-if="eva.done==0||eva.done==3" v-bind:content="content" v-bind:disabled="false" :catchData="catchData"></wangeditor>
+        <!-- <wangeditor v-if="eva.done==1||eva.done==2" v-bind:content="content" v-bind:disabled="true" :catchData="catchData"></wangeditor>
+        <wangeditor v-if="eva.done==0||eva.done==3" v-bind:content="content" v-bind:disabled="false" :catchData="catchData"></wangeditor> -->
+        <div id="wangeditor" style="text-align:left"></div>
         <div style="font-size:18px;padding:10px" v-if="eva.done==0"><span>该作业还未到可提交的时间！</span></div>
         <div style="padding:10px" v-if="eva.done==1"><Button @click="save(0)" class="ivu-btn ivu-btn-primary ivu-btn-big">提交作业</Button></div>
         <div style="padding:10px" v-if="eva.done==2"><Button @click="save(1)" class="ivu-btn ivu-btn-success ivu-btn-big">修改作业</Button></div>
@@ -57,7 +59,8 @@
 </template>
 
 <script>
-import wangeditor from './wangeditor'
+// import wangeditor from './wangeditor'
+import E from 'wangeditor'
 export default {
   name: "user",
   data() {
@@ -71,12 +74,84 @@ export default {
       course:'',
       homework:'',
       content:'',
+      ed:''
     };
   },
   components: {
-    wangeditor
+    // wangeditor
   },
   mounted() {
+
+    var editor = new E('#wangeditor')    //创建富文本实例
+     editor.customConfig.onchange = (html) => {
+       this.content = html
+     }
+     editor.customConfig.uploadImgServer = '//47.100.174.14:9999/api/v1/save_hw_img'
+     // editor.customConfig.uploadFileName = 'file'
+     editor.customConfig.uploadImgHeaders = { 'Authorization':this.$store.state.token }
+     editor.customConfig.menus = [     //菜单配置
+       'head', //标题
+       'list', // 列表
+       'justify', // 对齐方式
+       'bold', //粗体
+       'fontSize', // 字号
+       'italic', //斜体
+       'underline', //下划线
+       'image', // 插入图片
+       'foreColor', // 文字颜色
+       'undo', // 撤销
+       'redo', // 重复
+      ] 
+           //下面是最重要的的方法
+     editor.customConfig.uploadImgHooks = {
+       before: function (xhr, editor, files) {
+         // 图片上传之前触发
+         // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，files 是选择的图片文件
+         // 如果返回的结果是 {prevent: true, msg: 'xxxx'} 则表示用户放弃上传
+         // return {
+         //   prevent: true,
+         //   msg: '放弃上传'
+         // }
+       },
+       success: function (xhr, editor, result) {
+         // 图片上传并返回结果，图片插入成功之后触发
+         // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
+       this.imgUrl=Object.values(result.data).toString()
+       },
+       fail: function (xhr, editor, result) {
+         // 图片上传并返回结果，但图片插入错误时触发
+         // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
+       },
+       error: function (xhr, editor) {
+         // 图片上传出错时触发
+         // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
+       },
+       timeout: function (xhr, editor) {
+         // 图片上传超时时触发
+         // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
+       },
+ 
+       // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
+       // （但是，服务器端返回的必须是一个 JSON 格式字符串！！！否则会报错）
+       customInsert: function (insertImg, result, editor) {
+         // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
+         // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
+ 
+         // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
+         let url = Object.values(result.data)   //result.data就是服务器返回的图片名字和链接
+         for(let i =0;i<url.length;i++){
+          JSON.stringify(url[i])  //在这里转成JSON格式
+          insertImg(url[i])
+         }
+         // result 必须是一个 JSON 格式字符串！！！否则报错
+       }
+     }
+      
+      
+     editor.create() 
+     this.ed=editor;
+
+
     this.$axios.get("/termList").then( res =>{
         this.term = res.data.a;
         this.option = res.data.b;
@@ -86,9 +161,6 @@ export default {
     });
   },
   methods:{    
-    catchData(value){
-      this.content=value;      //在这里接受子组件传过来的参数，赋值给data里的参数
-    },
     selected() {
         this.homework='';
         this.eva='';
@@ -112,6 +184,7 @@ export default {
       this.course=course;
       this.homework=eva.homework[0];
       this.content="";
+      this.ed.txt.html(this.content);
       if (eva.done>=2) {
         this.$axios.post('/stu_homework', {
             params: {
@@ -121,6 +194,7 @@ export default {
         }).then(function(res) {   
           if(res.data.length>0){
             this.content=res.data[0].content;
+            this.ed.txt.html(this.content);
           }else{
             this.content="无法输入作业内容"
           }    

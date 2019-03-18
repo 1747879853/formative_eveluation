@@ -31,7 +31,7 @@
        this.editorContent = html
        this.catchData(html) //把这个html通过catchData的方法传入父组件
      }
-     editor.customConfig.uploadImgServer = '//127.0.0.1:9999/api/v1/save_hw_img'
+     editor.customConfig.uploadImgServer = '//47.100.174.14:9999/api/v1/save_hw_img'
      // editor.customConfig.uploadFileName = 'file'
      editor.customConfig.uploadImgHeaders = { 'Authorization':this.$store.state.token }
      editor.customConfig.menus = [     //菜单配置
