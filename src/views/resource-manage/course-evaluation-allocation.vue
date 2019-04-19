@@ -343,6 +343,7 @@ import Sortable from 'sortablejs';
                         console.log(res);
                         this.users_data[this.select].checked_id = res.data.a.checked_id;
                         this.weight = res.data.b;
+                        this.check222(res.data.a.checked_id);
                         this.$Message.info('保存成功');
                     }.bind(this))
                     .catch(function(error) {
@@ -359,6 +360,144 @@ import Sortable from 'sortablejs';
             for(let i=0;i<checkedList.length;i++){
                 ch_id.push(checkedList[i].id);
             }
+            let vm = this;
+            // vm.c_weight=[];
+            function edit(arr){  
+              depthTraversal1(arr); 
+              return arr; 
+            }   
+            function depthTraversal1(arr){  
+                if (arr!=null){  
+                    for(let i=0;i<arr.length;i++){
+                        arr[i]["render"]=(h, params) => {
+                              let _this = vm;
+                              return h('span', [
+                                  h('span', params.data.name),
+                                  h('Input', {
+                                      style: {
+                                          width: '80px',
+                                          marginLeft:'15px'
+                                      },
+                                      props:{
+                                           value:'',
+                                           autosize: true,
+                                           placeholder:"请输入权重"
+                                      },
+                                      on:{
+                                        input:function(e){
+                                
+                                            if(e!=''){
+                                                let x = 0;
+                                                for(let k=0;k<_this.c_weight.length;k++){
+                                                    if(_this.c_weight[k].id==params.data.id){
+                                                      _this.c_weight[k].weight=e;
+                                                      x=1;
+                                                    }
+                                                }
+                                                if(x==0){
+                                                  _this.c_weight.push({
+                                                          id: params.data.id,
+                                                          weight:e,
+                                                        })
+                                                }
+                                            }else{
+                                                for(let k=0;k<_this.c_weight.length;k++){
+                                                    if(_this.c_weight[k].id==params.data.id){
+                                                      _this.c_weight.splice(k, 1);                                       
+                                                    }
+                                                }
+                                            }
+                                            console.log(_this.c_weight)
+                                        },                                  
+                                      }
+                                    })
+                              ]);
+                          }                              
+                        for(let xx=0;xx<vm.weight.length;xx++){
+                            if(vm.weight[xx].courses_id==vm.course_id&&vm.weight[xx].evaluations_id==arr[i].id)
+                            {
+                                arr[i]["render"]=(h, params) => {
+                                          let _this = vm;
+                                          return h('span', [
+                                              h('span', params.data.name),
+                                              h('Input', {
+                                                  style: {
+                                                      width: '80px',
+                                                      marginLeft:'15px'
+                                                  },
+                                                  props:{
+                                                       value:_this.weight[xx].weight,
+                                                       autosize: true,
+                                                       placeholder:"请输入权重"
+                                                  },
+                                                  on:{
+                                                    input:function(e){
+                                            
+                                                        if(e!=''){
+                                                            let x = 0;
+                                                            for(let k=0;k<_this.c_weight.length;k++){
+                                                                if(_this.c_weight[k].id==params.data.id){
+                                                                  _this.c_weight[k].weight=e;
+                                                                  x=1;
+                                                                }
+                                                            }
+                                                            if(x==0){
+                                                              _this.c_weight.push({
+                                                                      id: params.data.id,
+                                                                      weight:e,
+                                                                    })
+                                                            }
+                                                        }else{
+                                                            for(let k=0;k<_this.c_weight.length;k++){
+                                                                if(_this.c_weight[k].id==params.data.id){
+                                                                  _this.c_weight.splice(k, 1);                                       
+                                                                }
+                                                            }
+                                                        }
+                                                    },                                  
+                                                  }
+                                                })
+                                          ]);
+                                      }
+                                // vm.c_weight.push({
+                                //   id: arr[i].id,
+                                //   weight:vm.weight[xx].weight,
+                                // })
+                                break;
+                            }
+                        }                                   
+
+                        if(ch_id.length!=0){
+                            if(ch_id.indexOf(arr[i].id)>-1){
+                                arr[i].checked=true;
+                            }else{
+                                let v=true;
+                                for(let n=0;n<arr[i].children.length;n++){
+                                    if(ch_id.indexOf(arr[i].children[n].id)>-1){
+                                        arr[i].checked=false;
+                                        v=false;
+                                        break;
+                                    }
+                                }
+                                if(v){
+                                    arr[i].checked=false;
+                                    delete arr[i]["render"]
+                                }                           
+                            }
+                        }else{
+                            arr[i].checked=false;
+                            delete arr[i]["render"]
+                        }
+
+
+                      depthTraversal1(arr[i].children);
+                    }
+                }         
+            }
+            vm.data1=edit(JSON.parse(JSON.stringify(vm.data2)));       
+        },
+        check222(checkedList){
+            let ch_id = checkedList;  
             let vm = this;
             // vm.c_weight=[];
             function edit(arr){  
