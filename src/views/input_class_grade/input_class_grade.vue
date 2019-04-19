@@ -39,7 +39,8 @@
           <Col span="14">
               <Button v-if="course!=''&&edit!='uneditable'&&u_agent == 'pc'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-small ">暂存</Button>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-small">提交</Button></Col>
+              <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-small">提交</Button>
+          </Col>
       </Row>
       <Row v-if="u_agent == 'pc' ">  
           <Table  :columns="Columns" :data="studentList" border height="500" style="width: 100%;"></Table>
@@ -50,17 +51,12 @@
           <div  @click="selectstu(item)">
           <Card style="margin:5px 5px;">
             <p slot="title" >
-                <!-- <Icon type="ios-film-outline"></Icon> -->
                 <Avatar icon="ios-person" size="small" style="color: blue;"/>
                 {{item.name}}&nbsp;/&nbsp;{{item.sno}}
             </p>
-            <!-- <img src="../../images/my.png" style="padding:5px;width:25%;float:left;margin-left:-5px"> -->
-            <!-- <table style="font-family:consolas;font-size:10px;width:70%;float:right;" @click="selectstu(item)">
-                <tr><td style="float:left">姓名:</td><td style="float:right">{{item.name}}</td></tr>
-                <tr><td style="float:left">学号:</td><td style="float:right">{{item.sno}}</td></tr>
-            </table> -->
-            <p>11111</p>
-            <p>22222</p>
+            
+            <p>其他信息1</p>
+            <p>其他信息2</p>
           </Card>
           </div>
         </Col>
@@ -89,7 +85,8 @@
             </td></tr>
             <tr>&nbsp;&nbsp;&nbsp;</tr>
             <tr style="height:35px"><td style="float:left">操作:</td><td style="float:right">
-            <Button type="primary" size="middle" @click="save(1)">暂存</Button></td></tr>
+            <Button type="primary" size="small" @click="save(1)">暂存</Button>
+          </td></tr>
         </table>
         <table v-if="edit=='uneditable'" style="padding:10px;font-family:consolas;font-size:20px;width:100%;">
             <tr style="height:35px"><td style="float:left">学号:</td><td style="float:right">{{student[0].sno}}</td></tr>
@@ -123,7 +120,7 @@
 <script>
 import Cookies from 'js-cookie';
 export default {
-  name: "user",
+  name: "input_student_grade",
   data() {
     return {
       // content:'a11111',
