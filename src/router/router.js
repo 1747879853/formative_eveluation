@@ -565,6 +565,14 @@ export const appRouter = [
                 name: 'assign_homework', 
                 component: () => import('@/views/input_class_grade/assign_homework.vue') 
             },
+            { 
+                path: 'immediate_evaluation', 
+                title: '即时性评价',
+                icon: 'compose',
+                access:'input_class_grade/immediate_evaluation', 
+                name: 'immediate_evaluation', 
+                component: () => import('@/views/input_class_grade/immediate_evaluation.vue') 
+            }
             // {
             //     path: 'pad_input_class_grade',                
             //     title: '平板-学生成绩录入',

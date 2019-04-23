@@ -120,7 +120,7 @@
 <script>
 import Cookies from 'js-cookie';
 export default {
-  name: "input_student_grade",
+  name: "immediate_evaluation",
   data() {
     return {
       // content:'a11111',
@@ -165,8 +165,8 @@ export default {
   mounted() { 
       this.u_agent = Cookies.get('user_agent');   
       this.$axios.get("/termList").then( res =>{
-            this.term = res.data.a;  //所有学期选项
-            this.option = res.data.b;  //当前学期是哪个
+            this.term = res.data.a;
+            this.option = res.data.b;
             this.selected();
             if(JSON.parse(localStorage.getItem('class'))!=null&&JSON.parse(localStorage.getItem('course'))!=null){
               this.selectCourse(JSON.parse(localStorage.getItem('class')),JSON.parse(localStorage.getItem('course')));
@@ -200,10 +200,10 @@ export default {
           this.class1='';
           this.$axios.post("/tclassList", {
               params: {
-                  term:this.option, //选择的学期
+                  term:this.option,
               }
           }).then(res => {
-            this.classcourseList = res.data;  //返回数据：该学期，当前用户（教师），所教的班级，和 课程
+            this.classcourseList = res.data;
             // this.term = res.data.b;
             console.log(res.data)
           })
@@ -211,7 +211,7 @@ export default {
             console.log(error);
           });
       }, 
-      selectCourse(classes,course){  //选择了 班级classes和课程course
+      selectCourse(classes,course){
         this.m=[];
         this.Columns=[
             {
@@ -235,7 +235,7 @@ export default {
         this.class_id=classes.id;
         this.course=course.name;
         this.course_id=course.id;
-        this.$axios.post("/get_classgrade",{ //根据学期、班级、课程查成绩
+        this.$axios.post("/get_classgrade",{
           params:{
             course_id:course.id,
             class_id:classes.id,
