@@ -205,7 +205,7 @@ export default {
           this.studentList = [];
           this.course='';
           this.class1='';
-          this.$axios.post("/tclassList", {
+          this.$axios.post("/tclassList_question", {
               params: {
                   term:this.option,
               }
@@ -376,7 +376,7 @@ export default {
         });
       },
       refresh(){
-        this.$axios.post("/tclassList", {
+        this.$axios.post("/tclassList_question", {
             params: {
                 term:this.option,
             }
