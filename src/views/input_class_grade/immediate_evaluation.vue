@@ -37,28 +37,29 @@
               班级&nbsp;/&nbsp;课程：&nbsp;&nbsp;{{class1}}&nbsp;/&nbsp;{{course}}
           </Col>
           <Col span="14">
-              <Button v-if="course!=''&&edit!='uneditable'&&u_agent == 'pc'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-small ">暂存</Button>
+              <!-- <Button v-if="course!=''&&edit!='uneditable'&&u_agent == 'pc'" @click="save(1)" class="ivu-btn ivu-btn-primary ivu-btn-small ">暂存</Button> -->
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-small">提交</Button>
+              <!-- <Button v-if="course!=''&&edit!='uneditable'" @click="save(2)" class="ivu-btn ivu-btn-primary ivu-btn-small">提交</Button> -->
           </Col>
       </Row>
-      <Row v-if="u_agent == 'pc' ">  
+      <!-- <Row v-if="u_agent == 'pc' ">  
           <Table  :columns="Columns" :data="studentList" border height="500" style="width: 100%;"></Table>
-      </Row>
+      </Row> -->
 
-      <Row v-if="u_agent == 'mobile' ">  
+      <Row>  
         <Col v-for="(item,index) in studentList" :key="index" :xs="8" :sm="6" :md="6" :lg="3">
-          <div  @click="selectstu(item)">
-          <Card style="margin:5px 5px;">
-            <p slot="title" >
-                <Avatar icon="ios-person" size="small" style="color: blue;"/>
-                {{item.name}}&nbsp;/&nbsp;{{item.sno}}
-            </p>
+          
+                <!-- <a href="#" class="demo-badge"></a> -->
+          
+          <div  @click="selectstu(item)"><Badge :count="item.count">
+          <Card style="margin:5px 5px;min-width: 130px;">
             
-            <p>其他信息1</p>
-            <p>其他信息2</p>
-          </Card>
+            <Avatar icon="ios-person" size="small" style="color: blue;"/>
+            {{item.name}}
+
+          </Card></Badge>
           </div>
+          
         </Col>
       </Row>
 
@@ -74,14 +75,17 @@
         <table v-if="edit!='uneditable'" style="padding:10px;font-family:consolas;font-size:20px;width:100%;">
             <tr style="height:35px"><td style="float:left">学号:</td><td style="float:right">{{student[0].sno}}</td></tr>
             <tr style="height:35px"><td style="float:left">姓名:</td><td style="float:right">{{student[0].name}}</td></tr>
-            <tr style="height:35px" v-for="(items,indexs) in data"><td style="float:left">{{items.name}}:</td>
+            <tr style="height:35px" v-for="(items,indexs) in data"><td style="float:left" v-if="items.types=='classroom_question'">{{items.name}}:</td>
             <td style="float:right">
-            <Input v-if="items.types=='score'" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
+            <!-- <Input v-if="items.types=='score'" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
             <Select v-if="items.types=='grade'" :placeholder="student[0]['e'+items.id]==''?'请选择':student[0]['e'+items.id]" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])">
               <Option v-for="(op,i) in items.description.split('@')" :key="op" :value="op.split('-')[0]"></Option>
             </Select>
             <Input v-if="items.types=='text-score'" style="width:60px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
-            <Button v-if="items.types=='text-score'" type="primary" size="small" @click="show_modal22(items,student[0])">查看</Button>
+            <Button v-if="items.types=='text-score'" type="primary" size="small" @click="show_modal22(items,student[0])">查看</Button> -->
+            <Select v-if="items.types=='classroom_question'" :placeholder="student[0]['e'+items.id]==''?'请选择':student[0]['e'+items.id]" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])">
+              <Option v-for="(op,i) in items.description.split('@')" :key="op" :value="op.split('-')[0]"></Option>
+            </Select>
             </td></tr>
             <tr>&nbsp;&nbsp;&nbsp;</tr>
             <tr style="height:35px"><td style="float:left">操作:</td><td style="float:right">
@@ -93,12 +97,15 @@
             <tr style="height:35px"><td style="float:left">姓名:</td><td style="float:right">{{student[0].name}}</td></tr>
             <tr style="height:35px" v-for="(items,indexs) in data"><td style="float:left">{{items.name}}:</td>
             <td style="float:right">
-            <Input v-if="items.types=='score'" disabled style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
+            <!-- <Input v-if="items.types=='score'" disabled style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
             <Select v-if="items.types=='grade'" disabled :placeholder="student[0]['e'+items.id]==''?'请选择':student[0]['e'+items.id]" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])">
               <Option v-for="(op,i) in items.description.split('@')" :key="op" :value="op.split('-')[0]"></Option>
             </Select>
             <Input v-if="items.types=='text-score'" disabled style="width:60px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
-            <Button v-if="items.types=='text-score'" type="primary" size="small" @click="show_modal22(items,student[0])">查看</Button>
+            <Button v-if="items.types=='text-score'" type="primary" size="small" @click="show_modal22(items,student[0])">查看</Button> -->
+            <Select v-if="items.types=='classroom_question'" disabled :placeholder="student[0]['e'+items.id]==''?'请选择':student[0]['e'+items.id]" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])">
+              <Option v-for="(op,i) in items.description.split('@')" :key="op" :value="op.split('-')[0]"></Option>
+            </Select>
             </td></tr>
         </table>
         <div slot="footer"></div>
@@ -124,7 +131,7 @@ export default {
   data() {
     return {
       // content:'a11111',
-      u_agent: 'pc',
+      // u_agent: 'pc',
       classcourseList:[],
       classList:[],
       studentList:[],
@@ -163,7 +170,7 @@ export default {
   components: {
   },
   mounted() { 
-      this.u_agent = Cookies.get('user_agent');   
+      // this.u_agent = Cookies.get('user_agent');   
       this.$axios.get("/termList").then( res =>{
             this.term = res.data.a;
             this.option = res.data.b;
@@ -243,53 +250,20 @@ export default {
           }
         }).then(res => {
           this.data = res.data.a;
+          for (var i = 0; i < this.data.length; i++) {
+            if(this.data[i].types!='classroom_question'||this.data[i].children.length){
+              this.data.splice(i,1);
+              i--;
+            }
+          }
+          // console.log(this.data[1].children.length)
           this.studentList = res.data.b;
           this.edit = res.data.c;
 
           if(this.edit=='editable'){
               for(let i =0;i<this.data.length;i++){
                 if(this.data[i].children.length==0){
-                    if(this.data[i].types=='score'){
-                      this.Columns.push({
-                              title: this.data[i].name,
-                              key: 'e'+this.data[i].id,
-                              align: "center",
-                              width: 80,
-                              render: (h, params) => {
-                                let _this = this;
-                                return h('div', [
-                                    h('Input', {
-                                        // style: {
-                                        //     width: '200px'
-                                        // },
-                                        props:{
-                                             value:params.row[params.column.key],
-                                             autosize: true
-                                        },
-                                        on:{
-                                          input:function(e){
-                                              let x = 0;
-                                              for(let k=0;k<_this.m.length;k++){
-                                                  if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
-                                                    _this.m[k].grade=e;
-                                                    x=1;
-                                                  }
-                                              }
-                                              if(x==0){
-                                                _this.m.push({
-                                                        id: _this.data[i].id,
-                                                        // eno: _this.data[i].eno,
-                                                        stu:params.row.id,
-                                                        grade:e,
-                                                      })
-                                              }
-                                          },                                  
-                                        }
-                                        })
-                                ]);
-                            }
-                      },);
-                    }else if(this.data[i].types=='grade'){
+                    if(this.data[i].types=='classroom_question'){
                       let array = this.data[i].description.split('@');
                       let arr = [];
                       for(let n=0;n<array.length;n++){
@@ -338,106 +312,12 @@ export default {
                                           },a);
                               }
                         },);
-                    }else if(this.data[i].types=='text-score'){
-                      this.Columns.push({
-                              title: this.data[i].name,
-                              key: 'e'+this.data[i].id,
-                              align: "center",
-                              width: 150,
-                              render: (h, params) => {
-                                let _this = this;
-                                return h('div', [
-                                    h('Input', {
-                                        style: {
-                                            width: '60%'
-                                        },
-                                        props:{
-                                             value:params.row[params.column.key],
-                                             autosize: true
-                                        },
-                                        on:{
-                                          input:function(e){
-                                              let x = 0;
-                                              for(let k=0;k<_this.m.length;k++){
-                                                  if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
-                                                    _this.m[k].grade=e;
-                                                    x=1;
-                                                  }
-                                              }
-                                              if(x==0){
-                                                _this.m.push({
-                                                        id: _this.data[i].id,
-                                                        // eno: _this.data[i].eno,
-                                                        stu:params.row.id,
-                                                        grade:e,
-                                                      })
-                                              }
-                                          },                                  
-                                        }
-                                        }),
-                                    h('Button', {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginLeft: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.show_modal2(params);
-                                            }
-                                        }
-                                    }, '查看'),
-                                ]);
-                            }
-                      },);
                     }
                 }
               }
           }else if(this.edit=='uneditable'){
             for(let i =0;i<this.data.length;i++){
-              if(this.data[i].types=='score'){
-                  this.Columns.push({
-                          title: this.data[i].name,
-                          key: 'e'+this.data[i].id,
-                          align: "center",
-                          render: (h, params) => {
-                            let _this = this;
-                            return h('div', [
-                                h('Input', {
-                                    // style: {
-                                    //     width: '200px'
-                                    // },
-                                    props:{
-                                         value:params.row[params.column.key],
-                                         autosize: true,
-                                         disabled: true
-                                    },
-                                    on:{
-                                      input:function(e){
-                                          let x = 0;
-                                          for(let k=0;k<_this.m.length;k++){
-                                              if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
-                                                _this.m[k].grade=e;
-                                                x=1;
-                                              }
-                                          }
-                                          if(x==0){
-                                            _this.m.push({
-                                                    id: _this.data[i].id,
-                                                    // eno: _this.data[i].eno,
-                                                    stu:params.row.id,
-                                                    grade:e,
-                                                  })
-                                          }
-                                      },                                  
-                                    }
-                                    })
-                            ]);
-                        }
-                  },);
-              }else if(this.data[i].types=='grade'){
+              if(this.data[i].types=='classroom_question'){
                 let array = this.data[i].description.split('@');
                 let arr = [];
                 for(let n=0;n<array.length;n++){
@@ -487,105 +367,15 @@ export default {
                                     },a);
                         }
                   },);
-              }else if(this.data[i].types=='text-score'){
-                      this.Columns.push({
-                              title: this.data[i].name,
-                              key: 'e'+this.data[i].id,
-                              align: "center",
-                              render: (h, params) => {
-                                let _this = this;
-                                return h('div', [
-                                    h('Input', {
-                                        style: {
-                                            width: '30%'
-                                        },
-                                        props:{
-                                             value:params.row[params.column.key],
-                                             autosize: true,
-                                             disabled: true,
-                                        },
-                                        on:{
-                                          input:function(e){
-                                              let x = 0;
-                                              for(let k=0;k<_this.m.length;k++){
-                                                  if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
-                                                    _this.m[k].grade=e;
-                                                    x=1;
-                                                  }
-                                              }
-                                              if(x==0){
-                                                _this.m.push({
-                                                        id: _this.data[i].id,
-                                                        // eno: _this.data[i].eno,
-                                                        stu:params.row.id,
-                                                        grade:e,
-                                                      })
-                                              }
-                                          },                                  
-                                        }
-                                        }),
-                                    h('Button', {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginLeft: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.show_modal2(params);
-                                            }
-                                        }
-                                    }, '查看'),
-                                ]);
-                            }
-                      },);
-                    }
+              }
             }
           }
-
-          
-          // this.Columns.push({
-          //   title: "操作",
-          //   key: "action",
-          //   align: "center",
-          //   render: (h, params) => {
-          //         return h('div', [
-          //             h('Button', {
-          //                 props: {
-          //                     type: 'primary',
-          //                     size: 'middle'
-          //                 },
-          //                 style: {
-          //                     marginRight: '5px'
-          //                 },
-          //                 on: {
-          //                     click: () => {
-          //                         this.save(params.row.id);
-          //                     }
-          //                 }
-          //             }, '保存')
-          //         ]);
-          //     }
-          // })
         })
         .catch(error => {
           console.log(error);
         });
       },
       refresh(){
-        // for (var i = 0; i < this.classcourseList.length; i++) {
-        //   if (this.classcourseList[i].id==this.class_id) {
-        //     for (var j = 0; j < this.classcourseList[i].length; j++) {
-        //       if (this.classcourseList[i][j].id==this.course_id) {
-        //         this.classcourseList[i][j].status=2;
-        //         break;
-        //       }
-        //     }
-        //     break;
-        //   }
-        // }
         this.$axios.post("/tclassList", {
             params: {
                 term:this.option,
@@ -625,46 +415,7 @@ export default {
           if(this.edit=='editable'){
               for(let i =0;i<this.data.length;i++){
                 if(this.data[i].children.length==0){
-                    if(this.data[i].types=='score'){
-                      this.Columns.push({
-                              title: this.data[i].name,
-                              key: 'e'+this.data[i].id,
-                              align: "center",
-                              render: (h, params) => {
-                                let _this = this;
-                                return h('div', [
-                                    h('Input', {
-                                        // style: {
-                                        //     width: '200px'
-                                        // },
-                                        props:{
-                                             value:params.row[params.column.key],
-                                             autosize: true
-                                        },
-                                        on:{
-                                          input:function(e){
-                                              let x = 0;
-                                              for(let k=0;k<_this.m.length;k++){
-                                                  if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
-                                                    _this.m[k].grade=e;
-                                                    x=1;
-                                                  }
-                                              }
-                                              if(x==0){
-                                                _this.m.push({
-                                                        id: _this.data[i].id,
-                                                        // eno: _this.data[i].eno,
-                                                        stu:params.row.id,
-                                                        grade:e,
-                                                      })
-                                              }
-                                          },                                  
-                                        }
-                                        })
-                                ]);
-                            }
-                      },);
-                    }else if(this.data[i].types=='grade'){
+                    if(this.data[i].types=='classroom_question'){
                       let array = this.data[i].description.split('@');
                       let arr = [];
                       for(let n=0;n<array.length;n++){
@@ -713,105 +464,12 @@ export default {
                                           },a);
                               }
                         },);
-                    }else if(this.data[i].types=='text-score'){
-                      this.Columns.push({
-                              title: this.data[i].name,
-                              key: 'e'+this.data[i].id,
-                              align: "center",
-                              render: (h, params) => {
-                                let _this = this;
-                                return h('div', [
-                                    h('Input', {
-                                        style: {
-                                            width: '30%'
-                                        },
-                                        props:{
-                                             value:params.row[params.column.key],
-                                             autosize: true
-                                        },
-                                        on:{
-                                          input:function(e){
-                                              let x = 0;
-                                              for(let k=0;k<_this.m.length;k++){
-                                                  if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
-                                                    _this.m[k].grade=e;
-                                                    x=1;
-                                                  }
-                                              }
-                                              if(x==0){
-                                                _this.m.push({
-                                                        id: _this.data[i].id,
-                                                        // eno: _this.data[i].eno,
-                                                        stu:params.row.id,
-                                                        grade:e,
-                                                      })
-                                              }
-                                          },                                  
-                                        }
-                                        }),
-                                    h('Button', {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginLeft: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.show_modal2(params);
-                                            }
-                                        }
-                                    }, '查看'),
-                                ]);
-                            }
-                      },);
                     }
                 }
               }
           }else if(this.edit=='uneditable'){
             for(let i =0;i<this.data.length;i++){
-              if(this.data[i].types=='score'){
-                  this.Columns.push({
-                          title: this.data[i].name,
-                          key: 'e'+this.data[i].id,
-                          align: "center",
-                          render: (h, params) => {
-                            let _this = this;
-                            return h('div', [
-                                h('Input', {
-                                    // style: {
-                                    //     width: '200px'
-                                    // },
-                                    props:{
-                                         value:params.row[params.column.key],
-                                         autosize: true,
-                                         disabled: true
-                                    },
-                                    on:{
-                                      input:function(e){
-                                          let x = 0;
-                                          for(let k=0;k<_this.m.length;k++){
-                                              if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
-                                                _this.m[k].grade=e;
-                                                x=1;
-                                              }
-                                          }
-                                          if(x==0){
-                                            _this.m.push({
-                                                    id: _this.data[i].id,
-                                                    // eno: _this.data[i].eno,
-                                                    stu:params.row.id,
-                                                    grade:e,
-                                                  })
-                                          }
-                                      },                                  
-                                    }
-                                    })
-                            ]);
-                        }
-                  },);
-              }else if(this.data[i].types=='grade'){
+              if(this.data[i].types=='classroom_question'){
                 let array = this.data[i].description.split('@');
                 let arr = [];
                 for(let n=0;n<array.length;n++){
@@ -861,88 +519,9 @@ export default {
                                     },a);
                         }
                   },);
-              }else if(this.data[i].types=='text-score'){
-                      this.Columns.push({
-                              title: this.data[i].name,
-                              key: 'e'+this.data[i].id,
-                              align: "center",
-                              render: (h, params) => {
-                                let _this = this;
-                                return h('div', [
-                                    h('Input', {
-                                        style: {
-                                            width: '30%'
-                                        },
-                                        props:{
-                                             value:params.row[params.column.key],
-                                             autosize: true,
-                                             disabled: true
-                                        },
-                                        on:{
-                                          input:function(e){
-                                              let x = 0;
-                                              for(let k=0;k<_this.m.length;k++){
-                                                  if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
-                                                    _this.m[k].grade=e;
-                                                    x=1;
-                                                  }
-                                              }
-                                              if(x==0){
-                                                _this.m.push({
-                                                        id: _this.data[i].id,
-                                                        // eno: _this.data[i].eno,
-                                                        stu:params.row.id,
-                                                        grade:e,
-                                                      })
-                                              }
-                                          },                                  
-                                        }
-                                        }),
-                                    h('Button', {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginLeft: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.show_modal2(params);
-                                            }
-                                        }
-                                    }, '查看'),
-                                ]);
-                            }
-                      },);
-                    }
+              }
             }
           }
-
-          
-          // this.Columns.push({
-          //   title: "操作",
-          //   key: "action",
-          //   align: "center",
-          //   render: (h, params) => {
-          //         return h('div', [
-          //             h('Button', {
-          //                 props: {
-          //                     type: 'primary',
-          //                     size: 'middle'
-          //                 },
-          //                 style: {
-          //                     marginRight: '5px'
-          //                 },
-          //                 on: {
-          //                     click: () => {
-          //                         this.save(params.row.id);
-          //                     }
-          //                 }
-          //             }, '保存')
-          //         ]);
-          //     }
-          // })
         })
         .catch(error => {
           console.log(error);
@@ -1014,6 +593,7 @@ export default {
                     for(let j = 0;j<this.studentList.length;j++){
                       if(res.data[i].stu==this.studentList[j].id){
                         this.studentList[j][('e'+res.data[i].id)]=res.data[i].grade;
+                        this.studentList[j]['count']++;
                         break;
                       }
                     }

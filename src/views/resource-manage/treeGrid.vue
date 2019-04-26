@@ -20,6 +20,7 @@
                         <Option value="score">score</Option>
                         <Option value="grade">grade</Option>
                         <Option value="text-score">text-score</Option>
+                        <Option value="classroom_question">classroom_question</Option>
                     </Select></td></tr>
                     <tr>&nbsp;</tr>
                     <tr><td>评价指标分类</td><td>                    
