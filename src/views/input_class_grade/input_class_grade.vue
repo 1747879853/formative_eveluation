@@ -77,7 +77,7 @@
             <tr style="height:35px" v-for="(items,indexs) in data"><td style="float:left">{{items.name}}:</td>
             <td style="float:right">
             <Input v-if="items.types=='score'" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
-            <Select v-if="items.types=='grade'" :placeholder="student[0]['e'+items.id]==''?'请选择':student[0]['e'+items.id]" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])">
+            <Select v-if="items.types=='grade'||items.types=='classroom_question'" :placeholder="student[0]['e'+items.id]==''?'请选择':student[0]['e'+items.id]" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])">
               <Option v-for="(op,i) in items.description.split('@')" :key="op" :value="op.split('-')[0]"></Option>
             </Select>
             <Input v-if="items.types=='text-score'" style="width:60px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
@@ -94,7 +94,7 @@
             <tr style="height:35px" v-for="(items,indexs) in data"><td style="float:left">{{items.name}}:</td>
             <td style="float:right">
             <Input v-if="items.types=='score'" disabled style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
-            <Select v-if="items.types=='grade'" disabled :placeholder="student[0]['e'+items.id]==''?'请选择':student[0]['e'+items.id]" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])">
+            <Select v-if="items.types=='grade'||items.types=='classroom_question'" disabled :placeholder="student[0]['e'+items.id]==''?'请选择':student[0]['e'+items.id]" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])">
               <Option v-for="(op,i) in items.description.split('@')" :key="op" :value="op.split('-')[0]"></Option>
             </Select>
             <Input v-if="items.types=='text-score'" disabled style="width:60px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])"></Input>
@@ -243,6 +243,12 @@ export default {
           }
         }).then(res => {
           this.data = res.data.a;
+          for (var i = 0; i < this.data.length; i++) {
+            if(this.data[i].children.length){
+              this.data.splice(i,1);
+              i--;
+            }
+          }
           this.studentList = res.data.b;
           this.edit = res.data.c;
 
