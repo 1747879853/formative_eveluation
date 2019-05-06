@@ -951,10 +951,10 @@ export default {
                       status: mm
                   }
               }).then(function(res) {              
-                  for(let i=0;i<res.data.length;i++){
+                  for(let i=0;i<res.data.a.length;i++){
                     for(let j = 0;j<this.studentList.length;j++){
-                      if(res.data[i].stu==this.studentList[j].id){
-                        this.studentList[j][('e'+res.data[i].id)]=res.data[i].grade;
+                      if(res.data.a[i].stu==this.studentList[j].id){
+                        this.studentList[j][('e'+res.data.a[i].id)]=res.data.a[i].grade;
                         break;
                       }
                     }
@@ -979,10 +979,10 @@ export default {
                                 status: mm
                             }
                         }).then(function(res) {              
-                            for(let i=0;i<res.data.length;i++){
+                            for(let i=0;i<res.data.a.length;i++){
                               for(let j = 0;j<this.studentList.length;j++){
-                                if(res.data[i].stu==this.studentList[j].id){
-                                  this.studentList[j][('e'+res.data[i].id)]=res.data[i].grade;
+                                if(res.data.a[i].stu==this.studentList[j].id){
+                                  this.studentList[j][('e'+res.data.a[i].id)]=res.data.a[i].grade;
                                   break;
                                 }
                               }
@@ -1008,10 +1008,10 @@ export default {
                       status: 1
                   }
               }).then(function(res) {              
-                  for(let i=0;i<res.data.length;i++){
+                  for(let i=0;i<res.data.a.length;i++){
                     for(let j = 0;j<this.studentList.length;j++){
-                      if(res.data[i].stu==this.studentList[j].id){
-                        this.studentList[j][('e'+res.data[i].id)]=res.data[i].grade;
+                      if(res.data.a[i].stu==this.studentList[j].id){
+                        this.studentList[j][('e'+res.data.a[i].id)]=res.data.a[i].grade;
                         break;
                       }
                     }
