@@ -43,7 +43,7 @@
           </Col>
       </Row>
       <Row style="margin-top: 10px;">
-          <Col span="2"><Icon type="ios-film-outline"></Icon>
+          <Col span="3"><Icon type="ios-film-outline"></Icon>
               一级评价指标：
           </Col>
           <Col>
@@ -54,7 +54,7 @@
         
       </Row>
       <Row v-if="u_agent == 'pc' ">  
-          <Table  :columns="Columns" :data="studentList" border height="500" style="width: 100%;"></Table>
+          <Table  :columns="Columns" :data="studentList" border style="width: 100%;"></Table>
       </Row>
 
       <Row v-if="u_agent == 'mobile' ">  
@@ -149,9 +149,7 @@ export default {
               title: "姓名",
               key: "name",
               align: "center",
-              width: 110,
-              fixed: 'left',
-              
+              width: 110,             
             }, 
             {
               title: "学号",
@@ -203,8 +201,6 @@ export default {
               key: "name",
               align: "center",
               width: 110,
-              fixed: 'left',
-              
             }, 
             {
               title: "学号",
@@ -661,8 +657,6 @@ export default {
               key: "name",
               align: "center",
               width: 110,
-              fixed: 'left',
-              
             }, 
             {
               title: "学号",
@@ -1153,8 +1147,6 @@ export default {
               key: "name",
               align: "center",
               width: 110,
-              fixed: 'left',
-              
             }, 
             {
               title: "学号",
