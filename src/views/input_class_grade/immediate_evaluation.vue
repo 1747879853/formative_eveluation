@@ -85,7 +85,7 @@
             <Button v-if="items.types=='text-score'" type="primary" size="small" @click="show_modal22(items,student[0])">查看</Button> -->
             <Select v-if="items.types=='classroom_question'" :placeholder="student[0]['e'+items.id]==''?'请选择':student[0]['e'+items.id]" style="width:100px" v-model="student[0]['e'+items.id]" @on-change="change(items,student[0])">
               <Option v-for="(op,i) in items.description.split('@')" :key="op" :value="op.split('-')[0]"></Option>
-            </Select>
+            </Select><Button type="primary" size="small" @click="clean(items,student[0])">清空</Button>
             </td></tr>
             <tr>&nbsp;&nbsp;&nbsp;</tr>
             <tr style="height:35px"><td style="float:left">操作:</td><td style="float:right">
@@ -186,6 +186,44 @@ export default {
     this.save(3);
   },
   methods:{
+      clean(p,s){
+        this.$Modal.confirm({
+                    title: '清空成绩',
+                    content: '<p>确定要清空该项成绩吗？</p>',
+                    onOk: () => {
+                        this.$axios.patch('/inputclassgrade', {
+                            params: {
+                                courses_id: this.course_id,
+                                class_id: this.class_id,
+                                term: this.option,
+                                eval: [{
+                                        id: p.id,
+                                        stu: s.id,
+                                        grade: '',
+                                      }],
+                                status: 1
+                            }
+                        }).then(function(res) {              
+                            for(let i=0;i<res.data.a.length;i++){
+                              for(let j = 0;j<this.studentList.length;j++){
+                                if(res.data.a[i].stu==this.studentList[j].id){
+                                  this.studentList[j][('e'+res.data.a[i].id)]=res.data.a[i].grade;
+                                  this.studentList[j]['count']=this.studentList[j]['count']+res.data.a[i].count;
+                                  break;
+                                }
+                              }
+                            }
+                            console.log(this.studentList);
+                            // this.modal1=false;
+                            this.$Message.info('暂存成功');
+                        }.bind(this))
+                        .catch(function(error) {
+                            console.log(error)
+                        });
+                        
+                    },
+                    onCancel: () => { this.$Message.info('取消'); }});
+      },
       selected() {
           this.Columns=[
             {
