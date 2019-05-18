@@ -175,8 +175,8 @@ export default {
             this.term = res.data.a;
             this.option = res.data.b;
             this.selected();
-            if(JSON.parse(localStorage.getItem('class'))!=null&&JSON.parse(localStorage.getItem('course'))!=null){
-              this.selectCourse(JSON.parse(localStorage.getItem('class')),JSON.parse(localStorage.getItem('course')));
+            if(JSON.parse(localStorage.getItem('i_class'))!=null&&JSON.parse(localStorage.getItem('i_course'))!=null){
+              this.selectCourse(JSON.parse(localStorage.getItem('i_class')),JSON.parse(localStorage.getItem('i_course')));
             }
         }).catch(error =>{
             console.log(error);
@@ -236,8 +236,8 @@ export default {
               
             },                      
           ];
-        localStorage.setItem('class',JSON.stringify(classes));
-        localStorage.setItem('course',JSON.stringify(course));
+        localStorage.setItem('i_class',JSON.stringify(classes));
+        localStorage.setItem('i_course',JSON.stringify(course));
         this.class1=classes.name;
         this.class_id=classes.id;
         this.course=course.name;
@@ -264,12 +264,15 @@ export default {
               for(let i =0;i<this.data.length;i++){
                 if(this.data[i].children.length==0){
                     if(this.data[i].types=='classroom_question'){
+                      console.log(this.data[i].description)
                       let array = this.data[i].description.split('@');
+
                       let arr = [];
                       for(let n=0;n<array.length;n++){
                         let a = array[n].split('-');
                         arr.push(a[0]);
                       }
+                      // console.log(arr)
                         this.Columns.push({
                                 title: this.data[i].name,
                                 key: 'e'+this.data[i].id,

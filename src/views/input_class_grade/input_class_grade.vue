@@ -653,6 +653,7 @@ export default {
           });
       }, 
       selectCourse(classes,course){  //选择了 班级classes和课程course
+        this.data1=[];
         this.table=[];
         this.m=[];
         this.Columns=[
