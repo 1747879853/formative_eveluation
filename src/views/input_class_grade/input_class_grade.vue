@@ -148,12 +148,14 @@ export default {
         {
               title: "姓名",
               key: "name",
+              fixed:'left',
               align: "center",
               width: 110,             
             }, 
             {
               title: "学号",
               key: "sno",
+              fixed: 'left',
               width: 110,              
             },                      
       ],
@@ -199,12 +201,14 @@ export default {
           {
               title: "姓名",
               key: "name",
+              fixed:'left',
               align: "center",
               width: 110,
             }, 
             {
               title: "学号",
               key: "sno",
+              fixed: 'left',
               width: 110,              
             },                       
         ];
@@ -620,11 +624,13 @@ export default {
             {
               title: "学号",
               key: "sno",
+              fixed: 'left',
               width: 110
             },
             {
               title: "姓名",
               key: "name",
+              fixed:'left',
               align: "center",
               width: 110
             },                       
@@ -649,6 +655,7 @@ export default {
           });
       }, 
       selectCourse(classes,course){  //选择了 班级classes和课程course
+        this.checkAllGroup=[];
         this.data1=[];
         this.table=[];
         this.m=[];
@@ -656,12 +663,14 @@ export default {
             {
               title: "姓名",
               key: "name",
+              fixed:'left',
               align: "center",
               width: 110,
             }, 
             {
               title: "学号",
               key: "sno",
+              fixed: 'left',
               width: 110,              
             },                      
           ];
@@ -1146,12 +1155,14 @@ export default {
             {
               title: "姓名",
               key: "name",
+              fixed:'left',
               align: "center",
               width: 110,
             }, 
             {
               title: "学号",
               key: "sno",
+              fixed: 'left',
               width: 110,              
             },                       
           ];
