@@ -215,12 +215,12 @@ export default {
                             }
                             console.log(this.studentList);
                             // this.modal1=false;
-                            this.$Message.info('暂存成功');
+                            this.$Message.info('清空成功');
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
                         });
-                        
+                        this.m=[];
                     },
                     onCancel: () => { this.$Message.info('取消'); }});
       },
@@ -642,6 +642,7 @@ export default {
                   console.log(this.studentList);
                   this.modal1=false;
                   this.$Message.info('暂存成功');
+                  this.m=[];
               }.bind(this))
               .catch(function(error) {
                   console.log(error)
@@ -670,6 +671,7 @@ export default {
                             }
                             console.log(this.studentList);
                             this.$Message.info('提交成功');
+                            this.m=[];
                             this.refresh();
                         }.bind(this))
                         .catch(function(error) {
@@ -698,6 +700,7 @@ export default {
                     }
                   }
                   console.log(this.studentList);
+                  this.m=[];
                   // this.$Message.info('提交成功');
               }.bind(this))
               .catch(function(error) {
