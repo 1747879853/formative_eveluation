@@ -44,12 +44,18 @@
                     <Input v-model="sno" placeholder="请输入学号" clearable style="width: 300px"></Input></td></tr>
                     <tr><td>姓名:</td><td>
                     <Input v-model="sname" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
-                    <tr><td>用户名:</td><td>
+                    <tr><td>性别:</td><td>
+                    <Input v-model="sex" placeholder="请输入性别" clearable style="width: 300px"></Input></td></tr>
+                    <tr><td>出生日期:</td><td>
+                    <Input v-model="birthday" placeholder="请输入出生日期" clearable style="width: 300px"></Input></td></tr>
+                    <tr><td>民族:</td><td>
+                    <Input v-model="nation" placeholder="请输入民族" clearable style="width: 300px"></Input></td></tr>
+                    <!-- <tr><td>用户名:</td><td>
                     <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
                     <tr><td>入学年份:</td><td>
                     <Input v-model="year" placeholder="请输入入学年份" clearable style="width: 300px"></Input></td></tr>
                     <tr><td>电话:</td><td>
-                    <Input v-model="tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
+                    <Input v-model="tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr> -->
                 </table>
             </Modal>
             <Modal
@@ -69,12 +75,18 @@
             <Input v-model="sno" placeholder="请输入学号" clearable style="width: 300px"></Input></td></tr>
             <tr><td>姓名</td><td>
             <Input v-model="sname" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
-            <tr><td>用户名</td><td>
+            <tr><td>性别:</td><td>
+            <Input v-model="sex" placeholder="请输入性别" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>出生日期:</td><td>
+            <Input v-model="birthday" placeholder="请输入出生日期" clearable style="width: 300px"></Input></td></tr>
+            <tr><td>民族:</td><td>
+            <Input v-model="nation" placeholder="请输入民族" clearable style="width: 300px"></Input></td></tr>
+            <!-- <tr><td>用户名</td><td>
             <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>入学年份</td><td>
             <Input v-model="year" placeholder="请输入入学年份" clearable style="width: 300px"></Input></td></tr>
             <tr><td>电话</td><td>
-            <Input v-model="tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr>
+            <Input v-model="tel" placeholder="请输入电话" clearable style="width: 300px"></Input></td></tr> -->
             </table>
             </Modal>
         </div>
@@ -182,21 +194,36 @@ import excel from '@/libs/excel'
                         title: '姓名',
                         key: 'name',
                         align: 'center'
-                    },    
+                    },  
                     {
-                        title: "邮箱",
-                        key: "email",
-                        align: "center"
-                    },                
-                    {
-                        title: '入学年份',
-                        key: 'year',
+                        title: '性别',
+                        key: 'sex',
                         align: 'center'
                     },
                     {
-                        title: "手机号",
-                        key: "tel"
-                    },
+                        title: '出生日期',
+                        key: 'birthday',
+                        align: 'center'
+                    }, 
+                    {
+                        title: '民族',
+                        key: 'nation',
+                        align: 'center'
+                    },  
+                    // {
+                    //     title: "邮箱",
+                    //     key: "email",
+                    //     align: "center"
+                    // },                
+                    // {
+                    //     title: '入学年份',
+                    //     key: 'year',
+                    //     align: 'center'
+                    // },
+                    // {
+                    //     title: "手机号",
+                    //     key: "tel"
+                    // },
                     {
                       title: "状态",
                       key: "status",
@@ -242,6 +269,9 @@ import excel from '@/libs/excel'
                 classstuData: [],
                 sno: '',
                 sname:'',
+                sex:'',
+                birthday:'',
+                nation:'',
                 email:'',
                 year:'',
                 tel:'',
@@ -343,10 +373,13 @@ import excel from '@/libs/excel'
                 this.name = this.userData[index].name; // 这应该是获取了班级名称
                 this.stuid='';
                 this.sname='';
-                this.email='';
-                this.year='';
+                // this.email='';
+                // this.year='';
                 this.sno='';
-                this.tel='';
+                this.sex='';
+                this.birthday='';
+                this.nation='';
+                // this.tel='';
                 //alert(this.name);
             },
             delstu (index) { // 显示删除学生的窗口
@@ -372,10 +405,13 @@ import excel from '@/libs/excel'
                 this.$axios.post('/studentList', {
                     params: {
                         name: this.sname,
-                        email: this.email,
-                        year: this.year,
-                        tel: this.tel,
+                        // email: this.email,
+                        // year: this.year,
+                        // tel: this.tel,
                         sno: this.sno,
+                        sex: this.sex,
+                        birthday: this.birthday,
+                        nation: this.nation,
                         class_room_id: this.id,
                     }
                 }).then(function(res) {
@@ -412,20 +448,26 @@ import excel from '@/libs/excel'
                 this.modal3=true;
                 this.stuid=this.classstuData[index].id;
                 this.sname=this.classstuData[index].name;
-                this.email=this.classstuData[index].email;
-                this.year=this.classstuData[index].year;
+                // this.email=this.classstuData[index].email;
+                // this.year=this.classstuData[index].year;
                 this.sno=this.classstuData[index].sno;
-                this.tel=this.classstuData[index].tel;
+                this.sex=this.classstuData[index].sex;
+                this.birthday=this.classstuData[index].birthday;
+                this.nation=this.classstuData[index].nation;
+                // this.tel=this.classstuData[index].tel;
             },
             ok () {
                 this.$axios.patch('/studentList', {
                     params: {
                         id: this.stuid,
                         name: this.sname,
-                        email: this.email,
-                        year: this.year,
+                        // email: this.email,
+                        // year: this.year,
                         sno: this.sno,
-                        tel: this.tel,
+                        sex: this.sex,
+                        birthday: this.birthday,
+                        nation: this.nation,
+                        // tel: this.tel,
                         class_room_id: this.id,
                     }
                 }).then(function(res) {
@@ -434,10 +476,13 @@ import excel from '@/libs/excel'
                     for(let i = 0; i < this.classstuData.length; i++){
                       if (this.classstuData[i].id == id){
                         this.classstuData[i].name = res.data[0].name;
-                        this.classstuData[i].email = res.data[0].email;
-                        this.classstuData[i].year = res.data[0].year;
+                        // this.classstuData[i].email = res.data[0].email;
+                        // this.classstuData[i].year = res.data[0].year;
                         this.classstuData[i].sno = res.data[0].sno;
-                        this.classstuData[i].tel = res.data[0].tel;
+                        this.classstuData[i].birthday = res.data[0].birthday;
+                        this.classstuData[i].sex = res.data[0].sex;
+                        this.classstuData[i].nation = res.data[0].nation;
+                        // this.classstuData[i].tel = res.data[0].tel;
                         this.classstuData[i].class_room_id = res.data[0].class_room_id;
                         this.classstuData[i].classname = res.data[0].classname;
                         break;
