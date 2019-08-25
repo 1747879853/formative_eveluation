@@ -45,11 +45,71 @@
                     <tr><td>姓名:</td><td>
                     <Input v-model="sname" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
                     <tr><td>性别:</td><td>
-                    <Input v-model="sex" placeholder="请输入性别" clearable style="width: 300px"></Input></td></tr>
+                    <Select v-model="sex" ref="element1" style="width:200px">
+                        <Option value="男">男</Option>
+                        <Option value="女">女</Option>
+                    </Select></td></tr>
                     <tr><td>出生日期:</td><td>
-                    <Input v-model="birthday" placeholder="请输入出生日期" clearable style="width: 300px"></Input></td></tr>
+                    <DatePicker v-model="birthday" type="date" placeholder="请选择日期" style="width: 300px"></DatePicker></td></tr>
                     <tr><td>民族:</td><td>
-                    <Input v-model="nation" placeholder="请输入民族" clearable style="width: 300px"></Input></td></tr>
+                    <Select v-model="nation" ref="element1" style="width:200px">
+                        <Option value="汉族">汉族</Option>  
+                        <Option value="蒙古族">蒙古族</Option>  
+                        <Option value="回族">回族</Option>  
+                        <Option value="藏族">藏族</Option>  
+                        <Option value="维吾尔族">维吾尔族</Option>  
+                        <Option value="苗族">苗族</Option>  
+                        <Option value="彝族">彝族</Option>  
+                        <Option value="壮族">壮族</Option>  
+                        <Option value="布依族">布依族</Option>  
+                        <Option value="朝鲜族">朝鲜族</Option>  
+                        <Option value="满族">满族</Option>  
+                        <Option value="侗族">侗族</Option>  
+                        <Option value="瑶族">瑶族</Option>  
+                        <Option value="白族">白族</Option>  
+                        <Option value="土家族">土家族</Option>  
+                        <Option value="哈尼族">哈尼族</Option>  
+                        <Option value="哈萨克族">哈萨克族</Option>  
+                        <Option value="傣族">傣族</Option>  
+                        <Option value="黎族">黎族</Option>  
+                        <Option value="傈僳族">傈僳族</Option>  
+                        <Option value="佤族">佤族</Option>  
+                        <Option value="畲族">畲族</Option>  
+                        <Option value="高山族">高山族</Option>  
+                        <Option value="拉祜族">拉祜族</Option>  
+                        <Option value="水族">水族</Option>  
+                        <Option value="东乡族">东乡族</Option>  
+                        <Option value="纳西族">纳西族</Option>  
+                        <Option value="景颇族">景颇族</Option>  
+                        <Option value="柯尔克孜族">柯尔克孜族</Option>  
+                        <Option value="土族">土族</Option>  
+                        <Option value="达斡尔族">达斡尔族</Option>  
+                        <Option value="仫佬族">仫佬族</Option>  
+                        <Option value="羌族">羌族</Option>  
+                        <Option value="布朗族">布朗族</Option>  
+                        <Option value="撒拉族">撒拉族</Option>  
+                        <Option value="毛南族">毛南族</Option>  
+                        <Option value="仡佬族">仡佬族</Option>  
+                        <Option value="锡伯族">锡伯族</Option>  
+                        <Option value="阿昌族">阿昌族</Option>  
+                        <Option value="普米族">普米族</Option>  
+                        <Option value="塔吉克族">塔吉克族</Option>  
+                        <Option value="怒族">怒族</Option>  
+                        <Option value="乌孜别克族">乌孜别克族</Option>  
+                        <Option value="俄罗斯族">俄罗斯族</Option>  
+                        <Option value="鄂温克族">鄂温克族</Option>  
+                        <Option value="德昂族">德昂族</Option>  
+                        <Option value="保安族">保安族</Option>  
+                        <Option value="裕固族">裕固族</Option>  
+                        <Option value="京族">京族</Option>  
+                        <Option value="塔塔尔族">塔塔尔族</Option>  
+                        <Option value="独龙族">独龙族</Option>  
+                        <Option value="鄂伦春族">鄂伦春族</Option>  
+                        <Option value="赫哲族">赫哲族</Option>  
+                        <Option value="门巴族">门巴族</Option>  
+                        <Option value="珞巴族">珞巴族</Option>  
+                        <Option value="基诺族">基诺族</Option>
+                    </Select></td></tr>
                     <!-- <tr><td>用户名:</td><td>
                     <Input v-model="email" placeholder="请输入用户名" clearable style="width: 300px"></Input></td></tr>
                     <tr><td>入学年份:</td><td>
@@ -402,24 +462,36 @@ import excel from '@/libs/excel'
                     });
             },
             addclassstu () {
-                this.$axios.post('/studentList', {
-                    params: {
-                        name: this.sname,
-                        // email: this.email,
-                        // year: this.year,
-                        // tel: this.tel,
-                        sno: this.sno,
-                        sex: this.sex,
-                        birthday: this.birthday,
-                        nation: this.nation,
-                        class_room_id: this.id,
-                    }
-                }).then(function(res) {
-                    this.$Message.info('添加成功');
-                }.bind(this))
-                .catch(function(error) {
-                    console.log(error)
-                });
+                if (this.sname!=''&&this.sno!=''&&this.sex!=''&&this.birthday!=''&&this.nation!='') {
+
+                      var y = this.birthday.getFullYear();
+                      var m = this.birthday.getMonth() + 1;
+                      m = m < 10 ? ('0' + m) : m;
+                      var d = this.birthday.getDate();
+                      d = d < 10 ? ('0' + d) : d;
+                      this.birthday =  y + '-' + m + '-' + d;
+
+                    this.$axios.post('/studentList', {
+                        params: {
+                            name: this.sname,
+                            // email: this.email,
+                            // year: this.year,
+                            // tel: this.tel,
+                            sno: this.sno,
+                            sex: this.sex,
+                            birthday: this.birthday,
+                            nation: this.nation,
+                            class_room_id: this.id,
+                        }
+                    }).then(function(res) {
+                        this.$Message.info('添加成功');
+                    }.bind(this))
+                    .catch(function(error) {
+                        console.log(error)
+                    });
+                }else{
+                    this.$Message.info('姓名，学号，性别，出生日期，民族不能为空！');
+                }
             },
             delclassstu (index) { // 删除学生里面的按钮
                 this.$Modal.confirm({
