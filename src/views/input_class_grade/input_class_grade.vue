@@ -118,12 +118,14 @@
     <Modal
       v-model="modal"
       title="查看学生作业"
-      >
+      @on-ok="save_tea_comment">
       <table>            
       <tr><td>作业名称:</td><td>{{homework.title}}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>完成时间:</td><td>{{homework.finish_time.substring(0,10)}}</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>学生姓名:</td><td>{{homework.stu_name}}</td></tr>
       </table>
       作业内容：
       <div v-html='homework.content' style="background-color:cornsilk;padding:10px"></div>
+      教师评语：
+      <Input v-model="homework.tea_comment"></Input>
     </Modal>
 </div>
 </template>
@@ -135,6 +137,7 @@ export default {
   data() {
     return {
       // content:'a11111',
+      tea_comment: '',
       u_agent: 'pc',
       classcourseList:[],
       classList:[],
@@ -172,6 +175,7 @@ export default {
         finish_time:'',
         stu_name:'',
         content:'',
+        tea_comment: ''
       },
       checkAllGroup:[],
       table:[],
@@ -1593,7 +1597,10 @@ export default {
             })
           }
           // console.log(this.m);
-      },      
+      },
+      save_tea_comment(){
+
+      }     
   }
 };
 </script>

@@ -83,7 +83,7 @@
 import Cookies from 'js-cookie';
 import util from '@/libs/util.js';
 export default {
-    name: 'ownspace_index',
+    name: 'ownspace_page',
     data () {
         // const validePhone = (rule, value, callback) => {
         //     var re = /^1[0-9]{10}$/;
