@@ -97,7 +97,7 @@ export default {
         },
         {
           title: "状态",
-          key: "status",
+          key: "status_str",
           align: "center",
         },
         {
@@ -119,7 +119,7 @@ export default {
                                         this.show_modal2(params.index);
                                     }
                                 }
-                            }, '编辑教师'),  
+                            }, '编辑'),  
                             h('Button', {
                                 props: {
                                     type: 'error',
@@ -130,7 +130,7 @@ export default {
                                         this.deleteClick(params.index);
                                       }
                                 }
-                            }, '删除教师')
+                            }, '离职')
                         ]);
                     }
                 }
@@ -167,6 +167,10 @@ export default {
     },
     ok () 
     {
+      if(this.tno ==""){
+        this.$Message.error('职工号为空');
+        return
+      }
                 this.$axios.post('/teacherList', {
                             params: {
                                 name: this.name,
@@ -177,9 +181,14 @@ export default {
                                 status: 1,
                             }
                         }).then(function(res) {
-                            console.log(res.data);
-                            this.userData.push(res.data);
-                            this.$Message.info('添加成功');
+                            // console.log(res.data);
+                            if(res.data.code == '1'){
+                              this.userData.push(res.data.data);
+                              this.$Message.info('添加成功');
+                            }else{
+                              this.$Message.info(res.data.msg);
+                            }
+                            
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
@@ -234,8 +243,8 @@ export default {
     {
        this.id = this.userData[index].id;
        this.$Modal.confirm({
-                    title: '删除教师',
-                    content: '<p>确定要删除此教师吗？</p>',
+                    title: '教师离职',
+                    content: '<p>确定此教师离职吗？</p>',
                     onOk: () => {
                         this.$axios.delete('/teacherList', {
                             data: {
@@ -247,7 +256,7 @@ export default {
                         }).then(function(res) {
                             console.log(res);
                             this.userData.splice(index,1);
-                            this.$Message.info('删除成功');
+                            this.$Message.info('成功');
                         }.bind(this))
                         .catch(function(error) {
                             console.log(error)
