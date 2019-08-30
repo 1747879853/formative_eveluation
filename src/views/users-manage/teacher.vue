@@ -254,8 +254,9 @@ export default {
                                 }
                             }
                         }).then(function(res) {
-                            console.log(res);
-                            this.userData.splice(index,1);
+                            // console.log(res);
+                            this.userData[index] = res.data;
+                            this.userData.splice(0,0);
                             this.$Message.info('成功');
                         }.bind(this))
                         .catch(function(error) {
