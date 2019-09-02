@@ -135,7 +135,7 @@ export default {
          }
          this.comment.push(res.data.f[j])
        }*/
-       console.log(this.comment)
+       
        console.log(this.homeworkName)
        
          //console.log(this.Columns[0][0][0])

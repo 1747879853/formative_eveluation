@@ -46,6 +46,7 @@
           <tr>&nbsp;</tr>  
           <tr><td style="width:60px">作业要求:</td><td><div v-html='homework.demand' style="background-color:cornsilk;padding:10px"></div></td></tr>
           <tr>&nbsp;</tr>        
+          <tr><td style="width:60px">教师评语:</td><td><div  style="background-color:cornsilk;padding:10px">{{tea_comment}}</div></td></tr>
         </table> 
         <!-- <wangeditor v-if="eva.done==1||eva.done==2" v-bind:content="content" v-bind:disabled="true" :catchData="catchData"></wangeditor>
         <wangeditor v-if="eva.done==0||eva.done==3" v-bind:content="content" v-bind:disabled="false" :catchData="catchData"></wangeditor> -->
@@ -74,7 +75,8 @@ export default {
       course:'',
       homework:'',
       content:'',
-      ed:''
+      ed:'',
+      tea_comment:''
     };
   },
   components: {
@@ -173,7 +175,7 @@ export default {
           this.user = res.data.a;
           this.classes = res.data.b;
           this.data = res.data.c;
-          // console.log(this.data)
+           console.log(this.data)
         })
         .catch(error => {
           console.log(error);
@@ -192,9 +194,11 @@ export default {
                 content: 'get'
             }
         }).then(function(res) {   
+          console.log(res.data[0].tea_comment)
           if(res.data.length>0){
             this.content=res.data[0].content;
             this.ed.txt.html(this.content);
+            this.tea_comment = res.data[0].tea_comment
           }else{
             this.content="无法输入作业内容"
           }    
