@@ -124,8 +124,11 @@
       </table>
       作业内容：
       <div v-html='homework.content' style="background-color:cornsilk;padding:10px"></div>
+      
+      <Checkbox v-model="homework.excellent">选为优秀作业</Checkbox><br/>
       教师评语：
-      <Input v-model="homework.tea_comment" type="textarea"></Input>
+      
+      <Input v-model="homework.tea_comment" clearable type="textarea"></Input>
     </Modal>
 </div>
 </template>
@@ -137,6 +140,8 @@ export default {
   data() {
     return {
       // content:'a11111',
+      
+      
       now_stu_id:'',
       now_courses_id:'',
       now_term:'',
@@ -179,7 +184,8 @@ export default {
         finish_time:'',
         stu_name:'',
         content:'',
-        tea_comment: ''
+        tea_comment: '',
+        excellent:false
       },
       checkAllGroup:[],
       table:[],
@@ -1418,8 +1424,10 @@ export default {
       show_modal2(p){
         this.modal=true;
         // console.log(p)
+        this.homework.tea_comment = '';
         this.homework.title=p.column.title;        
         this.homework.stu_name=p.row.name;
+        this.homework.excellent = false;
         this.now_stu_id = p.row.id;
         this.now_courses_id = this.course_id;
         this.now_term = this.option;
@@ -1436,7 +1444,8 @@ export default {
             console.log(res.data)
             this.homework.finish_time=res.data.finish_time;
             this.homework.content=res.data.content;  
-            this.homework.tea_comment = res.data.tea_comment         
+            this.homework.tea_comment = res.data.tea_comment;
+            this.homework.excellent = res.data.excellent;         
         }.bind(this))
         .catch(function(error) {
             console.log(error)
@@ -1487,6 +1496,7 @@ export default {
         // console.log(p)
         this.homework.title=eva.title;        
         this.homework.stu_name=stu.name;
+        
         this.$axios.get('/stu_homework_by_id', {
             params: {
                 courses_id: this.course_id,
@@ -1611,20 +1621,27 @@ export default {
           // console.log(this.m);
       },
       save_tea_comment(){
+        if(this.homework.excellent==null){
+          this.homework.excellent = false
+        }
         this.$axios.post('/tea_comment', {
                 params: {
                     stu_id: this.now_stu_id,
                     tea_comment: this.homework.tea_comment,
                     courses_id: this.now_courses_id,
                     term: this.now_term,
-                    eval: this.now_eva
+                    eval: this.now_eva,
+                    excellent: this.homework.excellent
                 }
-            }).then(function(res) {              
+            }).then(function(res) {   
+              this.excellent = false
+
                 console.log(res)
                 this.$Message.info('评价成功');
             }.bind(this))
             .catch(function(error) {
                 console.log(error)
+                this.excellent = false
             });
       }     
        
