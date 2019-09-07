@@ -65,7 +65,7 @@ v-model="modal1"
       width="50%"
       :mask-closable="false"
 >
-<Table border :columns="columns12" :data="data6"></Table>
+  <Table border :columns="columns12" :data="data6"></Table>
 </Modal>
 
 </div>
@@ -90,7 +90,7 @@ export default {
                     },
                     {
                         title: '学号',
-                        key: 'stu_num'
+                        key: 'sno'
                     },
                      {
                         title: '操作',
@@ -111,7 +111,7 @@ export default {
                                         click: () => { 
                                             this.$Modal.success({
                                             
-                                            content: this.excellent_homework[params.index],
+                                            content: this.data6[params.index].content,
                                             
                });
                                         }
@@ -229,22 +229,14 @@ export default {
       if(this.eva.homework==undefined){
         this.$Message.info('请先选择课程');
       }
+      let _this = this
       this.$axios.get("/excellent_stu_homework", {
             params: {
                th_id: this.eva.homework[0].id
             }
         }).then(res => {
-            this.data6=[]
-            this.excellent_homework = []
-          this.modal1 = true
-          
-          for( let i = 0;i<res.data.stu_num.length;i++){
-              this.data1.name = res.data.name[i]
-              this.data1.stu_num = res.data.stu_num[i]
-              this.excellent_homework.push(res.data.content[i])
-              this.data6.push(this.data1)
-          }
-          
+          _this.data6 = res.data
+          _this.modal1 = true
         })
         .catch(error => {
           alert(this.eva.homework[0].id)

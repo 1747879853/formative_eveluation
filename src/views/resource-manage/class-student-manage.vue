@@ -136,9 +136,12 @@
             <tr><td>姓名</td><td>
             <Input v-model="sname" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
             <tr><td>性别:</td><td>
-            <Input v-model="sex" placeholder="请输入性别" clearable style="width: 300px"></Input></td></tr>
+                <Select v-model="sex" ref="element1" style="width:200px">
+                            <Option value="男">男</Option>
+                            <Option value="女">女</Option>
+                </Select></td></tr>
             <tr><td>出生日期:</td><td>
-            <Input v-model="birthday" placeholder="请输入出生日期" clearable style="width: 300px"></Input></td></tr>
+            <DatePicker v-model="birthday" type="date" placeholder="请选择日期" style="width: 300px"></DatePicker></td></tr>
             <tr><td>民族:</td><td>
             <Input v-model="nation" placeholder="请输入民族" clearable style="width: 300px"></Input></td></tr>
             <!-- <tr><td>用户名</td><td>
