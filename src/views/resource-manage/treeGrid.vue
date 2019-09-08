@@ -30,7 +30,18 @@
                     </Select></td></tr>
                     <tr>&nbsp;</tr><tr><td>描述</td><td>
                     <Input v-model="f_description" placeholder="请输入评价指标描述" clearable style="width: 300px"></Input></td></tr>
-                    <tr>&nbsp;</tr></table>
+                    <tr>&nbsp;</tr>
+                    </table>
+                </Modal>
+                <Modal
+                    v-model="f_modal_modify"
+                    :title="f_title"
+                    @on-ok="ok"
+                    @on-cancel="cancel">
+                    <table>
+                    <tr><td>评价指标名</td><td>
+                    <Input v-model="f_name" placeholder="请输入评价指标名" clearable style="width: 300px"></Input></td></tr>                    
+                    </table>
                 </Modal>
             </p>
             <div :style="{width:tableWidth}" class='autoTbale'>
@@ -54,9 +65,9 @@
                         <tr v-for="(item,index) in initItems" :key="item.id" v-if="item.status!='2'" v-show="show(item)" :class="{'child-tr':item.parent}">
                             <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
                                 <div v-if="column.type === 'action'">
-                                    <button v-if="item.status=='激活'&&item.parent_id==0" class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal(item, index);">添加子评价指标</button>
-                                    <button v-if="item.status=='激活'" class="ivu-btn ivu-btn-success ivu-btn-small" @click="show_modal(item, index, 1);">修改</button>
-                                    <button v-if="item.status=='激活'&&item.parent_id==0" class="ivu-btn ivu-btn-error ivu-btn-small" @click="deleteClick(item, index);">停用</button>
+                                    <button v-if="item.parent_id==0" class="ivu-btn ivu-btn-primary ivu-btn-small" @click="show_modal(item, index);">添加子指标</button>
+                                    <button class="ivu-btn ivu-btn-success ivu-btn-small" @click="show_modal_modify(item, index);">修改</button>
+                                    <button class="ivu-btn ivu-btn-error ivu-btn-small" @click="deleteClick(item, index);">删除</button>
                                 </div>
                                 <label @click="toggle(index,item)" v-if="!column.type">
                                     <span v-if='snum==iconRow()'>
@@ -99,6 +110,7 @@ export default {
             timer: false, //控制监听时长
             dataLength: 0, //树形数据长度
             f_modal: false,
+            f_modal_modify: false,
             f_modal_action: 0,
             f_title: '添加评价指标',
             f_name: "",
@@ -191,7 +203,7 @@ export default {
                 this.f_in_class = "";
                 this.f_types = "";
             }else if (flag == undefined){
-                this.f_title = "添加子评价指标";
+                this.f_title = "添加子指标";
                 this.current_id = this.renderId(item);
                 this.f_modal_action = 2;
                 this.f_name = "";
@@ -204,7 +216,7 @@ export default {
                 if(parent_id==0){
                     this.f_title = "修改评价指标";
                 }else{
-                    this.f_title = "修改子评价指标";
+                    this.f_title = "修改子指标";
                 }                
                 this.current_id = this.renderId(item);
                 this.f_modal_action = 3;
@@ -217,10 +229,26 @@ export default {
             this.current_index = index;
             this.f_modal = true; 
         },
+        show_modal_modify(item, index){
+            
+            let parent_id = this.renderParentId(item);
+            if(parent_id==0){
+                this.f_title = "修改评价指标";
+            }else{
+                this.f_title = "修改子指标";
+            }                
+            this.current_id = this.renderId(item);
+            this.f_modal_action = 3;
+            this.f_name = this.renderName(item);
+            this.f_description = this.renderDescription(item);
+            this.f_in_class = this.renderInClass(item);
+            this.f_types = this.renderTypes(item);
+            this.current_item = item;
+            this.current_index = index;
+            this.f_modal_modify = true; 
+        },
         ok () {
-            if(this.c_status=='激活'){
-                this.c_status=1;
-            }
+
             switch (this.f_modal_action) {
                 case 1:
                     this.$axios.post('/evaluationList', {
@@ -337,43 +365,8 @@ export default {
                             in_class: this.f_in_class,
                         }
                     }).then(function(res) {
-                        if(this.initItems[this.current_index].parent_id==0){
-                            this.initItems[this.current_index].status = '2';
-                            let c = this.initItems[this.current_index].children;
-                            for (var i =  0; i <c.length; i++) {
-                                c[i].status = '2';
-                            }
-                        }else{
-                            this.initItems[this.current_index].status = '2';
-                            for (var i = 0; i < this.initItems.length; i++) {
-                                if(this.initItems[i].id==this.initItems[this.current_index].parent_id){
-                                    this.initItems[i].status='2';
-                                    let c = this.initItems[i].children;
-                                    for (var j =  0; j <c.length; j++) {
-                                        c[j].status = '2';
-                                    }
-                                    break;
-                                }
-                            }
-                        }                        
-                        let item = res.data;
-                        let level = 1;
-                        let parent = null;
-                        let spaceHtml = "";
-                        for (var i = 1; i < level; i++) {
-                            spaceHtml += "<i class='ms-tree-space'></i>"
-                        }
-                        item = Object.assign({}, item, {
-                            "parent": parent,
-                            "level": level,
-                            "spaceHtml": spaceHtml,
-                            "expanded": false,
-                            "isShow": false,
-                            "isChecked": false,
-                            "load": false
-                        });
-                        //debugger
-                        this.initItems.push(item);
+                        this.initItems[this.current_index].name = res.data.name;
+                        this.initItems.splice(0,0);
                         this.$Message.info('修改成功');
                     }.bind(this))
                     .catch(function(error) {
@@ -420,10 +413,11 @@ export default {
             }
             console.log(index);
         },
+        // 表courses_evaluations,evaluations,tea_homeworks,weights中的与此评价指标相关的数据都将删除
         deleteClick(item, index) { 
             this.$Modal.confirm({
-                title: '停用评价指标',
-                content: '<p>确定要停用此评价指标吗？</p>',
+                title: '删除评价指标',
+                content: '<p><span style="color: red">与此评价指标相关的数据都将被删除!</span><br>确定要删除此评价指标吗？</p>',
                 onOk: () => {
 
                     this.current_item = item;
@@ -437,12 +431,13 @@ export default {
                             }
                         }
                     }).then(function(res) {
-                        this.initItems[this.current_index].status = '停用';
+                        // this.initItems[this.current_index].status = '停用';
                         let c = this.initItems[this.current_index].children;
                         for (var i =  0; i <c.length; i++) {
-                            c[i].status = '停用';
+                            c[i].isShow = false;
                         }
-                        this.$Message.info('停用成功');
+                        this.initItems.splice(this.current_index, 1)
+                        this.$Message.info('删除成功');
                     }.bind(this))
                     .catch(function(error) {
                         console.log(error)
