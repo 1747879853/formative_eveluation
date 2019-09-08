@@ -1,4 +1,5 @@
-<template>    
+<template>  
+<div>  
 <Card style="min-height: 260px;">
     <p slot="title" style="height:32px">
         <Icon type="ios-list"></Icon>
@@ -37,7 +38,7 @@
         <p v-if="course!=''&&eva!=''" style="font-size:18px">当前已选择课程&nbsp;{{course.name}}&nbsp;的&nbsp;{{eva.name}}:</p> 
         <p v-else="course!=''&&eva!=''" style="font-size:18px">请选择一份作业</p>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        <table style="">
+        <table>
           <tr><td style="width:60px">作业名称:</td><td>{{homework.name}}</td></tr>
           <tr>&nbsp;</tr>
           <!-- <tr></tr>
@@ -46,6 +47,7 @@
           <tr>&nbsp;</tr>  
           <tr><td style="width:60px">作业要求:</td><td><div v-html='homework.demand' style="background-color:cornsilk;padding:10px"></div></td></tr>
           <tr>&nbsp;</tr>        
+          <tr><td style="width:60px">教师评语:</td><td><div  style="background-color:cornsilk;padding:10px">{{tea_comment}}</div></td><td><div v-if="excellent==true"><p style="color:Red" font-family="Helvetica Neue">优秀作业</p></div></td></tr>
         </table> 
         <!-- <wangeditor v-if="eva.done==1||eva.done==2" v-bind:content="content" v-bind:disabled="true" :catchData="catchData"></wangeditor>
         <wangeditor v-if="eva.done==0||eva.done==3" v-bind:content="content" v-bind:disabled="false" :catchData="catchData"></wangeditor> -->
@@ -53,9 +55,20 @@
         <div style="font-size:18px;padding:10px" v-if="eva.done==0"><span>该作业还未到可提交的时间！</span></div>
         <div style="padding:10px" v-if="eva.done==1"><Button @click="save(0)" class="ivu-btn ivu-btn-primary ivu-btn-big">提交作业</Button></div>
         <div style="padding:10px" v-if="eva.done==2"><Button @click="save(1)" class="ivu-btn ivu-btn-success ivu-btn-big">修改作业</Button></div>
-        <div style="font-size:18px;padding:10px" v-if="eva.done==3"><span>该作业已经超时，无法提交！</span></div>    
+        <div style="font-size:18px;padding:10px" v-if="eva.done==3"><span>该作业已经超时，无法提交！</span></div>
+        <div><Button type="primary" icon="ios-search" @click="get_all_excellent_homework()">查看优秀作业</Button> </div>   
     </Card>                       
 </Card>
+<Modal
+v-model="modal1"
+      title="查看优秀作业"
+      width="50%"
+      :mask-closable="false"
+>
+  <Table border :columns="columns12" :data="data6"></Table>
+</Modal>
+
+</div>
 </template>
 
 <script>
@@ -65,6 +78,49 @@ export default {
   name: "user",
   data() {
     return {
+      excellent_homework:[],
+      data6: [],
+      data1:{
+          name:'',
+          stu_num:''
+      },
+      columns12: [{
+                        title: '姓名',
+                        key: 'name'
+                    },
+                    {
+                        title: '学号',
+                        key: 'sno'
+                    },
+                     {
+                        title: '操作',
+                        key: 'action',
+                        width: 150,
+                        align: 'center',
+                        render: (h, params) => {
+                           return  h('div', [
+                           h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => { 
+                                            this.$Modal.success({
+                                            
+                                            content: this.data6[params.index].content,
+                                            
+               });
+                                        }
+                                    }
+                                }, '查看')
+                           ])
+                        }
+            }],
+      modal1:false,
       term:[],
       option:'',
       data:[],
@@ -74,7 +130,9 @@ export default {
       course:'',
       homework:'',
       content:'',
-      ed:''
+      ed:'',
+      tea_comment:'',
+      excellent:false
     };
   },
   components: {
@@ -161,6 +219,30 @@ export default {
     });
   },
   methods:{    
+    show (index) {
+                this.$Modal.info({
+                    title: 'User Info',
+                    content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
+                })
+            },
+    get_all_excellent_homework() {
+      if(this.eva.homework==undefined){
+        this.$Message.info('请先选择课程');
+      }
+      let _this = this
+      this.$axios.get("/excellent_stu_homework", {
+            params: {
+               th_id: this.eva.homework[0].id
+            }
+        }).then(res => {
+          _this.data6 = res.data
+          _this.modal1 = true
+        })
+        .catch(error => {
+          alert(this.eva.homework[0].id)
+          console.log(error);
+        });
+    },
     selected() {
         this.homework='';
         this.eva='';
@@ -173,7 +255,8 @@ export default {
           this.user = res.data.a;
           this.classes = res.data.b;
           this.data = res.data.c;
-          // console.log(this.data)
+          console.log("sssssss")
+           console.log(this.data)
         })
         .catch(error => {
           console.log(error);
@@ -181,10 +264,12 @@ export default {
     },
     selecthomework(course,eva){
       this.eva=eva;
+      this.tea_comment = '';
       this.course=course;
       this.homework=eva.homework[0];
       this.content="";
       this.ed.txt.html(this.content);
+      this.excellent = false;
       if (eva.done>=2) {
         this.$axios.post('/stu_homework', {
             params: {
@@ -192,9 +277,12 @@ export default {
                 content: 'get'
             }
         }).then(function(res) {   
+          console.log(res.data[0])
           if(res.data.length>0){
             this.content=res.data[0].content;
             this.ed.txt.html(this.content);
+            this.tea_comment = res.data[0].tea_comment
+            this.excellent= res.data[0].excellent
           }else{
             this.content="无法输入作业内容"
           }    

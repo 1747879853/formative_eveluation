@@ -24,7 +24,7 @@ export default {
             return {
                 columns: [
                     {
-                      title: "名称",
+                      title: "评价指标名",
                       key: "name",
                       align: "center"
                     },
@@ -41,6 +41,11 @@ export default {
                     {
                       title: "描述",
                       key: "description",
+                      align: "center",
+                    },
+                    {
+                      title: "状态",
+                      key: "status",
                       align: "center",
                     },
                     {
