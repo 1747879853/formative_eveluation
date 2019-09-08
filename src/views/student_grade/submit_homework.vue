@@ -67,6 +67,13 @@ v-model="modal1"
 >
   <Table border :columns="columns12" :data="data6"></Table>
 </Modal>
+<Modal
+v-model="modal2"
+      width="50%"
+      :mask-closable="false"
+>
+ <p style="font-size:20px">{{now_content}}</p>
+</Modal>
 
 </div>
 </template>
@@ -78,6 +85,8 @@ export default {
   name: "user",
   data() {
     return {
+      
+      now_content:'',
       excellent_homework:[],
       data6: [],
       data1:{
@@ -109,11 +118,10 @@ export default {
                                     },
                                     on: {
                                         click: () => { 
-                                            this.$Modal.success({
                                             
-                                            content: this.data6[params.index].content,
+                                            this.now_content=this.data6[params.index].content
+                                            this.modal2=true
                                             
-               });
                                         }
                                     }
                                 }, '查看')
@@ -121,6 +129,7 @@ export default {
                         }
             }],
       modal1:false,
+      modal2:false,
       term:[],
       option:'',
       data:[],
