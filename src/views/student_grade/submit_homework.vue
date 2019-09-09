@@ -43,7 +43,7 @@
           <tr>&nbsp;</tr>
           <!-- <tr></tr>
           <tr>&nbsp;</tr> -->
-          <tr><td style="width:60px">开始时间:</td><td v-if="course!=''&&eva!=''">{{homework.start_time.substring(0,10)}}</td><td style="width:60px">截止时间:</td><td v-if="course!=''&&eva!=''">{{homework.end_time.substring(0,10)}}</td></tr>
+          <tr><td style="width:60px">开始时间:</td><td v-if="course!=''&&eva!=''">{{homework.start_time}}</td><td style="width:60px">截止时间:</td><td v-if="course!=''&&eva!=''">{{homework.end_time}}</td></tr>
           <tr>&nbsp;</tr>  
           <tr><td style="width:60px">作业要求:</td><td><div v-html='homework.demand' style="background-color:cornsilk;padding:10px"></div></td></tr>
           <tr>&nbsp;</tr>        

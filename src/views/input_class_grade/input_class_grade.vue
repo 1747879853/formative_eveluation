@@ -1633,11 +1633,14 @@ export default {
                     eval: this.now_eva,
                     excellent: this.homework.excellent
                 }
-            }).then(function(res) {   
-              this.excellent = false
-
+            }).then(function(res) { 
+              if(res){  
+                this.excellent = false
                 console.log(res)
                 this.$Message.info('评价成功');
+              }else{
+                 this.$Message.info('该作业未提交');
+              }
             }.bind(this))
             .catch(function(error) {
                 console.log(error)

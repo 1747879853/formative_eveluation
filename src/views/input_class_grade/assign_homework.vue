@@ -42,10 +42,10 @@
               <Input v-model="homework.demand" placeholder="请输入作业要求" clearable style="width: 300px"></Input></td></tr> -->
               <tr>&nbsp;</tr>
               <tr><td>开始时间:</td><td>
-              <DatePicker v-model="homework.start_time" placement="right-end" type="date" placeholder="请选择开始时间" style="width: 300px"></DatePicker></td></tr>
+              <DatePicker v-model="homework.start_time" placement="right-end" type="datetime" placeholder="请选择开始时间" style="width: 300px"></DatePicker></td></tr>
               <tr>&nbsp;</tr>
               <tr><td>截止时间:</td><td>
-              <DatePicker v-model="homework.end_time" placement="right-end" type="date" placeholder="请选择截止时间" style="width: 300px"></DatePicker></td></tr>
+              <DatePicker v-model="homework.end_time" placement="right-end" type="datetime" placeholder="请选择截止时间" style="width: 300px"></DatePicker></td></tr>
               <tr>&nbsp;</tr>
               <tr><td>作业要求:</td><td>                    
                 <div id="wangeditor" style="text-align:left"></div>         
