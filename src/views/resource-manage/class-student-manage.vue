@@ -201,11 +201,6 @@ import excel from '@/libs/excel'
                         align: 'center'
                     },
                     {
-                        title: '状态',
-                        key: 'status',
-                        align: 'center'
-                    },
-                    {
                         title: '操作',
                         key: 'action',
                         align: 'center',
@@ -287,11 +282,11 @@ import excel from '@/libs/excel'
                     //     title: "手机号",
                     //     key: "tel"
                     // },
-                    {
-                      title: "状态",
-                      key: "status",
-                      align: "center",
-                    },
+                    // {
+                    //   title: "状态",
+                    //   key: "status",
+                    //   align: "center",
+                    // },
                     {
                         title: '操作',
                         key: 'action',
