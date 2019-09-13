@@ -53,8 +53,9 @@
         <wangeditor v-if="eva.done==0||eva.done==3" v-bind:content="content" v-bind:disabled="false" :catchData="catchData"></wangeditor> -->
         <div id="wangeditor" style="text-align:left"></div>
         <div style="font-size:18px;padding:10px" v-if="eva.done==0"><span>该作业还未到可提交的时间！</span></div>
-        <div style="padding:10px" v-if="eva.done==1"><Button @click="save(0)" class="ivu-btn ivu-btn-primary ivu-btn-big">提交作业</Button></div>
-        <div style="padding:10px" v-if="eva.done==2"><Button @click="save(1)" class="ivu-btn ivu-btn-success ivu-btn-big">修改作业</Button></div>
+        <div style="padding:10px" v-if="eva.done==1"><Button @click="save(0)" class="ivu-btn ivu-btn-primary ivu-btn-big">暂存作业</Button>&nbsp;&nbsp;&nbsp;<Button @click="save(1)" class="ivu-btn ivu-btn-success ivu-btn-big">提交作业</Button></div>
+        <div style="font-size:18px;padding:10px" v-if="eva.done==1">注意，提交作业后将无法修改！</div>
+        <div style="font-size:18px;padding:10px" v-if="eva.done==2">作业已经提交，无法修改。</div>
         <div style="font-size:18px;padding:10px" v-if="eva.done==3"><span>该作业已经超时，无法提交！</span></div>
         <div><Button type="primary" icon="ios-search" @click="get_all_excellent_homework()">查看优秀作业</Button> </div>   
     </Card>                       
@@ -279,7 +280,7 @@ export default {
       this.content="";
       this.ed.txt.html(this.content);
       this.excellent = false;
-      if (eva.done>=2) {
+      if (eva.done>=1) {
         this.$axios.post('/stu_homework', {
             params: {
                 th_id: this.eva.homework[0].id,
@@ -304,34 +305,77 @@ export default {
       }        
     }, 
     save(mm){
-        if(mm==0){
-          this.$axios.post('/stu_homework', {
+      if (mm==1) {
+        console.log(this.content)
+        this.$Modal.confirm({
+        title: '提交作业',
+        content: '<p>确定要提交此作业？提交后将不能再修改！</p>',
+        onOk: () => {
+            this.$axios.post('/stu_homework', {
                 params: {
                     th_id: this.eva.homework[0].id,
-                    content: this.content
+                    content: this.content,
+                    status: mm
                 }
             }).then(function(res) {              
                 this.content=res.data.content;
-                this.$Message.info('提交成功');
+                this.$Message.info('提交成功');          
                 this.eva.done=2;
             }.bind(this))
             .catch(function(error) {
                 console.log(error)
             });
-        }else if(mm==1){
-          this.$axios.patch('/stu_homework', {
+            
+           },
+        onCancel: () => { this.$Message.info('取消'); }});
+      } else {
+        this.$axios.post('/stu_homework', {
                 params: {
                     th_id: this.eva.homework[0].id,
-                    content: this.content
+                    content: this.content,
+                    status: mm
                 }
             }).then(function(res) {              
-                this.content=res.data[0].content;
-                this.$Message.info('修改成功');
+                this.content=res.data.content;
+                this.$Message.info('暂存成功');          
+                this.eva.done=1;
             }.bind(this))
             .catch(function(error) {
                 console.log(error)
             });
-        }
+      }
+        
+
+
+        
+        // if(mm==0){
+        //   this.$axios.post('/stu_homework', {
+        //         params: {
+        //             th_id: this.eva.homework[0].id,
+        //             content: this.content
+        //         }
+        //     }).then(function(res) {              
+        //         this.content=res.data.content;
+        //         this.$Message.info('提交成功');
+        //         this.eva.done=2;
+        //     }.bind(this))
+        //     .catch(function(error) {
+        //         console.log(error)
+        //     });
+        // }else if(mm==1){
+        //   this.$axios.patch('/stu_homework', {
+        //         params: {
+        //             th_id: this.eva.homework[0].id,
+        //             content: this.content
+        //         }
+        //     }).then(function(res) {              
+        //         this.content=res.data[0].content;
+        //         this.$Message.info('修改成功');
+        //     }.bind(this))
+        //     .catch(function(error) {
+        //         console.log(error)
+        //     });
+        // }
     }
   }
 };

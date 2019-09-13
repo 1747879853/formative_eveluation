@@ -403,51 +403,99 @@ export default {
                               width: 150,
                               render: (h, params) => {
                                 let _this = this;
-                                return h('div', [
-                                    h('Input', {
-                                        style: {
-                                            width: '60%'
-                                        },
-                                        props:{
-                                             value:params.row[params.column.key],
-                                             autosize: true
-                                        },
-                                        on:{
-                                          input:function(e){
-                                              let x = 0;
-                                              for(let k=0;k<_this.m.length;k++){
-                                                  if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
-                                                    _this.m[k].grade=e;
-                                                    x=1;
+                                if (params.row[params.column.key+'status']==0) {
+                                    return h('div', [
+                                        h('Input', {
+                                            style: {
+                                                width: '60%'
+                                            },
+                                            props:{
+                                                 value:params.row[params.column.key],
+                                                 autosize: true
+                                            },
+                                            on:{
+                                              input:function(e){
+                                                  let x = 0;
+                                                  for(let k=0;k<_this.m.length;k++){
+                                                      if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
+                                                        _this.m[k].grade=e;
+                                                        x=1;
+                                                      }
                                                   }
-                                              }
-                                              if(x==0){
-                                                _this.m.push({
-                                                        id: _this.table[i].id,
-                                                        // eno: _this.table[i].eno,
-                                                        stu:params.row.id,
-                                                        grade:e,
-                                                      })
-                                              }
-                                          },                                  
-                                        }
-                                        }),
-                                    h('Button', {
-                                        props: {
-                                            type: 'primary',
-                                            size: 'small'
-                                        },
-                                        style: {
-                                            marginLeft: '5px'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.show_modal2(params);
+                                                  if(x==0){
+                                                    _this.m.push({
+                                                            id: _this.table[i].id,
+                                                            // eno: _this.table[i].eno,
+                                                            stu:params.row.id,
+                                                            grade:e,
+                                                          })
+                                                  }
+                                              },                                  
                                             }
-                                        }
-                                    }, '查看'),
-                                ]);
-                            }
+                                            }),
+                                        h('Button', {
+                                            props: {
+                                                // type: 'error',
+                                                size: 'small'
+                                            },
+                                            style: {
+                                                marginLeft: '5px'
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.show_modal2(params);
+                                                }
+                                            }
+                                        }, '查看'),
+                                    ]);
+                                } else {
+                                    return h('div', [
+                                        h('Input', {
+                                            style: {
+                                                width: '60%'
+                                            },
+                                            props:{
+                                                 value:params.row[params.column.key],
+                                                 autosize: true
+                                            },
+                                            on:{
+                                              input:function(e){
+                                                  let x = 0;
+                                                  for(let k=0;k<_this.m.length;k++){
+                                                      if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
+                                                        _this.m[k].grade=e;
+                                                        x=1;
+                                                      }
+                                                  }
+                                                  if(x==0){
+                                                    _this.m.push({
+                                                            id: _this.table[i].id,
+                                                            // eno: _this.table[i].eno,
+                                                            stu:params.row.id,
+                                                            grade:e,
+                                                          })
+                                                  }
+                                              },                                  
+                                            }
+                                            }),
+                                        h('Button', {
+                                            props: {
+                                                type: 'primary',
+                                                size: 'small'
+                                            },
+                                            style: {
+                                                marginLeft: '5px'
+                                            },
+                                            on: {
+                                                click: () => {
+                                                    this.show_modal2(params);
+                                                }
+                                            }
+                                        }, '查看'),
+                                    ]);
+                                }
+                                
+                              }
                       },);
                     }
                 }
@@ -601,7 +649,54 @@ export default {
                         align: "center",
                         render: (h, params) => {
                           let _this = this;
-                          return h('div', [
+                          if (params.row[params.column.key+'status']==0) {
+                            return h('div', [
+                              h('Input', {
+                                  style: {
+                                      width: '30%'
+                                  },
+                                  props:{
+                                       value:params.row[params.column.key],
+                                       autosize: true,
+                                       disabled: true,
+                                  },
+                                  on:{
+                                    input:function(e){
+                                        let x = 0;
+                                        for(let k=0;k<_this.m.length;k++){
+                                            if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
+                                              _this.m[k].grade=e;
+                                              x=1;
+                                            }
+                                        }
+                                        if(x==0){
+                                          _this.m.push({
+                                                  id: _this.table[i].id,
+                                                  // eno: _this.table[i].eno,
+                                                  stu:params.row.id,
+                                                  grade:e,
+                                                })
+                                        }
+                                    },                                  
+                                  }
+                                  }),
+                              h('Button', {
+                                  props: {
+                                      // type: 'error',
+                                      size: 'small'
+                                  },
+                                  style: {
+                                      marginLeft: '5px'
+                                  },
+                                  on: {
+                                      click: () => {
+                                          this.show_modal2(params);
+                                      }
+                                  }
+                              }, '查看'),
+                          ]);
+                          }else{
+                            return h('div', [
                               h('Input', {
                                   style: {
                                       width: '30%'
@@ -646,6 +741,8 @@ export default {
                                   }
                               }, '查看'),
                           ]);
+                          }
+                          
                       }
                 },);
               }
@@ -881,7 +978,54 @@ export default {
                         align: "center",
                         render: (h, params) => {
                           let _this = this;
-                          return h('div', [
+                          if (params.row[params.column.key+'status']==0) {
+                            return h('div', [
+                              h('Input', {
+                                  style: {
+                                      width: '30%'
+                                  },
+                                  props:{
+                                       value:params.row[params.column.key],
+                                       autosize: true,
+                                       disabled: true,
+                                  },
+                                  on:{
+                                    input:function(e){
+                                        let x = 0;
+                                        for(let k=0;k<_this.m.length;k++){
+                                            if(('e'+_this.m[k].id)==params.column.key&&_this.m[k].stu==params.row.id){
+                                              _this.m[k].grade=e;
+                                              x=1;
+                                            }
+                                        }
+                                        if(x==0){
+                                          _this.m.push({
+                                                  id: _this.data[i].id,
+                                                  // eno: _this.data[i].eno,
+                                                  stu:params.row.id,
+                                                  grade:e,
+                                                })
+                                        }
+                                    },                                  
+                                  }
+                                  }),
+                              h('Button', {
+                                  props: {
+                                      // type: 'error',
+                                      size: 'small'
+                                  },
+                                  style: {
+                                      marginLeft: '5px'
+                                  },
+                                  on: {
+                                      click: () => {
+                                          this.show_modal2(params);
+                                      }
+                                  }
+                              }, '查看'),
+                          ]);
+                          }else{
+                            return h('div', [
                               h('Input', {
                                   style: {
                                       width: '30%'
@@ -926,6 +1070,8 @@ export default {
                                   }
                               }, '查看'),
                           ]);
+                          }
+                          
                       }
                 },);
               }
