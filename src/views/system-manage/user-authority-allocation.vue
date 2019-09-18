@@ -55,6 +55,7 @@ import Sortable from 'sortablejs';
         },
         mounted () { 
             this.$axios.get("/authUserList").then( res =>{
+                console.log(res.data)
             this.users_data = res.data.a;
             this.data1 = res.data.b;
         }).catch(error =>{

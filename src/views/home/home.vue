@@ -33,10 +33,21 @@ export default {
     },
     mounted() {
         this.$axios.get("/show_histo").then( res =>{
-            console.log(res.data)
-            if(res.data!='Teacher'&&res.data!='Student'){
+            
+           this.$axios.get('/now_show_histo', {
+                params: {
+                   checked_id:res.data.a.checked_id[0]
+                }
+            }).then(function(res) { 
+              console.log(res.data[0].title)
+              if(res.data[0].title=='超级管理员'||res.data[0].title=='开发者'){
                 this.show_histo = true
-            }
+              }
+            }.bind(this))
+            .catch(function(error) {
+                console.log(error)
+               
+            });
         }).catch(error =>{
             console.log(error);
         });
