@@ -4,7 +4,7 @@
 <template>
     <div>
         <Row>
-        <Col span="12">
+        <Col span="12" v-if="show_histo">
             <Card :bordered="false">
                 <p slot="title">
                 上周即时评价统计
@@ -27,8 +27,19 @@ export default {
     },
     data () {
         return { 
+            show_histo:false
            
         }
+    },
+    mounted() {
+        this.$axios.get("/show_histo").then( res =>{
+            console.log(res.data)
+            if(res.data!='Teacher'&&res.data!='Student'){
+                this.show_histo = true
+            }
+        }).catch(error =>{
+            console.log(error);
+        });
     }
 }
 </script>
