@@ -23,15 +23,14 @@ import echarts from 'echarts'
     mounted() {
      
       let data_now=[]
-      this.$axios.get("/lastWeekActivity").then( res =>{
-            console.log(res.data)
-            var data_ = {
-              'name':'',
-              'question_times':-1
-            }
-            for(let i = 0; i< res.data.length;i++){
-            data_.name = res.data[i][0]
-            data_.question_times = res.data[i][1]
+      this.$axios.get("/classroom_question_chart").then( res =>{
+          var data_ = {
+            'name':'',
+            'question_times':-1
+          }
+          for(let i = 0; i< res.data.length;i++){
+            data_.name = res.data[i].name
+            data_.question_times = res.data[i].times
             this.chartData.rows.push(data_)
             data_ = {
                'name':'',

@@ -3,8 +3,8 @@
 </style>
 <template>
     <div>
-        <Row>
-        <Col span="12" v-if="show_histo">
+        <Row  v-if="show_histo">
+        <Col span="12">
             <Card :bordered="false">
                 <p slot="title">
                 上周即时评价统计
@@ -12,10 +12,15 @@
                 <histo-gram></histo-gram>
             </Card>
         </Col>
-        
-        <Col span="12">
-        </Col>
         </Row>
+        <Row v-else>
+            <Col span="12">
+                欢迎使用本系统
+            </Col>
+        </Row>
+        
+        
+        
     </div>
 </template>
 <script>
@@ -33,21 +38,7 @@ export default {
     },
     mounted() {
         this.$axios.get("/show_histo").then( res =>{
-            
-           this.$axios.get('/now_show_histo', {
-                params: {
-                   checked_id:res.data.a.checked_id[0]
-                }
-            }).then(function(res) { 
-              console.log(res.data[0].title)
-              if(res.data[0].title=='超级管理员'||res.data[0].title=='开发者'){
-                this.show_histo = true
-              }
-            }.bind(this))
-            .catch(function(error) {
-                console.log(error)
-               
-            });
+            this.show_histo = res.data.show            
         }).catch(error =>{
             console.log(error);
         });
