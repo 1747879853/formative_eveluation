@@ -65,7 +65,7 @@
 // import wangeditor from './wangeditor'
 import E from 'wangeditor'
 export default {
-  name: "user",
+  name: "assign_homework",
   data() {
     return {
       term:[],

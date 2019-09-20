@@ -443,7 +443,8 @@ export default {
                                             },
                                             on: {
                                                 click: () => {
-                                                    this.show_modal2(params);
+                                                    // this.show_modal2(params);
+                                                    this.$Message.info('作业未提交！');
                                                 }
                                             }
                                         }, '查看'),
