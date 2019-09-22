@@ -315,7 +315,7 @@ export default {
                 params: {
                     th_id: this.eva.homework[0].id,
                     content: this.content,
-                    status: mm
+                    status: 1
                 }
             }).then(function(res) {              
                 this.content=res.data.content;
@@ -333,7 +333,7 @@ export default {
                 params: {
                     th_id: this.eva.homework[0].id,
                     content: this.content,
-                    status: mm
+                    status: 0
                 }
             }).then(function(res) {              
                 this.content=res.data.content;

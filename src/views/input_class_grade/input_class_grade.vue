@@ -411,7 +411,8 @@ export default {
                                             },
                                             props:{
                                                  value:params.row[params.column.key],
-                                                 autosize: true
+                                                 autosize: true,
+                                                 disabled: true,
                                             },
                                             on:{
                                               input:function(e){
