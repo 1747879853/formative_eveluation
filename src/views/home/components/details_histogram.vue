@@ -29,7 +29,7 @@
         </Row>
   <Row>
     <Col span="24">
-      <ve-histogram :data="chartData" :settings="chartSettings"></ve-histogram>
+      <ve-histogram :data="chartData" :settings="chartSettings" width="1500px" height="400px"></ve-histogram>
     </Col>
   </Row>
  
@@ -41,9 +41,10 @@ import echarts from 'echarts'
   export default {
     name:"histogram",
     methods:{
-
+     
       get() {
         if(this.checked_teachers.length>0 && this.checked_courses.length>0 && this.date!=null){
+          this.$emit('changeflag',1)
         this.chartData.rows =[]
         this.$axios.get("/get_details_histogram",{
           params:{

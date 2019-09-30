@@ -19,11 +19,9 @@
                 <h1>欢迎使用本系统</h1>
             </Col>
         </Row>
-    <Modal v-model="show_details" width="1500px" height="1000px" :closable="false">
-        <details-histogram ></details-histogram>
+    <Modal v-model="show_details"  width="1500px" height="1000px" :closable="false" >
+        <details-histogram @changeflag="change"></details-histogram>
     </Modal>
-        
-        
     </div>
 </template>
 <script>
@@ -38,7 +36,8 @@ export default {
     data () {
         return { 
             show_histo:false,
-            show_details:false
+            show_details:false,
+            _width:"1500px",
         }
     },
     methods:{
@@ -49,7 +48,6 @@ export default {
     mounted() {
         this.$axios.get("/show_histo").then( res =>{
             this.show_histo = res.data
-            console.log("sdfsadfsdf")
             console.log(res.data)          
         }).catch(error =>{
             console.log(error);
