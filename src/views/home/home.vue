@@ -19,30 +19,29 @@
                 <h1>欢迎使用本系统</h1>
             </Col>
         </Row>
-    <Modal v-model="show_details"  width="1500px" height="1000px" :closable="false" >
-        <details-histogram @changeflag="change"></details-histogram>
-    </Modal>
+   
+       
+    
     </div>
 </template>
 <script>
 import histoGram from './components/histogram.vue';
-import detailsHistogram from './components/details_histogram.vue'
 export default {
     name: 'home',
     components: {
-        histoGram, //上周提问活跃度——柱状图
-        detailsHistogram //活跃度详情
+        histoGram //上周提问活跃度——柱状图
+       
     },
     data () {
         return { 
             show_histo:false,
-            show_details:false,
+            
             _width:"1500px",
         }
     },
     methods:{
         show_details_histo() {
-            this.show_details = true
+            this.$router.push({ name: 'detailsHistogram' })
         }
     },
     mounted() {

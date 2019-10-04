@@ -4,7 +4,7 @@
   <Row>
 
              <Col span="8">
-                <Select v-model="checked_teachers" multiple style="width:475px" placeholder="请选择教师(可多选)" :max-tag-count="3">
+                <Select v-model="checked_teachers" multiple style="width:550px" placeholder="请选择教师(可多选)" :max-tag-count="3">
                     <Option v-for="item in TeacherList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
             </Col>
@@ -12,7 +12,7 @@
                
             </Col>
             <Col span="8">
-                <Select v-model="checked_courses" multiple style="width:475px" lplaceholder="请选择课程(可多选)" :max-tag-count="3">
+                <Select v-model="checked_courses" multiple style="width:550px" lplaceholder="请选择课程(可多选)" :max-tag-count="3">
                     <Option v-for="item in CourseList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
             </Col>
@@ -27,9 +27,10 @@
             <Button type="primary" @click="get()">确定</Button>
             </Col>
         </Row>
+        
   <Row>
     <Col span="24">
-      <ve-histogram :data="chartData" :settings="chartSettings" width="1500px" height="400px"></ve-histogram>
+      <ve-histogram :data="chartData" :settings="chartSettings" ></ve-histogram>
     </Col>
   </Row>
  
