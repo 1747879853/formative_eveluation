@@ -9,6 +9,7 @@
                 <p slot="title">
                 上周即时评价统计
                 </p>
+                <Button @click="show_details_histo()">详情</Button>
                 <histo-gram></histo-gram>
             </Card>
         </Col>
@@ -18,9 +19,9 @@
                 <h1>欢迎使用本系统</h1>
             </Col>
         </Row>
-        
-        
-        
+   
+       
+    
     </div>
 </template>
 <script>
@@ -29,16 +30,24 @@ export default {
     name: 'home',
     components: {
         histoGram //上周提问活跃度——柱状图
+       
     },
     data () {
         return { 
-            show_histo:false
-           
+            show_histo:false,
+            
+            _width:"1500px",
+        }
+    },
+    methods:{
+        show_details_histo() {
+            this.$router.push({ name: 'detailsHistogram' })
         }
     },
     mounted() {
         this.$axios.get("/show_histo").then( res =>{
-            this.show_histo = res.data.show            
+            this.show_histo = res.data
+            console.log(res.data)          
         }).catch(error =>{
             console.log(error);
         });

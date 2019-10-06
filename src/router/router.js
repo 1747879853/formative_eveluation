@@ -84,6 +84,7 @@ export const otherRouter = {
     component: Main,
     children: [
         { path: 'home', title: {i18n: 'home'}, name: 'home_index', component: () => import('@/views/home/home.vue') },
+        { path: 'detailsHistogram', title: "教师活跃度详情", name: 'detailsHistogram', component: () => import('@/views/home/components/details_histogram') },
         { path: 'ownspace', title: '个人中心', name: 'ownspace_index', component: () => import('@/views/own-space/own-space.vue') },
         { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/production-manage/component/order-info.vue') }, // 用于展示动态路由
         { path: 'work-shop-order-info/:work_shop_order_id', title: '工单详情', name: 'work-shop-order-info', component: () => import('@/views/production-manage/component/work-shop-order-info.vue') }, // 用于展示动态路由
