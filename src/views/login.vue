@@ -28,8 +28,21 @@
                         </FormItem>
                         <FormItem>
                             <Button @click="handleSubmit" type="primary" long>登录</Button>
+                            <Button @click="forgetPassword" type="primary" long>忘记密码</Button>
                         </FormItem>
                     </Form>
+                    <Modal
+                        v-model="modal"
+                        title="重置密码"
+                        @on-ok="ok"
+                        @on-cancel="cancel">
+                        <table>
+                        <tr><td>学(工)号</td><td>
+                        <Input v-model="no" placeholder="请输入学(工)号" clearable style="width: 300px"></Input></td></tr>
+                        <tr><td>姓名</td><td>
+                        <Input v-model="name" placeholder="请输入姓名" clearable style="width: 300px"></Input></td></tr>
+                        </table>
+                    </Modal>
                     <p class="login-tip"><a style="color: #FF0000">{{failed}}</a></p>
                 </div>
             </Card>
@@ -57,7 +70,10 @@ export default {
                 ]
             },
             failed: '',
-            pad: false
+            pad: false,
+            modal:false,
+            no:'',
+            name:'',
         };
     },
     methods: {
@@ -116,7 +132,28 @@ export default {
         _isMobile () {
             let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
             return flag;
-        }
+        },
+        forgetPassword(){
+            this.no='';
+            this.name='';
+            this.modal=true;
+        },
+        cancel(){this.$Message.info('取消');},
+        ok (){
+            this.$axios.post('/resetPassword', {
+                params: {
+                    name: this.name,
+                    email: this.no,
+                }
+            }).then(function(res) {
+                // console.log(res.data);
+                this.$Message.info(res.data.msg);
+                this.modal=false;
+            }.bind(this))
+            .catch(function(error) {
+                console.log(error)
+            });                        
+        },
     },
     mounted () {
         this.form.userName = Cookies.get('user');
