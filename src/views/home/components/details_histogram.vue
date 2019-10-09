@@ -16,7 +16,7 @@
                           
                         </div>           
                         <div style="text-align:center">
-                          <div id="myChart" :style="{width: '1600px', height: '300px'}"></div>
+                          <div id="myChart" style="width:100%;height:300px;"></div>
                         </div>
                       </Card>
                     </Col>
@@ -35,12 +35,12 @@
                         <Row>
                         <Col span="12">       
                           <div style="text-align:center">
-                            <div id="piechart_teacher_class" :style="{width: '600px', height: '300px'}"></div>
+                            <div id="piechart_teacher_class" style="width:50%;height:400px;"></div>
                           </div>
                         </Col>
                         <Col span="12">       
                           <div style="text-align:center">
-                            <div id="piechart_teacher_course" :style="{width: '600px', height: '300px'}"></div>
+                            <div id="piechart_teacher_course" style="width:50%;height:400px;"></div>
                           </div>
                         </Col>
                       </Row>
@@ -61,7 +61,7 @@
                           
                         </div>           
                         <div style="text-align:center">
-                          <div id="class_room_histogram" :style="{width: '1600px', height: '300px'}"></div>
+                          <div id="class_room_histogram" style="width:100%;height:300px;"></div>
                         </div>
                       </Card>
                     </Col>
@@ -81,12 +81,12 @@
                         <Row>
                         <Col span="12">       
                           <div style="text-align:center">
-                            <div id="piechart_class_room_teachers" :style="{width: '600px', height: '300px'}"></div>
+                            <div id="piechart_class_room_teachers" style="width:50%;height:400px;"></div>
                           </div>
                         </Col>
                         <Col span="12">       
                           <div style="text-align:center">
-                            <div id="piechart_class_room_class" :style="{width: '600px', height: '300px'}"></div>
+                            <div id="piechart_class_room_class" style="width:50%;height:400px;"></div>
                           </div>
                         </Col>
                       </Row>
@@ -108,7 +108,7 @@
                           
                         </div>           
                         <div style="text-align:center">
-                          <div id="class_histogram" :style="{width: '1600px', height: '300px'}"></div>
+                          <div id="class_histogram" style="width:100%;height:300px;"></div>
                         </div>
                       </Card>
                     </Col>
@@ -127,12 +127,12 @@
                         <Row>
                         <Col span="12">         
                           <div style="text-align:center">
-                            <div id="piechart_course_class_rooms" :style="{width: '600px', height: '300px'}"></div>
+                            <div id="piechart_course_class_rooms"style="width:50%;height:400px;"></div>
                           </div>
                         </Col>
                         <Col span="12">
                           <div style="text-align:center">
-                            <div id="piechart_course_teachers" :style="{width: '600px', height: '300px'}"></div>
+                            <div id="piechart_course_teachers" style="width:50%;height:400px;"></div>
                           </div>
                         </Col>
                       </Row>
@@ -152,6 +152,7 @@
 
 <script>
 import echarts from 'echarts'
+
   export default {
     name:"histogram",
     methods:{ 
