@@ -10,7 +10,7 @@
                   </Row>
                   <Row>
                     <Col span="24">
-                      <Card >        
+                      <Card  >        
                         <div slot="title">
                           <DatePicker   @on-change ="changeTime_all_teacher_histogram" type="daterange" split-panels placeholder="选择时间范围" style="width: 200px" split-panels></DatePicker>
                           
@@ -55,7 +55,7 @@
                   </Row>
                   <Row>
                     <Col span="24">
-                      <Card >        
+                      <Card  >        
                         <div slot="title">
                           <DatePicker   @on-change ="changeTime_all_class_room_histogram" type="daterange" split-panels placeholder="选择时间范围" style="width: 200px" split-panels></DatePicker>
                           
@@ -361,15 +361,20 @@ import echarts from 'echarts'
             title: {
                 text: '班级提问次数'
             },
+            grid: {
+            left: '10%',
+            bottom:'25%'
+          },
+
             tooltip: {},
             xAxis: {
+
+
                 data: [],
                 axisLabel:{
+                  rotate:40,
                  interval: 0,  
-                 formatter:function(value)  
-                 {  
-                     return value.split("").join("\n");  
-                 }  
+                 
                 }
             },
             yAxis: {},
@@ -387,11 +392,12 @@ import echarts from 'echarts'
             xAxis: {
                 data: [],
                 axisLabel:{
-                 interval: 0,  
-                 formatter:function(value)  
-                 {  
-                     return value.split("").join("\n");  
-                 }  
+                 interval: 0, 
+                  rotate:40, 
+                grid: {
+                  left: '10%',
+                  bottom:'25%'
+                },  
                 }
             },
             yAxis: {},
