@@ -35,12 +35,12 @@
                         <Row>
                         <Col span="12">       
                           <div style="text-align:center">
-                            <div id="piechart_teacher_class" style="width:50%;height:400px;"></div>
+                            <div id="piechart_teacher_class" style="height:400px;"></div>
                           </div>
                         </Col>
                         <Col span="12">       
                           <div style="text-align:center">
-                            <div id="piechart_teacher_course" style="width:50%;height:400px;"></div>
+                            <div id="piechart_teacher_course" style="height:400px;"></div>
                           </div>
                         </Col>
                       </Row>
@@ -81,12 +81,12 @@
                         <Row>
                         <Col span="12">       
                           <div style="text-align:center">
-                            <div id="piechart_class_room_teachers" style="width:50%;height:400px;"></div>
+                            <div id="piechart_class_room_teachers" style="height:400px;"></div>
                           </div>
                         </Col>
                         <Col span="12">       
                           <div style="text-align:center">
-                            <div id="piechart_class_room_class" style="width:50%;height:400px;"></div>
+                            <div id="piechart_class_room_class" style="height:400px;"></div>
                           </div>
                         </Col>
                       </Row>
@@ -108,7 +108,7 @@
                           
                         </div>           
                         <div style="text-align:center">
-                          <div id="class_histogram" style="width:100%;height:300px;"></div>
+                          <div id="class_histogram" style="height:300px;"></div>
                         </div>
                       </Card>
                     </Col>
@@ -127,12 +127,12 @@
                         <Row>
                         <Col span="12">         
                           <div style="text-align:center">
-                            <div id="piechart_course_class_rooms"style="width:50%;height:400px;"></div>
+                            <div id="piechart_course_class_rooms"style="height:400px;"></div>
                           </div>
                         </Col>
                         <Col span="12">
                           <div style="text-align:center">
-                            <div id="piechart_course_teachers" style="width:50%;height:400px;"></div>
+                            <div id="piechart_course_teachers" style="height:400px;"></div>
                           </div>
                         </Col>
                       </Row>
@@ -472,7 +472,7 @@ import echarts from 'echarts'
               name: '提问次数',
               type: 'pie',
               radius : '55%',
-              center: ['50%', '60%'],
+              center: ['50%', '50%'],
               data:[
                   
               ],
@@ -551,7 +551,7 @@ import echarts from 'echarts'
               name: '提问次数',
               type: 'pie',
               radius : '55%',
-              center: ['50%', '60%'],
+              center: ['50%', '50%'],
               data:[
                   
               ],
@@ -581,7 +581,8 @@ import echarts from 'echarts'
               data:[]
           },
           series: [
-              {
+
+              {   
                   name:'提问次数',
                   type:'pie',
                   radius: ['50%', '70%'],
@@ -630,7 +631,7 @@ import echarts from 'echarts'
               name: '提问次数',
               type: 'pie',
               radius : '55%',
-              center: ['50%', '60%'],
+              center: ['65%', '50%'],
               data:[
                   
               ],
