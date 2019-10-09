@@ -6,10 +6,13 @@
         <Row  v-if="show_histo">
         <Col span="12">
             <Card :bordered="false">
-                <p slot="title">
+                <div slot="title">
+
                 上周即时评价统计
-                </p>
+                
                 <Button @click="show_details_histo()">详情</Button>
+                </div>
+                
                 <histo-gram ></histo-gram>
             </Card>
         </Col>
