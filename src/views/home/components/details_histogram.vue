@@ -271,6 +271,8 @@ import echarts from 'echarts'
           }
         }).then( res =>{
             let myChart = this.$echarts.init(document.getElementById('myChart'))
+            this.option_histogram.xAxis.data =[]
+            this.option_histogram.series[0].data =[]
           for(let i = 0; i< res.data.length;i++){
             this.option_histogram.xAxis.data.push(res.data[i].name)
             this.option_histogram.series[0].data.push(res.data[i].times)
@@ -292,6 +294,8 @@ import echarts from 'echarts'
           }
         }).then( res =>{
             let myChart = this.$echarts.init(document.getElementById('class_room_histogram'))
+          this.option_class_room_histogram.xAxis.data =[]
+          this.option_class_room_histogram.series[0].data =[]
           for(let i = 0; i< res.data.length;i++){
             this.option_class_room_histogram.xAxis.data.push(res.data[i].name)
             this.option_class_room_histogram.series[0].data.push(res.data[i].times)
