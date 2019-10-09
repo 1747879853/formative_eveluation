@@ -10,7 +10,7 @@
                 上周即时评价统计
                 </p>
                 <Button @click="show_details_histo()">详情</Button>
-                <histo-gram></histo-gram>
+                <histo-gram ></histo-gram>
             </Card>
         </Col>
         </Row>
@@ -29,7 +29,8 @@ import histoGram from './components/histogram.vue';
 export default {
     name: 'home',
     components: {
-        histoGram //上周提问活跃度——柱状图
+        histoGram, //上周提问活跃度——柱状图
+        
        
     },
     data () {

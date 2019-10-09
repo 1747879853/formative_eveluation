@@ -1,38 +1,151 @@
 <template>
   <div>
-  
-  <Row>
+     <Row :gutter="32">
+        <Col span="24" >
+            <Tabs type="card">
+                <TabPane label="教师"> 
+                  <Row>                  
+                    <Col span="24">               
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span="24">
+                      <Card >        
+                        <div slot="title">
+                          <DatePicker   @on-change ="changeTime_all_teacher_histogram" type="daterange" split-panels placeholder="选择时间范围" style="width: 200px" split-panels></DatePicker>
+                          
+                        </div>           
+                        <div style="text-align:center">
+                          <div id="myChart" :style="{width: '1600px', height: '300px'}"></div>
+                        </div>
+                      </Card>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span="24">
+                    <Card >        
+                        <div slot="title">
 
-             <Col span="8">
-                <Select v-model="checked_teachers" multiple style="width:550px" placeholder="请选择教师(可多选)" :max-tag-count="3">
-                    <Option v-for="item in TeacherList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-            </Col>
-            <Col span="1">
-               
-            </Col>
-            <Col span="8">
-                <Select v-model="checked_courses" multiple style="width:550px" lplaceholder="请选择课程(可多选)" :max-tag-count="3">
-                    <Option v-for="item in CourseList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-            </Col>
-            <Col span="1" >
+                          <DatePicker   @on-change ="changeTime_teacherts_charts" type="daterange" split-panels placeholder="选择时间范围" style="width: 200px" split-panels></DatePicker>
+                          <Select v-model="checked_teacher" style="width:200px" placeholder="选择教师">
+                            <Option v-for="item in teacherList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                          </Select>
+                          <Button type="primary" @click="get_teacher_charts()">确定</Button>
+                        </div>  
+                        <Row>
+                        <Col span="12">       
+                          <div style="text-align:center">
+                            <div id="piechart_teacher_class" :style="{width: '600px', height: '300px'}"></div>
+                          </div>
+                        </Col>
+                        <Col span="12">       
+                          <div style="text-align:center">
+                            <div id="piechart_teacher_course" :style="{width: '600px', height: '300px'}"></div>
+                          </div>
+                        </Col>
+                      </Row>
+                      </Card>
+                  </Col>
+                  </Row>
+              </TabPane>
+                <TabPane label="班级">
+                  <Row>                  
+                    <Col span="24">               
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span="24">
+                      <Card >        
+                        <div slot="title">
+                          <DatePicker   @on-change ="changeTime_all_class_room_histogram" type="daterange" split-panels placeholder="选择时间范围" style="width: 200px" split-panels></DatePicker>
+                          
+                        </div>           
+                        <div style="text-align:center">
+                          <div id="class_room_histogram" :style="{width: '1600px', height: '300px'}"></div>
+                        </div>
+                      </Card>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span="24">
+                    <Card >        
+                        <div slot="title">
+
+                          <DatePicker   @on-change ="changeTime_class_rooms_charts" type="daterange" split-panels placeholder="选择时间范围" style="width: 200px" split-panels></DatePicker>
+                          <Select v-model="checked_class_room" style="width:200px" placeholder="选择班级">
+                            <Option v-for="item in classRoomList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                          </Select>
+                          <Button type="primary" @click=" get_class_room_charts()">确定</Button>
+                        </div>           
+                        
+                        <Row>
+                        <Col span="12">       
+                          <div style="text-align:center">
+                            <div id="piechart_class_room_teachers" :style="{width: '600px', height: '300px'}"></div>
+                          </div>
+                        </Col>
+                        <Col span="12">       
+                          <div style="text-align:center">
+                            <div id="piechart_class_room_class" :style="{width: '600px', height: '300px'}"></div>
+                          </div>
+                        </Col>
+                      </Row>
+                      </Card>
+                  </Col>
+                  </Row>
+                </TabPane>
                 
-            </Col>
-           
-            <Col span="4">
-                <DatePicker   @on-change ="changeTime" type="daterange" split-panels placeholder="Select date" style="width: 200px" split-panels></DatePicker>
-            </Col>
-            <Col span="2">
-            <Button type="primary" @click="get()">确定</Button>
-            </Col>
-        </Row>
-        
-  <Row>
-    <Col span="24">
-      <ve-histogram :data="chartData" :settings="chartSettings" ></ve-histogram>
-    </Col>
-  </Row>
+                <TabPane label="课程">
+                  <Row>                  
+                    <Col span="24">               
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span="24">
+                      <Card >        
+                        <div slot="title">
+                          <DatePicker   @on-change ="changeTime_all_course_histogram" type="daterange" split-panels placeholder="选择时间范围" style="width: 200px" split-panels></DatePicker>
+                          
+                        </div>           
+                        <div style="text-align:center">
+                          <div id="class_histogram" :style="{width: '1600px', height: '300px'}"></div>
+                        </div>
+                      </Card>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col span="24">
+                    <Card >        
+                        <div slot="title">
+
+                          <DatePicker   @on-change ="changeTime_course_charts" type="daterange" split-panels placeholder="选择时间范围" style="width: 200px" split-panels></DatePicker>
+                          <Select v-model="checked_course" style="width:200px" placeholder="选择课程">
+                            <Option v-for="item in courseList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                          </Select>
+                          <Button type="primary" @click="get_course_charts()">确定</Button>
+                        </div>  
+                        <Row>
+                        <Col span="12">         
+                          <div style="text-align:center">
+                            <div id="piechart_course_class_rooms" :style="{width: '600px', height: '300px'}"></div>
+                          </div>
+                        </Col>
+                        <Col span="12">
+                          <div style="text-align:center">
+                            <div id="piechart_course_teachers" :style="{width: '600px', height: '300px'}"></div>
+                          </div>
+                        </Col>
+                      </Row>
+                      </Card>
+                  </Col>
+                  </Row>
+                </TabPane>
+               
+            </Tabs>
+        </Col>
+    </Row>
+  
+  
  
 </div>
 </template>
@@ -41,91 +154,516 @@
 import echarts from 'echarts'
   export default {
     name:"histogram",
-    methods:{
-     
-      get() {
-        if(this.checked_teachers.length>0 && this.checked_courses.length>0 && this.date!=null){
-          this.$emit('changeflag',1)
-        this.chartData.rows =[]
-        this.$axios.get("/get_details_histogram",{
+    methods:{ 
+      get_teacher_charts() {
+        console.log(this.checked_teacher)
+        if(this.date.length==''){
+           this.$Message.info('请选择时间范围！');
+        }else if(this.checked_teacher==''){
+          this.$Message.info('请指定教师！');
+        }else {
+          this.$axios.get("/get_teacher_charts",{
           params:{
-            checked_courses:this.checked_courses,
-            checked_teachers:this.checked_teachers,
+            checked_teacher:this.checked_teacher,
             time:this.date
           }
         }).then( res =>{
-            var data_ = {
-            'name':'',
-            'question_times':-1
+           let myChart = this.$echarts.init(document.getElementById('piechart_teacher_class'))
+           let myChart_teacher_pie = this.$echarts.init(document.getElementById('piechart_teacher_course'))
+           this.option_teacher_class_rooms.series[0].data = []
+           this.option_teacher_class_rooms.legend.data = []
+          for(let i = 0; i< res.data.a.length;i++){
+            this.option_teacher_class_rooms.series[0].data.push({value: res.data.a[i].times,name: res.data.a[i].name})
+            this.option_teacher_class_rooms.legend.data.push(res.data.a[i].name)
+           
           }
-          for(let i = 0; i< res.data.length;i++){
-            data_.name = res.data[i].name
-            data_.question_times = res.data[i].times
-            this.chartData.rows.push(data_)
-            data_ = {
-               'name':'',
-              'question_times':-1
-            }
+          this.option_teacher_courses.legend.data =[]
+          this.option_teacher_courses.series[0].data =[]
+          for(let i = 0;i<res.data.b.length;i++){
+             this.option_teacher_courses.legend.data.push(res.data.b[i].name)
+            this.option_teacher_courses.series[0].data.push({value: res.data.b[i].times,name: res.data.b[i].name})
           }
+           myChart.setOption(this.option_teacher_class_rooms);
+            myChart_teacher_pie.setOption(this.option_teacher_courses)
             console.log(res.data)          
         }).catch(error =>{
             console.log(error);
         });
       }
       },
-      changeTime(daterange) {
-        this.date = daterange
-      },
-      fun() {
-        console.log(this.checked_teachers)
-      }
-    },
-    data () {
-      this.chartSettings = {
-        legendName: {
-          'question_times': '提问次数'
-        }
-      }
-      return {
-        date:null,
-        checked_courses:[],
-        checked_teachers:[],
-        CourseList:[],
-        TeacherList:[],
-        chartData: {
-          columns: ['name', 'question_times'],
-          rows: []
-        },
-        rows_now:[]
-      }
-    },
-    mounted() {
-     
-      let data_now=[]
-      this.$axios.get("/get_teacher_course_list").then( res =>{
-        var a = {
-          label:'',
-          value:''
-        }
-        console.log(res.data.a[0])
-        for( let i = 0; i< res.data.a.length;i++){
-          
-         this.TeacherList.push({label: res.data.a[i].name,value: res.data.a[i].name})
-       
-          
-        }
-        for(let j = 0;j<res.data.b.length;j++){
-          this.CourseList.push({label: res.data.b[j].name,value: res.data.b[j].name})
-        }
-        console.log(this.CourseList)
-        console.log(this.TeacherList)
-     
-       
-            
+      get_class_room_charts() {
+        console.log(this.checked_class_room)
+        console.log(this.date_class_room)
+        if(this.date_class_room.length==''){
+           this.$Message.info('请选择时间范围！');
+        }else if(this.checked_class_room==''){
+          this.$Message.info('请指定班级！');
+        }else {
+          this.$axios.get("/get_class_room_charts",{
+          params:{
+            checked_class_room:this.checked_class_room,
+            time:this.date_class_room
+          }
+        }).then( res =>{
+           let myChart = this.$echarts.init(document.getElementById('piechart_class_room_teachers'))
+           let myChart_class_room_pie = this.$echarts.init(document.getElementById('piechart_class_room_class'))
+           this.option_class_rooms_teachers.series[0].data = []
+           this.option_class_rooms_teachers.legend.data =[]
+          for(let i = 0; i< res.data.a.length;i++){
+            this.option_class_rooms_teachers.series[0].data.push({value: res.data.a[i].times,name: res.data.a[i].name})
+            this.option_class_rooms_teachers.legend.data.push(res.data.a[i].name)
+           
+          }
+          this.option_class_room_courses.legend.data =[]
+          this.option_class_room_courses.series[0].data =[]
+          for(let i = 0;i<res.data.b.length;i++){
+             this.option_class_room_courses.legend.data.push(res.data.b[i].name)
+            this.option_class_room_courses.series[0].data.push({value: res.data.b[i].times,name: res.data.b[i].name})
+          }
+           myChart.setOption(this.option_class_rooms_teachers);
+            myChart_class_room_pie.setOption(this.option_class_room_courses)
+            console.log(res.data)          
         }).catch(error =>{
             console.log(error);
         });
-     
+      }
+      },
+      get_course_charts() {
+        if(this.date_course.length==''){
+           this.$Message.info('请选择时间范围！');
+        }else if(this.checked_course==''){
+          this.$Message.info('请指定课程！');
+        }else {
+          this.$axios.get("/get_course_charts",{
+          params:{
+            checked_course:this.checked_course,
+            time:this.date_course
+          }
+        }).then( res =>{
+           let myChart = this.$echarts.init(document.getElementById('piechart_course_class_rooms'))
+           let myChart_class_room_pie = this.$echarts.init(document.getElementById('piechart_course_teachers'))
+           this.option_course_class_rooms.series[0].data = []
+           this.option_course_class_rooms.legend.data =[]
+          for(let i = 0; i< res.data.b.length;i++){
+            this.option_course_class_rooms.series[0].data.push({value: res.data.b[i].times,name: res.data.b[i].name})
+            this.option_course_class_rooms.legend.data.push(res.data.b[i].name)
+           
+          }
+          this.option_course_teacher.legend.data =[]
+          this.option_course_teacher.series[0].data =[]
+          for(let i = 0;i<res.data.a.length;i++){
+             this.option_course_teacher.legend.data.push(res.data.a[i].name)
+            this.option_course_teacher.series[0].data.push({value: res.data.a[i].times,name: res.data.a[i].name})
+          }
+           myChart.setOption(this.option_course_class_rooms);
+            myChart_class_room_pie.setOption(this.option_course_teacher)
+            console.log(res.data)          
+        }).catch(error =>{
+            console.log(error);
+        });
+      }
+      },
+      changeTime_all_teacher_histogram(daterange) {
+        
+        this.$axios.get("/get_detailed_teacher_histogram",{
+          params:{
+            time:daterange
+          }
+        }).then( res =>{
+            let myChart = this.$echarts.init(document.getElementById('myChart'))
+          for(let i = 0; i< res.data.length;i++){
+            this.option_histogram.xAxis.data.push(res.data[i].name)
+            this.option_histogram.series[0].data.push(res.data[i].times)
+          }
+          myChart.setOption(this.option_histogram);
+            console.log(res.data)          
+        }).catch(error =>{
+            console.log(error);
+        });
+      },
+      changeTime_teacherts_charts(daterange) {
+        this.date = daterange
+        console.log(this.date)
+      },
+      changeTime_all_class_room_histogram(daterange) {
+        this.$axios.get("/get_detailed_class_room_histogram",{
+          params:{
+            time:daterange
+          }
+        }).then( res =>{
+            let myChart = this.$echarts.init(document.getElementById('class_room_histogram'))
+          for(let i = 0; i< res.data.length;i++){
+            this.option_class_room_histogram.xAxis.data.push(res.data[i].name)
+            this.option_class_room_histogram.series[0].data.push(res.data[i].times)
+          }
+          myChart.setOption(this.option_class_room_histogram);
+            console.log(res.data)          
+        }).catch(error =>{
+            console.log(error);
+        });
+      },
+      changeTime_class_rooms_charts(daterange) {
+        this.date_class_room = daterange
+      },
+      changeTime_all_course_histogram(daterange) {
+        this.$axios.get("/get_detailed_class__histogram",{
+          params:{
+            time:daterange
+          }
+        }).then( res =>{
+            let myChart = this.$echarts.init(document.getElementById('class_histogram'))
+            this.option_class_histogram.xAxis.data = []
+            this.option_class_histogram.series[0].data =[]
+          for(let i = 0; i< res.data.length;i++){
+            this.option_class_histogram.xAxis.data.push(res.data[i].name)
+            this.option_class_histogram.series[0].data.push(res.data[i].times)
+          }
+          myChart.setOption(this.option_class_histogram);
+            console.log(res.data)          
+        }).catch(error =>{
+            console.log(error);
+        });
+      },
+      changeTime_course_charts(daterange) {
+        this.date_course = daterange
+      }
+    },
+    data () {
+      return {
+        option_histogram:{
+            title: {
+                text: '全体教师活跃度'
+            },
+            tooltip: {},
+            xAxis: {
+                data: [],
+                axisLabel:{
+                 interval: 0,  
+                 formatter:function(value)  
+                 {  
+                     return value.split("").join("\n");  
+                 }  
+                }
+            },
+            yAxis: {},
+            series: [{
+                name: '提问次数',
+                type: 'bar',
+                data:[]
+            }]
+        },
+        option_class_room_histogram:{
+            title: {
+                text: '班级提问次数'
+            },
+            tooltip: {},
+            xAxis: {
+                data: [],
+                axisLabel:{
+                 interval: 0,  
+                 formatter:function(value)  
+                 {  
+                     return value.split("").join("\n");  
+                 }  
+                }
+            },
+            yAxis: {},
+            series: [{
+                name: '提问次数',
+                type: 'bar',
+                data:[]
+            }]
+        },
+        option_class_histogram:{
+            title: {
+                text: '课程提问次数'
+            },
+            tooltip: {},
+            xAxis: {
+                data: [],
+                axisLabel:{
+                 interval: 0,  
+                 formatter:function(value)  
+                 {  
+                     return value.split("").join("\n");  
+                 }  
+                }
+            },
+            yAxis: {},
+            series: [{
+                name: '提问次数',
+                type: 'bar',
+                data:[]
+            }]
+        },
+        option_teacher_class_rooms: {
+          title : {
+            text: '提问班级分布',
+            subtext: '',
+            x:'center'
+          },
+          tooltip: {
+              trigger: 'item',
+              formatter: "{a} <br/>{b}: {c} ({d}%)"
+          },
+          legend: {
+              orient: 'vertical',
+              x: 'left',
+              data:[]
+          },
+          series: [
+              {
+                  name:'提问次数',
+                  type:'pie',
+                  radius: ['50%', '70%'],
+                  avoidLabelOverlap: false,
+                  label: {
+                      normal: {
+                          show: false,
+                          position: 'center'
+                      },
+                      emphasis: {
+                          show: true,
+                          textStyle: {
+                              fontSize: '30',
+                              fontWeight: 'bold'
+                          }
+                      }
+                  },
+                  labelLine: {
+                      normal: {
+                          show: false
+                      }
+                  },
+                  data:[
+                      
+                  ]
+              }
+          ]
+      },
+      option_teacher_courses: {
+      title : {
+          text: '提问课程分布',
+          subtext: '',
+          x:'center'
+      },
+      tooltip : {
+          trigger: 'item',
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      legend: {
+          orient: 'vertical',
+          left: 'left',
+          data: []
+      },
+      series : [
+          {
+              name: '提问次数',
+              type: 'pie',
+              radius : '55%',
+              center: ['50%', '60%'],
+              data:[
+                  
+              ],
+              itemStyle: {
+                  emphasis: {
+                      shadowBlur: 10,
+                      shadowOffsetX: 0,
+                      shadowColor: 'rgba(0, 0, 0, 0.5)'
+                  }
+              }
+          }
+      ]
+  },
+      option_class_rooms_teachers: {
+              title : {
+                text: '班级-提问教师分布',
+                subtext: '',
+                x:'center'
+              },
+              tooltip: {
+                  trigger: 'item',
+                  formatter: "{a} <br/>{b}: {c} ({d}%)"
+              },
+              legend: {
+                  orient: 'vertical',
+                  x: 'left',
+                  data:[]
+              },
+              series: [
+                  {
+                      name:'提问次数',
+                      type:'pie',
+                      radius: ['50%', '70%'],
+                      avoidLabelOverlap: false,
+                      label: {
+                          normal: {
+                              show: false,
+                              position: 'center'
+                          },
+                          emphasis: {
+                              show: true,
+                              textStyle: {
+                                  fontSize: '30',
+                                  fontWeight: 'bold'
+                              }
+                          }
+                      },
+                      labelLine: {
+                          normal: {
+                              show: false
+                          }
+                      },
+                      data:[
+                          
+                      ]
+                  }
+              ]
+          },
+      option_class_room_courses: {
+      title : {
+          text: '班级-提问课程分布',
+          subtext: '',
+          x:'center'
+      },
+      tooltip : {
+          trigger: 'item',
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      legend: {
+          orient: 'vertical',
+          left: 'left',
+          data: []
+      },
+      series : [
+          {
+              name: '提问次数',
+              type: 'pie',
+              radius : '55%',
+              center: ['50%', '60%'],
+              data:[
+                  
+              ],
+              itemStyle: {
+                  emphasis: {
+                      shadowBlur: 10,
+                      shadowOffsetX: 0,
+                      shadowColor: 'rgba(0, 0, 0, 0.5)'
+                  }
+              }
+          }
+      ]
+  },
+  option_course_class_rooms: {
+          title : {
+            text: '课程-提问班级分布',
+            subtext: '',
+            x:'center'
+          },
+          tooltip: {
+              trigger: 'item',
+              formatter: "{a} <br/>{b}: {c} ({d}%)"
+          },
+          legend: {
+              orient: 'vertical',
+              x: 'left',
+              data:[]
+          },
+          series: [
+              {
+                  name:'提问次数',
+                  type:'pie',
+                  radius: ['50%', '70%'],
+                  avoidLabelOverlap: false,
+                  label: {
+                      normal: {
+                          show: false,
+                          position: 'center'
+                      },
+                      emphasis: {
+                          show: true,
+                          textStyle: {
+                              fontSize: '30',
+                              fontWeight: 'bold'
+                          }
+                      }
+                  },
+                  labelLine: {
+                      normal: {
+                          show: false
+                      }
+                  },
+                  data:[
+                      
+                  ]
+              }
+          ]
+      },
+      option_course_teacher: {
+      title : {
+          text: '课程-提问教师分布',
+          subtext: '',
+          x:'center'
+      },
+      tooltip : {
+          trigger: 'item',
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
+      },
+      legend: {
+          orient: 'vertical',
+          left: 'left',
+          data: []
+      },
+      series : [
+          {
+              name: '提问次数',
+              type: 'pie',
+              radius : '55%',
+              center: ['50%', '60%'],
+              data:[
+                  
+              ],
+              itemStyle: {
+                  emphasis: {
+                      shadowBlur: 10,
+                      shadowOffsetX: 0,
+                      shadowColor: 'rgba(0, 0, 0, 0.5)'
+                  }
+              }
+          }
+      ]
+  },
+        date:[],
+        date_class_room:[],
+        date_course:[],
+        teacherList: [],
+        classRoomList:[],
+        courseList:[],
+        checked_teacher: '',
+        checked_class_room:'',
+        checked_course:''
+      }
+      
+    },
+    mounted() {
+      this.teacherList =[]
+      this.classRoomList=[]
+      this.courseList =[]
+      this.$axios.get("/get_teacher_course_list",{
+        }).then( res =>{
+           for(let i = 0;i< res.data.a.length;i++){
+              this.teacherList.push({value:res.data.a[i].name,label:res.data.a[i].name})
+           }
+           for(let i = 0;i<res.data.c.length;i++){
+            this.classRoomList.push({value:res.data.c[i].name,label:res.data.c[i].name})
+           }
+           for(let i =0;i<res.data.b.length;i++){
+              this.courseList.push({value:res.data.b[i].name,label:res.data.b[i].name})
+           }
+                  console.log(res.data)
+        }).catch(error =>{
+            console.log(error);
+        });
     }
   }
 </script>
