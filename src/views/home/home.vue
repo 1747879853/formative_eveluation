@@ -50,8 +50,9 @@ export default {
     },
     mounted() {
         this.$axios.get("/show_histo").then( res =>{
-            this.show_histo = res.data
-            console.log(res.data)          
+            this.show_histo = res.data.show
+            console.log("sdsfsd")
+            console.log(res.data.show)          
         }).catch(error =>{
             console.log(error);
         });
