@@ -305,7 +305,10 @@ export default {
       }        
     }, 
     save(mm){
-      if (mm==1) {
+      if (this.content=='无法输入作业内容'||this.content=='') {
+        this.$Message.info('内容不能为空！');
+      } else {
+        if (mm==1) {
         console.log(this.content)
         this.$Modal.confirm({
         title: '提交作业',
@@ -328,22 +331,24 @@ export default {
             
            },
         onCancel: () => { this.$Message.info('取消'); }});
-      } else {
-        this.$axios.post('/stu_homework', {
-                params: {
-                    th_id: this.eva.homework[0].id,
-                    content: this.content,
-                    status: 0
-                }
-            }).then(function(res) {              
-                this.content=res.data.content;
-                this.$Message.info('暂存成功');          
-                this.eva.done=1;
-            }.bind(this))
-            .catch(function(error) {
-                console.log(error)
-            });
+        } else {
+          this.$axios.post('/stu_homework', {
+                  params: {
+                      th_id: this.eva.homework[0].id,
+                      content: this.content,
+                      status: 0
+                  }
+              }).then(function(res) {              
+                  this.content=res.data.content;
+                  this.$Message.info('暂存成功');          
+                  this.eva.done=1;
+              }.bind(this))
+              .catch(function(error) {
+                  console.log(error)
+              });
+        }
       }
+      
         
 
 
