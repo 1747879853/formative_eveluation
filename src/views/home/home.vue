@@ -6,11 +6,14 @@
         <Row  v-if="show_histo">
         <Col span="12">
             <Card :bordered="false">
-                <p slot="title">
+                <div slot="title">
+
                 上周即时评价统计
-                </p>
+                
                 <Button @click="show_details_histo()">详情</Button>
-                <histo-gram></histo-gram>
+                </div>
+                
+                <histo-gram ></histo-gram>
             </Card>
         </Col>
         </Row>
@@ -29,7 +32,8 @@ import histoGram from './components/histogram.vue';
 export default {
     name: 'home',
     components: {
-        histoGram //上周提问活跃度——柱状图
+        histoGram, //上周提问活跃度——柱状图
+        
        
     },
     data () {
@@ -46,8 +50,9 @@ export default {
     },
     mounted() {
         this.$axios.get("/show_histo").then( res =>{
-            this.show_histo = res.data
-            console.log(res.data)          
+            this.show_histo = res.data.show
+            console.log("sdsfsd")
+            console.log(res.data.show)          
         }).catch(error =>{
             console.log(error);
         });

@@ -1,5 +1,7 @@
 <template>
-  <ve-histogram :data="chartData" :settings="chartSettings"></ve-histogram>
+  <div>
+  <div id="myChart" style="width:100%;height:400px;"></div>
+ </div>
 </template>
 
 <script>
@@ -7,43 +9,60 @@ import echarts from 'echarts'
   export default {
     name:"histogram",
     data () {
-      this.chartSettings = {
-        legendName: {
-          'question_times': '提问次数'
+      return {
+       xdata:[],
+       ydata:[],
+       optionline:{
+            title: '',
+            tooltip: {},
+            xAxis: {
+                data: [],
+                axisLabel:{
+                 interval: 0,  
+                 formatter:function(value)  
+                 {  
+                     return value.split("").join("\n");  
+                 }  
+                }
+            },
+            yAxis: {
+
+            },
+            series: [{
+                name: '提问次数',
+                type: 'bar',
+                data:[]
+            }]
         }
       }
-      return {
-        chartData: {
-          columns: ['name', 'question_times'],
-          rows: [ ]
-        },
-        rows_now:[]
-      }
+    },
+    methods: {
+     
     },
     mounted() {
-     
+      
       let data_now=[]
       this.$axios.get("/classroom_question_chart").then( res =>{
-          var data_ = {
-            'name':'',
-            'question_times':-1
-          }
+        // 基于准备好的dom，初始化echarts实例
+        let myChart = this.$echarts.init(document.getElementById('myChart'))
+        // 绘制图表
           for(let i = 0; i< res.data.length;i++){
-            data_.name = res.data[i].name
-            data_.question_times = res.data[i].times
-            this.chartData.rows.push(data_)
-            data_ = {
-               'name':'',
-              'question_times':-1
-            }
+            this.optionline.xAxis.data.push(res.data[i].name)
+            this.optionline.series[0].data.push(res.data[i].times)
           }
-            
+           myChart.setOption(this.optionline);
+          
+        console.log(this.xdata)
+         console.log(this.ydata)
+        // 指定图表的配置项和数据
+      
+        
         }).catch(error =>{
             console.log(error);
         });
 
     
-      //console.log(data_now)
+      
     }
   }
 </script>

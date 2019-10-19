@@ -13,6 +13,8 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import BaiduMap from 'vue-baidu-map';
 import VCharts from 'v-charts';
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 // import cascaderMulti from "cascader-multi";
 // import Autocomplete from 'v-autocomplete'
 // import 'v-autocomplete/dist/v-autocomplete.css'
