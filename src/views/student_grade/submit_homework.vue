@@ -305,15 +305,29 @@ export default {
       }        
     }, 
     save(mm){
+      console.log(this.content)
       if (this.content=='无法输入作业内容'||this.content=='') {
         this.$Message.info('内容不能为空！');
       } else {
-        if (mm==1) {
-        console.log(this.content)
+        if (mm==1) {        
         this.$Modal.confirm({
         title: '提交作业',
         content: '<p>确定要提交此作业？提交后将不能再修改！</p>',
         onOk: () => {
+            this.$Spin.show({
+                render: (h) => {
+                    return h('div', [
+                        h('Icon', {
+                            'class': 'demo-spin-icon-load',
+                            props: {
+                                type: 'ios-loading',
+                                size: 18
+                            }
+                        }),
+                        h('div', '正在提交···')
+                    ])
+                }
+            });
             this.$axios.post('/stu_homework', {
                 params: {
                     th_id: this.eva.homework[0].id,
@@ -328,10 +342,26 @@ export default {
             .catch(function(error) {
                 console.log(error)
             });
-            
+            setTimeout(() => {
+                this.$Spin.hide();
+            }, 800);
            },
         onCancel: () => { this.$Message.info('取消'); }});
         } else {
+          this.$Spin.show({
+              render: (h) => {
+                  return h('div', [
+                      h('Icon', {
+                          'class': 'demo-spin-icon-load',
+                          props: {
+                              type: 'ios-loading',
+                              size: 18
+                          }
+                      }),
+                      h('div', '正在暂存···')
+                  ])
+              }
+          });
           this.$axios.post('/stu_homework', {
                   params: {
                       th_id: this.eva.homework[0].id,
@@ -346,6 +376,9 @@ export default {
               .catch(function(error) {
                   console.log(error)
               });
+          setTimeout(() => {
+              this.$Spin.hide();
+          }, 800);
         }
       }
       
@@ -385,3 +418,9 @@ export default {
   }
 };
 </script>
+
+<style>
+    .demo-spin-icon-load{
+        animation: ani-demo-spin 1s linear infinite;
+    }
+</style>
