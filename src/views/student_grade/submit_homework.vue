@@ -336,15 +336,15 @@ export default {
                 }
             }).then(function(res) {              
                 this.content=res.data.content;
-                this.$Message.info('提交成功');          
+                setTimeout(() => {
+                    this.$Spin.hide();
+                    this.$Message.info('提交成功');
+                }, 800);                          
                 this.eva.done=2;
             }.bind(this))
             .catch(function(error) {
                 console.log(error)
-            });
-            setTimeout(() => {
-                this.$Spin.hide();
-            }, 800);
+            });            
            },
         onCancel: () => { this.$Message.info('取消'); }});
         } else {
@@ -370,15 +370,15 @@ export default {
                   }
               }).then(function(res) {              
                   this.content=res.data.content;
-                  this.$Message.info('暂存成功');          
+                  setTimeout(() => {
+                      this.$Spin.hide();
+                      this.$Message.info('暂存成功');
+                  }, 800);                            
                   this.eva.done=1;
               }.bind(this))
               .catch(function(error) {
                   console.log(error)
-              });
-          setTimeout(() => {
-              this.$Spin.hide();
-          }, 800);
+              });          
         }
       }
       
