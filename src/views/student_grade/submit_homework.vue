@@ -422,7 +422,6 @@ export default {
   }
 };
 </script>
-<<<<<<< HEAD
 <style>
   .text-wrapper {
   white-space: pre-wrap;
@@ -430,12 +429,8 @@ export default {
   word-wrap: break-word;
   font-size: 20px;
 
-}
-=======
-
-<style>
+},
     .demo-spin-icon-load{
         animation: ani-demo-spin 1s linear infinite;
     }
->>>>>>> 0b5c23c936aeacbb69aa070f77d3da1084e76acd
 </style>
