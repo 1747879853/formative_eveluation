@@ -73,7 +73,8 @@ v-model="modal2"
       width="50%"
       :mask-closable="false"
 >
- <p style="font-size:20px">{{now_content}}</p>
+<div  ></div>
+ <p class="text-wrapper" >{{now_content}}</p>
 </Modal>
 
 </div>
@@ -121,6 +122,9 @@ export default {
                                         click: () => { 
                                             
                                             this.now_content=this.data6[params.index].content
+                                            this.now_content = this.now_content.replace(/<[^>]+>/g, "");
+                                            this.now_content = this.now_content.replace(/&nbsp;/g, "")
+                                            
                                             this.modal2=true
                                             
                                         }
@@ -380,3 +384,12 @@ export default {
   }
 };
 </script>
+<style>
+  .text-wrapper {
+  white-space: pre-wrap;
+  word-break: break-all;
+  word-wrap: break-word;
+  font-size: 20px;
+
+}
+</style>
