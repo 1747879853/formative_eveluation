@@ -309,12 +309,29 @@ export default {
       }        
     }, 
     save(mm){
-      if (mm==1) {
-        console.log(this.content)
+      console.log(this.content)
+      if (this.content=='无法输入作业内容'||this.content=='') {
+        this.$Message.info('内容不能为空！');
+      } else {
+        if (mm==1) {        
         this.$Modal.confirm({
         title: '提交作业',
         content: '<p>确定要提交此作业？提交后将不能再修改！</p>',
         onOk: () => {
+            this.$Spin.show({
+                render: (h) => {
+                    return h('div', [
+                        h('Icon', {
+                            'class': 'demo-spin-icon-load',
+                            props: {
+                                type: 'ios-loading',
+                                size: 18
+                            }
+                        }),
+                        h('div', '正在提交···')
+                    ])
+                }
+            });
             this.$axios.post('/stu_homework', {
                 params: {
                     th_id: this.eva.homework[0].id,
@@ -323,31 +340,52 @@ export default {
                 }
             }).then(function(res) {              
                 this.content=res.data.content;
-                this.$Message.info('提交成功');          
+                setTimeout(() => {
+                    this.$Spin.hide();
+                    this.$Message.info('提交成功');
+                }, 800);                          
                 this.eva.done=2;
             }.bind(this))
             .catch(function(error) {
                 console.log(error)
-            });
-            
+            });            
            },
         onCancel: () => { this.$Message.info('取消'); }});
-      } else {
-        this.$axios.post('/stu_homework', {
-                params: {
-                    th_id: this.eva.homework[0].id,
-                    content: this.content,
-                    status: 0
-                }
-            }).then(function(res) {              
-                this.content=res.data.content;
-                this.$Message.info('暂存成功');          
-                this.eva.done=1;
-            }.bind(this))
-            .catch(function(error) {
-                console.log(error)
-            });
+        } else {
+          this.$Spin.show({
+              render: (h) => {
+                  return h('div', [
+                      h('Icon', {
+                          'class': 'demo-spin-icon-load',
+                          props: {
+                              type: 'ios-loading',
+                              size: 18
+                          }
+                      }),
+                      h('div', '正在暂存···')
+                  ])
+              }
+          });
+          this.$axios.post('/stu_homework', {
+                  params: {
+                      th_id: this.eva.homework[0].id,
+                      content: this.content,
+                      status: 0
+                  }
+              }).then(function(res) {              
+                  this.content=res.data.content;
+                  setTimeout(() => {
+                      this.$Spin.hide();
+                      this.$Message.info('暂存成功');
+                  }, 800);                            
+                  this.eva.done=1;
+              }.bind(this))
+              .catch(function(error) {
+                  console.log(error)
+              });          
+        }
       }
+      
         
 
 
@@ -384,6 +422,7 @@ export default {
   }
 };
 </script>
+<<<<<<< HEAD
 <style>
   .text-wrapper {
   white-space: pre-wrap;
@@ -392,4 +431,11 @@ export default {
   font-size: 20px;
 
 }
+=======
+
+<style>
+    .demo-spin-icon-load{
+        animation: ani-demo-spin 1s linear infinite;
+    }
+>>>>>>> 0b5c23c936aeacbb69aa070f77d3da1084e76acd
 </style>
