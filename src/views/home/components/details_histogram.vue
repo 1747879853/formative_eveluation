@@ -339,6 +339,7 @@ import echarts from 'echarts'
             term_id:this.option
           }
         }).then( res =>{
+          console.log(res.data)
          //_teacher_line.clear()
          if(res.data.d[0].length==0){
           this.$Message.info("无数据，重新选择学期或教师！")
