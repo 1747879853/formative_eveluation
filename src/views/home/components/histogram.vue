@@ -44,19 +44,20 @@ import echarts from 'echarts'
       let data_now=[]
       this.$axios.get("/classroom_question_chart").then( res =>{
         // 基于准备好的dom，初始化echarts实例
-        let myChart = this.$echarts.init(document.getElementById('myChart'))
-        // 绘制图表
-          for(let i = 0; i< res.data.length;i++){
-            this.optionline.xAxis.data.push(res.data[i].name)
-            this.optionline.series[0].data.push(res.data[i].times)
+        if(res.data.a==0){
+          this.$Message.info('当前时间不在学期范围内！')
+        }
+        else if(res.data.a==1){
+            let myChart = this.$echarts.init(document.getElementById('myChart'))
+          // 绘制图表
+            for(let i = 0; i< res.data.b.length;i++){
+              this.optionline.xAxis.data.push(res.data.b[i].name)
+              this.optionline.series[0].data.push(res.data.b[i].times)
+            }
+             myChart.setOption(this.optionline);
           }
-           myChart.setOption(this.optionline);
-          
-        console.log(this.xdata)
-         console.log(this.ydata)
-        // 指定图表的配置项和数据
-      
-        
+       
+        console.log(res.data.b)
         }).catch(error =>{
             console.log(error);
         });
