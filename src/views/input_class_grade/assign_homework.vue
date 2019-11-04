@@ -92,7 +92,7 @@ export default {
      editor.customConfig.onchange = (html) => {
        this.homework.demand = html
      }
-     editor.customConfig.uploadImgServer = '//47.100.174.14:9999/api/v1/save_hw_img'
+     editor.customConfig.uploadImgServer = '/api/v1/save_hw_img'
      // editor.customConfig.uploadFileName = 'file'
      editor.customConfig.uploadImgHeaders = { 'Authorization':this.$store.state.token }
      editor.customConfig.menus = [     //菜单配置
