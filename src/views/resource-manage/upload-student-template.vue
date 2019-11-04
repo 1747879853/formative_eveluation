@@ -17,7 +17,7 @@
                         <Row type="flex" justify="center" align="middle" class="height-100">
                             <Upload
                                 ref="upload"
-                                action="//47.100.174.14:9999/api/v1/upload_student_template"
+                                action="/api/v1/upload_student_template"
                                 :format="['xls', 'xlsx']"
                                 :on-format-error="handleFormatError"
                                 :on-success="handleSuccess"
@@ -88,11 +88,25 @@ export default {
                 desc: '文件 ' + file.name + ' 正在上传。'
             });
         },
-        handleSuccess (evnet, file) {
-            this.$Notice.success({
+        handleSuccess (response, file, fileList) {
+            // this.$Notice.success({
+            //     title: '文件上传成功',
+            //     desc: '文件 ' + file.name + ' 上传成功。'
+            // });
+            let _this = this
+            if(response.status){
+              this.$Notice.success({
                 title: '文件上传成功',
                 desc: '文件 ' + file.name + ' 上传成功。'
-            });
+              })
+              
+            }else{
+              this.$refs.upload.fileList.splice(0, this.$refs.upload.fileList.length)
+              this.$Notice.error({
+                title: '文件 ' + file.name + ' 上传失败。',
+                desc: response.msg
+              })
+            }
         },
         handleError (event, file) {
             this.$Notice.error({
@@ -103,8 +117,8 @@ export default {
 
         handleRemove (file) {
             // 从 upload 实例删除数据
-            const fileList = this.$refs.upload.fileList;
-            this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
+            let _this = this;
+            
             // console.log(file.name);
             
             this.$axios.post("/delete_student_template", {
@@ -112,8 +126,13 @@ export default {
                     file_name: file.name,
                 }
             }).then( res =>{
-                                
-                 // console.log("delete success");     
+                if (res.data.status){
+                    const fileList = _this.$refs.upload.fileList;
+                    _this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);   
+                    _this.$Message.info('删除成功')             
+                } else {
+                    _this.$Message.info('删除失败')
+                }     
 
             }).catch(error =>{
                 console.log(error);
