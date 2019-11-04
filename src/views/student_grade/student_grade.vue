@@ -62,6 +62,9 @@ export default {
           console.log(this.data[j][i][0])
           }
         }
+        console.log("sssssssssssss")
+        console.log(res.data)
+        console.log("sssssssssssss")
         console.log(this.data)
         for(let k = 0;k<this.table_list.length;k++){
           this.tab_msg=this.table_list[k];
