@@ -13,7 +13,7 @@
                       <Card  >        
                         <div slot="title">
                           <DatePicker   @on-change ="changeTime_all_teacher_histogram" type="daterange" split-panels placeholder="选择时间范围" style="width: 200px" split-panels></DatePicker>
-                          
+              
                         </div>           
                         <div style="text-align:center">
                           <div id="myChart" style="width:100%;height:300px;"></div>
@@ -51,7 +51,7 @@
                     <Col span="24">
                     <Card >        
                         <div slot="title">
-                          
+                        
                           <Select v-model="checked_teacher_line"   multiple style="width:260px" placeholder="选择教师">
                             <Option v-for="item in teacherList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                           </Select>
@@ -93,7 +93,7 @@
                         <div slot="title">
 
                           <DatePicker   @on-change ="changeTime_class_rooms_charts" type="daterange" split-panels placeholder="选择时间范围" style="width: 200px" split-panels></DatePicker>
-                          <Select v-model="classRoomList" style="width:200px" placeholder="选择班级">
+                          <Select v-model="checked_class_room" style="width:200px" placeholder="选择班级">
                             <Option v-for="item in classRoomList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                           </Select>
                           <Button type="primary" @click=" get_class_room_charts()">确定</Button>
