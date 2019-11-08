@@ -348,7 +348,9 @@ export default {
             }.bind(this))
             .catch(function(error) {
                 console.log(error)
-            });            
+                this.$Spin.hide();
+                this.$Message.info('提交失败，请刷新后重新提交！');
+            }.bind(this));            
            },
         onCancel: () => { this.$Message.info('取消'); }});
         } else {
@@ -382,7 +384,9 @@ export default {
               }.bind(this))
               .catch(function(error) {
                   console.log(error)
-              });          
+                  this.$Spin.hide();
+                  this.$Message.info('提交失败，请刷新后重新提交！');
+              }.bind(this));          
         }
       }
       
