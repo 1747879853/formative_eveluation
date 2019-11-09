@@ -573,6 +573,14 @@ export const appRouter = [
                 access:'input_class_grade/immediate_evaluation', 
                 name: 'immediate_evaluation', 
                 component: () => import('@/views/input_class_grade/immediate_evaluation.vue') 
+            },
+            { 
+                path: 'output_grades', 
+                title: '学生成绩导出',
+                icon: 'compose',
+                access:'input_class_grade/output_grades', 
+                name: 'output_grades', 
+                component: () => import('@/views/input_class_grade/output_grades.vue') 
             }
             // {
             //     path: 'pad_input_class_grade',                
