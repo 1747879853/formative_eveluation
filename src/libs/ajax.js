@@ -7,13 +7,13 @@ import store from '../store/index';
 const ajaxUrl = env === 'development'
     ? 'http://127.0.0.1:3000/api/v1'
     : env === 'production'
-        ? 'http://47.100.174.14:9999/api/v1'
+        ? '/api/v1'
         : '';
 
 const devUrl = env === 'development'
     ? 'http://127.0.0.1:3000/api/v1'
     : env === 'production'
-        ? 'http://47.100.174.14:9999/api/v1'
+        ? '/api/v1'
         : '';
 
 const service = axios.create({

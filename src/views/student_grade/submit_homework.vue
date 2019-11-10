@@ -158,7 +158,7 @@ export default {
      editor.customConfig.onchange = (html) => {
        this.content = html
      }
-     editor.customConfig.uploadImgServer = '//47.100.174.14:9999/api/v1/save_hw_img'
+     editor.customConfig.uploadImgServer = '/api/v1/save_hw_img'
      // editor.customConfig.uploadFileName = 'file'
      editor.customConfig.uploadImgHeaders = { 'Authorization':this.$store.state.token }
      editor.customConfig.menus = [     //菜单配置
@@ -348,7 +348,9 @@ export default {
             }.bind(this))
             .catch(function(error) {
                 console.log(error)
-            });            
+                this.$Spin.hide();
+                this.$Message.info('提交失败，请刷新后重新提交！');
+            }.bind(this));            
            },
         onCancel: () => { this.$Message.info('取消'); }});
         } else {
@@ -382,7 +384,9 @@ export default {
               }.bind(this))
               .catch(function(error) {
                   console.log(error)
-              });          
+                  this.$Spin.hide();
+                  this.$Message.info('提交失败，请刷新后重新提交！');
+              }.bind(this));          
         }
       }
       

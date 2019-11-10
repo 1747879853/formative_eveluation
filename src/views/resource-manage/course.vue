@@ -81,12 +81,12 @@ export default {
             return h('div'),[
               h('a',{
                 domProps:{
-                  href: 'http://47.100.174.14:9999/course_outline/' + params.row.outline_name,
+                  href: '/course_outline/' + params.row.outline_name,
                 }
               },params.row.outline_name),
               h('Upload',{
                 props:{
-                  action: "//47.100.174.14:9999/api/v1/upload_course_outline?id=" + params.row.id,
+                  action: "/api/v1/upload_course_outline?id=" + params.row.id,
                   format: ['doc', 'docx'],
                   'on-format-error': this.handleFormatError,
                   'on-success': this.handleSuccess,
