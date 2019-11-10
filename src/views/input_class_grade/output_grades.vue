@@ -227,14 +227,22 @@ export default {
     	}
     },
     'course_all'() {
+    	
+
      	if(this.course_all==true){
-     		for(let i = 0;i<this.courseList;i++){
+     		
+     		for(let i = 0;i<this.courseList.length;i++)
+     		{
      			this.final_courses.push(this.courseList[i].value)
+     			console.log(this.courseList[i].name)
+     			
      		}
+     		console.log("sssdasdasd"+this.final_courses)
      		
      	}else {
      		this.final_courses = []
      	}
+     	console.log(this.final_courses)
     },
     'class_room_all'() {
     	if(this.class_room_all==true){
