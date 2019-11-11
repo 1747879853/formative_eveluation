@@ -76,7 +76,14 @@ v-model="modal2"
 <div  ></div>
  <p class="text-wrapper" >{{now_content}}</p>
 </Modal>
-
+<Modal
+    v-model="confirm_modal"
+    title="确认提交内容"
+    @on-ok="submit">    
+    您要提交的作业内容为：
+    <div v-html='content' style="background-color:cornsilk;padding:10px"></div>
+    提交后将不能更改！
+</Modal>
 </div>
 </template>
 
@@ -87,7 +94,7 @@ export default {
   name: "user",
   data() {
     return {
-      
+      confirm_modal:false,
       now_content:'',
       excellent_homework:[],
       data6: [],
@@ -314,45 +321,14 @@ export default {
         this.$Message.info('内容不能为空！');
       } else {
         if (mm==1) {        
-        this.$Modal.confirm({
-        title: '提交作业',
-        content: '<p>确定要提交此作业？提交后将不能再修改！</p>',
-        onOk: () => {
-            this.$Spin.show({
-                render: (h) => {
-                    return h('div', [
-                        h('Icon', {
-                            'class': 'demo-spin-icon-load',
-                            props: {
-                                type: 'ios-loading',
-                                size: 18
-                            }
-                        }),
-                        h('div', '正在提交···')
-                    ])
-                }
-            });
-            this.$axios.post('/stu_homework', {
-                params: {
-                    th_id: this.eva.homework[0].id,
-                    content: this.content,
-                    status: 1
-                }
-            }).then(function(res) {              
-                this.content=res.data.content;
-                setTimeout(() => {
-                    this.$Spin.hide();
-                    this.$Message.info('提交成功');
-                }, 800);                          
-                this.eva.done=2;
-            }.bind(this))
-            .catch(function(error) {
-                console.log(error)
-                this.$Spin.hide();
-                this.$Message.info('提交失败，请刷新后重新提交！');
-            }.bind(this));            
-           },
-        onCancel: () => { this.$Message.info('取消'); }});
+          this.confirm_modal = true ;
+        // this.$Modal.confirm({
+        // title: '提交作业',
+        // content: '确认提交，提交后将无法更改！',
+        // onOk: () => {
+                       
+        //    },
+        // onCancel: () => { this.$Message.info('取消'); }});
         } else {
           this.$Spin.show({
               render: (h) => {
@@ -422,6 +398,41 @@ export default {
         //         console.log(error)
         //     });
         // }
+    },
+    submit(){
+            this.$Spin.show({
+                render: (h) => {
+                    return h('div', [
+                        h('Icon', {
+                            'class': 'demo-spin-icon-load',
+                            props: {
+                                type: 'ios-loading',
+                                size: 18
+                            }
+                        }),
+                        h('div', '正在提交···')
+                    ])
+                }
+            });
+            this.$axios.post('/stu_homework', {
+                params: {
+                    th_id: this.eva.homework[0].id,
+                    content: this.content,
+                    status: 1
+                }
+            }).then(function(res) {              
+                this.content=res.data.content;
+                setTimeout(() => {
+                    this.$Spin.hide();
+                    this.$Message.info('提交成功');
+                }, 800);                          
+                this.eva.done=2;
+            }.bind(this))
+            .catch(function(error) {
+                console.log(error)
+                this.$Spin.hide();
+                this.$Message.info('提交失败，请刷新后重新提交！');
+            }.bind(this)); 
     }
   }
 };
