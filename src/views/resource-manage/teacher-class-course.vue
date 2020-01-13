@@ -198,6 +198,7 @@ import Sortable from 'sortablejs';
                     checked_course.push(n);
                 }
                 // console.log(this.users_data[this.select].id)
+                
                 this.$axios.patch('/tccList', {
                     params: {
                         term: this.option,

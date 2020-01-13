@@ -581,6 +581,14 @@ export const appRouter = [
                 access:'input_class_grade/output_grades', 
                 name: 'output_grades', 
                 component: () => import('@/views/input_class_grade/output_grades.vue') 
+            },
+            { 
+                path: 'Details_of_achievements', 
+                title: '成绩详情',
+                icon: 'compose',
+                access:'input_class_grade/Details_of_achievements', 
+                name: 'Details_of_achievements', 
+                component: () => import('@/views/input_class_grade/Details_of_achievements.vue') 
             }
             // {
             //     path: 'pad_input_class_grade',                
